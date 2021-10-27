@@ -25,18 +25,15 @@ function App() {
             <nav style={{display: "none"}} >
               <ul>
                 <li>
-                  <Link to="/">Home</Link>
+                  <Link  to="/">Home</Link>
                 </li>
                 <li>
                   <Link to="/callback">Callback</Link>
                 </li>
-                <li>
-                  <Link to="/users">Users</Link>
-                </li>
               </ul>
             </nav>
             <Switch>
-              <Route path="/">
+              <Route exact path="/">
                 <Home />
               </Route>
               <Route path="/callback">
