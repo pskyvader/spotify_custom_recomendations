@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import Credentials from './Credentials';
+import login from './Credentials';
 
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
         >
           Learn React
         </a>
+          <button onClick={login} > Login </button>
       </header>
     </div>
   );

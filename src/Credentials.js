@@ -1,39 +1,26 @@
-var request = require('request'); // "Request" library
-
+import {
+    generateRandomString
+} from "./Utils";
 
 var client_id = '6e8b594462ac469c95cf1f137ae901a7'; // Your client id
-var client_secret = 'd91be2fbd4d64d8f846b30dccf1abd12'; // Your secret
+// var client_secret = 'd91be2fbd4d64d8f846b30dccf1abd12'; // Your secret
+var redirect_uri = 'http://localhost:3000/callback'; // Your redirect uri
+var stateKey = 'spotify_auth_state';
 
-// your application requests authorization
-var authOptions = {
-  url: 'https://accounts.spotify.com/api/token',
-  headers: {
-    'Authorization': 'Basic ' + (Buffer.from((client_id + ':' + client_secret), "base64"))
-  },
-  form: {
-    grant_type: 'client_credentials'
-  },
-  json: true
-};
+var login = function() {
+    var state = generateRandomString(16);
+    localStorage.setItem(stateKey, state);
+    // your application requests authorization
+    var scope = 'user-read-private user-read-email';
+    var uri = 'https://accounts.spotify.com/authorize?' + new URLSearchParams({
+        response_type: 'code',
+        client_id: client_id,
+        scope: scope,
+        redirect_uri: redirect_uri,
+        state: state
+    });
+    window.location = uri;
+}
 
 
-
-
-
-request.post(authOptions, function(error, response, body) {
-    if (!error && response.statusCode === 200) {
-  
-      // use the access token to access the Spotify Web API
-      var token = body.access_token;
-      var options = {
-        url: 'https://api.spotify.com/v1/me',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        },
-        json: true
-      };
-      request.get(options, function(error, response, body) {
-        console.log(body);
-      });
-    }
-  });
+export default login;
