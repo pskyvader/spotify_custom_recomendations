@@ -1,61 +1,44 @@
 import { useLocation } from "react-router-dom";
+import { useEffect,useRef } from "react";
 import {
-  stateKey,
-  redirect_uri,
-  client_id,
-  client_secret,
+  stateKey
 } from "./Credentials";
 
 export default function Callback(props) {
-  let location = new URLSearchParams(useLocation().search);
-  const code = location.get("code");
+  let location = new URLSearchParams(useLocation().hash);
+  const access_token = location.get("access_token");
   const state = location.get("state");
-
   const storedState = localStorage.getItem(stateKey);
+  let user_data=useRef(null);
 
-  if (state === null || state !== storedState) {
-    window.location = "/#error=state_mismatch";
-    return null;
-  }
+  useEffect(() => {
+    if (state === null || state !== storedState) {
+      window.location = "/#error=state_mismatch";
+      return null;
+    }
 
-//   var authOptions = {
-//     url: "https://accounts.spotify.com/api/token",
-//     form: {
-//       code: code,
-//       redirect_uri: redirect_uri,
-//       grant_type: "authorization_code",
-//     },
-//     headers: {
-//       Authorization:
-//         "Basic " + Buffer.from(client_id + ":" + client_secret, "base64"),
-//     },
-//     json: true,
-//   };
+    localStorage.removeItem(stateKey);
+    // POST request using fetch inside useEffect React hook
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + access_token,
+      },
+    };
 
-//   console.log(authOptions);
-
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization":
-        "Basic " + Buffer(client_id + ":" + client_secret).toString("base64"),
-    },
-    body: JSON.stringify({
-      code: code,
-      redirect_uri: redirect_uri,
-      grant_type: "authorization_code",
-    }),
-  };
-
-
-  fetch("https://accounts.spotify.com/api/token", requestOptions)
-    .then(async (response) => console.log(response.json()));
+    fetch("https://api.spotify.com/v1/me", requestOptions).then((response) => {
+      console.log(response);
+      user_data.current.text =response;
+    });
+    // empty dependency array means this effect will only run once (like componentDidMount in classes)
+  }, [access_token, state, storedState]);
 
   return (
     <div>
+      <p ref={user_data}>Logged in: </p>
       callback:
-      <p>code: {code}</p>
+      <p>access_token: {access_token}</p>
       <p>state: {state}</p>
     </div>
   );

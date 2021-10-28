@@ -14,7 +14,7 @@ var login = function () {
   var uri =
     "https://accounts.spotify.com/authorize?" +
     new URLSearchParams({
-      response_type: "code",
+      response_type: "token",
       client_id: client_id,
       scope: scope,
       redirect_uri: redirect_uri,
