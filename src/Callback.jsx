@@ -1,23 +1,20 @@
 import { useLocation } from "react-router-dom";
-import { useEffect,useRef } from "react";
-import {
-  stateKey
-} from "./Credentials";
+import { useEffect, useState } from "react";
+import { stateKey } from "./Credentials";
 
 export default function Callback(props) {
   let location = new URLSearchParams(useLocation().hash);
   const access_token = location.get("access_token");
   const state = location.get("state");
   const storedState = localStorage.getItem(stateKey);
-  let user_data=useRef(null);
+  const [response, setResponse] = useState(null);
+
+  if (state === null || state !== storedState) {
+    window.location = "/#error=state_mismatch";
+    // return null;
+  }
 
   useEffect(() => {
-    if (state === null || state !== storedState) {
-      window.location = "/#error=state_mismatch";
-      return null;
-    }
-
-    localStorage.removeItem(stateKey);
     // POST request using fetch inside useEffect React hook
     const requestOptions = {
       method: "GET",
@@ -28,15 +25,25 @@ export default function Callback(props) {
     };
 
     fetch("https://api.spotify.com/v1/me", requestOptions).then((response) => {
-      console.log(response);
-      user_data.current.text =response;
+      response=response.text();
+      setResponse(
+        <div>
+          {Object.keys(response).map((key, i) => (
+            <p key={i}>
+              <span>Key Name: {key}</span>
+              <span>Value: {response[key]}</span>
+            </p>
+          ))}
+        </div>
+      );
+      localStorage.removeItem(stateKey);
     });
     // empty dependency array means this effect will only run once (like componentDidMount in classes)
   }, [access_token, state, storedState]);
-
+  console.log(response);
   return (
     <div>
-      <p ref={user_data}>Logged in: </p>
+      <div>Logged in: {response}</div>
       callback:
       <p>access_token: {access_token}</p>
       <p>state: {state}</p>
