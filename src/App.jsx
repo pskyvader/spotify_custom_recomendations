@@ -9,7 +9,6 @@ function App() {
 	return (
 		<CssBaseline>
 			<Header></Header>
-			<body>
 				<Router>
 					<div>
 						<Switch>
@@ -22,7 +21,6 @@ function App() {
 						</Switch>
 					</div>
 				</Router>
-			</body>
 		</CssBaseline>
 	);
 }

@@ -2,10 +2,20 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 
+import Login from "./Login";
+
+const login = () => {
+	const expiration = localStorage.getItem("expiration");
+	const access_token = localStorage.getItem("access_token");
+	if (access_token !== null && expiration > Date.now()) {
+		return null;
+	} else {
+		return <Login />;
+	}
+};
 const Header = () => {
 	return (
 		<header>
@@ -26,9 +36,9 @@ const Header = () => {
 							component="div"
 							sx={{ flexGrow: 1 }}
 						>
-							News
+							Spotify custom playlists
 						</Typography>
-						<Button color="inherit">Login</Button>
+						{login()}
 					</Toolbar>
 				</AppBar>
 			</Box>
