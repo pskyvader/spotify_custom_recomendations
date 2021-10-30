@@ -1,7 +1,7 @@
 import { client_id, stateKey, redirect_uri } from "./Credentials";
 import { generateRandomString } from "./Utils";
 import Account from "./Account";
-import { Redirect } from "react-router";
+import Button from '@mui/material/Button';
 
 export default function Home(params) {
 	const expiration = localStorage.getItem("expiration");
@@ -9,7 +9,7 @@ export default function Home(params) {
 	if (access_token !== null && expiration > Date.now()) {
 		return <Account></Account>;
 	} else {
-		return <button onClick={login}> Login with Spotify</button>;
+		return <Button variant="contained" onClick={login}> Login with Spotify</Button>;
 	}
 }
 
@@ -28,5 +28,4 @@ var login = function () {
 			state: state,
 		});
 	window.location = uri;
-	// return <Redirect push  to={uri} />;
 };
