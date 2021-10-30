@@ -9,7 +9,7 @@ export default function Home(params) {
 	if (access_token !== null && expiration > Date.now()) {
 		return <Account></Account>;
 	} else {
-		return login();//<button onClick={login}> Login </button>;
+		return <button onClick={login}> Login with Spotify</button>;
 	}
 }
 
@@ -27,6 +27,6 @@ var login = function () {
 			redirect_uri: redirect_uri,
 			state: state,
 		});
-	// window.location = uri;
-	return <Redirect push  to={uri} />;
+	window.location = uri;
+	// return <Redirect push  to={uri} />;
 };
