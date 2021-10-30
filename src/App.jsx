@@ -8,19 +8,19 @@ import CssBaseline from "@mui/material/CssBaseline";
 function App() {
 	return (
 		<CssBaseline>
-			<Header></Header>
-				<Router>
-					<div>
-						<Switch>
-							<Route exact path="/">
-								<Home />
-							</Route>
-							<Route path="/callback">
-								<Callback />
-							</Route>
-						</Switch>
-					</div>
-				</Router>
+			<Router>
+				<div>
+					<Switch>
+						<Route exact path="/">
+							<Header></Header>
+							<Home />
+						</Route>
+						<Route path="/callback">
+							<Callback />
+						</Route>
+					</Switch>
+				</div>
+			</Router>
 		</CssBaseline>
 	);
 }
