@@ -16,14 +16,9 @@ const UserInfo = () => {
 
 	const userinfo_template = (response) => {
 		return (
-			<Box  sx={{ flexGrow: 1 }}>
-			<Box sx={{ display: 'inline' }}>
-				<Avatar alt={response.display_name} src={response.images[0].url} />
-			</Box>
-			<Box sx={{ display: 'inline' }}>
-			
-			<Button variant="contained" onClick={Logout}> Logout </Button>
-			</Box>
+			<Box sx={{ display: 'flex'}}>
+				<Avatar sx={{ mr: 2 }} alt={response.display_name} src={response.images[0].url} />
+				<Button variant="contained" onClick={Logout}> Logout </Button>
 			</Box>
 		);
 	};
