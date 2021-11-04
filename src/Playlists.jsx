@@ -1,59 +1,23 @@
 import { useEffect, useState } from "react";
-import { Box } from "@mui/system";
-import {
-	CircularProgress,
-	List,
-	ListItemButton,
-	ListItemIcon,
-	ListItemText,
-	Grid,
-	Container,
-} from "@mui/material";
-import Avatar from "@mui/material/Avatar";
+import { CircularProgress, Grid, Container } from "@mui/material";
 
 import Me, { MePlaylist } from "./API/Me";
-
-const ItemsList = ({ items, me }) => {
-	const [selectedIndex, setSelectedIndex] = useState(0);
-
-	const handleListItemClick = ( index) => {
-		setSelectedIndex(index);
-	};
-
-	let item_list = [];
-	items.forEach((element, key) => {
-		item_list.push(
-			<ListItemButton
-				disabled={me.id !== element.owner.id && !element.colaborative}
-				key={key}
-				selected={selectedIndex === key}
-				onClick={() => handleListItemClick(key)}
-			>
-				<ListItemIcon>
-					<Avatar alt={element.name} src={element.images[2].url} />
-				</ListItemIcon>
-				<ListItemText primary={element.name} />
-			</ListItemButton>
-		);
-	});
-	return (
-		<Box>
-			<List component="nav" aria-label="playlists">
-				{item_list}
-			</List>
-		</Box>
-	);
-};
+import PlaylistList from "./PlaylistList";
+import PlaylistDetail from "./PlaylistDetail";
 
 const Playlists_template = (response, me) => {
+	
+	const [selectedItem,SetselectedItem]=useState(0);
+
+
 	return (
 		<Container>
 			<Grid container spacing={2}>
 				<Grid item xs={4}>
-					<ItemsList items={response.items} me={me} />
+					<PlaylistList items={response.items} me={me} SetselectedItem={SetselectedItem}/>
 				</Grid>
 				<Grid item xs={8}>
-					<Box></Box>
+					<PlaylistDetail item={selectedItem}/>
 				</Grid>
 			</Grid>
 		</Container>

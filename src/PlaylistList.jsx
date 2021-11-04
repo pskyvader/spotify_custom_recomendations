@@ -1,8 +1,20 @@
-const PlaylistList = ({ items, me }) => {
+import { useState } from "react";
+import { Box } from "@mui/system";
+import {
+	List,
+	ListItemButton,
+	ListItemIcon,
+	ListItemText,
+} from "@mui/material";
+
+import Avatar from "@mui/material/Avatar";
+
+const PlaylistList = ({ items, me ,SetselectedItem}) => {
 	const [selectedIndex, setSelectedIndex] = useState(0);
 
-	const handleListItemClick = ( index) => {
+	const handleListItemClick = (index) => {
 		setSelectedIndex(index);
+		SetselectedItem(index);
 	};
 
 	let item_list = [];
