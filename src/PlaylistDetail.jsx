@@ -10,15 +10,18 @@ import { Box } from "@mui/system";
 import { CircularProgress } from "@mui/material";
 
 import { objectToList } from "./Utils";
-
 import Me from "./API/Me";
 import Playlist from "./API/Playlist";
 
-const PlaylistTemplate = ({ response,me }) => {
-	return (
-		<Box>
-            {objectToList(response.tracks)}
-			<Card sx={{ maxWidth: 345 }}>
+const PlaylistTemplate = ({ response, me }) => {
+	let tracks = [];
+	response.tracks.items.forEach((element,key) => {
+		console.log(element.track);
+		// console.log(element.track.id);
+		// console.log(element.track.href);
+		// console.log(element.track.external_urls.spotify);
+		tracks.push(
+			<Card key={key} sx={{ maxWidth: 345 }}>
 				<CardMedia
 					component="img"
 					height="140"
@@ -27,12 +30,10 @@ const PlaylistTemplate = ({ response,me }) => {
 				/>
 				<CardContent>
 					<Typography gutterBottom variant="h5" component="div">
-						Lizard
+						{element.track.name}
 					</Typography>
 					<Typography variant="body2" color="text.secondary">
-						Lizards are a widespread group of squamate reptiles,
-						with over 6,000 species, ranging across all continents
-						except Antarctica
+                    {element.track.album.name}
 					</Typography>
 				</CardContent>
 				<CardActions>
@@ -40,25 +41,28 @@ const PlaylistTemplate = ({ response,me }) => {
 					<Button size="small">Learn More</Button>
 				</CardActions>
 			</Card>
-		</Box>
-	);
+		);
+	});
+
+	return <Box>{tracks}</Box>;
 };
 
-const PlaylistDetail = ({id}) => {
+const PlaylistDetail = ({ id }) => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
 
 	useEffect(() => {
-        if(id===null){
-            return;
-        }
+		if (id === null) {
+			return;
+		}
 		Playlist(id).then((response) => {
 			Me().then((me) => {
-                if(response.error){
-                    setPlaylist(objectToList(response));
-                }else{
-                    setPlaylist(<PlaylistTemplate response={response} me={me} />);
-                }
-				
+				if (response.error) {
+					setPlaylist(objectToList(response));
+				} else {
+					setPlaylist(
+						<PlaylistTemplate response={response} me={me} />
+					);
+				}
 			});
 		});
 	}, [id]);
