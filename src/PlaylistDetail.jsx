@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -6,11 +7,18 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
+import { CircularProgress } from "@mui/material";
 
-const PlaylistDetail = ({item}) => {
+import { objectToList } from "./Utils";
+
+import Me from "./API/Me";
+import Playlist from "./API/Playlist";
+
+const PlaylistTemplate = ({ response,me }) => {
+    
 	return (
 		<Box>
-            {item}
+			{response}
 			<Card sx={{ maxWidth: 345 }}>
 				<CardMedia
 					component="img"
@@ -35,6 +43,25 @@ const PlaylistDetail = ({item}) => {
 			</Card>
 		</Box>
 	);
+};
+
+const PlaylistDetail = () => {
+	const [playlist, setPlaylist] = useState(<CircularProgress />);
+
+	useEffect(() => {
+		Playlist().then((response) => {
+			Me().then((me) => {
+                if(response.error){
+                    setPlaylist(objectToList(response));
+                }else{
+                    setPlaylist(<PlaylistTemplate response={response} me={me} />);
+                }
+				
+			});
+		});
+	}, []);
+
+	return playlist;
 };
 
 export default PlaylistDetail;

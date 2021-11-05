@@ -14,7 +14,6 @@ const PlaylistList = ({ items, me ,SetselectedItem}) => {
 
 	const handleListItemClick = (index) => {
 		setSelectedIndex(index);
-		SetselectedItem(index);
 	};
 
 	let item_list = [];
@@ -24,7 +23,8 @@ const PlaylistList = ({ items, me ,SetselectedItem}) => {
 				disabled={me.id !== element.owner.id && !element.colaborative}
 				key={key}
 				selected={selectedIndex === key}
-				onClick={() => handleListItemClick(key)}
+				onClick={() => {handleListItemClick(key);
+					SetselectedItem(element.id)}}
 			>
 				<ListItemIcon>
 					<Avatar alt={element.name} src={element.images[2].url} />

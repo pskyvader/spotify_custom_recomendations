@@ -5,9 +5,8 @@ import Me, { MePlaylist } from "./API/Me";
 import PlaylistList from "./PlaylistList";
 import PlaylistDetail from "./PlaylistDetail";
 
-const Playlists_template = (response, me) => {
-	
-	const [selectedItem,SetselectedItem]=useState(0);
+const PlaylistsTemplate = ({response, me}) => {
+	const [selectedItem,SetselectedItem]=useState(null);
 
 
 	return (
@@ -30,7 +29,7 @@ const Playlists = () => {
 	useEffect(() => {
 		MePlaylist().then((response) => {
 			Me().then((me) => {
-				setPlaylist(Playlists_template(response, me));
+				setPlaylist(<PlaylistsTemplate response={response} me={me}/>);
 			});
 		});
 	}, []);
