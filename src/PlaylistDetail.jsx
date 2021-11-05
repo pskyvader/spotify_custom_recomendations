@@ -15,10 +15,9 @@ import Me from "./API/Me";
 import Playlist from "./API/Playlist";
 
 const PlaylistTemplate = ({ response,me }) => {
-    
 	return (
 		<Box>
-			{response}
+            {objectToList(response.tracks)}
 			<Card sx={{ maxWidth: 345 }}>
 				<CardMedia
 					component="img"
@@ -45,11 +44,14 @@ const PlaylistTemplate = ({ response,me }) => {
 	);
 };
 
-const PlaylistDetail = () => {
+const PlaylistDetail = ({id}) => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
 
 	useEffect(() => {
-		Playlist().then((response) => {
+        if(id===null){
+            return;
+        }
+		Playlist(id).then((response) => {
 			Me().then((me) => {
                 if(response.error){
                     setPlaylist(objectToList(response));
@@ -59,7 +61,7 @@ const PlaylistDetail = () => {
 				
 			});
 		});
-	}, []);
+	}, [id]);
 
 	return playlist;
 };
