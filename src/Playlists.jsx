@@ -10,16 +10,16 @@ const PlaylistsTemplate = ({response, me}) => {
 
 
 	return (
-		<Container>
-			<Grid container spacing={2}>
-				<Grid item xs={4}>
+		// <Container>
+			<Grid container spacing={2}  style={{ height: "100vh", width: "100%" }}>
+				<Grid item xs={12} sm={12} md={4}>
 					<PlaylistList items={response.items} me={me} SetselectedItem={SetselectedItem}/>
 				</Grid>
-				<Grid item xs={8}>
+				<Grid item xs={12} sm={12} md={8}>
 					<PlaylistDetail id={selectedItem}/>
 				</Grid>
 			</Grid>
-		</Container>
+		// </Container>
 	);
 };
 
