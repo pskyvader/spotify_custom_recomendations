@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { CircularProgress, Grid, Container } from "@mui/material";
+import { createTheme } from '@mui/material/styles';
 
 import Me, { MePlaylist } from "./API/Me";
 import PlaylistList from "./PlaylistList";
 import PlaylistDetail from "./PlaylistDetail";
 
 const PlaylistsTemplate = ({response, me}) => {
+	const theme = createTheme();
 	const [selectedItem,SetselectedItem]=useState(null);
-
-
 	return (
 		// <Container>
-			<Grid container spacing={2}  style={{ height: "100vh", width: "100%" }}>
+			<Grid container spacing={2} style={{ height: "calc(100vh - " + theme.mixins.toolbar.minHeight + "px)", width: "100%" }}>
 				<Grid item xs={12} sm={12} md={4}>
 					<PlaylistList items={response.items} me={me} SetselectedItem={SetselectedItem}/>
 				</Grid>

@@ -28,8 +28,8 @@ function useData(items) {
 		});
 
 		const columns = [
-			{ field: "id", hide: true, flex: 1 },
-			{ field: "name", headerName: "Name", flex: 1 },
+			{ field: "id", headerName: "#", minWidth: 40,flex:0.1 },
+			{ field: "name", headerName: "Title", flex: 1 },
 			{ field: "artist", headerName: "Artist", flex: 1 },
 			{ field: "album", headerName: "Album", flex: 1 },
 		];
@@ -46,7 +46,7 @@ function useData(items) {
 const PlaylistTemplate = ({ response, me }) => {
 	const data = useData(response.tracks.items);
 	return (
-		<Box style={{ height: "100%", width: "100%" }}>
+		<Box style={{ height: "100%",paddingTop:8}}>
 			<DataGrid
 			hideFooter
 				{...data}
