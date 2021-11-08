@@ -17,10 +17,13 @@ const PlaylistList = ({ items, me, SetselectedItem }) => {
 	};
 
 	let item_list = [];
-	let selectedItem=null;
+	let selectedItem = null;
 	items.forEach((element, key) => {
-		if(selectedIndex === key && ( me.id === element.owner.id || !element.colaborative)){
-		selectedItem=element.id;
+		if (
+			selectedIndex === key &&
+			(me.id === element.owner.id || element.colaborative)
+		) {
+			selectedItem = element.id;
 		}
 		item_list.push(
 			<ListItemButton
@@ -39,10 +42,10 @@ const PlaylistList = ({ items, me, SetselectedItem }) => {
 			</ListItemButton>
 		);
 	});
-	
+
 	useEffect(() => {
-	SetselectedItem(selectedItem);
-	},[SetselectedItem,selectedItem]);
+		SetselectedItem(selectedItem);
+	}, [SetselectedItem, selectedItem]);
 	return (
 		<Box>
 			<List component="nav" aria-label="playlists">

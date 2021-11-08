@@ -17,11 +17,8 @@ const PlaylistTemplate = ({ response, me }) => {
 	let tracks = [];
 	response.tracks.items.forEach((element,key) => {
 		console.log(element.track);
-		// console.log(element.track.id);
-		// console.log(element.track.href);
-		// console.log(element.track.external_urls.spotify);
 		tracks.push(
-			<Card key={key} sx={{ maxWidth: 345 }}>
+			<Card key={"detail_"+key} sx={{ maxWidth: 345 }}>
 				<CardMedia
 					component="img"
 					height="140"
@@ -31,6 +28,14 @@ const PlaylistTemplate = ({ response, me }) => {
 				<CardContent>
 					<Typography gutterBottom variant="h5" component="div">
 						{element.track.name}
+					</Typography>
+					<Typography variant="h6" color="text.secondary">
+
+
+                    {element.track.artists.map((artist) =>{
+                    return <span style={{marginRight:15}}>{artist.name}</span> ;
+                    })
+                }
 					</Typography>
 					<Typography variant="body2" color="text.secondary">
                     {element.track.album.name}
@@ -58,6 +63,7 @@ const PlaylistDetail = ({ id }) => {
 			Me().then((me) => {
 				if (response.error) {
 					setPlaylist(objectToList(response));
+					console.log("Playlistdetail",id);
 				} else {
 					setPlaylist(
 						<PlaylistTemplate response={response} me={me} />
