@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import { CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { createTheme,styled } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 
 import { objectToList } from "./Utils";
 import Me from "./API/Me";
@@ -29,7 +29,7 @@ function useData(items) {
 		});
 
 		const columns = [
-			{ field: "id", headerName: "#", minWidth: 40,flex:0.1 },
+			{ field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
 			{ field: "name", headerName: "Title", flex: 1 },
 			{ field: "artist", headerName: "Artist", flex: 1 },
 			{ field: "album", headerName: "Album", flex: 1 },
@@ -44,28 +44,18 @@ function useData(items) {
 	return data;
 }
 
-
-const Root = styled('div')(({ theme }) => ({
-	maxHeight: "calc(50vh - " + theme.mixins.toolbar.minHeight + "px)",
-	height:5000,
-	[theme.breakpoints.up('md')]: {
-		maxHeight: "calc(100vh - " + theme.mixins.toolbar.minHeight + "px)",
-	},
-  }));
-
-
 const PlaylistTemplate = ({ response, me }) => {
 	const theme = createTheme();
 	const data = useData(response.tracks.items);
 	return (
-		<Root>
-			<DataGrid  
-			hideFooter
+		<Box sx={{ height: "100%", padding: theme.spacing() }}>
+			<DataGrid
+				hideFooter
 				{...data}
 				columnBuffer={2}
 				columnThreshold={2}
 			/>
-		</Root>
+		</Box>
 	);
 };
 

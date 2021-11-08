@@ -1,26 +1,28 @@
 import { useEffect, useState } from "react";
 import { CircularProgress, Grid, Container } from "@mui/material";
-import { createTheme, styled } from "@mui/material/styles";
+import {  styled } from "@mui/material/styles";
 
 import Me, { MePlaylist } from "./API/Me";
 import PlaylistList from "./PlaylistList";
 import PlaylistDetail from "./PlaylistDetail";
 
 const PlaylistsTemplate = ({ response, me }) => {
-	const Root = styled("div")(({ theme }) => ({
-		maxHeight: "calc(50vh - " + theme.mixins.toolbar.minHeight + "px)",
-		height: 5000,
-		[theme.breakpoints.up("md")]: {
-			maxHeight: "calc(100vh - " + theme.mixins.toolbar.minHeight + "px)",
-		},
-	}));
+	const Root = styled("div")(({ theme }) => {
+		return {
+			maxHeight: "calc(50vh - " + theme.mixins.toolbar.minHeight + "px - "+ theme.spacing()+" )",
+			height: 5000,
+			[theme.breakpoints.up("md")]: {
+				maxHeight: "calc(100vh - " + theme.mixins.toolbar.minHeight + "px - "+ theme.spacing()+" )",
+			},
+		};
+	});
 
 	const [selectedItem, SetselectedItem] = useState(null);
 	return (
 		<Container maxWidth={false}>
 			<Grid container spacing={2}>
-				<Grid item xs={12} sm={12} md={4}>
-					<Root>
+				<Grid item xs={12} md={4}>
+					<Root style={{ height: "auto" }}>
 						<PlaylistList
 							items={response.items}
 							me={me}
