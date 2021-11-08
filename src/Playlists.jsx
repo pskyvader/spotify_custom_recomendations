@@ -11,8 +11,8 @@ const PlaylistsTemplate = ({response, me}) => {
 	const [selectedItem,SetselectedItem]=useState(null);
 	return (
 		// <Container>
-			<Grid container spacing={2} style={{ height: "calc(100vh - " + theme.mixins.toolbar.minHeight + "px)", width: "100%" }}>
-				<Grid item xs={12} sm={12} md={4}>
+			<Grid container spacing={2} style={ {height: "calc(100vh - " + theme.mixins.toolbar.minHeight + "px)"}}>
+				<Grid item xs={{boxSizing:12,height:"50%"}} sm={12} md={4}>
 					<PlaylistList items={response.items} me={me} SetselectedItem={SetselectedItem}/>
 				</Grid>
 				<Grid item xs={12} sm={12} md={8}>

@@ -46,7 +46,7 @@ function useData(items) {
 const PlaylistTemplate = ({ response, me }) => {
 	const data = useData(response.tracks.items);
 	return (
-		<Box style={{ height: "100%",paddingTop:8}}>
+		<Box md={{ height: "100%",paddingTop:8}}>
 			<DataGrid
 			hideFooter
 				{...data}
