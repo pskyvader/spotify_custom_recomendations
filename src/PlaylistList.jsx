@@ -47,7 +47,7 @@ const PlaylistList = ({ items, me, SetselectedItem }) => {
 		SetselectedItem(selectedItem);
 	}, [SetselectedItem, selectedItem]);
 	return (
-		<Box sx={{height:"50%"}} md={{height:"100%"}}>
+		<Box sx={{ height: '50%', flexGrow:12}} >
 			<List component="nav" aria-label="playlists">
 				{item_list}
 			</List>

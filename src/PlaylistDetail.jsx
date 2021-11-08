@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import { CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { createTheme } from "@mui/material/styles";
 
 import { objectToList } from "./Utils";
 import Me from "./API/Me";
@@ -44,10 +45,11 @@ function useData(items) {
 }
 
 const PlaylistTemplate = ({ response, me }) => {
+	const theme = createTheme();
 	const data = useData(response.tracks.items);
 	return (
-		<Box md={{ height: "100%",paddingTop:8}}>
-			<DataGrid
+		<Box style={{ height: "calc(100vh - " + theme.mixins.toolbar.minHeight + "px)"}}>
+			<DataGrid 
 			hideFooter
 				{...data}
 				columnBuffer={2}
