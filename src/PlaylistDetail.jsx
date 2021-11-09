@@ -8,7 +8,7 @@ import { createTheme } from "@mui/material/styles";
 import { objectToList } from "./Utils";
 import Playlist, { DeleteSong } from "./API/Playlist";
 
-function useData(items, playlistId, apiRef) {
+function useData(items, playlistId) {
 	const [data, setData] = React.useState({ columns: [], rows: [] });
 
 	React.useEffect(() => {
@@ -24,7 +24,6 @@ function useData(items, playlistId, apiRef) {
 				album: element.track.album.name,
 				action: element.track.uri,
 			};
-
 			rows.push(row);
 		});
 
@@ -38,18 +37,13 @@ function useData(items, playlistId, apiRef) {
 				headerName: "",
 				minWidth: 120,
 				flex: 1,
-				renderCell: (data) => {
-					const id=data.id;
-					const uri = data.formattedValue;
-					console.log(apiRef);
+				renderCell: (cellData) => {
+					const id = cellData.id;
+					const uri = cellData.formattedValue;
 					return (
 						<Button
 							onClick={() => {
-								DeleteSong(playlistId, uri).then(
-									apiRef.current.updateRows([
-										{ id: id, _action: "delete" },
-									])
-								);
+								DeleteSong(playlistId, uri).then(setData(data));
 							}}
 						>
 							Delete
@@ -63,21 +57,21 @@ function useData(items, playlistId, apiRef) {
 			rows,
 			columns,
 		});
-	}, [items, playlistId,apiRef]);
+	}, [items, playlistId]);
 
 	return data;
 }
 
 const PlaylistTemplate = ({ response }) => {
 	const apiRef = useGridApiRef();
-	console.log(apiRef)
 	const theme = createTheme();
-	const data = useData(response.tracks.items, response.id, apiRef);
+	const data = useData(response.tracks.items, response.id);
 	return (
 		<Box sx={{ height: "100%", padding: theme.spacing() }}>
 			<DataGrid
 				hideFooter
 				checkboxSelection
+				disableSelectionOnClick
 				{...data}
 				columnBuffer={2}
 				columnThreshold={2}
