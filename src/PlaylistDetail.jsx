@@ -1,18 +1,15 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/system";
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { createTheme } from "@mui/material/styles";
 
 import { objectToList } from "./Utils";
-import Playlist from "./API/Playlist";
+import Playlist, { DeleteSong } from "./API/Playlist";
 
-function useData(items) {
+function useData(items, playlistId) {
 	const [data, setData] = React.useState({ columns: [], rows: [] });
-
-	console.log(DataGrid);
-
 
 	React.useEffect(() => {
 		const rows = [];
@@ -21,47 +18,55 @@ function useData(items) {
 				(artist) => " " + artist.name + " "
 			);
 			const row = {
+				playlistId: playlistId,
 				id: key,
 				name: element.track.name,
 				artist: art,
 				album: element.track.album.name,
-				action:<div>uwu</div>
+				action: element.track.uri,
 			};
 
 			rows.push(row);
 		});
 
 		const columns = [
+			{ field: "playlistId", hide: true },
 			{ field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
 			{ field: "name", headerName: "Title", flex: 1 },
 			{ field: "artist", headerName: "Artist", flex: 1 },
 			{ field: "album", headerName: "Album", flex: 1 },
-			{ field: "action", headerName: "", minWidth:120, flex: 1,  },
+			{
+				field: "action",
+				headerName: "",
+				minWidth: 120,
+				flex: 1,
+				renderCell: createDeleteButton,
+			},
 		];
 
 		setData({
 			rows,
 			columns,
 		});
-	}, [items]);
+	}, [items, playlistId]);
 
 	return data;
 }
 
-
-const renderRow=(a,b)=>{
-	return <div>a</div>;
-}
+const createDeleteButton = (data) => {
+	const uri = data.formattedValue;
+	const playlistId = data.row.playlistId;
+	return <Button onClick={() => DeleteSong(playlistId,uri)}>Delete</Button>;
+};
 
 const PlaylistTemplate = ({ response }) => {
 	const theme = createTheme();
-	const data = useData(response.tracks.items);
+	const data = useData(response.tracks.items, response.id);
 	return (
 		<Box sx={{ height: "100%", padding: theme.spacing() }}>
 			<DataGrid
 				hideFooter
 				checkboxSelection
-				components={{Row:renderRow}}
 				{...data}
 				columnBuffer={2}
 				columnThreshold={2}
