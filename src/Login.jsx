@@ -26,7 +26,7 @@ const Login = function () {
     }
 	
 	// your application requests authorization
-	var scope = "user-read-private user-read-email";
+	var scope = "user-read-private user-read-email playlist-modify-public playlist-modify-private";
 	var uri =
 		"https://accounts.spotify.com/authorize?" +
 		new URLSearchParams({

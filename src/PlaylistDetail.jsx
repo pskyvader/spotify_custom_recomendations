@@ -2,13 +2,13 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import { Button, CircularProgress } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { createTheme } from "@mui/material/styles";
 
 import { objectToList } from "./Utils";
 import Playlist, { DeleteSong } from "./API/Playlist";
 
-function useData(items, playlistId) {
+function useData(items, playlistId, apiRef) {
 	const [data, setData] = React.useState({ columns: [], rows: [] });
 
 	React.useEffect(() => {
@@ -18,7 +18,6 @@ function useData(items, playlistId) {
 				(artist) => " " + artist.name + " "
 			);
 			const row = {
-				playlistId: playlistId,
 				id: key,
 				name: element.track.name,
 				artist: art,
@@ -30,7 +29,6 @@ function useData(items, playlistId) {
 		});
 
 		const columns = [
-			{ field: "playlistId", hide: true },
 			{ field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
 			{ field: "name", headerName: "Title", flex: 1 },
 			{ field: "artist", headerName: "Artist", flex: 1 },
@@ -40,7 +38,24 @@ function useData(items, playlistId) {
 				headerName: "",
 				minWidth: 120,
 				flex: 1,
-				renderCell: createDeleteButton,
+				renderCell: (data) => {
+					const id=data.id;
+					const uri = data.formattedValue;
+					console.log(apiRef);
+					return (
+						<Button
+							onClick={() => {
+								DeleteSong(playlistId, uri).then(
+									apiRef.current.updateRows([
+										{ id: id, _action: "delete" },
+									])
+								);
+							}}
+						>
+							Delete
+						</Button>
+					);
+				},
 			},
 		];
 
@@ -48,20 +63,16 @@ function useData(items, playlistId) {
 			rows,
 			columns,
 		});
-	}, [items, playlistId]);
+	}, [items, playlistId,apiRef]);
 
 	return data;
 }
 
-const createDeleteButton = (data) => {
-	const uri = data.formattedValue;
-	const playlistId = data.row.playlistId;
-	return <Button onClick={() => DeleteSong(playlistId,uri)}>Delete</Button>;
-};
-
 const PlaylistTemplate = ({ response }) => {
+	const apiRef = useGridApiRef();
+	console.log(apiRef)
 	const theme = createTheme();
-	const data = useData(response.tracks.items, response.id);
+	const data = useData(response.tracks.items, response.id, apiRef);
 	return (
 		<Box sx={{ height: "100%", padding: theme.spacing() }}>
 			<DataGrid
@@ -70,6 +81,7 @@ const PlaylistTemplate = ({ response }) => {
 				{...data}
 				columnBuffer={2}
 				columnThreshold={2}
+				apiRef={apiRef}
 			/>
 		</Box>
 	);
