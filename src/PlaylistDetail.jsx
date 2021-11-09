@@ -6,11 +6,13 @@ import { DataGrid } from "@mui/x-data-grid";
 import { createTheme } from "@mui/material/styles";
 
 import { objectToList } from "./Utils";
-import Me from "./API/Me";
 import Playlist from "./API/Playlist";
 
 function useData(items) {
 	const [data, setData] = React.useState({ columns: [], rows: [] });
+
+	console.log(DataGrid);
+
 
 	React.useEffect(() => {
 		const rows = [];
@@ -23,6 +25,7 @@ function useData(items) {
 				name: element.track.name,
 				artist: art,
 				album: element.track.album.name,
+				action:<div>uwu</div>
 			};
 
 			rows.push(row);
@@ -33,6 +36,7 @@ function useData(items) {
 			{ field: "name", headerName: "Title", flex: 1 },
 			{ field: "artist", headerName: "Artist", flex: 1 },
 			{ field: "album", headerName: "Album", flex: 1 },
+			{ field: "action", headerName: "", minWidth:120, flex: 1,  },
 		];
 
 		setData({
@@ -44,13 +48,20 @@ function useData(items) {
 	return data;
 }
 
-const PlaylistTemplate = ({ response, me }) => {
+
+const renderRow=(a,b)=>{
+	return <div>a</div>;
+}
+
+const PlaylistTemplate = ({ response }) => {
 	const theme = createTheme();
 	const data = useData(response.tracks.items);
 	return (
 		<Box sx={{ height: "100%", padding: theme.spacing() }}>
 			<DataGrid
 				hideFooter
+				checkboxSelection
+				components={{Row:renderRow}}
 				{...data}
 				columnBuffer={2}
 				columnThreshold={2}
@@ -67,16 +78,12 @@ const PlaylistDetail = ({ id }) => {
 			return;
 		}
 		Playlist(id).then((response) => {
-			Me().then((me) => {
-				if (response.error) {
-					setPlaylist(objectToList(response));
-					console.log("Playlistdetail", id);
-				} else {
-					setPlaylist(
-						<PlaylistTemplate response={response} me={me} />
-					);
-				}
-			});
+			if (response.error) {
+				setPlaylist(objectToList(response));
+				console.log("Playlistdetail", id);
+			} else {
+				setPlaylist(<PlaylistTemplate response={response} />);
+			}
 		});
 	}, [id]);
 
