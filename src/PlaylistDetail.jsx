@@ -18,7 +18,7 @@ function useData(items, playlistId) {
 				(artist) => " " + artist.name + " "
 			);
 			const row = {
-				id: key,
+				id: key + 1,
 				name: element.track.name,
 				artist: art,
 				album: element.track.album.name,
@@ -26,7 +26,6 @@ function useData(items, playlistId) {
 			};
 			rows.push(row);
 		});
-
 		const columns = [
 			{ field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
 			{ field: "name", headerName: "Title", flex: 1 },
@@ -43,7 +42,7 @@ function useData(items, playlistId) {
 					return (
 						<Button
 							onClick={() => {
-								DeleteSong(playlistId, uri).then(setData(data));
+								DeleteSong(playlistId, uri).then(removeRow(id));
 							}}
 						>
 							Delete
@@ -53,10 +52,19 @@ function useData(items, playlistId) {
 			},
 		];
 
-		setData({
+		const removeRow = (id) => {
+			tmpData.rows = tmpData.rows.filter((item, key) => key !== id - 1);
+			tmpData.rows = tmpData.rows.map((item, key) => {
+				item.id = key + 1;
+				return item;
+			});
+			setData({ ...tmpData });
+		};
+		const tmpData = {
 			rows,
 			columns,
-		});
+		};
+		setData(tmpData);
 	}, [items, playlistId]);
 
 	return data;
