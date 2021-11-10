@@ -5,19 +5,21 @@ import {  styled } from "@mui/material/styles";
 import Me, { MePlaylist } from "./API/Me";
 import PlaylistList from "./PlaylistList";
 import PlaylistDetail from "./PlaylistDetail";
+import PlaylistActions from "./PlaylistActions";
 
 const PlaylistsTemplate = ({ response, me }) => {
 	const Root = styled("div")(({ theme }) => {
 		return {
-			maxHeight: "calc(50vh - " + theme.mixins.toolbar.minHeight + "px - "+ theme.spacing()+" )",
+			maxHeight: "calc(33vh - " + theme.mixins.toolbar.minHeight + "px - "+ theme.spacing()+" )",
 			height: 5000,
 			[theme.breakpoints.up("md")]: {
-				maxHeight: "calc(100vh - " + theme.mixins.toolbar.minHeight + "px - "+ theme.spacing()+" )",
+				maxHeight: "calc(50vh - " + theme.mixins.toolbar.minHeight + "px - "+ theme.spacing()+" )",
 			},
 		};
 	});
 
 	const [selectedItem, SetselectedItem] = useState(null);
+
 	return (
 		<Container maxWidth={false}>
 			<Grid container spacing={2}>
@@ -33,6 +35,11 @@ const PlaylistsTemplate = ({ response, me }) => {
 				<Grid item xs={12} md={8}>
 					<Root>
 						<PlaylistDetail id={selectedItem} />
+					</Root>
+				</Grid>
+				<Grid item xs={12} md={8}>
+					<Root>
+						<PlaylistActions id={selectedItem} />
 					</Root>
 				</Grid>
 			</Grid>

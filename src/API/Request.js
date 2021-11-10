@@ -9,7 +9,7 @@ const GetRequest = async (url, method="GET", body=null) => {
         },
         body:body
     };
-    return fetch(url, requestOptions).then((response) => response.json()).then((response) => response).catch((error)=>console.log(error));
+    return fetch(url, requestOptions).then((response) => {console.log(response):response.json()}).then((response) => response).catch((error)=>console.log(error));
 }
 
 

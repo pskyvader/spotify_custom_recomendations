@@ -75,8 +75,7 @@ const PlaylistTemplate = ({ response }) => {
 	const theme = createTheme();
 	const data = useData(response.tracks.items, response.id);
 	return (
-		<Box sx={{ height: "100%", padding: theme.spacing(),justifyContent: 'center' ,
-        textAlign: 'center', }}>
+		<Box sx={{ height: "100%", padding: theme.spacing() }}>
 			<DataGrid
 				hideFooter
 				// checkboxSelection
