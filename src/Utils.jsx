@@ -1,4 +1,4 @@
-export var generateRandomString = (length) => {
+export const generateRandomString = (length) => {
 	var text = "";
 	var possible =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -9,7 +9,7 @@ export var generateRandomString = (length) => {
 	return text;
 };
 
-export var objectToList = (main_object) => {
+export const objectToList = (main_object) => {
 	if (main_object === null) return;
 	return (
 		<pre>
@@ -34,4 +34,8 @@ export var objectToList = (main_object) => {
 			})}
 		</pre>
 	);
+};
+
+export const subtractById = (r1, r2) => {
+	return Object.keys(r1)
 };

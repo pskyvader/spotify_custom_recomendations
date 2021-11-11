@@ -78,7 +78,6 @@ const PlaylistTemplate = ({ response }) => {
 		<Box sx={{ height: "100%", padding: theme.spacing() }}>
 			<DataGrid
 				hideFooter
-				// checkboxSelection
 				disableSelectionOnClick
 				{...data}
 				columnBuffer={2}
@@ -89,7 +88,7 @@ const PlaylistTemplate = ({ response }) => {
 	);
 };
 
-const PlaylistDetail = ({ id }) => {
+const PlaylistDetail = ({ id ,}) => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
 
 	useEffect(() => {

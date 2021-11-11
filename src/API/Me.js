@@ -11,7 +11,7 @@ export const MePlaylist = async (offset = 0) => {
 	return GetRequest(url);
 };
 
-export const MeTop = async (offset = 0, time_range = "medium_term") => {
+export const MeTop = async (offset = 0, time_range = "long_term") => {
 	const url =
 		"https://api.spotify.com/v1/me/top/tracks?limit=50&offset=" +
 		offset +

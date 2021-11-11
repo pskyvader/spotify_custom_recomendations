@@ -37,7 +37,7 @@ const PlaylistsTemplate = ({ response, me }) => {
 						<PlaylistDetail id={selectedItem} />
 					</Root>
 				</Grid>
-				<Grid item xs={12} md={8}>
+				<Grid item xs={12}>
 					<Root>
 						<PlaylistActions id={selectedItem} />
 					</Root>
