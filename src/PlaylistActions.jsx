@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
+import { Box } from "@mui/system";
 
 import { MeTop } from "./API/Me";
 import { objectToList, subtractById } from "./Utils";
@@ -17,10 +18,13 @@ const PlaylistActionsTemplate = ({ top, playlist }) => {
 		name: song.track.name,
 	}));
 
-	const notTopsongs = subtractById(playlistSongs,topSongs);
-	console.log(notTopsongs);
+	const notTopsongs = subtractById(playlistSongs, topSongs);
 
-	return objectToList(topSongs);
+	return (
+		<Box sx={{ height: "100%", flexGrow: 12,overflow:"auto" }}>
+			{objectToList(notTopsongs)}
+		</Box>
+	);
 };
 
 const PlaylistActions = ({ id }) => {
@@ -38,7 +42,7 @@ const PlaylistActions = ({ id }) => {
 					}
 					setPlaylist(
 						<PlaylistActionsTemplate
-							response={response}
+							top={response}
 							playlist={playlist}
 						/>
 					);

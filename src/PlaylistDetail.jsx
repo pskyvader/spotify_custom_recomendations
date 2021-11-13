@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import { Button, CircularProgress } from "@mui/material";
-import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { createTheme } from "@mui/material/styles";
 
 import { objectToList } from "./Utils";
@@ -71,7 +71,7 @@ function useData(items, playlistId) {
 }
 
 const PlaylistTemplate = ({ response }) => {
-	const apiRef = useGridApiRef();
+	// const apiRef = useGridApiRef();
 	const theme = createTheme();
 	const data = useData(response.tracks.items, response.id);
 	return (
@@ -82,7 +82,7 @@ const PlaylistTemplate = ({ response }) => {
 				{...data}
 				columnBuffer={2}
 				columnThreshold={2}
-				apiRef={apiRef}
+				// apiRef={apiRef}
 			/>
 		</Box>
 	);
