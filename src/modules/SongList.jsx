@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useCallback } from "react";
 import { Button } from "@mui/material";
 import { Playlist } from "../API";
 
@@ -18,6 +18,40 @@ const addRow = (cellData, tmpData) => {
 
 const ElementList = (songList, ElementId, action = "add") => {
 	const [data, setData] = useState({ columns: [], rows: [] });
+
+	const buttonAction =useCallback(() => {
+		if (action === "add") {
+			return (
+				<Button
+					onClick={(cellData, tmpData) => {
+						const uri = cellData.formattedValue;
+
+						Playlist.AddSong(ElementId, uri).then(
+							setData(addRow(cellData, tmpData))
+						);
+					}}
+				>
+					Delete
+				</Button>
+			);
+		} else if (action === "delete") {
+			return (
+				<Button
+					onClick={(cellData, tmpData) => {
+						const id = cellData.id;
+						const uri = cellData.formattedValue;
+
+						Playlist.DeleteSong(ElementId, uri).then(
+							setData(removeRow(id, tmpData))
+						);
+					}}
+				>
+					Delete
+				</Button>
+			);
+		}
+	},[ElementId,action]);
+
 	useEffect(() => {
 		let tmpData = {};
 		const rows = songList;
@@ -32,25 +66,7 @@ const ElementList = (songList, ElementId, action = "add") => {
 				minWidth: 120,
 				flex: 1,
 				renderCell: (cellData) => {
-					const id = cellData.id;
-					const uri = cellData.formattedValue;
-					return (
-						<Button
-							onClick={() => {
-								if (action === "add") {
-									Playlist.AddSong(ElementId, uri).then(
-										setData(addRow(cellData, tmpData))
-									);
-								} else if (action === "delete") {
-									Playlist.DeleteSong(ElementId, uri).then(
-										setData(removeRow(id, tmpData))
-									);
-								}
-							}}
-						>
-							Delete
-						</Button>
-					);
+					buttonAction(cellData);
 				},
 			},
 		];
@@ -60,7 +76,7 @@ const ElementList = (songList, ElementId, action = "add") => {
 			columns,
 		};
 		setData(tmpData);
-	}, [songList, ElementId, action]);
+	}, [songList, ElementId,buttonAction]);
 
 	return data;
 };

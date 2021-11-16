@@ -1,5 +1,5 @@
 import Playlists from "../../components/playlist/Playlists";
 import Login, { is_logged } from "../../modules/Login";
 
-
-export default (is_logged ? <Playlists /> : <Login />);
+const Home = () => (is_logged ? <Playlists /> : <Login />);
+export default Home;
