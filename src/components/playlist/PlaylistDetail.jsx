@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import { CircularProgress } from "@mui/material";
@@ -7,13 +6,14 @@ import { createTheme } from "@mui/material/styles";
 
 import { objectToList } from "../../utils";
 import { Playlist } from "../../API";
-
-import ElementList from "../../modules/ElementList";
+import ElementList from "../../modules/SongList";
+import FormatSongList from "../../modules/FormatSongList";
 
 
 const PlaylistTemplate = ({ response }) => {
 	const theme = createTheme();
-	const data = ElementList(response.tracks.items, response.id);
+	const songList=FormatSongList(response.tracks.items);
+	const data = ElementList(songList, response.id,"delete");
 	return (
 		<Box sx={{ height: "100%", padding: theme.spacing() }}>
 			<DataGrid

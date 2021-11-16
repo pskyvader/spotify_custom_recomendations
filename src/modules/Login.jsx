@@ -1,15 +1,12 @@
 import { Button } from "@mui/material";
 
-import { Credentials } from "../../API";
+import { Credentials } from "../API";
 
+import { generateRandomString } from "../utils";
 
-import { generateRandomString } from "../../utils";
-
-export const is_logged = () => {
-	const expiration = localStorage.getItem("expiration");
-	const access_token = localStorage.getItem("access_token");
-	return access_token !== null && expiration > Date.now();
-};
+export const is_logged =
+	localStorage.getItem("access_token") !== null &&
+	localStorage.getItem("expiration") > Date.now();
 
 export const Logout = () => {
 	localStorage.clear();

@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, Button } from "@mui/material";
 
-import Login, { Logout, is_logged } from "../../components/login/Login";
+import Login, { Logout, is_logged } from "../../modules/Login";
 import { useEffect, useState } from "react";
 
 import { Me } from "../../API";
@@ -53,7 +53,7 @@ const Header = () => {
 						>
 							Spotify custom playlists
 						</Typography>
-						{is_logged() ? <UserInfo /> : <Login />}
+						{is_logged ? <UserInfo /> : <Login />}
 					</Toolbar>
 				</AppBar>
 			</Box>
