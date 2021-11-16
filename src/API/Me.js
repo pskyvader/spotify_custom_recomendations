@@ -1,6 +1,6 @@
 import GetRequest from "./Request";
 
-const Me = async () => {
+export const Me = async () => {
 	const url = "https://api.spotify.com/v1/me";
 	return GetRequest(url);
 };
@@ -19,5 +19,3 @@ export const MeTop = async (offset = 0, time_range = "long_term") => {
 		time_range;
 	return GetRequest(url);
 };
-
-export default Me;

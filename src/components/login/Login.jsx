@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 
-import { client_id, stateKey, redirect_uri } from "../../API/Credentials";
+import { Credentials } from "../../API";
 
 
 import { generateRandomString } from "../../utils";
@@ -17,10 +17,10 @@ export const Logout = () => {
 };
 
 const Login = () => {
-	let state = localStorage.getItem(stateKey);
+	let state = localStorage.getItem(Credentials.stateKey);
 	if (state === null) {
 		state = generateRandomString(16);
-		localStorage.setItem(stateKey, state);
+		localStorage.setItem(Credentials.stateKey, state);
 	}
 
 	// your application requests authorization
@@ -30,9 +30,9 @@ const Login = () => {
 		"https://accounts.spotify.com/authorize?" +
 		new URLSearchParams({
 			response_type: "token",
-			client_id: client_id,
+			client_id: Credentials.client_id,
 			scope: scope,
-			redirect_uri: redirect_uri,
+			redirect_uri: Credentials.redirect_uri,
 			state: state,
 		});
 

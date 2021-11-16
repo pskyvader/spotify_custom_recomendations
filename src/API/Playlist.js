@@ -15,5 +15,3 @@ export const DeleteSong = async (playlistid, songuri) => {
 	};
 	return GetRequest(url, "DELETE",JSON.stringify(songs));
 };
-
-export default Playlist;

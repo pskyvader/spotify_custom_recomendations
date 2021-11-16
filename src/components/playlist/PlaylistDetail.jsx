@@ -1,78 +1,19 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/system";
-import { Button, CircularProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { createTheme } from "@mui/material/styles";
 
 import { objectToList } from "../../utils";
-import Playlist, { DeleteSong } from "../../API/Playlist";
+import { Playlist } from "../../API";
 
-function useData(items, playlistId) {
-	const [data, setData] = React.useState({ columns: [], rows: [] });
+import ElementList from "../../modules/ElementList";
 
-	React.useEffect(() => {
-		const rows = [];
-		items.forEach((element, key) => {
-			const art = element.track.artists.map(
-				(artist) => " " + artist.name + " "
-			);
-			const row = {
-				id: key + 1,
-				name: element.track.name,
-				artist: art,
-				album: element.track.album.name,
-				action: element.track.uri,
-			};
-			rows.push(row);
-		});
-		const columns = [
-			{ field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
-			{ field: "name", headerName: "Title", flex: 1 },
-			{ field: "artist", headerName: "Artist", flex: 1 },
-			{ field: "album", headerName: "Album", flex: 1 },
-			{
-				field: "action",
-				headerName: "",
-				minWidth: 120,
-				flex: 1,
-				renderCell: (cellData) => {
-					const id = cellData.id;
-					const uri = cellData.formattedValue;
-					return (
-						<Button
-							onClick={() => {
-								DeleteSong(playlistId, uri).then(removeRow(id));
-							}}
-						>
-							Delete
-						</Button>
-					);
-				},
-			},
-		];
-
-		const removeRow = (id) => {
-			tmpData.rows = tmpData.rows.filter((item, key) => key !== id - 1);
-			tmpData.rows = tmpData.rows.map((item, key) => {
-				item.id = key + 1;
-				return item;
-			});
-			setData({ ...tmpData });
-		};
-		const tmpData = {
-			rows,
-			columns,
-		};
-		setData(tmpData);
-	}, [items, playlistId]);
-
-	return data;
-}
 
 const PlaylistTemplate = ({ response }) => {
 	const theme = createTheme();
-	const data = useData(response.tracks.items, response.id);
+	const data = ElementList(response.tracks.items, response.id);
 	return (
 		<Box sx={{ height: "100%", padding: theme.spacing() }}>
 			<DataGrid
@@ -94,7 +35,7 @@ const PlaylistDetail = ({ id }) => {
 		if (id === null) {
 			return;
 		}
-		Playlist(id).then((response) => {
+		Playlist.Playlist(id).then((response) => {
 			if (response.error) {
 				setPlaylist(objectToList(response));
 				console.log("Playlistdetail", id);

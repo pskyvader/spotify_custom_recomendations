@@ -9,7 +9,7 @@ import { Avatar, Button } from "@mui/material";
 import Login, { Logout, is_logged } from "../../components/login/Login";
 import { useEffect, useState } from "react";
 
-import Me from "../../API/Me";
+import { Me } from "../../API";
 
 const UserInfo = () => {
 	const [user, setUser] = useState(null);
@@ -23,7 +23,7 @@ const UserInfo = () => {
 		);
 	};
 	useEffect(() => {
-		Me().then((response) => {
+		Me.Me().then((response) => {
 			setUser(userinfo_template(response));
 		});
 	}, []);
