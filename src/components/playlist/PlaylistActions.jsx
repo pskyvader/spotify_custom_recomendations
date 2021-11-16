@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
 
-import { MeTop } from "./API/Me";
-import { objectToList, subtractById } from "./Utils";
-import Playlist from "./API/Playlist";
+import { MeTop } from "../../API/Me";
+import { objectToList, subtractById } from "../../utils/Utils";
+import Playlist from "../../API/Playlist";
 
 const PlaylistAddSongsTemplate = ({ top, playlist }) => {
 	const topSongs = top.items.map((song) => ({

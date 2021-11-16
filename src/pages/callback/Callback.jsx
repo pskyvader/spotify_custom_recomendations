@@ -1,7 +1,8 @@
 import { useLocation } from "react-router-dom";
-import { stateKey } from "./Credentials";
-
 import { Redirect } from "react-router";
+
+
+import { stateKey } from "../../API/Credentials";
 
 export default function Callback(props) {
   let location = new URLSearchParams(useLocation().hash.replace("#","?"));

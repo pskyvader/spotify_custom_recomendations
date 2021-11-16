@@ -6,7 +6,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { createTheme } from "@mui/material/styles";
 
 import { objectToList } from "./Utils";
-import Playlist, { DeleteSong } from "./API/Playlist";
+import Playlist, { DeleteSong } from "../../API/Playlist";
 
 function useData(items, playlistId) {
 	const [data, setData] = React.useState({ columns: [], rows: [] });

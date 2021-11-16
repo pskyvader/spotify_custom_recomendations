@@ -1,5 +1,5 @@
-import Playlists from "./Playlists";
-import Login from "./Login";
+import Playlists from "../../components/playlist/Playlists";
+import Login from "../../components/login/Login";
 
 export default function Home(params) {
 	const expiration = localStorage.getItem("expiration");

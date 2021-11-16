@@ -1,8 +1,8 @@
 // import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Home from "./Home";
-import Callback from "./Callback";
-import Header from "./Header";
+import Home from "./home/Home";
+import Callback from "./callback/Callback";
+import Header from "./home/Header";
 import CssBaseline from "@mui/material/CssBaseline";
 
 function App() {

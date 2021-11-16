@@ -6,10 +6,10 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, Button } from "@mui/material";
 
-import Login, { Logout, is_logged } from "./Login";
+import Login, { Logout, is_logged } from "../../components/login/Login";
 import { useEffect, useState } from "react";
 
-import Me from "./API/Me";
+import Me from "../../API/Me";
 
 const UserInfo = () => {
 	const [user, setUser] = useState(null);
