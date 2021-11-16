@@ -5,7 +5,7 @@ import {  styled } from "@mui/material/styles";
 import Me, { MePlaylist } from "../../API/Me";
 import PlaylistList from "./PlaylistList";
 import PlaylistDetail from "./PlaylistDetail";
-import PlaylistActions from "./PlaylistActions";
+import PlaylistActions from "./actions";
 
 const PlaylistsTemplate = ({ response, me }) => {
 	const Root = styled("div")(({ theme }) => {

@@ -5,7 +5,7 @@ import { Button, CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { createTheme } from "@mui/material/styles";
 
-import { objectToList } from "./Utils";
+import { objectToList } from "../../utils";
 import Playlist, { DeleteSong } from "../../API/Playlist";
 
 function useData(items, playlistId) {
