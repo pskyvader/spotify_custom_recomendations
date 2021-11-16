@@ -6,7 +6,7 @@ import { MeTop } from "./API/Me";
 import { objectToList, subtractById } from "./Utils";
 import Playlist from "./API/Playlist";
 
-const PlaylistActionsTemplate = ({ top, playlist }) => {
+const PlaylistAddSongsTemplate = ({ top, playlist }) => {
 	const topSongs = top.items.map((song) => ({
 		id: song.id,
 		href: song.href,
@@ -41,7 +41,7 @@ const PlaylistActions = ({ id }) => {
 						return;
 					}
 					setPlaylist(
-						<PlaylistActionsTemplate
+						<PlaylistAddSongsTemplate
 							top={response}
 							playlist={playlist}
 						/>

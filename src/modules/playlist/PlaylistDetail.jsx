@@ -71,7 +71,6 @@ function useData(items, playlistId) {
 }
 
 const PlaylistTemplate = ({ response }) => {
-	// const apiRef = useGridApiRef();
 	const theme = createTheme();
 	const data = useData(response.tracks.items, response.id);
 	return (
@@ -82,13 +81,13 @@ const PlaylistTemplate = ({ response }) => {
 				{...data}
 				columnBuffer={2}
 				columnThreshold={2}
-				// apiRef={apiRef}
+				disableExtendRowFullWidth
 			/>
 		</Box>
 	);
 };
 
-const PlaylistDetail = ({ id ,}) => {
+const PlaylistDetail = ({ id }) => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
 
 	useEffect(() => {
