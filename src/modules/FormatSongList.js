@@ -1,5 +1,6 @@
 
 const FormatSongList=(items)=>{
+    console.log(items)
     const formattedList=[];
     items.forEach((element, key) => {
         const art = element.track.artists.map(

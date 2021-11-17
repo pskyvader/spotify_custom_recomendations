@@ -7,6 +7,7 @@ import FormatSongList from "../../../modules/FormatSongList";
 import { subtractById } from "../../../utils";
 
 const AddSong = ({ top, playlist }) => {
+	console.log(top.items,playlist)
 	// const topSongs = top.items.map((song) => ({
 	// 	id: song.id,
 	// 	href: song.href,
