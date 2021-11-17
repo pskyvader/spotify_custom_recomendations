@@ -33,7 +33,7 @@ const PlaylistDetail = ({ id }) => {
 
 	useEffect(() => {
 		if (id === null) {
-			return;
+			return false;
 		}
 		Playlist.Playlist(id).then((response) => {
 			if (response.error) {
@@ -42,7 +42,7 @@ const PlaylistDetail = ({ id }) => {
 			} else {
 				setPlaylist(<PlaylistTemplate response={response} />);
 			}
-		});
+		}).catch((e) => console.log(e));
 	}, [id]);
 
 	return playlist;

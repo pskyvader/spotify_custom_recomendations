@@ -40,7 +40,7 @@ const PlaylistsTemplate = ({ response, me }) => {
 				</Grid>
 				<Grid item xs={12}>
 					<Root>
-						<PlaylistActions id={selectedItem} />
+						{/* <PlaylistActions id={selectedItem} /> */}
 					</Root>
 				</Grid>
 			</Grid>

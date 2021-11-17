@@ -7,24 +7,24 @@ import FormatSongList from "../../../modules/FormatSongList";
 import { subtractById } from "../../../utils";
 
 const AddSong = ({ top, playlist }) => {
-	console.log(top.items,playlist)
+	return "uwu";
 	// const topSongs = top.items.map((song) => ({
 	// 	id: song.id,
 	// 	href: song.href,
 	// 	name: song.name,
 	// }));
-	const topSongs=FormatSongList(top.items);
-	// const playlistSongs = playlist.tracks.items.map((song) => ({
-	// 	id: song.track.id,
-	// 	href: song.track.href,
-	// 	name: song.track.name,
-	// }));
-	const playlistSongs=FormatSongList(playlist.tracks.items);
+	// const topSongs=FormatSongList(top.items);
+	// // const playlistSongs = playlist.tracks.items.map((song) => ({
+	// // 	id: song.track.id,
+	// // 	href: song.track.href,
+	// // 	name: song.track.name,
+	// // }));
+	// const playlistSongs=FormatSongList(playlist.tracks.items);
 
-	const notTopsongs = subtractById(playlistSongs, topSongs);
+	// const notTopsongs = subtractById(playlistSongs, topSongs);
 
 
-	return <PlaylistTemplate songList={notTopsongs} id={playlist.id}/>;
+	// return <PlaylistTemplate songList={notTopsongs} id={playlist.id}/>;
 };
 
 const PlaylistTemplate = ({ songList,id }) => {
