@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import { CircularProgress } from "@mui/material";
 import { objectToList } from "../../../utils";
 import { Playlist } from "../../../API";
@@ -7,6 +7,8 @@ import {
 	FormatSongListColumns,
 } from "../../../modules/FormatSongs";
 import { PlaylistTemplate, ButtonRemove } from "../../../modules/SongList";
+import PlaylistContext from "../../../modules/PlaylistContext";
+
 
 const PlayListSongsTemplate = ({ response, playlistId }) => {
 	const songList = FormatSongList(response.tracks.items);
@@ -14,28 +16,31 @@ const PlayListSongsTemplate = ({ response, playlistId }) => {
 	return <PlaylistTemplate data={data} />;
 };
 
-const PlayListSongs = ({ id }) => {
+const PlayListSongs = () => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
+
+	const playlistId  = useContext(PlaylistContext);
+
 	useEffect(() => {
-		if (id === null) {
+		if (playlistId === 0) {
 			return false;
 		}
-		Playlist.Playlist(id)
+		Playlist.Playlist(playlistId)
 			.then((response) => {
 				if (response.error) {
 					setPlaylist(objectToList(response));
-					console.log("PlayListSongs", id);
+					console.log("PlayListSongs", playlistId);
 				} else {
 					setPlaylist(
 						<PlayListSongsTemplate
 							response={response}
-							playlistId={id}
+							playlistId={playlistId}
 						/>
 					);
 				}
 			})
 			.catch((e) => console.log(e));
-	}, [id]);
+	}, [playlistId]);
 	return playlist;
 };
 

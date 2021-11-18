@@ -19,7 +19,7 @@ const PlaylistsTemplate = ({ response, me }) => {
 		};
 	});
 
-	const [selectedItem, SetselectedItem] = useState(null);
+	// const [selectedItem, SetselectedItem] = useState(null);
 
 	return (
 		<Container maxWidth={false}>
@@ -27,20 +27,20 @@ const PlaylistsTemplate = ({ response, me }) => {
 				<Grid item xs={12} md={4}>
 					<Root style={{ height: "auto" }}>
 						<PlaylistList
-							items={response.items}
+							playlists={response.items}
 							me={me}
-							SetselectedItem={SetselectedItem}
+							// SetselectedItem={SetselectedItem}
 						/>
 					</Root>
 				</Grid>
 				<Grid item xs={12} md={8}>
 					<Root>
-						<PlayListSongs id={selectedItem} />
+						<PlayListSongs />
 					</Root>
 				</Grid>
 				<Grid item xs={12}>
 					<Root>
-						<NoTopSongs id={selectedItem} />
+						<NoTopSongs />
 					</Root>
 				</Grid>
 			</Grid>

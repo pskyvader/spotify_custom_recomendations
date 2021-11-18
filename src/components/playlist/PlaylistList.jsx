@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 import { Box } from "@mui/system";
 import {
 	List,
@@ -6,50 +6,48 @@ import {
 	ListItemIcon,
 	ListItemText,
 } from "@mui/material";
-
 import Avatar from "@mui/material/Avatar";
+import PlaylistContext from "../../modules/PlaylistContext";
 
-const PlaylistList = ({ items, me, SetselectedItem }) => {
-	const [selectedIndex, setSelectedIndex] = useState(0);
+const PlaylistList = ({ playlists, me }) => {
+	const { playlistId, setPlaylistId } = useContext(PlaylistContext);
+	console.log(playlistId,setPlaylistId)
 
-	const handleListItemClick = (index) => {
-		setSelectedIndex(index);
-	};
-
-	let item_list = [];
-	let selectedItem = null;
-	items.forEach((element, key) => {
+	let itemList = [];
+	playlists.forEach((currentPlaylist) => {
 		if (
-			selectedIndex === key &&
-			(me.id === element.owner.id || element.colaborative)
+			(playlistId === currentPlaylist.id || playlistId === 0) &&
+			(me.id === currentPlaylist.owner.id || currentPlaylist.colaborative)
 		) {
-			selectedItem = element.id;
+			setPlaylistId(currentPlaylist.id);
 		}
-		item_list.push(
+		itemList.push(
 			<ListItemButton
-				disabled={me.id !== element.owner.id && !element.colaborative}
-				key={key}
-				selected={selectedIndex === key}
+				disabled={
+					me.id !== currentPlaylist.owner.id &&
+					!currentPlaylist.colaborative
+				}
+				key={currentPlaylist.id}
+				selected={playlistId === currentPlaylist.id}
 				onClick={() => {
-					handleListItemClick(key);
-					SetselectedItem(element.id);
+					setPlaylistId(currentPlaylist.id);
 				}}
 			>
 				<ListItemIcon>
-					<Avatar alt={element.name} src={element.images[2].url} />
+					<Avatar
+						alt={currentPlaylist.name}
+						src={currentPlaylist.images[2].url}
+					/>
 				</ListItemIcon>
-				<ListItemText primary={element.name} />
+				<ListItemText primary={currentPlaylist.name} />
 			</ListItemButton>
 		);
 	});
 
-	useEffect(() => {
-		SetselectedItem(selectedItem);
-	}, [SetselectedItem, selectedItem]);
 	return (
-		<Box sx={{ height: '100%', flexGrow:12}} >
+		<Box sx={{ height: "100%", flexGrow: 12 }}>
 			<List component="nav" aria-label="playlists">
-				{item_list}
+				{itemList}
 			</List>
 		</Box>
 	);

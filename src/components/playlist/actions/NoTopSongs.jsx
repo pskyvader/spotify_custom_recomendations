@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import { CircularProgress } from "@mui/material";
 import {
 	FormatSongList,
@@ -7,6 +7,7 @@ import {
 import { subtractById, objectToList } from "../../../utils";
 import { Playlist, Me } from "../../../API";
 import { PlaylistTemplate, ButtonAdd } from "../../../modules/SongList";
+import PlaylistContext from "../../../modules/PlaylistContext";
 
 const NoTopSongsTemplate = ({ top, playlist, playlistId }) => {
 	const topSongs = FormatSongList(top.items);
@@ -16,25 +17,26 @@ const NoTopSongsTemplate = ({ top, playlist, playlistId }) => {
 	return <PlaylistTemplate data={data} />;
 };
 
-const NoTopSongs = ({ id }) => {
+const NoTopSongs = () => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
+	const playlistId  = useContext(PlaylistContext);
 	useEffect(() => {
-		if (id === null) {
+		if (playlistId === 0) {
 			return;
 		}
-		Playlist.Playlist(id)
+		Playlist.Playlist(playlistId)
 			.then((playlist) => {
 				Me.MeTop()
 					.then((response) => {
 						if (response.error) {
 							setPlaylist(objectToList(response));
-							console.log("PlayListSongs", id);
+							console.log("PlayListSongs", playlistId);
 						} else {
 							setPlaylist(
 								<NoTopSongsTemplate
 									top={response}
 									playlist={playlist}
-									playlistId={id}
+									playlistId={playlistId}
 								/>
 							);
 						}
@@ -42,7 +44,7 @@ const NoTopSongs = ({ id }) => {
 					.catch((e) => console.log(e));
 			})
 			.catch((e) => console.log(e));
-	}, [id]);
+	}, [playlistId]);
 	return playlist;
 };
 
