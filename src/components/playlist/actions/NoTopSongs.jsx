@@ -22,6 +22,7 @@ const NoTopSongs = () => {
 	const {playlistId}  = useContext(PlaylistContext);
 	useEffect(() => {
 		if (playlistId === null) {
+			setPlaylist(<CircularProgress />);
 			return;
 		}
 		Playlist.Playlist(playlistId)

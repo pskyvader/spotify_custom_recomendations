@@ -21,7 +21,8 @@ const PlayListSongs = () => {
 
 	useEffect(() => {
 		if (playlistId === null) {
-			return false;
+			setPlaylist(<CircularProgress />);
+			return;
 		}
 		Playlist.Playlist(playlistId)
 			.then((response) => {

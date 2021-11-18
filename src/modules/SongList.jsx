@@ -1,28 +1,20 @@
 import { Button } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { Box } from "@mui/system";
-import { DataGrid } from "@mui/x-data-grid";
+import { GridOverlay, DataGrid } from '@mui/x-data-grid';
 import { Playlist } from "../API";
-
-const removeRow = (id, tmpData) => {
-	tmpData.rows = tmpData.rows.filter((item, key) => key !== id - 1);
-	tmpData.rows = tmpData.rows.map((item, key) => {
-		item.id = key + 1;
-		return item;
-	});
-	return { ...tmpData };
-};
-
-const addRow = (cellData, tmpData) => {
-	tmpData.rows.push(cellData);
-	return { ...tmpData };
-};
+import { useContext } from "react";
+import { PlaylistContext } from "./PlaylistContextProvider";
 
 export const ButtonAdd = ({ PlaylistId, uri }) => {
+	const { setPlaylistId } = useContext(PlaylistContext);
 	return (
 		<Button
 			onClick={() => {
-				Playlist.AddSong(PlaylistId, uri).then();
+				setPlaylistId(null);
+					Playlist.AddSong(PlaylistId, uri).then(() => {
+						setPlaylistId(PlaylistId);
+					});
 			}}
 		>
 			Add
@@ -31,10 +23,12 @@ export const ButtonAdd = ({ PlaylistId, uri }) => {
 };
 
 export const ButtonRemove = ({ PlaylistId, uri, id }) => {
+	const { setPlaylistId } = useContext(PlaylistContext);
 	return (
 		<Button
 			onClick={() => {
-				Playlist.DeleteSong(PlaylistId, uri).then();
+				setPlaylistId(null);
+					Playlist.DeleteSong(PlaylistId, uri).then(setPlaylistId(PlaylistId));
 			}}
 		>
 			Remove
@@ -49,6 +43,11 @@ export const PlaylistTemplate = ({ data }) => {
 			<DataGrid
 				hideFooter
 				disableSelectionOnClick
+				components={{
+					NoRowsOverlay:()=> {
+						return <GridOverlay>No songs in this playlist</GridOverlay>
+					},
+				  }}
 				{...data}
 				columnBuffer={2}
 				columnThreshold={2}

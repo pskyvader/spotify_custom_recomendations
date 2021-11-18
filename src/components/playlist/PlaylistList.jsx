@@ -36,7 +36,7 @@ const PlaylistList = ({ playlists, me }) => {
 				<ListItemIcon>
 					<Avatar
 						alt={currentPlaylist.name}
-						src={currentPlaylist.images[2].url}
+						src={(currentPlaylist.images[0])?currentPlaylist.images[0].url:null}
 					/>
 				</ListItemIcon>
 				<ListItemText primary={currentPlaylist.name} />
