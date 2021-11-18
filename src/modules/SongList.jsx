@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { Box } from "@mui/system";
@@ -19,80 +18,29 @@ const addRow = (cellData, tmpData) => {
 	return { ...tmpData };
 };
 
-
-
-
-const ElementList2 = (songList, ElementId, action = "add") => {
-	// const [data, setData] = useState({ columns: [], rows: [] });
-
-	const rows = songList;
-	
-
-	// useEffect(() => {
-			const buttonAction = () => {
-				if (action === "add") {
-					return (
-						<Button
-							onClick={(cellData, tmpData) => {
-								const uri = cellData.formattedValue;
-								Playlist.AddSong(ElementId, uri).then(
-									// setData(addRow(cellData, tmpData))
-								);
-							}}
-						>
-							Delete
-						</Button>
-					);
-				} else if (action === "delete") {
-					return (
-						<Button
-							onClick={(cellData, tmpData) => {
-								const id = cellData.id;
-								const uri = cellData.formattedValue;
-								Playlist.DeleteSong(ElementId, uri).then(
-									// setData(removeRow(id, tmpData))
-								);
-							}}
-						>
-							Add
-						</Button>
-					);
-				}
-			};
-
-		let tmpData = {};
-		const columns = [
-			{ field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
-			{ field: "name", headerName: "Title", flex: 1 },
-			{ field: "artist", headerName: "Artist", flex: 1 },
-			{ field: "album", headerName: "Album", flex: 1 },
-			{
-				field: "action",
-				headerName: "",
-				minWidth: 120,
-				flex: 1,
-				renderCell: (cellData) => {
-					return buttonAction(cellData);
-					// return "uwu";
-				},
-			},
-		];
-
-		tmpData = {
-			rows,
-			columns,
-		};
-		// setData(tmpData);
-	// }, [songList, ElementId, action]);
-
-	return tmpData;
+export const ButtonAdd = ({ ElementId, uri }) => {
+	return (
+		<Button
+			onClick={() => {
+				Playlist.AddSong(ElementId, uri).then();
+			}}
+		>
+			Add
+		</Button>
+	);
 };
 
-
-
-
-
-
+export const ButtonRemove = ({ ElementId, uri, id }) => {
+	return (
+		<Button
+			onClick={() => {
+				Playlist.DeleteSong(ElementId, uri).then();
+			}}
+		>
+			Remove
+		</Button>
+	);
+};
 
 export const PlaylistTemplate = ({ data }) => {
 	const theme = createTheme();

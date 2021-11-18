@@ -5,12 +5,12 @@ import { Playlist } from "../../../API";
 import {
 	FormatSongList,
 	FormatSongListColumns,
-} from "../../../modules/FormatSongList";
-import { PlaylistTemplate } from "../../../modules/SongList";
+} from "../../../modules/FormatSongs";
+import { PlaylistTemplate, ButtonRemove } from "../../../modules/SongList";
 
-const PlayListSongsTemplate = ({ response }) => {
+const PlayListSongsTemplate = ({ response, playlistId }) => {
 	const songList = FormatSongList(response.tracks.items);
-	const data = FormatSongListColumns(songList, response.id, "delete");
+	const data = FormatSongListColumns(songList, playlistId, ButtonRemove);
 	return <PlaylistTemplate data={data} />;
 };
 
@@ -26,7 +26,12 @@ const PlayListSongs = ({ id }) => {
 					setPlaylist(objectToList(response));
 					console.log("PlayListSongs", id);
 				} else {
-					setPlaylist(<PlayListSongsTemplate response={response} />);
+					setPlaylist(
+						<PlayListSongsTemplate
+							response={response}
+							playlistId={id}
+						/>
+					);
 				}
 			})
 			.catch((e) => console.log(e));

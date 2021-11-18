@@ -18,8 +18,7 @@ export const FormatSongList = (items) => {
 	return formattedList;
 };
 
-
-export const FormatSongListColumns = (songList) => {
+export const FormatSongListColumns = (songList, PlaylistId, ActionButton) => {
 	const rows = songList;
 	const columns = [
 		{ field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
@@ -32,8 +31,11 @@ export const FormatSongListColumns = (songList) => {
 			minWidth: 120,
 			flex: 1,
 			renderCell: (cellData) => {
-				// return buttonAction(cellData);
-				return "uwu";
+				const id = cellData.id;
+				const uri = cellData.formattedValue;
+				return (
+					<ActionButton PlaylistId={PlaylistId} uri={uri} id={id} />
+				);
 			},
 		},
 	];
@@ -42,5 +44,4 @@ export const FormatSongListColumns = (songList) => {
 		columns,
 	};
 	return data;
-
-}
+};

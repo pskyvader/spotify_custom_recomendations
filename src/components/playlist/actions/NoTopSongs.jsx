@@ -3,16 +3,16 @@ import { CircularProgress } from "@mui/material";
 import {
 	FormatSongList,
 	FormatSongListColumns,
-} from "../../../modules/FormatSongList";
+} from "../../../modules/FormatSongs";
 import { subtractById, objectToList } from "../../../utils";
 import { Playlist, Me } from "../../../API";
-import { PlaylistTemplate } from "../../../modules/SongList";
+import { PlaylistTemplate, ButtonAdd } from "../../../modules/SongList";
 
-const NoTopSongsTemplate = ({ top, playlist }) => {
+const NoTopSongsTemplate = ({ top, playlist, playlistId }) => {
 	const topSongs = FormatSongList(top.items);
 	const playlistSongs = FormatSongList(playlist.tracks.items);
 	const notTopsongs = subtractById(playlistSongs, topSongs);
-	const data = FormatSongListColumns(notTopsongs, playlist.id, "add");
+	const data = FormatSongListColumns(notTopsongs, playlistId, ButtonAdd);
 	return <PlaylistTemplate data={data} />;
 };
 
@@ -34,6 +34,7 @@ const NoTopSongs = ({ id }) => {
 								<NoTopSongsTemplate
 									top={response}
 									playlist={playlist}
+									playlistId={id}
 								/>
 							);
 						}
