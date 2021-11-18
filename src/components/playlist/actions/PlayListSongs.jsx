@@ -1,4 +1,4 @@
-import { useEffect, useState,useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { CircularProgress } from "@mui/material";
 import { objectToList } from "../../../utils";
 import { Playlist } from "../../../API";
@@ -7,8 +7,7 @@ import {
 	FormatSongListColumns,
 } from "../../../modules/FormatSongs";
 import { PlaylistTemplate, ButtonRemove } from "../../../modules/SongList";
-import PlaylistContext from "../../../modules/PlaylistContext";
-
+import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 
 const PlayListSongsTemplate = ({ response, playlistId }) => {
 	const songList = FormatSongList(response.tracks.items);
@@ -18,11 +17,10 @@ const PlayListSongsTemplate = ({ response, playlistId }) => {
 
 const PlayListSongs = () => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
-
-	const playlistId  = useContext(PlaylistContext);
+	const { playlistId } = useContext(PlaylistContext);
 
 	useEffect(() => {
-		if (playlistId === 0) {
+		if (playlistId === null) {
 			return false;
 		}
 		Playlist.Playlist(playlistId)

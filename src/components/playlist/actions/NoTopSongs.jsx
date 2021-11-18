@@ -7,7 +7,7 @@ import {
 import { subtractById, objectToList } from "../../../utils";
 import { Playlist, Me } from "../../../API";
 import { PlaylistTemplate, ButtonAdd } from "../../../modules/SongList";
-import PlaylistContext from "../../../modules/PlaylistContext";
+import {PlaylistContext} from "../../../modules/PlaylistContextProvider";
 
 const NoTopSongsTemplate = ({ top, playlist, playlistId }) => {
 	const topSongs = FormatSongList(top.items);
@@ -19,9 +19,9 @@ const NoTopSongsTemplate = ({ top, playlist, playlistId }) => {
 
 const NoTopSongs = () => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
-	const playlistId  = useContext(PlaylistContext);
+	const {playlistId}  = useContext(PlaylistContext);
 	useEffect(() => {
-		if (playlistId === 0) {
+		if (playlistId === null) {
 			return;
 		}
 		Playlist.Playlist(playlistId)

@@ -1,12 +1,12 @@
 import Playlists from "../../components/playlist/Playlists";
 import Login, { is_logged } from "../../modules/Login";
-import PlaylistContext from "../../modules/PlaylistContext";
+import PlaylistContextProvider from "../../modules/PlaylistContextProvider";
 
 const Home = () =>
 	is_logged ? (
-		<PlaylistContext.Consumer>
+		<PlaylistContextProvider>
 			<Playlists />
-		</PlaylistContext.Consumer>
+		</PlaylistContextProvider>
 	) : (
 		<Login />
 	);

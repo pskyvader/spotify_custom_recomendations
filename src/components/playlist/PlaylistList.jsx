@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useEffect, useContext } from "react";
 import { Box } from "@mui/system";
 import {
 	List,
@@ -7,19 +7,19 @@ import {
 	ListItemText,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-import PlaylistContext from "../../modules/PlaylistContext";
+import { PlaylistContext } from "../../modules/PlaylistContextProvider";
 
 const PlaylistList = ({ playlists, me }) => {
 	const { playlistId, setPlaylistId } = useContext(PlaylistContext);
-	console.log(playlistId,setPlaylistId)
 
 	let itemList = [];
+	let currentPlaylistid = playlistId;
 	playlists.forEach((currentPlaylist) => {
 		if (
-			(playlistId === currentPlaylist.id || playlistId === 0) &&
+			(playlistId === currentPlaylist.id || currentPlaylistid === null) &&
 			(me.id === currentPlaylist.owner.id || currentPlaylist.colaborative)
 		) {
-			setPlaylistId(currentPlaylist.id);
+			currentPlaylistid = currentPlaylist.id;
 		}
 		itemList.push(
 			<ListItemButton
@@ -43,6 +43,10 @@ const PlaylistList = ({ playlists, me }) => {
 			</ListItemButton>
 		);
 	});
+
+	useEffect(() => {
+		setPlaylistId(currentPlaylistid);
+	}, [setPlaylistId, currentPlaylistid]);
 
 	return (
 		<Box sx={{ height: "100%", flexGrow: 12 }}>

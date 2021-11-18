@@ -18,11 +18,11 @@ const addRow = (cellData, tmpData) => {
 	return { ...tmpData };
 };
 
-export const ButtonAdd = ({ ElementId, uri }) => {
+export const ButtonAdd = ({ PlaylistId, uri }) => {
 	return (
 		<Button
 			onClick={() => {
-				Playlist.AddSong(ElementId, uri).then();
+				Playlist.AddSong(PlaylistId, uri).then();
 			}}
 		>
 			Add
@@ -30,11 +30,11 @@ export const ButtonAdd = ({ ElementId, uri }) => {
 	);
 };
 
-export const ButtonRemove = ({ ElementId, uri, id }) => {
+export const ButtonRemove = ({ PlaylistId, uri, id }) => {
 	return (
 		<Button
 			onClick={() => {
-				Playlist.DeleteSong(ElementId, uri).then();
+				Playlist.DeleteSong(PlaylistId, uri).then();
 			}}
 		>
 			Remove
