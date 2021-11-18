@@ -12,7 +12,8 @@ const PlaylistsTemplate = ({ response, me }) => {
 	const Root = styled("div")(({ theme }) => {
 		return {
 			maxHeight: "calc(33vh - " + theme.mixins.toolbar.minHeight + "px - "+ theme.spacing()+" )",
-			height: 5000,
+			height: "100vh",
+			overflow:"auto",
 			[theme.breakpoints.up("md")]: {
 				maxHeight: "calc(50vh - " + theme.mixins.toolbar.minHeight + "px - "+ theme.spacing()+" )",
 			},
@@ -25,7 +26,7 @@ const PlaylistsTemplate = ({ response, me }) => {
 		<Container maxWidth={false}>
 			<Grid container spacing={2}>
 				<Grid item xs={12} md={4}>
-					<Root style={{ height: "auto" }}>
+					<Root>
 						<PlaylistList
 							playlists={response.items}
 							me={me}

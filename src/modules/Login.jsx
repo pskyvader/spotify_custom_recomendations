@@ -4,9 +4,12 @@ import { Credentials } from "../API";
 
 import { generateRandomString } from "../utils";
 
-export const is_logged =
-	localStorage.getItem("access_token") !== null &&
-	localStorage.getItem("expiration") > Date.now();
+export const is_logged = () => {
+	return (
+		localStorage.getItem("access_token") !== null &&
+		localStorage.getItem("expiration") > Date.now()
+	);
+};
 
 export const Logout = () => {
 	localStorage.clear();
@@ -21,8 +24,15 @@ const Login = () => {
 	}
 
 	// your application requests authorization
-	var scope =
-		"user-read-private user-top-read user-read-email playlist-modify-public playlist-modify-private";
+	const permissions = [
+		// "user-read-private",
+		// "user-top-read",
+		// "user-read-email",
+		"playlist-read-private",
+		"playlist-modify-public",
+		"playlist-modify-private",
+	];
+	var scope = permissions.join(" ");
 	var uri =
 		"https://accounts.spotify.com/authorize?" +
 		new URLSearchParams({

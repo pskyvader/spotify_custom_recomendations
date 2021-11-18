@@ -53,7 +53,7 @@ const Header = () => {
 						>
 							Spotify custom playlists
 						</Typography>
-						{is_logged ? <UserInfo /> : <Login />}
+						{is_logged() ? <UserInfo /> : <Login />}
 					</Toolbar>
 				</AppBar>
 			</Box>
