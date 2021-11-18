@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
+import { Box } from "@mui/system";
+import { DataGrid } from "@mui/x-data-grid";
 import { Playlist } from "../API";
 
 const removeRow = (id, tmpData) => {
@@ -16,44 +19,48 @@ const addRow = (cellData, tmpData) => {
 	return { ...tmpData };
 };
 
-const ElementList = (songList, ElementId, action = "add") => {
+
+
+
+const ElementList2 = (songList, ElementId, action = "add") => {
 	// const [data, setData] = useState({ columns: [], rows: [] });
-	let data={}
+
+	const rows = songList;
+	
 
 	// useEffect(() => {
-		const buttonAction = () => {
-			if (action === "add") {
-				return (
-					<Button
-						onClick={(cellData, data) => {
-							const uri = cellData.formattedValue;
-							Playlist.AddSong(ElementId, uri).then(
-								data=(addRow(cellData, data))
-							);
-						}}
-					>
-						Add
-					</Button>
-				);
-			} else if (action === "delete") {
-				return (
-					<Button
-						onClick={(cellData, data) => {
-							const id = cellData.id;
-							const uri = cellData.formattedValue;
-							Playlist.DeleteSong(ElementId, uri).then(
-								data=(removeRow(id, data))
-							);
-						}}
-					>
-						Delete
-					</Button>
-				);
-			}
-		};
+			const buttonAction = () => {
+				if (action === "add") {
+					return (
+						<Button
+							onClick={(cellData, tmpData) => {
+								const uri = cellData.formattedValue;
+								Playlist.AddSong(ElementId, uri).then(
+									// setData(addRow(cellData, tmpData))
+								);
+							}}
+						>
+							Delete
+						</Button>
+					);
+				} else if (action === "delete") {
+					return (
+						<Button
+							onClick={(cellData, tmpData) => {
+								const id = cellData.id;
+								const uri = cellData.formattedValue;
+								Playlist.DeleteSong(ElementId, uri).then(
+									// setData(removeRow(id, tmpData))
+								);
+							}}
+						>
+							Add
+						</Button>
+					);
+				}
+			};
 
 		let tmpData = {};
-		const rows = songList;
 		const columns = [
 			{ field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
 			{ field: "name", headerName: "Title", flex: 1 },
@@ -65,8 +72,8 @@ const ElementList = (songList, ElementId, action = "add") => {
 				minWidth: 120,
 				flex: 1,
 				renderCell: (cellData) => {
-					return buttonAction();
-					// return "uwu"
+					return buttonAction(cellData);
+					// return "uwu";
 				},
 			},
 		];
@@ -76,10 +83,29 @@ const ElementList = (songList, ElementId, action = "add") => {
 			columns,
 		};
 		// setData(tmpData);
-		data=tmpData
-	// }, [songList, ElementId,action]);
+	// }, [songList, ElementId, action]);
 
-	return data;
+	return tmpData;
 };
 
-export default ElementList;
+
+
+
+
+
+
+export const PlaylistTemplate = ({ data }) => {
+	const theme = createTheme();
+	return (
+		<Box sx={{ height: "100%", padding: theme.spacing() }}>
+			<DataGrid
+				hideFooter
+				disableSelectionOnClick
+				{...data}
+				columnBuffer={2}
+				columnThreshold={2}
+				disableExtendRowFullWidth
+			/>
+		</Box>
+	);
+};
