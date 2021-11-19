@@ -5,20 +5,20 @@ import {
 	FormatSongListColumns,
 } from "../../../modules/FormatSongs";
 import { subtractById, objectToList } from "../../../utils";
-import { Playlist, Me } from "../../../API";
+import { Playlist, Recommended } from "../../../API";
 import { SongListTemplate, ButtonAdd } from "../../../modules/SongsView";
 import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 
-const TopSongsTemplate = ({ top, playlist, playlistId }) => {
-	const topSongs = FormatSongList(top.items);
+const RecommendedSongsTemplate = ({ recommended, playlist, playlistId }) => {
+	const recommendedSongs = FormatSongList(recommended.items);
 	const playlistSongs = FormatSongList(playlist.tracks.items);
-	const RemainingTopSongs = subtractById(topSongs,playlistSongs);
+	const RemainingRecommendedSongs = subtractById(recommendedSongs,playlistSongs);
 
-	const data = FormatSongListColumns(RemainingTopSongs, playlistId, ButtonAdd);
+	const data = FormatSongListColumns(RemainingRecommendedSongs, playlistId, ButtonAdd);
 	return <SongListTemplate data={data} title="Top Songs" />;
 };
 
-const TopSongs = () => {
+const RecommendedSongs = () => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
 	const { playlistId } = useContext(PlaylistContext);
 	useEffect(() => {
@@ -28,15 +28,15 @@ const TopSongs = () => {
 		}
 		Playlist.Playlist(playlistId)
 			.then((playlist) => {
-				Me.MeTop()
+				Recommended.Recommended()
 					.then((response) => {
 						if (response.error) {
 							setPlaylist(objectToList(response));
 							console.log("PlayListSongs", playlistId);
 						} else {
 							setPlaylist(
-								<TopSongsTemplate
-									top={response}
+								<RecommendedSongsTemplate
+									recommended={response}
 									playlist={playlist}
 									playlistId={playlistId}
 								/>
@@ -50,4 +50,4 @@ const TopSongs = () => {
 	return playlist;
 };
 
-export default TopSongs;
+export default RecommendedSongs;

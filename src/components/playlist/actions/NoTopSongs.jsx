@@ -14,7 +14,7 @@ const NoTopSongsTemplate = ({ top, playlist, playlistId }) => {
 	const playlistSongs = FormatSongList(playlist.tracks.items);
 	const notTopsongs = subtractById(playlistSongs, topSongs);
 	const data = FormatSongListColumns(notTopsongs, playlistId, ButtonAdd);
-	return <SongListTemplate data={data} />;
+	return <SongListTemplate data={data} title="No Top Songs"/>;
 };
 
 const NoTopSongs = () => {

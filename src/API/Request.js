@@ -1,6 +1,5 @@
 const GetRequest = async (url, method = "GET", body = null) => {
 	const access_token = localStorage.getItem("access_token");
-	// POST request using fetch inside useEffect React hook
 	const requestOptions = {
 		method: method,
 		headers: {

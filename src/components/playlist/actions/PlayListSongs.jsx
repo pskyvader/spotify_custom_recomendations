@@ -12,7 +12,7 @@ import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 const PlayListSongsTemplate = ({ response, playlistId }) => {
 	const songList = FormatSongList(response.tracks.items);
 	const data = FormatSongListColumns(songList, playlistId, ButtonRemove);
-	return <SongListTemplate data={data} />;
+	return <SongListTemplate data={data} title={response.name}/>;
 };
 
 const PlayListSongs = () => {
