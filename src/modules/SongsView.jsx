@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { Box } from "@mui/system";
-import { GridOverlay, DataGrid } from '@mui/x-data-grid';
+import { GridOverlay, DataGrid } from "@mui/x-data-grid";
 import { Playlist } from "../API";
 import { useContext } from "react";
 import { PlaylistContext } from "./PlaylistContextProvider";
@@ -12,9 +12,9 @@ export const ButtonAdd = ({ PlaylistId, uri }) => {
 		<Button
 			onClick={() => {
 				setPlaylistId(null);
-					Playlist.AddSong(PlaylistId, uri).then(() => {
-						setPlaylistId(PlaylistId);
-					});
+				Playlist.AddSong(PlaylistId, uri).then(() => {
+					setPlaylistId(PlaylistId);
+				});
 			}}
 		>
 			Add
@@ -28,7 +28,9 @@ export const ButtonRemove = ({ PlaylistId, uri, id }) => {
 		<Button
 			onClick={() => {
 				setPlaylistId(null);
-					Playlist.DeleteSong(PlaylistId, uri).then(setPlaylistId(PlaylistId));
+				Playlist.DeleteSong(PlaylistId, uri).then(
+					setPlaylistId(PlaylistId)
+				);
 			}}
 		>
 			Remove
@@ -36,18 +38,21 @@ export const ButtonRemove = ({ PlaylistId, uri, id }) => {
 	);
 };
 
-export const SongListTemplate = ({ data }) => {
+export const SongListTemplate = ({ data, Title="uwu" }) => {
 	const theme = createTheme();
 	return (
 		<Box sx={{ height: "100%", padding: theme.spacing() }}>
+			<h4>{Title}</h4>
 			<DataGrid
 				hideFooter
 				disableSelectionOnClick
 				components={{
-					NoRowsOverlay:()=> {
-						return <GridOverlay>No songs in this playlist</GridOverlay>
+					NoRowsOverlay: () => {
+						return (
+							<GridOverlay>No songs in this playlist</GridOverlay>
+						);
 					},
-				  }}
+				}}
 				{...data}
 				columnBuffer={2}
 				columnThreshold={2}

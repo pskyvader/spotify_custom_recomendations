@@ -17,6 +17,7 @@ const GetRequest = async (url, method = "GET", body = null) => {
 				error:true,
 				status: response.status,
 				text: response.statusText,
+				response:response
 			};
 		}
 	});

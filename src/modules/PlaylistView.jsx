@@ -1,34 +1,36 @@
-import { ListItemButton } from "@mui/material";
-import {
-	List,
-	ListItemButton,
-	ListItemIcon,
-	ListItemText,
-	CircularProgress,
-} from "@mui/material";
+import { useContext, useEffect } from "react";
+import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 
-export const PlaylistTemplate = ({ data }) => {
-    console.log(data);
+import { PlaylistContext } from "./PlaylistContextProvider";
 
-    return (<ListItemButton
-        disabled={me.id !== currentPlaylist.owner.id}
-        key={currentPlaylist.id}
-        selected={playlistId === currentPlaylist.id}
-        onClick={() => {
-            setPlaylistId(currentPlaylist.id);
-        }}
-    >
-        <ListItemIcon>
-            <Avatar
-                alt={currentPlaylist.name}
-                src={
-                    currentPlaylist.images[0]
-                        ? currentPlaylist.images[0].url
-                        : null
-                }
-            />
-        </ListItemIcon>
-        <ListItemText primary={currentPlaylist.name} />
-    </ListItemButton>)
+export const PlaylistTemplate = ({ itemList, selectedId }) => {
+	const { playlistId, setPlaylistId } = useContext(PlaylistContext);
+
+	useEffect(() => {
+		if (playlistId !== selectedId) {
+			setPlaylistId(selectedId);
+		}
+	}, [playlistId,setPlaylistId, selectedId]);
+
+	return itemList.map((currentPlaylist) => {
+		return (
+			<ListItemButton
+				disabled={currentPlaylist.disabled}
+				key={currentPlaylist.id}
+				selected={currentPlaylist.selected}
+				onClick={() => {
+					setPlaylistId(currentPlaylist.id);
+				}}
+			>
+				<ListItemIcon>
+					<Avatar
+						alt={currentPlaylist.name}
+						src={currentPlaylist.image}
+					/>
+				</ListItemIcon>
+				<ListItemText primary={currentPlaylist.name} />
+			</ListItemButton>
+		);
+	});
 };

@@ -6,7 +6,7 @@ import {
 	FormatSongList,
 	FormatSongListColumns,
 } from "../../../modules/FormatSongs";
-import { SongListTemplate, ButtonRemove } from "../../../modules/SongList";
+import { SongListTemplate, ButtonRemove } from "../../../modules/SongsView";
 import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 
 const PlayListSongsTemplate = ({ response, playlistId }) => {
@@ -20,15 +20,14 @@ const PlayListSongs = () => {
 	const { playlistId } = useContext(PlaylistContext);
 
 	useEffect(() => {
+		setPlaylist(<CircularProgress />);
 		if (playlistId === null) {
-			setPlaylist(<CircularProgress />);
 			return;
 		}
 		Playlist.Playlist(playlistId)
 			.then((response) => {
 				if (response.error) {
 					setPlaylist(objectToList(response));
-					console.log("PlayListSongs", playlistId);
 				} else {
 					setPlaylist(
 						<PlayListSongsTemplate

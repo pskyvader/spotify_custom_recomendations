@@ -1,25 +1,17 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Box } from "@mui/system";
 import { List, CircularProgress } from "@mui/material";
 
-import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 import { Me } from "../../../API";
 import { FormatPlaylists } from "../../../modules/FormatPlaylists";
 import { PlaylistTemplate } from "../../../modules/PlaylistView";
 
 const PlaylistListTemplate = ({ playlists, me }) => {
-	const { playlistId, setPlaylistId } = useContext(PlaylistContext);
-
-	let { itemList, selectedId } = FormatPlaylists( playlists, playlistId, me.id );
-
-	useEffect(() => {
-		setPlaylistId(selectedId);
-	}, [setPlaylistId, selectedId]);
-
+	let templateProps = FormatPlaylists(playlists, me.id);
 	return (
 		<Box sx={{ height: "100%", flexGrow: 12 }}>
 			<List component="nav" aria-label="playlists">
-				<PlaylistTemplate data={itemList} />
+				<PlaylistTemplate {...templateProps} />
 			</List>
 		</Box>
 	);
@@ -29,10 +21,16 @@ const PlaylistList = () => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
 
 	useEffect(() => {
-		Me.MePlaylist().then((playlists) => {
+		setPlaylist(<CircularProgress />);
+
+		Me.MePlaylist().then((response) => {
+			if (response.items.length === 0) {
+				setPlaylist("No available Playlist");
+				return;
+			}
 			Me.Me().then((me) => {
 				setPlaylist(
-					<PlaylistListTemplate playlists={playlists.items} me={me} />
+					<PlaylistListTemplate playlists={response.items} me={me} />
 				);
 			});
 		});

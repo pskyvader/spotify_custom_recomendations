@@ -5,6 +5,7 @@ import {  styled } from "@mui/material/styles";
 import PlaylistList from "./actions/PlaylistList";
 import PlayListSongs from "./actions/PlayListSongs";
 import NoTopSongs from "./actions/NoTopSongs";
+import TopSongs from "./actions/TopSongs";
 
 const Playlists = () => {
 	const Root = styled("div")(({ theme }) => {
@@ -30,7 +31,12 @@ const Playlists = () => {
 						<PlayListSongs />
 					</Root>
 				</Grid>
-				<Grid item xs={12}>
+				<Grid item xs={12} md={6}>
+					<Root>
+						<TopSongs />
+					</Root>
+				</Grid>
+				<Grid item xs={12} md={6}>
 					<Root>
 						<NoTopSongs />
 					</Root>

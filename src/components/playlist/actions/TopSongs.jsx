@@ -9,15 +9,16 @@ import { Playlist, Me } from "../../../API";
 import { SongListTemplate, ButtonAdd } from "../../../modules/SongsView";
 import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 
-const NoTopSongsTemplate = ({ top, playlist, playlistId }) => {
+const TopSongsTemplate = ({ top, playlist, playlistId }) => {
 	const topSongs = FormatSongList(top.items);
 	const playlistSongs = FormatSongList(playlist.tracks.items);
-	const notTopsongs = subtractById(playlistSongs, topSongs);
+	const notTopsongs = subtractById(topSongs,playlistSongs);
+
 	const data = FormatSongListColumns(notTopsongs, playlistId, ButtonAdd);
 	return <SongListTemplate data={data} />;
 };
 
-const NoTopSongs = () => {
+const TopSongs = () => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
 	const { playlistId } = useContext(PlaylistContext);
 	useEffect(() => {
@@ -34,7 +35,7 @@ const NoTopSongs = () => {
 							console.log("PlayListSongs", playlistId);
 						} else {
 							setPlaylist(
-								<NoTopSongsTemplate
+								<TopSongsTemplate
 									top={response}
 									playlist={playlist}
 									playlistId={playlistId}
@@ -49,4 +50,4 @@ const NoTopSongs = () => {
 	return playlist;
 };
 
-export default NoTopSongs;
+export default TopSongs;

@@ -1,6 +1,10 @@
-export const FormatPlaylists = (playlists, currentPlaylistid, MyId) => {
+import { PlaylistContext } from "./PlaylistContextProvider";
+import { useContext } from "react";
+export const FormatPlaylists = (playlists, MyId) => {
+	const { playlistId } = useContext(PlaylistContext);
+
 	let itemList = [];
-	let selectedId = null;
+	let selectedId = playlistId;
 	playlists.forEach((currentPlaylist) => {
 		const formattedPlaylist = {};
 		formattedPlaylist.id = currentPlaylist.id;
@@ -12,8 +16,7 @@ export const FormatPlaylists = (playlists, currentPlaylistid, MyId) => {
 			: null;
 
 		if (
-			(currentPlaylistid === currentPlaylist.id ||
-				currentPlaylistid === null) &&
+			(selectedId === currentPlaylist.id || selectedId === null) &&
 			MyId === currentPlaylist.owner.id
 		) {
 			formattedPlaylist.selected = true;
