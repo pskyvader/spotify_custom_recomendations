@@ -9,11 +9,17 @@ const GetRequest = async (url, method = "GET", body = null) => {
 		},
 		body: body,
 	};
-	return fetch(url, requestOptions)
-		.then((response) => response.json())
-		.catch((error) => console.log(error))
-		.then((response) => response)
-		.catch((error) => console.log(error));
+	return fetch(url, requestOptions).then((response) => {
+		if (response.ok) {
+			return response.json();
+		} else {
+			return {
+				error:true,
+				status: response.status,
+				text: response.statusText,
+			};
+		}
+	});
 };
 
 export default GetRequest;

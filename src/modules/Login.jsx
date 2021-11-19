@@ -26,8 +26,9 @@ const Login = () => {
 	// your application requests authorization
 	const permissions = [
 		// "user-read-private",
-		// "user-top-read",
+		"user-top-read",
 		// "user-read-email",
+		// "playlist-read-collaborative",
 		"playlist-read-private",
 		"playlist-modify-public",
 		"playlist-modify-private",

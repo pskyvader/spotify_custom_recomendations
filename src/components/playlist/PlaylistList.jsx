@@ -17,16 +17,13 @@ const PlaylistList = ({ playlists, me }) => {
 	playlists.forEach((currentPlaylist) => {
 		if (
 			(playlistId === currentPlaylist.id || currentPlaylistid === null) &&
-			(me.id === currentPlaylist.owner.id || currentPlaylist.colaborative)
+			me.id === currentPlaylist.owner.id
 		) {
 			currentPlaylistid = currentPlaylist.id;
 		}
 		itemList.push(
 			<ListItemButton
-				disabled={
-					me.id !== currentPlaylist.owner.id &&
-					!currentPlaylist.colaborative
-				}
+				disabled={me.id !== currentPlaylist.owner.id}
 				key={currentPlaylist.id}
 				selected={playlistId === currentPlaylist.id}
 				onClick={() => {
@@ -36,7 +33,11 @@ const PlaylistList = ({ playlists, me }) => {
 				<ListItemIcon>
 					<Avatar
 						alt={currentPlaylist.name}
-						src={(currentPlaylist.images[0])?currentPlaylist.images[0].url:null}
+						src={
+							currentPlaylist.images[0]
+								? currentPlaylist.images[0].url
+								: null
+						}
 					/>
 				</ListItemIcon>
 				<ListItemText primary={currentPlaylist.name} />
