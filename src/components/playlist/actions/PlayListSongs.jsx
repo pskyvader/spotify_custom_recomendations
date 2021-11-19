@@ -6,13 +6,13 @@ import {
 	FormatSongList,
 	FormatSongListColumns,
 } from "../../../modules/FormatSongs";
-import { PlaylistTemplate, ButtonRemove } from "../../../modules/SongList";
+import { SongListTemplate, ButtonRemove } from "../../../modules/SongList";
 import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 
 const PlayListSongsTemplate = ({ response, playlistId }) => {
 	const songList = FormatSongList(response.tracks.items);
 	const data = FormatSongListColumns(songList, playlistId, ButtonRemove);
-	return <PlaylistTemplate data={data} />;
+	return <SongListTemplate data={data} />;
 };
 
 const PlayListSongs = () => {

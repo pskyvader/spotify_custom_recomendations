@@ -36,7 +36,7 @@ export const ButtonRemove = ({ PlaylistId, uri, id }) => {
 	);
 };
 
-export const PlaylistTemplate = ({ data }) => {
+export const SongListTemplate = ({ data }) => {
 	const theme = createTheme();
 	return (
 		<Box sx={{ height: "100%", padding: theme.spacing() }}>

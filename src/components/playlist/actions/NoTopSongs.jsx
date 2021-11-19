@@ -6,7 +6,7 @@ import {
 } from "../../../modules/FormatSongs";
 import { subtractById, objectToList } from "../../../utils";
 import { Playlist, Me } from "../../../API";
-import { PlaylistTemplate, ButtonAdd } from "../../../modules/SongList";
+import { SongListTemplate, ButtonAdd } from "../../../modules/SongsView";
 import {PlaylistContext} from "../../../modules/PlaylistContextProvider";
 
 const NoTopSongsTemplate = ({ top, playlist, playlistId }) => {
@@ -14,7 +14,7 @@ const NoTopSongsTemplate = ({ top, playlist, playlistId }) => {
 	const playlistSongs = FormatSongList(playlist.tracks.items);
 	const notTopsongs = subtractById(playlistSongs, topSongs);
 	const data = FormatSongListColumns(notTopsongs, playlistId, ButtonAdd);
-	return <PlaylistTemplate data={data} />;
+	return <SongListTemplate data={data} />;
 };
 
 const NoTopSongs = () => {

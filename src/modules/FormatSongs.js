@@ -1,7 +1,7 @@
-export const FormatSongList = (items) => {
+export const FormatSongList = (songList) => {
 	const formattedList = [];
-	items.forEach((element) => {
-		const currentSong = element.track || element;
+	songList.forEach((song) => {
+		const currentSong = song.track || song;
 		const art = currentSong.artists.map(
 			(artist) => " " + artist.name + " "
 		);

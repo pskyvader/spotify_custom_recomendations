@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
-import { CircularProgress, Grid, Container } from "@mui/material";
+import { Grid, Container } from "@mui/material";
 import {  styled } from "@mui/material/styles";
 
-import { Me,MePlaylist } from "../../API/Me";
 
-import PlaylistList from "./PlaylistList";
+import PlaylistList from "./actions/PlaylistList";
 import PlayListSongs from "./actions/PlayListSongs";
 import NoTopSongs from "./actions/NoTopSongs";
 
-const PlaylistsTemplate = ({ response, me }) => {
+const Playlists = () => {
 	const Root = styled("div")(({ theme }) => {
 		return {
 			maxHeight: "calc(33vh - " + theme.mixins.toolbar.minHeight + "px - "+ theme.spacing()+" )",
@@ -19,19 +17,12 @@ const PlaylistsTemplate = ({ response, me }) => {
 			},
 		};
 	});
-
-	// const [selectedItem, SetselectedItem] = useState(null);
-
 	return (
 		<Container maxWidth={false}>
 			<Grid container spacing={2}>
 				<Grid item xs={12} md={4}>
 					<Root>
-						<PlaylistList
-							playlists={response.items}
-							me={me}
-							// SetselectedItem={SetselectedItem}
-						/>
+						<PlaylistList/>
 					</Root>
 				</Grid>
 				<Grid item xs={12} md={8}>
@@ -49,18 +40,5 @@ const PlaylistsTemplate = ({ response, me }) => {
 	);
 };
 
-const Playlists = () => {
-	const [playlist, setPlaylist] = useState(<CircularProgress />);
-
-	useEffect(() => {
-		MePlaylist().then((response) => {
-			Me().then((me) => {
-				setPlaylist(<PlaylistsTemplate response={response} me={me} />);
-			});
-		});
-	}, []);
-
-	return playlist;
-};
 
 export default Playlists;
