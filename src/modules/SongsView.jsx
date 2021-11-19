@@ -12,11 +12,11 @@ export const ButtonAdd = ({ PlaylistId, uri }) => {
 		<Button
 			onClick={() => {
 				setPlaylistId(null);
+				setTimeout(() => {
 				Playlist.AddSong(PlaylistId, uri).then(() => {
-					setTimeout(() => {
-						setPlaylistId(PlaylistId);	
-					}, 100);
+						setPlaylistId(PlaylistId);
 				});
+			}, 500);
 			}}
 		>
 			Add
@@ -30,9 +30,11 @@ export const ButtonRemove = ({ PlaylistId, uri, id }) => {
 		<Button
 			onClick={() => {
 				setPlaylistId(null);
-				Playlist.DeleteSong(PlaylistId, uri).then(
-					setPlaylistId(PlaylistId)
-				);
+				setTimeout(() => {
+				Playlist.DeleteSong(PlaylistId, uri).then(() => {
+						setPlaylistId(PlaylistId);
+				});
+			}, 500);
 			}}
 		>
 			Remove
@@ -51,7 +53,11 @@ export const SongListTemplate = ({ data, title = "title" }) => {
 					Toolbar: () => {
 						return (
 							<Toolbar variant="dense">
-								<Typography variant="h6" component="div" sx={{ flexGrow: 1 }} >
+								<Typography
+									variant="h6"
+									component="div"
+									sx={{ flexGrow: 1 }}
+								>
 									{title}
 								</Typography>
 							</Toolbar>

@@ -5,7 +5,7 @@ import {
 	FormatSongListColumns,
 } from "../../../modules/FormatSongs";
 import { subtractById, objectToList } from "../../../utils";
-import { Playlist, Recommended } from "../../../API";
+import { Playlist, Recommended,Me } from "../../../API";
 import { SongListTemplate, ButtonAdd } from "../../../modules/SongsView";
 import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 
@@ -26,10 +26,9 @@ const RecommendedSongs = () => {
 		if (playlistId === null) {
 			return;
 		}
-		Playlist.Playlist(playlistId)
-			.then((playlist) => {
-				Recommended.Recommended(playlist)
-					.then((response) => {
+		Playlist.Playlist(playlistId).then((playlist) => {
+				Me.MeTop().then((topSongs)=> {
+					Recommended.Recommended(playlist,topSongs).then((response) => {
 						if (response.error) {
 							setPlaylist(objectToList(response));
 							console.log("PlayListSongs", playlistId,response);
@@ -44,6 +43,8 @@ const RecommendedSongs = () => {
 						}
 					})
 					.catch((e) => console.log(e));
+				})
+				
 			})
 			.catch((e) => console.log(e));
 	}, [playlistId]);

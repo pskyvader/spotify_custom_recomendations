@@ -1,16 +1,21 @@
 import GetRequest from "./Request";
+import { genres } from "../utils";
 
-const fillOptions = (playlist, genres) => {
+const fillOptions = (playlist, topSongs, currentgenres) => {
 	const options = {
 		seed_artists: [],
 		seed_genres: [],
 		seed_tracks: [],
 	};
-	const songs = playlist.tracks.items;
+	const songs =
+		playlist.tracks.items.length > 0
+			? playlist.tracks.items
+			: topSongs.items;
+
 	if (songs.length > 0) {
 		for (let index = 0; index < 5; index++) {
-			const currentSong =
-				songs[Math.floor(Math.random() * songs.length)].track;
+			const idsong = Math.floor(Math.random() * songs.length);
+			const currentSong = songs[idsong].track || songs[idsong];
 			switch (Math.floor(Math.random() * 3)) {
 				case 0:
 					options.seed_artists.push(currentSong.artists[0].id);
@@ -20,7 +25,9 @@ const fillOptions = (playlist, genres) => {
 					break;
 				default:
 					options.seed_genres.push(
-						genres[Math.floor(Math.random() * genres.length)]
+						currentgenres[
+							Math.floor(Math.random() * currentgenres.length)
+						]
 					);
 					break;
 			}
@@ -28,7 +35,7 @@ const fillOptions = (playlist, genres) => {
 	} else {
 		for (let index = 0; index < 5; index++) {
 			options.seed_genres.push(
-				genres[Math.floor(Math.random() * genres.length)]
+				currentgenres[Math.floor(Math.random() * currentgenres.length)]
 			);
 		}
 	}
@@ -36,8 +43,8 @@ const fillOptions = (playlist, genres) => {
 	return options;
 };
 
-export const Recommended = async (playlist, genres = ["pop", "disco"]) => {
-	const options = fillOptions(playlist, genres);
+export const Recommended = async (playlist, topSongs, currentgenres) => {
+	const options = fillOptions(playlist, topSongs, currentgenres || genres);
 
 	const url = "https://api.spotify.com/v1/recommendations";
 	let urlOptions = "?";

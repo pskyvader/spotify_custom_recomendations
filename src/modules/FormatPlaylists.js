@@ -15,10 +15,7 @@ export const FormatPlaylists = (playlists, MyId) => {
 			? currentPlaylist.images[0].url
 			: null;
 
-		if (
-			(selectedId === currentPlaylist.id || selectedId === null) &&
-			MyId === currentPlaylist.owner.id
-		) {
+		if ( (selectedId === currentPlaylist.id) && MyId === currentPlaylist.owner.id ) {
 			formattedPlaylist.selected = true;
 			selectedId = currentPlaylist.id;
 		}
