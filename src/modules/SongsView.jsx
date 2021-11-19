@@ -15,8 +15,7 @@ export const ButtonAdd = ({ PlaylistId, uri }) => {
 				Playlist.AddSong(PlaylistId, uri).then(() => {
 					setTimeout(() => {
 						setPlaylistId(PlaylistId);	
-					}, 0);
-					
+					}, 100);
 				});
 			}}
 		>
