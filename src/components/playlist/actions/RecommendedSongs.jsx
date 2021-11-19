@@ -10,12 +10,12 @@ import { SongListTemplate, ButtonAdd } from "../../../modules/SongsView";
 import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 
 const RecommendedSongsTemplate = ({ recommended, playlist, playlistId }) => {
-	const recommendedSongs = FormatSongList(recommended.items);
+	const recommendedSongs = FormatSongList(recommended.tracks);
 	const playlistSongs = FormatSongList(playlist.tracks.items);
 	const RemainingRecommendedSongs = subtractById(recommendedSongs,playlistSongs);
 
 	const data = FormatSongListColumns(RemainingRecommendedSongs, playlistId, ButtonAdd);
-	return <SongListTemplate data={data} title="Top Songs" />;
+	return <SongListTemplate data={data} title="Recommended" />;
 };
 
 const RecommendedSongs = () => {
@@ -28,11 +28,11 @@ const RecommendedSongs = () => {
 		}
 		Playlist.Playlist(playlistId)
 			.then((playlist) => {
-				Recommended.Recommended()
+				Recommended.Recommended(playlist)
 					.then((response) => {
 						if (response.error) {
 							setPlaylist(objectToList(response));
-							console.log("PlayListSongs", playlistId);
+							console.log("PlayListSongs", playlistId,response);
 						} else {
 							setPlaylist(
 								<RecommendedSongsTemplate

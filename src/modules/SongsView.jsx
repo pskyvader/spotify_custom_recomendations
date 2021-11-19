@@ -13,7 +13,10 @@ export const ButtonAdd = ({ PlaylistId, uri }) => {
 			onClick={() => {
 				setPlaylistId(null);
 				Playlist.AddSong(PlaylistId, uri).then(() => {
-					setPlaylistId(PlaylistId);
+					setTimeout(() => {
+						setPlaylistId(PlaylistId);	
+					}, 0);
+					
 				});
 			}}
 		>

@@ -12,12 +12,16 @@ const GetRequest = async (url, method = "GET", body = null) => {
 		if (response.ok) {
 			return response.json();
 		} else {
-			return {
-				error:true,
-				status: response.status,
-				text: response.statusText,
-				response:response
-			};
+			return response.json().then((responsejson)=>{
+				return {
+					error:true,
+					status: response.status,
+					text: responsejson.error.message,
+					url:response.url,
+					detail:responsejson,
+				};
+			})
+			
 		}
 	});
 };
