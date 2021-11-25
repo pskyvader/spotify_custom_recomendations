@@ -52,15 +52,15 @@ const RemoveSongs = () => {
 	return playlist;
 };
 
-const paginatedRecentsList = ( fromDate, beforedate, setPlaylist, recentsList = [] ) => {
-    console.log(fromDate, beforedate,beforedate-fromDate);
-	return Me.MeRecently(beforedate).then((recent) => {
+const paginatedRecentsList = ( fromDate, afterDate, setPlaylist, recentsList = [] ) => {
+    console.log(fromDate, afterDate,afterDate-fromDate,recentsList);
+	return Me.MeRecently(afterDate).then((recent) => {
 		if (recent.error) return recent;
 		recentsList.push(recent);
-		if (recent.cursors && recent.cursors.before > fromDate) {
+		if (recent.cursors) {
 			return paginatedRecentsList(
 				fromDate,
-				recent.cursors.before,
+				recent.cursors.after,
 				setPlaylist,
 				recentsList
 			);
