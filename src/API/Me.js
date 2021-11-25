@@ -20,7 +20,7 @@ export const MeTop = (offset = 0, time_range = "long_term") => {
 	return GetRequest(url);
 };
 
-export const MeRecently = async (after = null, limit = 50) => {
+export const MeRecently = (after = null, limit = 50) => {
 	if (after === null) {
 		after=Date.now()-604800000;//1 week in milliseconds = (24*60*60*1000) * 7; //7 days)
 	}

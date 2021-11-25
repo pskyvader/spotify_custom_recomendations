@@ -27,8 +27,7 @@ const RemoveSongs = () => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
 	const { playlistId } = useContext(PlaylistContext);
 	useEffect(() => {
-        const fromDate = Date.now() - 604800000;
-        let beforedate=fromDate+1;
+		const fromDate = Date.now() - 604800000;
 		setPlaylist(<CircularProgress />);
 		if (playlistId === null) {
 			return;
@@ -36,35 +35,38 @@ const RemoveSongs = () => {
 		Playlist.Playlist(playlistId)
 			.then((playlist) => {
 				if (playlist.error) return setPlaylist(objectToList(playlist));
-                let recentsList = [];
-                while(beforedate>fromDate){
-                    const next=Me.MeRecently(beforedate);
-                    console.log(next());
-                    beforedate=0;
-                }
-
-				// Me.MeRecently(fromDate).then((recent) => {
-				// 	if (recent.error) return setPlaylist(objectToList(recent));
-                //     let recentsList = [recent];
-				// 	if (recent.cursors && recent.cursors.before > fromDate) {
-				// 		Me.MeRecently(recent.cursors.before).then((next) => {
-                //             if (next.error) return setPlaylist(objectToList(next));
-				// 			recentsList.push(next);
-				// 			console.log(recentsList,fromDate);
-				// 			setPlaylist(
-				// 				<RemoveSongsTemplate
-				// 					recent={recent}
-				// 					playlist={playlist}
-				// 					playlistId={playlistId}
-				// 				/>
-				// 			);
-				// 		});
-				// 	}
-				// });
+				paginatedRecentsList( fromDate, fromDate + 1, setPlaylist, [] ).then((recentslist) => {
+					if (recentslist.error)
+						return setPlaylist(objectToList(recentslist));
+					setPlaylist(
+						<RemoveSongsTemplate
+							recent={recentslist[0]}
+							playlist={playlist}
+							playlistId={playlistId}
+						/>
+					);
+				});
 			})
 			.catch((e) => console.log(e));
 	}, [playlistId]);
 	return playlist;
+};
+
+const paginatedRecentsList = ( fromDate, beforedate, setPlaylist, recentsList = [] ) => {
+    console.log(fromDate, beforedate,beforedate-fromDate);
+	return Me.MeRecently(beforedate).then((recent) => {
+		if (recent.error) return recent;
+		recentsList.push(recent);
+		if (recent.cursors && recent.cursors.before > fromDate) {
+			return paginatedRecentsList(
+				fromDate,
+				recent.cursors.before,
+				setPlaylist,
+				recentsList
+			);
+		}
+		return recentsList;
+	});
 };
 
 export default RemoveSongs;
