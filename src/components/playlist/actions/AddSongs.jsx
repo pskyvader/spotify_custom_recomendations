@@ -9,23 +9,23 @@ import { Playlist, Recommended, Me } from "../../../API";
 import { SongListTemplate, ButtonAdd } from "../../../modules/SongsView";
 import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 
-const RecommendedSongsTemplate = ({ recommended, playlist, playlistId }) => {
+const AddSongsTemplate = ({ recommended, playlist, playlistId }) => {
 	const recommendedSongs = FormatSongList(recommended.tracks);
 	const playlistSongs = FormatSongList(playlist.tracks.items);
-	const RemainingRecommendedSongs = subtractById(
+	const AddRecommendedSongs = subtractById(
 		recommendedSongs,
 		playlistSongs
 	);
 
 	const data = FormatSongListColumns(
-		RemainingRecommendedSongs,
+		AddRecommendedSongs,
 		playlistId,
 		ButtonAdd
 	);
-	return <SongListTemplate data={data} title="Recommended" />;
+	return <SongListTemplate data={data} title="Recommended to Add" />;
 };
 
-const RecommendedSongs = () => {
+const AddSongs = () => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
 	const { playlistId } = useContext(PlaylistContext);
 	useEffect(() => {
@@ -42,7 +42,7 @@ const RecommendedSongs = () => {
 						.then((response) => {
 							if (response.error) return setPlaylist(objectToList(response));
 							setPlaylist(
-								<RecommendedSongsTemplate
+								<AddSongsTemplate
 									recommended={response}
 									playlist={playlist}
 									playlistId={playlistId}
@@ -57,4 +57,4 @@ const RecommendedSongs = () => {
 	return playlist;
 };
 
-export default RecommendedSongs;
+export default AddSongs;

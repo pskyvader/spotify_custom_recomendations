@@ -27,6 +27,7 @@ const Login = () => {
 	const permissions = [
 		// "user-read-private",
 		"user-top-read",
+		"user-read-recently-played",
 		// "user-read-email",
 		// "playlist-read-collaborative",
 		"playlist-read-private",
