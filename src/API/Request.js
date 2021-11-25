@@ -12,16 +12,22 @@ const GetRequest = async (url, method = "GET", body = null) => {
 		if (response.ok) {
 			return response.json();
 		} else {
-			return response.json().then((responsejson)=>{
+			return response.text().then((responsetext) => {
+				let responsejson = "Parse Error";
+				try {
+					responsejson = JSON.parse(responsetext);
+				} catch (error) {
+					console.log(error);
+				}
+
 				return {
-					error:true,
+					error: true,
 					status: response.status,
-					text: responsejson.error.message,
-					url:response.url,
-					detail:responsejson,
+					text: responsetext,
+					url: response.url,
+					detail: responsejson,
 				};
-			})
-			
+			});
 		}
 	});
 };

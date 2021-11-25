@@ -8,7 +8,7 @@ import { Avatar, Button } from "@mui/material";
 
 import Login, { Logout, is_logged } from "../../modules/Login";
 import { useEffect, useState } from "react";
-
+import { objectToList } from "../../utils";
 import { Me } from "../../API";
 
 const UserInfo = () => {
@@ -24,7 +24,12 @@ const UserInfo = () => {
 	};
 	useEffect(() => {
 		Me.Me().then((response) => {
-			setUser(userinfo_template(response));
+			if (response.error) {
+				setUser(objectToList(response));
+			} else {
+				setUser(userinfo_template(response));
+			}
+			
 		});
 	}, []);
 
