@@ -5,6 +5,7 @@ import { List, CircularProgress } from "@mui/material";
 import { Me } from "../../../API";
 import { FormatPlaylists } from "../../../modules/FormatPlaylists";
 import { PlaylistTemplate } from "../../../modules/PlaylistView";
+import { objectToList } from "../../../utils";
 
 const PlaylistListTemplate = ({ playlists, me }) => {
 	let templateProps = FormatPlaylists(playlists, me.id);
@@ -24,11 +25,19 @@ const PlaylistList = () => {
 		setPlaylist(<CircularProgress />);
 
 		Me.MePlaylist().then((response) => {
+			if (response.error) {
+				setPlaylist(objectToList(response));
+				return;
+			}
 			if (response.items.length === 0) {
 				setPlaylist("No available Playlist");
 				return;
 			}
 			Me.Me().then((me) => {
+				if (me.error) {
+					setPlaylist(objectToList(me));
+					return;
+				}
 				setPlaylist(
 					<PlaylistListTemplate playlists={response.items} me={me} />
 				);

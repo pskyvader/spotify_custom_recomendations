@@ -14,7 +14,7 @@ const NoTopSongsTemplate = ({ top, playlist, playlistId }) => {
 	const playlistSongs = FormatSongList(playlist.tracks.items);
 	const notTopsongs = subtractById(playlistSongs, topSongs);
 	const data = FormatSongListColumns(notTopsongs, playlistId, ButtonAdd);
-	return <SongListTemplate data={data} title="No Top Songs"/>;
+	return <SongListTemplate data={data} title="No Top Songs" />;
 };
 
 const NoTopSongs = () => {
@@ -25,26 +25,17 @@ const NoTopSongs = () => {
 		if (playlistId === null) {
 			return;
 		}
-		Playlist.Playlist(playlistId)
-			.then((playlist) => {
-				Me.MeTop()
-					.then((response) => {
-						if (response.error) {
-							setPlaylist(objectToList(response));
-							console.log("PlayListSongs", playlistId);
-						} else {
-							setPlaylist(
-								<NoTopSongsTemplate
-									top={response}
-									playlist={playlist}
-									playlistId={playlistId}
-								/>
-							);
-						}
-					})
-					.catch((e) => console.log(e));
-			})
-			.catch((e) => console.log(e));
+		Playlist.Playlist(playlistId).then((playlist) => {
+			Me.MeTop().then((response) => {
+				setPlaylist(
+					<NoTopSongsTemplate
+						top={response}
+						playlist={playlist}
+						playlistId={playlistId}
+					/>
+				);
+			});
+		});
 	}, [playlistId]);
 	return playlist;
 };

@@ -11,25 +11,24 @@ const GetRequest = async (url, method = "GET", body = null) => {
 	return fetch(url, requestOptions).then((response) => {
 		if (response.ok) {
 			return response.json();
-		} else {
-			return response.text().then((responsetext) => {
-				let responsejson = "Parse Error";
-				try {
-					responsejson = JSON.parse(responsetext);
-				} catch (error) {
-					console.log(error);
-				}
-
-				return {
-					error: true,
-					status: response.status,
-					text: responsetext,
-					url: response.url,
-					detail: responsejson,
-				};
-			});
 		}
-	});
+		return response.text().then((responsetext) => {
+			let responsejson = responsetext;
+			try {
+				responsejson = JSON.parse(responsetext);
+			} finally {
+				throw TypeError(
+					JSON.stringify({
+						error: true,
+						status: response.status,
+						text: responsetext,
+						url: response.url,
+						detail: responsejson,
+					})
+				);
+			}
+		});
+	}).catch();
 };
 
 export default GetRequest;

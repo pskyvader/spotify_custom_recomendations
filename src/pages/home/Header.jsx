@@ -16,21 +16,24 @@ const UserInfo = () => {
 
 	const userinfo_template = (response) => {
 		return (
-			<Box sx={{ display: 'flex'}}>
-				<Avatar sx={{ mr: 2 }} alt={response.display_name} src={response.images[0].url} />
-				<Button variant="contained" onClick={Logout}> Logout </Button>
+			<Box sx={{ display: "flex" }}>
+				<Avatar
+					sx={{ mr: 2 }}
+					alt={response.display_name}
+					src={response.images[0].url}
+				/>
+				<Button variant="contained" onClick={Logout}>
+					{" "}
+					Logout{" "}
+				</Button>
 			</Box>
 		);
 	};
 	useEffect(() => {
 		Me.Me().then((response) => {
-			if (response.error) {
-				setUser(objectToList(response));
-			} else {
-				setUser(userinfo_template(response));
-			}
-			
-		});
+			console.log("asdf",response);
+			setUser(userinfo_template(response));
+		}).catch((e)=> setUser(e.message));
 	}, []);
 
 	return user;

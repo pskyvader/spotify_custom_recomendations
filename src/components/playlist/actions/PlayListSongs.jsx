@@ -12,7 +12,7 @@ import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 const PlayListSongsTemplate = ({ response, playlistId }) => {
 	const songList = FormatSongList(response.tracks.items);
 	const data = FormatSongListColumns(songList, playlistId, ButtonRemove);
-	return <SongListTemplate data={data} title={response.name}/>;
+	return <SongListTemplate data={data} title={response.name} />;
 };
 
 const PlayListSongs = () => {
@@ -24,20 +24,18 @@ const PlayListSongs = () => {
 		if (playlistId === null) {
 			return;
 		}
-		Playlist.Playlist(playlistId)
-			.then((response) => {
-				if (response.error) {
-					setPlaylist(objectToList(response));
-				} else {
-					setPlaylist(
-						<PlayListSongsTemplate
-							response={response}
-							playlistId={playlistId}
-						/>
-					);
-				}
-			})
-			.catch((e) => console.log(e));
+		Playlist.Playlist(playlistId).then((response) => {
+			if (response.error) {
+				setPlaylist(objectToList(response));
+				return;
+			}
+			setPlaylist(
+				<PlayListSongsTemplate
+					response={response}
+					playlistId={playlistId}
+				/>
+			);
+		});
 	}, [playlistId]);
 	return playlist;
 };
