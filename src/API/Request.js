@@ -9,26 +9,24 @@ const GetRequest = async (url, method = "GET", body = null) => {
 		body: body,
 	};
 	return fetch(url, requestOptions).then((response) => {
-		if (response.ok) {
-			return response.json();
-		}
-		return response.text().then((responsetext) => {
-			let responsejson = responsetext;
-			try {
-				responsejson = JSON.parse(responsetext);
-			} finally {
-				throw TypeError(
-					JSON.stringify({
+		if (!response.ok) {
+			return response.text().then((responsetext) => {
+				let responsejson = responsetext;
+				try {
+					responsejson = JSON.parse(responsetext);
+				} finally {
+					return {
 						error: true,
 						status: response.status,
 						text: responsetext,
 						url: response.url,
 						detail: responsejson,
-					})
-				);
-			}
-		});
-	}).catch();
+					};
+				}
+			});
+		}
+		return response.json();
+	});
 };
 
 export default GetRequest;

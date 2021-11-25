@@ -26,7 +26,9 @@ const NoTopSongs = () => {
 			return;
 		}
 		Playlist.Playlist(playlistId).then((playlist) => {
+			if (playlist.error) return setPlaylist(objectToList(playlist));
 			Me.MeTop().then((response) => {
+				if (response.error) return setPlaylist(objectToList(response));
 				setPlaylist(
 					<NoTopSongsTemplate
 						top={response}

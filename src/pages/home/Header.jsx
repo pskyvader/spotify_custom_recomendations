@@ -31,9 +31,9 @@ const UserInfo = () => {
 	};
 	useEffect(() => {
 		Me.Me().then((response) => {
-			console.log("asdf",response);
+			if (response.error) return setUser(objectToList(response));
 			setUser(userinfo_template(response));
-		}).catch((e)=> setUser(e.message));
+		});
 	}, []);
 
 	return user;

@@ -25,10 +25,7 @@ const PlayListSongs = () => {
 			return;
 		}
 		Playlist.Playlist(playlistId).then((response) => {
-			if (response.error) {
-				setPlaylist(objectToList(response));
-				return;
-			}
+			if (response.error) return setPlaylist(objectToList(response));
 			setPlaylist(
 				<PlayListSongsTemplate
 					response={response}

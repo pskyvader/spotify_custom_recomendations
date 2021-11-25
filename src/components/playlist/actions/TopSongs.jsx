@@ -12,9 +12,13 @@ import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 const TopSongsTemplate = ({ top, playlist, playlistId }) => {
 	const topSongs = FormatSongList(top.items);
 	const playlistSongs = FormatSongList(playlist.tracks.items);
-	const RemainingTopSongs = subtractById(topSongs,playlistSongs);
+	const RemainingTopSongs = subtractById(topSongs, playlistSongs);
 
-	const data = FormatSongListColumns(RemainingTopSongs, playlistId, ButtonAdd);
+	const data = FormatSongListColumns(
+		RemainingTopSongs,
+		playlistId,
+		ButtonAdd
+	);
 	return <SongListTemplate data={data} title="Top Songs" />;
 };
 
@@ -28,20 +32,18 @@ const TopSongs = () => {
 		}
 		Playlist.Playlist(playlistId)
 			.then((playlist) => {
+				if (playlist.error) return setPlaylist(objectToList(playlist));
 				Me.MeTop()
 					.then((response) => {
-						if (response.error) {
-							setPlaylist(objectToList(response));
-							console.log("PlayListSongs", playlistId);
-						} else {
-							setPlaylist(
-								<TopSongsTemplate
-									top={response}
-									playlist={playlist}
-									playlistId={playlistId}
-								/>
-							);
-						}
+						if (response.error)
+							return setPlaylist(objectToList(response));
+						setPlaylist(
+							<TopSongsTemplate
+								top={response}
+								playlist={playlist}
+								playlistId={playlistId}
+							/>
+						);
 					})
 					.catch((e) => console.log(e));
 			})

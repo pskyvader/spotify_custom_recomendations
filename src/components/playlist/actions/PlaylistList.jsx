@@ -25,19 +25,10 @@ const PlaylistList = () => {
 		setPlaylist(<CircularProgress />);
 
 		Me.MePlaylist().then((response) => {
-			if (response.error) {
-				setPlaylist(objectToList(response));
-				return;
-			}
-			if (response.items.length === 0) {
-				setPlaylist("No available Playlist");
-				return;
-			}
+			if (response.error) return setPlaylist(objectToList(response));
+			if (response.items.length === 0) return setPlaylist("No available Playlist");
 			Me.Me().then((me) => {
-				if (me.error) {
-					setPlaylist(objectToList(me));
-					return;
-				}
+				if (me.error) return setPlaylist(objectToList(me));
 				setPlaylist(
 					<PlaylistListTemplate playlists={response.items} me={me} />
 				);

@@ -5,16 +5,23 @@ import {
 	FormatSongListColumns,
 } from "../../../modules/FormatSongs";
 import { subtractById, objectToList } from "../../../utils";
-import { Playlist, Recommended,Me } from "../../../API";
+import { Playlist, Recommended, Me } from "../../../API";
 import { SongListTemplate, ButtonAdd } from "../../../modules/SongsView";
 import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
 
 const RecommendedSongsTemplate = ({ recommended, playlist, playlistId }) => {
 	const recommendedSongs = FormatSongList(recommended.tracks);
 	const playlistSongs = FormatSongList(playlist.tracks.items);
-	const RemainingRecommendedSongs = subtractById(recommendedSongs,playlistSongs);
+	const RemainingRecommendedSongs = subtractById(
+		recommendedSongs,
+		playlistSongs
+	);
 
-	const data = FormatSongListColumns(RemainingRecommendedSongs, playlistId, ButtonAdd);
+	const data = FormatSongListColumns(
+		RemainingRecommendedSongs,
+		playlistId,
+		ButtonAdd
+	);
 	return <SongListTemplate data={data} title="Recommended" />;
 };
 
@@ -26,13 +33,14 @@ const RecommendedSongs = () => {
 		if (playlistId === null) {
 			return;
 		}
-		Playlist.Playlist(playlistId).then((playlist) => {
-				Me.MeTop().then((topSongs)=> {
-					Recommended.Recommended(playlist,topSongs).then((response) => {
-						if (response.error) {
-							setPlaylist(objectToList(response));
-							console.log("PlayListSongs", playlistId,response);
-						} else {
+		Playlist.Playlist(playlistId)
+			.then((playlist) => {
+				if (playlist.error) return setPlaylist(objectToList(playlist));
+				Me.MeTop().then((topSongs) => {
+					if (topSongs.error) return setPlaylist(objectToList(topSongs));
+					Recommended.Recommended(playlist, topSongs)
+						.then((response) => {
+							if (response.error) return setPlaylist(objectToList(response));
 							setPlaylist(
 								<RecommendedSongsTemplate
 									recommended={response}
@@ -40,11 +48,9 @@ const RecommendedSongs = () => {
 									playlistId={playlistId}
 								/>
 							);
-						}
-					})
-					.catch((e) => console.log(e));
-				})
-				
+						})
+						.catch((e) => console.log(e));
+				});
 			})
 			.catch((e) => console.log(e));
 	}, [playlistId]);
