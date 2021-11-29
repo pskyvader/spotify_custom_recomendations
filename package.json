@@ -1,25 +1,28 @@
 {
-  "name": "spotify_custom_recomendations",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/pskyvader/spotify_custom_recomendations.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/pskyvader/spotify_custom_recomendations/issues"
-  },
-  "homepage": "https://github.com/pskyvader/spotify_custom_recomendations#readme",
-  "dependencies": {
-    "express": "^4.17.1"
-  }
+    "name": "spotify_custom_recomendations",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node server/index.js",
+        "dev": "(start node server/index.js && start npm start --prefix client) || (node server/index.js & npm start --prefix client)",
+        "build": "npm install && cd client && npm install && npm run build",
+        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/pskyvader/spotify_custom_recomendations.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/pskyvader/spotify_custom_recomendations/issues"
+    },
+    "homepage": "https://github.com/pskyvader/spotify_custom_recomendations#readme",
+    "dependencies": {
+        "express": "^4.17.1"
+    },
+    "devDependencies": {},
+    "description": ""
 }
