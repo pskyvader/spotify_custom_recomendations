@@ -21,7 +21,9 @@
     },
     "homepage": "https://github.com/pskyvader/spotify_custom_recomendations#readme",
     "dependencies": {
-        "express": "^4.17.1"
+        "dotenv": "^10.0.0",
+        "express": "^4.17.1",
+        "request": "^2.88.2"
     },
     "devDependencies": {},
     "description": ""

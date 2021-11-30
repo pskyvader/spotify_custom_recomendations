@@ -1,14 +1,13 @@
-const client_id = process.env.REACT_APP_CLIENT_ID; // Your client id
-const client_secret = process.env.REACT_APP_CLIENT_SECRET; // Your secret
-const redirect_uri = process.env.REACT_APP_REDIRECT_URI; // Your redirect uri
-const stateKey = process.env.REACT_APP_STATEKEY;
+const client_id = process.env.CLIENT_ID; // Your client id
+const client_secret = process.env.CLIENT_SECRET; // Your secret
+const redirect_uri = process.env.REDIRECT_URI; // Your redirect uri
+const stateKey = process.env.STATEKEY;
 
-const Credentials = {
+const credentials = {
 	client_id,
 	client_secret,
 	redirect_uri,
 	stateKey,
 };
 
-
-module.exports = { Credentials };
+module.exports = {credentials};

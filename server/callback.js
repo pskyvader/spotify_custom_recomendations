@@ -1,12 +1,14 @@
-const credentials = require("./credentials");
+const request = require('request');
+const { credentials } = require("./credentials");
 const callback = (req, res) => {
+	console.log("callback", req.query);
 	var code = req.query.code || null;
 	var state = req.query.state || null;
 
 	if (state === null) {
 		res.redirect(
 			"/#" +
-				querystring.stringify({
+				new URLSearchParams({
 					error: "state_mismatch",
 				})
 		);
@@ -38,6 +40,5 @@ const callback = (req, res) => {
 		res.json({ error: true, message: response });
 	});
 };
-
 
 module.exports = { callback };
