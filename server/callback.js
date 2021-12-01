@@ -1,17 +1,11 @@
 const request = require('request');
 const { credentials } = require("./credentials");
 const callback = (req, res) => {
-	console.log("callback", req.query);
 	var code = req.query.code || null;
 	var state = req.query.state || null;
 
 	if (state === null) {
-		res.redirect(
-			"/#" +
-				new URLSearchParams({
-					error: "state_mismatch",
-				})
-		);
+		res.redirect( "/#" + new URLSearchParams({ error: "state_mismatch", }) );
 		return;
 	}
 

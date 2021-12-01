@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { Redirect } from "react-router";
 
-import { Credentials } from "../../API";
+import { Credentials } from "../API";
 
 export default function Callback(props) {
 	let location = new URLSearchParams(useLocation().hash.replace("#", "?"));

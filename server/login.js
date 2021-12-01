@@ -1,6 +1,5 @@
 const { generateRandomString } = require("./utils/generateRandomString");
 const { credentials } = require("./credentials");
-console.log(credentials)
 // your application requests authorization
 const permissions = [
 	// "user-read-private",
@@ -12,21 +11,25 @@ const permissions = [
 	"playlist-modify-public",
 	"playlist-modify-private",
 ];
-var scope = permissions.join(" ");
+const scope = permissions.join(" ");
 
 const login = (req, res) => {
-	var state = generateRandomString(16);
-
-	res.redirect(
+	const return_value = req.query.return || null;
+	const state = generateRandomString(16);
+	const url =
 		"https://accounts.spotify.com/authorize?" +
-			new URLSearchParams({
-				response_type: "code",
-				client_id: credentials.client_id,
-				scope: scope,
-				redirect_uri: credentials.redirect_uri,
-				state: state,
-			})
-	);
+		new URLSearchParams({
+			response_type: "code",
+			client_id: credentials.client_id,
+			scope: scope,
+			redirect_uri: credentials.redirect_uri,
+			state: state,
+		});
+	if (return_value) {
+		res.json({ url: url });
+		return;
+	}
+	res.redirect(url);
 };
 
 module.exports = { login };
