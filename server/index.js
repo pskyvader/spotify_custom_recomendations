@@ -1,7 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-const { callback, authorize, pushtoken } = require("./api");
+const { authorize, pushtoken } = require("./api");
+const { callback } = require("./callback");
+const { login } = require("./login");
 const app = express();
 app.use(
 	session({
@@ -17,7 +19,6 @@ app.use(express.static("/client/build/"));
 // serve up the index.html if express does'nt recognize the route
 const path = require("path");
 
-
 app.get("/api/authorize", function (req, res) {
 	authorize(req, res);
 });
@@ -25,7 +26,7 @@ app.get("/api/authorize", function (req, res) {
 app.get("/api/callback", function (req, res) {
 	callback(req, res);
 });
-app.get("/api/pushtoken", function (req, res) {
+app.post("/api/pushtoken", function (req, res) {
 	pushtoken(req, res);
 });
 

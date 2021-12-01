@@ -22,11 +22,11 @@ const authorize = (req, res) => {
 					credentials.client_id + ":" + credentials.client_secret
 				).toString("base64"),
 		},
-		body: {
+		body: new URLSearchParams({
 			code: code,
 			redirect_uri: credentials.redirect_uri,
 			grant_type: "authorization_code",
-		},
+		}).toString(),
 	};
 
 	res.json(requestOptions);

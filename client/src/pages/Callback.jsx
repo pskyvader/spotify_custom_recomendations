@@ -1,14 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import GetRequest from "../API/Request";
 import { Redirect } from "react-router";
 
 export default function Callback(props) {
-	const url = "/authorize" + useLocation().search;
+	const [redirect, SetRedirect] = useState(null);
+	const url = "/api/authorize" + useLocation().search;
 	useEffect(() => {
 		GetRequest(url).then((data) => {
 			if (data.error) {
-				<Redirect to={"/#error=" + data.message} />;
+				SetRedirect("/#error=" + data.message);
 				return;
 			}
 			GetRequest(
@@ -19,22 +20,22 @@ export default function Callback(props) {
 			).then((response) => {
 				if (!response.error) {
 					GetRequest(
-						"/pushtoken",
+						"/api/pushtoken",
 						"POST",
 						JSON.stringify(response)
 					).then((tokenresponse) => {
 						if (!tokenresponse.error) {
-							<Redirect to="/#error=push_token_error" />;
+							SetRedirect("/#loggedin=true");
 							return;
 						}
-						<Redirect to="/#loggedin=true" />;
+						SetRedirect("/#error=push_token_error");
 					});
 					return;
 				}
-				<Redirect to="/#error=login_error" />;
+				SetRedirect("/#error=login_error");
 			});
 		});
 	}, [url]);
 
-	return "uwu";
+	return redirect ? <Redirect to={redirect} /> : "uwu";
 }
