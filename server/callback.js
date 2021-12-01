@@ -14,8 +14,7 @@ const callback = (req, res) => {
 		url: "https://accounts.spotify.com/api/token",
 		form: {
 			code: code,
-			// redirect_uri: credentials.redirect_uri,
-			redirect_uri: "http://localhost:5000/callback",
+			redirect_uri: credentials.redirect_uri,
 			grant_type: "authorization_code",
 		},
 		headers: {

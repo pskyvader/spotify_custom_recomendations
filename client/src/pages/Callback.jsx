@@ -1,14 +1,32 @@
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Redirect } from "react-router";
+import GetRequest from "../API/Request";
+// import { Redirect } from "react-router";
 
-import { Credentials } from "../API";
+// import { Credentials } from "../API";
 
 export default function Callback(props) {
-	fetch("/callback"+useLocation().search+"&return=true")
-	.then((res) => res.json())
-	.then((data) => {
-		console.log(data);
-	});
+	const url = "/callback" + useLocation().search + "&return=true";
+	useEffect(() => {
+		fetch(url)
+			.then((res) => res.json())
+			.then((data) => {
+				const form=new URLSearchParams(data.form);
+				const requestOptions = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded",
+						Authorization: data.headers.Authorization,
+					},
+					body: form,
+				};
+				GetRequest(data.url, "POST", null, requestOptions).then(
+					(response) => {
+						console.log(response);
+					}
+				);
+			});
+	}, [url]);
 
 	return "uwu";
 	// let location = new URLSearchParams(useLocation().hash.replace("#", "?"));

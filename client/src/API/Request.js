@@ -1,6 +1,6 @@
-const GetRequest = async (url, method = "GET", body = null) => {
+const GetRequest = async (url, method = "GET", body = null,request=null) => {
 	const access_token = localStorage.getItem("access_token");
-	const requestOptions = {
+	const requestOptions = request || {
 		method: method,
 		headers: {
 			"Content-Type": "application/json",
