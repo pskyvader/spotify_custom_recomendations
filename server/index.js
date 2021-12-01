@@ -1,9 +1,18 @@
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
+const session = require("express-session");
 const { callback } = require("./callback");
 const { login } = require("./login");
 
 const app = express();
+app.use(
+	session({
+		secret: process.env.SESSION_SECRET,
+		saveUninitialized: false,
+		resave: false,
+	})
+);
+
 // serve up production assets
 app.use(express.static("client/build"));
 // let the react app to handle any unknown routes
