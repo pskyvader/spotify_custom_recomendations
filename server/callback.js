@@ -14,7 +14,8 @@ const callback = (req, res) => {
 		url: "https://accounts.spotify.com/api/token",
 		form: {
 			code: code,
-			redirect_uri: credentials.redirect_uri,
+			// redirect_uri: credentials.redirect_uri,
+			redirect_uri: "http://localhost:5000/callback",
 			grant_type: "authorization_code",
 		},
 		headers: {
@@ -27,20 +28,22 @@ const callback = (req, res) => {
 		json: true,
 	};
 
+	if (return_value) {
+		res.json(authOptions);
+		return;
+	}
+
 	request.post(authOptions, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
 			const access_token = body.access_token;
 			const refresh_token = body.refresh_token;
+
 			req.session.loggedin = true;
 			req.session.access_token = access_token;
 			req.session.refresh_token = refresh_token;
 
 			const response_value = { loggedin: true };
 
-			if (return_value) {
-				res.json(response_value);
-				return;
-			}
 			res.redirect("/#" + new URLSearchParams(response_value));
 			return;
 		}
