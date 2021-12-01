@@ -3,7 +3,6 @@ const { credentials } = require("./credentials");
 const callback = (req, res) => {
 	var code = req.query.code || null;
 	var state = req.query.state || null;
-	const return_value = req.query.return || null;
 
 	if (state === null) {
 		res.redirect("/#" + new URLSearchParams({ error: "state_mismatch" }));
@@ -26,11 +25,6 @@ const callback = (req, res) => {
 		},
 		json: true,
 	};
-
-	if (return_value) {
-		res.json(authOptions);
-		return;
-	}
 
 	request.post(authOptions, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
