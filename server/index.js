@@ -8,8 +8,8 @@ const app = express();
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
-		saveUninitialized: false,
-		resave: false,
+		saveUninitialized: true,
+		resave: true,
 	})
 );
 
@@ -31,7 +31,18 @@ app.post("/api/pushtoken", function (req, res) {
 });
 
 app.get("/api", (req, res) => {
-	res.json({ message: "Hello from server!" });
+	console.log({
+		message: "Hello from server!",
+		loggedin: req.session.loggedin,
+		access_token: req.session.access_token,
+		refresh_token: req.session.refresh_token,
+	})
+	res.json({
+		message: "Hello from server!",
+		loggedin: req.session.loggedin,
+		access_token: req.session.access_token,
+		refresh_token: req.session.refresh_token,
+	});
 });
 
 app.get("/login", function (req, res) {

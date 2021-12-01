@@ -18,6 +18,7 @@ export default function Callback(props) {
 				null,
 				data
 			).then((response) => {
+				console.log(response)
 				if (!response.error) {
 					GetRequest(
 						"/api/pushtoken",

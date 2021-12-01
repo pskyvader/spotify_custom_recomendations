@@ -8,6 +8,7 @@ const GetRequest = async (url, method = "GET", body = null,request=null) => {
 		},
 		body: body,
 	};
+	console.log(requestOptions);
 	return fetch(url, requestOptions).then((response) => {
 		if (!response.ok) {
 			return response.text().then((responsetext) => {

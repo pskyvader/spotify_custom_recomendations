@@ -1,6 +1,6 @@
 // import { useEffect } from "react";
 import Playlists from "../../components/playlist/Playlists";
-import Login, { is_logged } from "../../modules/Login";
+import Login, { is_logged } from "../../modules/LoginButton";
 import PlaylistContextProvider from "../../modules/PlaylistContextProvider";
 
 const Home = () => {

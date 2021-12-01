@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, Button } from "@mui/material";
 
-import Login, { Logout, is_logged } from "../../modules/Login";
+import Login, { Logout, is_logged } from "../../modules/LoginButton";
 import { useEffect, useState } from "react";
 import { objectToList } from "../../utils";
 import { Me } from "../../API";
