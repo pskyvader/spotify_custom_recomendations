@@ -26,17 +26,11 @@ app.get("/api/authorize", function (req, res) {
 app.get("/api/callback", function (req, res) {
 	callback(req, res);
 });
-app.post("/api/pushtoken", function (req, res) {
+app.get("/api/pushtoken", function (req, res) {
 	pushtoken(req, res);
 });
 
 app.get("/api", (req, res) => {
-	console.log({
-		message: "Hello from server!",
-		loggedin: req.session.loggedin,
-		access_token: req.session.access_token,
-		refresh_token: req.session.refresh_token,
-	})
 	res.json({
 		message: "Hello from server!",
 		loggedin: req.session.loggedin,
@@ -50,7 +44,7 @@ app.get("/login", function (req, res) {
 });
 
 app.get("*", (req, res) => {
-	res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+	res.sendFile(path.resolve(__dirname,"..", "client", "build", "index.html"));
 });
 
 // if not in production use the port 5000

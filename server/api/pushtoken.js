@@ -6,8 +6,6 @@ const pushtoken = (req, res) => {
 	req.session.access_token = access_token;
 	req.session.refresh_token = refresh_token;
 
-	// console.log(req,req.session.access_token);
-
 	res.json({ loggedin: true });
 
 	// res.json({ error: true, message: response });

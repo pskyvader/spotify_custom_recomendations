@@ -1,12 +1,11 @@
 import { Button } from "@mui/material";
-import { useEffect } from "react";
 import GetRequest from "../API/Request";
 
 export const is_logged = () => {
-	return (
-		localStorage.getItem("access_token") !== null &&
-		localStorage.getItem("expiration") > Date.now()
-	);
+	return GetRequest("/api/loggedin").then((response) => {
+		console.log(response);
+		return response.loggedin;
+	});
 };
 
 export const Logout = () => {
@@ -16,13 +15,6 @@ export const Logout = () => {
 
 const LoginButton = () => {
 	const uri = "login";
-	useEffect(() => {
-		console.log(window.sessionStorage.getItem("loggedin"));
-		GetRequest("/api").then((response) => {
-			console.log(response);
-		});
-	});
-
 	return (
 		<Button variant="contained" href={uri} color="inherit">
 			Login with Spotify

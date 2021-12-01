@@ -4,7 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, CircularProgress } from "@mui/material";
 
 import Login, { Logout, is_logged } from "../../modules/LoginButton";
 import { useEffect, useState } from "react";
@@ -40,6 +40,18 @@ const UserInfo = () => {
 };
 
 const Header = () => {
+	const [header, setHeader] = useState(<CircularProgress />);
+
+	useEffect(() => {
+		is_logged().then((loggedin) => {
+			if (loggedin) {
+				setHeader(<UserInfo />);
+				return;
+			}
+			setHeader(<Login />);
+		});
+	}, []);
+
 	return (
 		<header>
 			<Box sx={{ flexGrow: 1 }}>
@@ -61,7 +73,7 @@ const Header = () => {
 						>
 							Spotify custom playlists
 						</Typography>
-						{is_logged() ? <UserInfo /> : <Login />}
+						{header}
 					</Toolbar>
 				</AppBar>
 			</Box>
