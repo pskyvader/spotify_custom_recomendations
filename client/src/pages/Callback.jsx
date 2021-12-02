@@ -19,7 +19,8 @@ export default function Callback(props) {
 				data
 			).then((response) => {
 				if (!response.error) {
-					GetRequest( "/api/pushtoken?"+ new URLSearchParams(response)
+					GetRequest(
+						"/api/pushtoken?" + new URLSearchParams(response)
 					).then((tokenresponse) => {
 						if (!tokenresponse.error) {
 							SetRedirect("/#loggedin=true");

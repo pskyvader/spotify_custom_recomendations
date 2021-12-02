@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-const { authorize, pushtoken } = require("./api");
+const { authorize, pushtoken,loggedin } = require("./api");
 const { callback } = require("./callback");
 const { login } = require("./login");
 const app = express();
@@ -30,12 +30,13 @@ app.get("/api/pushtoken", function (req, res) {
 	pushtoken(req, res);
 });
 
-app.get("/api", (req, res) => {
+app.get("/api/*", (req, res) => {
+	if (req.params[0] == "loggedin") {
+		loggedin(req, res);
+		return;
+	}
 	res.json({
 		message: "Hello from server!",
-		loggedin: req.session.loggedin,
-		access_token: req.session.access_token,
-		refresh_token: req.session.refresh_token,
 	});
 });
 
@@ -44,7 +45,9 @@ app.get("/login", function (req, res) {
 });
 
 app.get("*", (req, res) => {
-	res.sendFile(path.resolve(__dirname,"..", "client", "build", "index.html"));
+	res.sendFile(
+		path.resolve(__dirname, "..", "client", "build", "index.html")
+	);
 });
 
 // if not in production use the port 5000

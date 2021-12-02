@@ -32,10 +32,10 @@ const RemoveSongs = () => {
 		if (playlistId === null) {
 			return;
 		}
-		Playlist.Playlist(playlistId)
-			.then((playlist) => {
-				if (playlist.error) return setPlaylist(objectToList(playlist));
-				paginatedRecentsList( fromDate, fromDate + 1, setPlaylist, [] ).then((recentslist) => {
+		Playlist.Playlist(playlistId).then((playlist) => {
+			if (playlist.error) return setPlaylist(objectToList(playlist));
+			paginatedRecentsList(fromDate, fromDate + 1, setPlaylist, []).then(
+				(recentslist) => {
 					if (recentslist.error)
 						return setPlaylist(objectToList(recentslist));
 					setPlaylist(
@@ -45,15 +45,19 @@ const RemoveSongs = () => {
 							playlistId={playlistId}
 						/>
 					);
-				});
-			})
-			.catch((e) => console.log(e));
+				}
+			);
+		});
 	}, [playlistId]);
 	return playlist;
 };
 
-const paginatedRecentsList = ( fromDate, afterDate, setPlaylist, recentsList = [] ) => {
-    console.log(fromDate, afterDate,afterDate-fromDate,recentsList);
+const paginatedRecentsList = (
+	fromDate,
+	afterDate,
+	setPlaylist,
+	recentsList = []
+) => {
 	return Me.MeRecently(afterDate).then((recent) => {
 		if (recent.error) return recent;
 		recentsList.push(recent);

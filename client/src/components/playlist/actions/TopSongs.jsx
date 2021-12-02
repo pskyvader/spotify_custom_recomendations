@@ -30,24 +30,19 @@ const TopSongs = () => {
 		if (playlistId === null) {
 			return;
 		}
-		Playlist.Playlist(playlistId)
-			.then((playlist) => {
-				if (playlist.error) return setPlaylist(objectToList(playlist));
-				Me.MeTop()
-					.then((response) => {
-						if (response.error)
-							return setPlaylist(objectToList(response));
-						setPlaylist(
-							<TopSongsTemplate
-								top={response}
-								playlist={playlist}
-								playlistId={playlistId}
-							/>
-						);
-					})
-					.catch((e) => console.log(e));
-			})
-			.catch((e) => console.log(e));
+		Playlist.Playlist(playlistId).then((playlist) => {
+			if (playlist.error) return setPlaylist(objectToList(playlist));
+			Me.MeTop().then((response) => {
+				if (response.error) return setPlaylist(objectToList(response));
+				setPlaylist(
+					<TopSongsTemplate
+						top={response}
+						playlist={playlist}
+						playlistId={playlistId}
+					/>
+				);
+			});
+		});
 	}, [playlistId]);
 	return playlist;
 };

@@ -9,7 +9,6 @@ const GetRequest = async (url, method = "GET", body = null,request=null) => {
 		body: body,
 	};
 	return fetch(url, requestOptions).then((response) => {
-		console.log(response);
 		if (!response.ok) {
 			return response.text().then((responsetext) => {
 				let responsejson = responsetext;
