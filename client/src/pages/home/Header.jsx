@@ -14,6 +14,8 @@ import { Me } from "../../API";
 const UserInfo = () => {
 	const [user, setUser] = useState(null);
 
+	
+
 	const userinfo_template = (response) => {
 		return (
 			<Box sx={{ display: "flex" }}>
@@ -23,8 +25,7 @@ const UserInfo = () => {
 					src={response.images[0].url}
 				/>
 				<Button variant="contained" onClick={Logout}>
-					{" "}
-					Logout{" "}
+					Logout
 				</Button>
 			</Box>
 		);

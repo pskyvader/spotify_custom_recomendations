@@ -1,6 +1,7 @@
-const request = require("request");
 const { credentials } = require("./credentials");
-const callback = (req, res) => {
+const {request} = require("./utils");
+
+const callback = async (req, res) => {
 	var code = req.query.code || null;
 	var state = req.query.state || null;
 
@@ -9,39 +10,37 @@ const callback = (req, res) => {
 		return;
 	}
 
-	var authOptions = {
-		url: "https://accounts.spotify.com/api/token",
-		form: {
-			code: code,
-			redirect_uri: credentials.redirect_uri,
-			grant_type: "authorization_code",
-		},
+	const requestOptions = {
+		method: "POST",
 		headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
 			Authorization:
 				"Basic " +
 				Buffer.from(
 					credentials.client_id + ":" + credentials.client_secret
 				).toString("base64"),
 		},
-		json: true,
+		body: new URLSearchParams({
+			code: code,
+			redirect_uri: credentials.redirect_uri,
+			grant_type: "authorization_code",
+		}).toString(),
 	};
 
-	request.post(authOptions, function (error, response, body) {
-		if (!error && response.statusCode === 200) {
-			const access_token = body.access_token;
-			const refresh_token = body.refresh_token;
+	const response = await request(req, "https://accounts.spotify.com/api/token", "POST", null, requestOptions );
+	if (!response.error) {
+		console.log(response);
+		const access_token = response.access_token || null;
+		const refresh_token = response.refresh_token || null;
 
-			req.session.loggedin = true;
-			req.session.access_token = access_token;
-			req.session.refresh_token = refresh_token;
+		req.session.loggedin = true;
+		req.session.access_token = access_token;
+		req.session.refresh_token = refresh_token;
 
-			const response_value = { loggedin: true };
+		res.redirect("/#loggedin=true");
+	}
 
-			res.redirect("/#" + new URLSearchParams(response_value));
-			return;
-		}
-		res.json({ error: true, message: response });
-	});
+	res.redirect("/#error=login_error");
 };
 
 module.exports = { callback };
