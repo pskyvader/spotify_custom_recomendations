@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-const { authorize, pushtoken,loggedin } = require("./api");
+const { authorize, pushtoken, loggedin, me } = require("./api");
 const { callback } = require("./callback");
 const { login } = require("./login");
 const app = express();
@@ -31,13 +31,28 @@ app.get("/api/pushtoken", function (req, res) {
 });
 
 app.get("/api/*", (req, res) => {
-	if (req.params[0] == "loggedin") {
-		loggedin(req, res);
-		return;
+	switch (req.params[0]) {
+		case "loggedin":
+			loggedin(req, res);
+			break;
+		case "authorize":
+			authorize(req, res);
+			break;
+		case "callback":
+			callback(req, res);
+			break;
+		case "pushtoken":
+			pushtoken(req, res);
+			break;
+		case "me":
+			me(req, res);
+			break;
+		default:
+			res.json({
+				message: "Hello from server!",
+			});
+			break;
 	}
-	res.json({
-		message: "Hello from server!",
-	});
 });
 
 app.get("/login", function (req, res) {

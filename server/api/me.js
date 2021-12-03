@@ -1,6 +1,7 @@
 const { request } = require("../utils");
-const me = (req, res) => {
-	const response = await request(req,"https://accounts.spotify.com/api/me");
+const me =async (req, res) => {
+	const response = await request(req,"https://api.spotify.com/v1/me");
+	console.log(response)
 	if (response.error) {
 		res.json(response);
 		return;
@@ -12,7 +13,9 @@ const me = (req, res) => {
 		url: response.external_urls.spotify,
 		image: response.images[0].url,
 	};
+
 	res.json(result);
+	return;
 };
 
-module.exports = { me };
+module.exports = { me:me() };

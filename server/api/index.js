@@ -1,9 +1,10 @@
 const { authorize } = require("./authorize");
 const { pushtoken } = require("./pushtoken");
 const { loggedin } = require("./loggedin");
+const { me } = require("./me");
 
 module.exports = {
-	authorize: authorize,
-	pushtoken: pushtoken,
-	loggedin: loggedin,
+	authorize,
+	pushtoken,
+	loggedin,me
 };

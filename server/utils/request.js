@@ -1,3 +1,5 @@
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 const request = async (req,url, method = "GET", body = null, request = null) => {
 	const requestOptions = request || {
 		method: method,
@@ -8,7 +10,7 @@ const request = async (req,url, method = "GET", body = null, request = null) => 
 		body: body,
 	};
 	const result = async () => {
-		const response = fetch(url, requestOptions);
+		const response = await fetch(url, requestOptions);
 		if (!response.ok) {
 			const responsetext = await response.text();
 			let responsejson = responsetext;
@@ -26,7 +28,7 @@ const request = async (req,url, method = "GET", body = null, request = null) => 
 		}
 		return response.json();
 	};
-	return await result;
+	return result();
 };
 
 module.exports = { request };

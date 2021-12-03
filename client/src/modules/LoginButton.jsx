@@ -3,6 +3,7 @@ import GetRequest from "../API/Request";
 
 export const is_logged = () => {
 	return GetRequest("/api/loggedin").then((response) => {
+		console.log(response);
 		return response.loggedin;
 	});
 };
