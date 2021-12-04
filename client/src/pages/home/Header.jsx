@@ -1,3 +1,4 @@
+import {useContext, useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,37 +8,34 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, Button, CircularProgress } from "@mui/material";
 
 import Login, { Logout, is_logged } from "../../modules/LoginButton";
-import { useEffect, useState } from "react";
-import { objectToList } from "../../utils";
-import { Me } from "../../API";
+import {ProfileContext} from "../../context/ProfileContextProvider";
 
 const UserInfo = () => {
-	const [user, setUser] = useState(null);
+	// const [user, setUser] = useState(null);
+	const { profile } = useContext(ProfileContext);
+	if(!profile) return null;
+	return (
+		<Box sx={{ display: "flex" }}>
+			<Avatar
+				sx={{ mr: 2 }}
+				alt={profile.name}
+				src={profile.image}
+			/>
+			<Button variant="contained" onClick={Logout}>
+				Logout
+			</Button>
+		</Box>
+	);
 
 	
 
-	const userinfo_template = (response) => {
-		return (
-			<Box sx={{ display: "flex" }}>
-				<Avatar
-					sx={{ mr: 2 }}
-					alt={response.display_name}
-					src={response.images[0].url}
-				/>
-				<Button variant="contained" onClick={Logout}>
-					Logout
-				</Button>
-			</Box>
-		);
-	};
-	useEffect(() => {
-		Me.Me().then((response) => {
-			if (response.error) return setUser(objectToList(response));
-			setUser(userinfo_template(response));
-		});
-	}, []);
+	// const userinfo_template = (response) => {
+		
+	// };
+	
+	// setUser(userinfo_template(response));
 
-	return user;
+	// return user;
 };
 
 const Header = () => {

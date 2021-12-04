@@ -3,8 +3,8 @@ import { CircularProgress } from "@mui/material";
 
 import Playlists from "../../components/playlist/Playlists";
 import Login, { is_logged } from "../../modules/LoginButton";
-import PlaylistContextProvider from "../../modules/PlaylistContextProvider";
-import ProfileContextProvider from "../../modules/ProfileContextProvider";
+import PlaylistContextProvider from "../../context/PlaylistContextProvider";
+import ProfileContextProvider from "../../context/ProfileContextProvider";
 
 const Home = () => {
 	const [home, setHome] = useState(<CircularProgress />);

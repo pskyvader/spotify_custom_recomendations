@@ -6,5 +6,6 @@ const { me } = require("./me");
 module.exports = {
 	authorize,
 	pushtoken,
-	loggedin,me
+	loggedin,
+	me,
 };

@@ -7,8 +7,7 @@ import {
 import { subtractById, objectToList } from "../../../utils";
 import { Playlist, Me } from "../../../API";
 import { SongListTemplate, ButtonRemove } from "../../../modules/SongsView";
-import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
-import GetRequest from "../../../API/Request";
+import { PlaylistContext } from "../../../context/PlaylistContextProvider";
 
 const RemoveSongsTemplate = ({ recent, playlist, playlistId }) => {
 	const recentSongs = FormatSongList(recent.items);

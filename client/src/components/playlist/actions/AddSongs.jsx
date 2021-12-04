@@ -7,7 +7,7 @@ import {
 import { subtractById, objectToList } from "../../../utils";
 import { Playlist, Recommended, Me } from "../../../API";
 import { SongListTemplate, ButtonAdd } from "../../../modules/SongsView";
-import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
+import { PlaylistContext } from "../../../context/PlaylistContextProvider";
 
 const AddSongsTemplate = ({ recommended, playlist, playlistId }) => {
 	const recommendedSongs = FormatSongList(recommended.tracks);

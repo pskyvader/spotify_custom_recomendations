@@ -11,8 +11,7 @@ export const Me = () => {
 };
 
 export const MePlaylist = (offset = 0) => {
-	const url =
-		"/api/me/playlists?limit=50&offset=" + offset;
+	const url = "/api/me/playlists";
 	return GetRequest(url);
 };
 

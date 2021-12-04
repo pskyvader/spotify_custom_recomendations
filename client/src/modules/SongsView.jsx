@@ -4,7 +4,7 @@ import { Box } from "@mui/system";
 import { GridOverlay, DataGrid } from "@mui/x-data-grid";
 import { Playlist } from "../API";
 import { useContext } from "react";
-import { PlaylistContext } from "./PlaylistContextProvider";
+import { PlaylistContext } from "../context/PlaylistContextProvider";
 
 export const ButtonAdd = ({ PlaylistId, uri }) => {
 	const { setPlaylistId } = useContext(PlaylistContext);

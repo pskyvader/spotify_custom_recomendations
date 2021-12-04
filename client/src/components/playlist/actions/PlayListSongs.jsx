@@ -7,7 +7,7 @@ import {
 	FormatSongListColumns,
 } from "../../../modules/FormatSongs";
 import { SongListTemplate, ButtonRemove } from "../../../modules/SongsView";
-import { PlaylistContext } from "../../../modules/PlaylistContextProvider";
+import { PlaylistContext } from "../../../context/PlaylistContextProvider";
 
 const PlayListSongsTemplate = ({ response, playlistId }) => {
 	const songList = FormatSongList(response.tracks.items);
