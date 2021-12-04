@@ -31,6 +31,7 @@ app.get("/api/pushtoken", function (req, res) {
 });
 
 app.get("/api/*", (req, res) => {
+	console.log(req.params);
 	switch (req.params[0]) {
 		case "loggedin":
 			loggedin(req, res);
@@ -44,7 +45,7 @@ app.get("/api/*", (req, res) => {
 		case "pushtoken":
 			pushtoken(req, res);
 			break;
-		case "me":
+		case "me/*":
 			me(req, res);
 			break;
 		default:

@@ -1,41 +1,69 @@
-import { useState, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Box } from "@mui/system";
-import { List, CircularProgress } from "@mui/material";
+import {
+	List,
+	ListItemButton,
+	ListItemIcon,
+	ListItemText,
+} from "@mui/material";
+import Avatar from "@mui/material/Avatar";
 
-import { Me } from "../../../API";
-import { FormatPlaylists } from "../../../modules/FormatPlaylists";
-import { PlaylistTemplate } from "../../../modules/PlaylistView";
-import { objectToList } from "../../../utils";
+import { PlaylistContext } from "../../../context/PlaylistContextProvider";
+import { ProfileContext } from "../../../context/ProfileContextProvider";
 
-const PlaylistListTemplate = ({ playlists, me }) => {
-	let templateProps = FormatPlaylists(playlists, me.id);
-	return (
-		<Box sx={{ height: "100%", flexGrow: 12 }}>
-			<List component="nav" aria-label="playlists">
-				<PlaylistTemplate {...templateProps} />
-			</List>
-		</Box>
-	);
+const PlaylistTemplate = () => {
+	const { playlistId, setPlaylistId, playlists } =
+		useContext(PlaylistContext);
+	const { profile } = useContext(ProfileContext);
+	let selectedId = playlistId;
+
+	useEffect(() => {
+		if (playlistId !== selectedId) {
+			setPlaylistId(selectedId);
+		}
+	}, [playlistId, setPlaylistId, selectedId]);
+	if (!profile || !playlists) return null;
+
+	console.log(playlists);
+
+	return playlists.map((currentPlaylist) => {
+		if (
+			playlistId === currentPlaylist.id &&
+			profile.id === currentPlaylist.owner.id
+		) {
+			currentPlaylist.selected = true;
+			selectedId = currentPlaylist.id;
+		}
+
+		return (
+			<ListItemButton
+				disabled={currentPlaylist.disabled}
+				key={currentPlaylist.id}
+				selected={currentPlaylist.selected}
+				onClick={() => {
+					setPlaylistId(currentPlaylist.id);
+				}}
+			>
+				<ListItemIcon>
+					<Avatar
+						alt={currentPlaylist.name}
+						src={currentPlaylist.image}
+					/>
+				</ListItemIcon>
+				<ListItemText primary={currentPlaylist.name} />
+			</ListItemButton>
+		);
+	});
 };
 
 const PlaylistList = () => {
-	const [playlist, setPlaylist] = useState(<CircularProgress />);
-
-	useEffect(() => {
-		setPlaylist(<CircularProgress />);
-		Me.MePlaylist().then((response) => {
-			if (response.error) return setPlaylist(objectToList(response));
-			if (response.items.length === 0) return setPlaylist("No available Playlist");
-			Me.Me().then((me) => {
-				if (me.error) return setPlaylist(objectToList(me));
-				setPlaylist(
-					<PlaylistListTemplate playlists={response.items} me={me} />
-				);
-			});
-		});
-	}, []);
-
-	return playlist;
+	return (
+		<Box sx={{ height: "100%", flexGrow: 12 }}>
+			<List component="nav" aria-label="playlists">
+				<PlaylistTemplate />
+			</List>
+		</Box>
+	);
 };
 
 export default PlaylistList;

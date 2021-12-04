@@ -10,7 +10,7 @@ export const Me = () => {
 	return GetRequest(url);
 };
 
-export const MePlaylist = (offset = 0) => {
+export const MePlaylist = () => {
 	const url = "/api/me/playlists";
 	return GetRequest(url);
 };
