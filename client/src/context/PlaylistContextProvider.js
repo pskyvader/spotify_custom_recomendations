@@ -18,7 +18,8 @@ const PlaylistContextProvider = (props) => {
 	
 	useMemo(() => {
 		return Me.MePlaylist().then((response) => {
-			if (response.error) return;
+			if (response.error) return false;
+			console.log(response)
 			setPlaylists(response);
 		});
 	}, []);

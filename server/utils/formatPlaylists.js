@@ -1,6 +1,5 @@
 const FormatPlaylists = (playlists, MyId) => {
-	let itemList = [];
-	playlists.forEach((currentPlaylist) => {
+	let itemList = playlists.map((currentPlaylist) =>{
 		const formattedPlaylist = {};
 		formattedPlaylist.id = currentPlaylist.id;
 		formattedPlaylist.disabled = MyId !== currentPlaylist.owner.id;
@@ -9,8 +8,8 @@ const FormatPlaylists = (playlists, MyId) => {
 		formattedPlaylist.image = currentPlaylist.images[0]
 			? currentPlaylist.images[0].url
 			: null;
+		return formattedPlaylist;
 
-		itemList.push(formattedPlaylist);
 	});
 	return itemList;
 };

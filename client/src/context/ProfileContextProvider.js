@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { createContext, useMemo, useState } from "react";
 import { Me } from "../API";
 
@@ -8,24 +8,12 @@ const ProfileContextProvider = (props) => {
 	const [profile, setProfile] = useState(null);
 	const provider = useMemo( () => ({ profile, setProfile }), [profile] );
 
-	const myprofile = useMemo(() => {
-		return Me.Me().then((response) => response);
-	}, []);
-	// useMemo(() => {
-	// 	return Me.Me().then((response) => {
-	// 		console.log("context",response)
-	// 		if (response.error) return;
-	// 		setProfile(response);
-	// 	});
-	// }, []);
-
-	useEffect(() => {
-		myprofile.then((response) => {
-					console.log("context",response)
-			if (response.error) return;
+	useMemo(() => {
+		return Me.Me().then((response) => {
+			if (response.error) return false;
 			setProfile(response);
 		});
-	}, [myprofile]);
+	}, []);
 
 	return (
 		<ProfileContext.Provider value={provider}>

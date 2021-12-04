@@ -12,13 +12,9 @@ import { PlaylistContext } from "../../../context/PlaylistContextProvider";
 import { ProfileContext } from "../../../context/ProfileContextProvider";
 
 const PlaylistTemplate = () => {
-	const { playlistId, setPlaylistId, playlists } =
-		useContext(PlaylistContext);
+	const { playlistId, setPlaylistId, playlists } = useContext(PlaylistContext);
 	const { profile } = useContext(ProfileContext);
 	let selectedId = playlistId;
-
-	
-	console.log("profile",profile)
 
 	useEffect(() => {
 		if (playlistId !== selectedId) {
@@ -27,12 +23,8 @@ const PlaylistTemplate = () => {
 	}, [playlistId, setPlaylistId, selectedId]);
 
 	if (!profile || !playlists) return null;
-
 	return playlists.map((currentPlaylist) => {
-		if (
-			playlistId === currentPlaylist.id &&
-			profile.id === currentPlaylist.owner.id
-		) {
+		if ( playlistId === currentPlaylist.id && !currentPlaylist.disabled) {
 			currentPlaylist.selected = true;
 			selectedId = currentPlaylist.id;
 		}

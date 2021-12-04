@@ -8,17 +8,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, Button, CircularProgress } from "@mui/material";
 
 import Login, { Logout, is_logged } from "../../modules/LoginButton";
-import { ProfileContext } from "../../context/ProfileContextProvider";
+import ProfileContextProvider, { ProfileContext} from "../../context/ProfileContextProvider";
 
 const UserInfo = () => {
-	// const [user, setUser] = useState(null);
 	const { profile } = useContext(ProfileContext);
-	console.log("header",profile)
-
-	useEffect(() => {
-		console.log("header",profile)
-	}, [profile]);
-
 	if (!profile) return null;
 	return (
 		<Box sx={{ display: "flex" }}>
@@ -36,7 +29,11 @@ const Header = () => {
 	useEffect(() => {
 		is_logged().then((loggedin) => {
 			if (loggedin) {
-				setHeader(<UserInfo />);
+				setHeader(
+					<ProfileContextProvider>
+						<UserInfo />
+					</ProfileContextProvider>
+				);
 				return;
 			}
 			setHeader(<Login />);
