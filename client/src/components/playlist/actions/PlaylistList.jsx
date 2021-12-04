@@ -17,14 +17,16 @@ const PlaylistTemplate = () => {
 	const { profile } = useContext(ProfileContext);
 	let selectedId = playlistId;
 
+	
+	console.log("profile",profile)
+
 	useEffect(() => {
 		if (playlistId !== selectedId) {
 			setPlaylistId(selectedId);
 		}
 	}, [playlistId, setPlaylistId, selectedId]);
-	if (!profile || !playlists) return null;
 
-	console.log(playlists);
+	if (!profile || !playlists) return null;
 
 	return playlists.map((currentPlaylist) => {
 		if (

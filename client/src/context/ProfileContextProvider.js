@@ -6,27 +6,26 @@ export const ProfileContext = createContext({});
 
 const ProfileContextProvider = (props) => {
 	const [profile, setProfile] = useState(null);
-	const provider = useMemo(
-		() => ({ profile, setProfile }),
-		[profile, setProfile]
-	);
+	const provider = useMemo( () => ({ profile, setProfile }), [profile] );
 
-	// const myprofile = useMemo(() => {
-	// 	return Me.Me().then((response) => response);
-	// }, []);
-	useMemo(() => {
-		return Me.Me().then((response) => {
-			if (response.error) return;
-			setProfile(response);
-		});
+	const myprofile = useMemo(() => {
+		return Me.Me().then((response) => response);
 	}, []);
-
-	// useEffect(() => {
-	// 	myprofile.then((response) => {
+	// useMemo(() => {
+	// 	return Me.Me().then((response) => {
+	// 		console.log("context",response)
 	// 		if (response.error) return;
 	// 		setProfile(response);
 	// 	});
-	// }, [myprofile]);
+	// }, []);
+
+	useEffect(() => {
+		myprofile.then((response) => {
+					console.log("context",response)
+			if (response.error) return;
+			setProfile(response);
+		});
+	}, [myprofile]);
 
 	return (
 		<ProfileContext.Provider value={provider}>

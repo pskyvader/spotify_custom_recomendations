@@ -1,7 +1,7 @@
 const { request, FormatPlaylists } = require("../utils");
 
 const me = (req, res) => {
-	switch (req.params[1]) {
+	switch (req.params.submodule) {
 		case "playlists":
 			meplaylists(req, res);
 			break;

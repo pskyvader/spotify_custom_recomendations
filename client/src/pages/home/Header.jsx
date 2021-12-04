@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,34 +8,26 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, Button, CircularProgress } from "@mui/material";
 
 import Login, { Logout, is_logged } from "../../modules/LoginButton";
-import {ProfileContext} from "../../context/ProfileContextProvider";
+import { ProfileContext } from "../../context/ProfileContextProvider";
 
 const UserInfo = () => {
 	// const [user, setUser] = useState(null);
 	const { profile } = useContext(ProfileContext);
-	if(!profile) return null;
+	console.log("header",profile)
+
+	useEffect(() => {
+		console.log("header",profile)
+	}, [profile]);
+
+	if (!profile) return null;
 	return (
 		<Box sx={{ display: "flex" }}>
-			<Avatar
-				sx={{ mr: 2 }}
-				alt={profile.name}
-				src={profile.image}
-			/>
+			<Avatar sx={{ mr: 2 }} alt={profile.name} src={profile.image} />
 			<Button variant="contained" onClick={Logout}>
 				Logout
 			</Button>
 		</Box>
 	);
-
-	
-
-	// const userinfo_template = (response) => {
-		
-	// };
-	
-	// setUser(userinfo_template(response));
-
-	// return user;
 };
 
 const Header = () => {

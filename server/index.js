@@ -12,6 +12,7 @@ app.use(
 		resave: true,
 	})
 );
+app.disable('x-powered-by');
 
 // serve up production assets
 app.use(express.static("/client/build/"));
@@ -19,20 +20,20 @@ app.use(express.static("/client/build/"));
 // serve up the index.html if express does'nt recognize the route
 const path = require("path");
 
-app.get("/api/authorize", function (req, res) {
-	authorize(req, res);
-});
+// app.get("/api/authorize", function (req, res) {
+// 	authorize(req, res);
+// });
 
-app.get("/api/callback", function (req, res) {
-	callback(req, res);
-});
-app.get("/api/pushtoken", function (req, res) {
-	pushtoken(req, res);
-});
+// app.get("/api/callback", function (req, res) {
+// 	callback(req, res);
+// });
+// app.get("/api/pushtoken", function (req, res) {
+// 	pushtoken(req, res);
+// });
 
-app.get("/api/*", (req, res) => {
-	console.log(req.params);
-	switch (req.params[0]) {
+
+app.get("/api/:module/:submodule?", (req, res) => {
+	switch (req.params.module) {
 		case "loggedin":
 			loggedin(req, res);
 			break;
@@ -45,7 +46,7 @@ app.get("/api/*", (req, res) => {
 		case "pushtoken":
 			pushtoken(req, res);
 			break;
-		case "me/*":
+		case "me":
 			me(req, res);
 			break;
 		default:
