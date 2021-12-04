@@ -1,9 +1,8 @@
 import { Button } from "@mui/material";
-import GetRequest from "../API/Request";
+import { Me } from "../API";
 
 export const is_logged = () => {
-	return GetRequest("/api/loggedin").then((response) => {
-		console.log(response);
+	return Me.LoggedIn().then((response) => {
 		return response.loggedin;
 	});
 };

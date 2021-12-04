@@ -8,15 +8,18 @@ const ProfileContextProvider = (props) => {
 	const [Profile, setProfile] = useState(null);
 	const provider = useMemo(() => ({ Profile, setProfile }), [Profile]);
 
-	const getMe = useMemo(async () => {
-		const response = await Me.Me();
-		if (response.error) return;
-		setProfile(response);
+	const myprofile = useMemo(() => {
+		return Me.Me().then((response) => response);
 	}, []);
 
 	useEffect(() => {
-		getMe();
-	}, [getMe]);
+		myprofile.then((response) =>{
+			console.log(response);
+			if (response.error) return;
+			setProfile(response);
+		})
+		
+	}, [myprofile]);
 
 	return (
 		<ProfileContext.Provider value={provider}>

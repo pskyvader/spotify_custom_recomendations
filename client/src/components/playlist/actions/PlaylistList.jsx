@@ -23,7 +23,6 @@ const PlaylistList = () => {
 
 	useEffect(() => {
 		setPlaylist(<CircularProgress />);
-
 		Me.MePlaylist().then((response) => {
 			if (response.error) return setPlaylist(objectToList(response));
 			if (response.items.length === 0) return setPlaylist("No available Playlist");

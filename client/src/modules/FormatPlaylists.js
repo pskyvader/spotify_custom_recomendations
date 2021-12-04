@@ -1,4 +1,4 @@
-import { PlaylistContext } from "./PlaylistContextProvider";
+import { PlaylistContext } from "../context/PlaylistContextProvider";
 import { useContext } from "react";
 export const FormatPlaylists = (playlists, MyId) => {
 	const { playlistId } = useContext(PlaylistContext);

@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 
-import { PlaylistContext } from "./PlaylistContextProvider";
+import { PlaylistContext } from "../context/PlaylistContextProvider";
 
 export const PlaylistTemplate = ({ itemList, selectedId }) => {
 	const { playlistId, setPlaylistId } = useContext(PlaylistContext);

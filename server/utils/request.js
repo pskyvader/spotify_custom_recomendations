@@ -1,6 +1,9 @@
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) =>
+	import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
-const request = async (req,url, method = "GET", body = null, request = null) => {
+const request = (req, url, method = "GET", body = null, request = null) => {
+	if (!req.session) return { error: true, message: "No session available" };
+
 	const requestOptions = request || {
 		method: method,
 		headers: {
@@ -9,8 +12,8 @@ const request = async (req,url, method = "GET", body = null, request = null) => 
 		},
 		body: body,
 	};
-	const result = async () => {
-		const response = await fetch(url, requestOptions);
+
+	return fetch(url, requestOptions).then(async (response) => {
 		if (!response.ok) {
 			const responsetext = await response.text();
 			let responsejson = responsetext;
@@ -20,15 +23,14 @@ const request = async (req,url, method = "GET", body = null, request = null) => 
 				return {
 					error: true,
 					status: response.status,
-					text: responsetext,
+					message: responsetext,
 					url: response.url,
 					detail: responsejson,
 				};
 			}
 		}
 		return response.json();
-	};
-	return result();
+	});
 };
 
 module.exports = { request };

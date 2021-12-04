@@ -1,7 +1,6 @@
 const { request } = require("../utils");
 const me =async (req, res) => {
 	const response = await request(req,"https://api.spotify.com/v1/me");
-	console.log(response)
 	if (response.error) {
 		res.json(response);
 		return;
@@ -18,4 +17,9 @@ const me =async (req, res) => {
 	return;
 };
 
-module.exports = { me:me() };
+
+
+
+
+
+module.exports = { me };

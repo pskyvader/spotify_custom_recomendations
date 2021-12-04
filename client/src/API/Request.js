@@ -6,10 +6,9 @@ const GetRequest = async (url, method = "GET", body = null,request=null) => {
 		},
 		body: body,
 	};
-	const result= async () => {
-		const response = await fetch(url, requestOptions);
+	return fetch(url, requestOptions).then(async (response) => {
 		if (!response.ok) {
-			const responsetext= await response.text();
+			const responsetext = await response.text();
 			let responsejson = responsetext;
 			try {
 				responsejson = JSON.parse(responsetext);
@@ -17,16 +16,14 @@ const GetRequest = async (url, method = "GET", body = null,request=null) => {
 				return {
 					error: true,
 					status: response.status,
-					text: responsetext,
+					message: responsetext,
 					url: response.url,
 					detail: responsejson,
 				};
 			}
 		}
 		return response.json();
-	}
-	
-	return await result;
+	});
 };
 
 export default GetRequest;
