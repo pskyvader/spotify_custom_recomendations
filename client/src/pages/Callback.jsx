@@ -22,7 +22,7 @@ export default function Callback(props) {
 					GetRequest(
 						"/api/pushtoken?" + new URLSearchParams(response)
 					).then((tokenresponse) => {
-						if (tokenresponse.loggedin) {
+						if (!tokenresponse.loggedin) {
 							SetRedirect("/#error=push_token_error");
 							return;
 						}

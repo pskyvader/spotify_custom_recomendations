@@ -5,10 +5,11 @@ const pushtoken = (req, res) => {
 
 	req.session.access_token = access_token;
 	req.session.refresh_token = refresh_token;
+	req.session.save((err) =>{
+		console.log("err:",err);
+		res.json({ loggedin: (req.session.access_token!==null && req.session.refresh_token!==null) });	
+	});
 
-	console.log(req.session.access_token);
-
-	res.json({ loggedin: (access_token && refresh_token) });
 };
 
 module.exports = { pushtoken };

@@ -8,11 +8,11 @@ const app = express();
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
-		saveUninitialized: true,
-		resave: true,
+		saveUninitialized: false,
+		resave: false,
 	})
 );
-app.disable('x-powered-by');
+app.disable("x-powered-by");
 
 // serve up production assets
 app.use(express.static("/client/build/"));
@@ -20,12 +20,8 @@ app.use(express.static("/client/build/"));
 // serve up the index.html if express does'nt recognize the route
 const path = require("path");
 
-
 app.get("/api/:module/:submodule?", (req, res) => {
 	switch (req.params.module) {
-		case "loggedin":
-			loggedin(req, res);
-			break;
 		case "authorize":
 			authorize(req, res);
 			break;
@@ -37,6 +33,9 @@ app.get("/api/:module/:submodule?", (req, res) => {
 			break;
 		case "me":
 			me(req, res);
+			break;
+		case "loggedin":
+			loggedin(req, res);
 			break;
 		default:
 			res.json({
