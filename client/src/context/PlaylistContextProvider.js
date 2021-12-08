@@ -19,15 +19,20 @@ const PlaylistContextProvider = (props) => {
 	);
 
 	useMemo(() => {
-		if (LoggedIn) {
+		console.log("loggedin: ",LoggedIn,playlists);
+		if (LoggedIn && playlists===null) {
+			console.log("loggedin true: ",LoggedIn,playlists);
 			return Me.MePlaylist().then((response) => {
-				if (response.error) return false;
+				if (response.error){
+					console.log(response);
+					return false;
+				} 
 				console.log(response);
 				setPlaylists(response);
 			});
 		}
 		return false;
-	}, [LoggedIn]);
+	}, [LoggedIn,playlists]);
 
 	return (
 		<PlaylistContext.Provider value={provider}>

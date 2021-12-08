@@ -22,11 +22,11 @@ export default function Callback(props) {
 					GetRequest(
 						"/api/pushtoken?" + new URLSearchParams(response)
 					).then((tokenresponse) => {
-						if (!tokenresponse.error) {
-							SetRedirect("/#loggedin=true");
+						if (tokenresponse.loggedin) {
+							SetRedirect("/#error=push_token_error");
 							return;
 						}
-						SetRedirect("/#error=push_token_error");
+						SetRedirect("/#loggedin=true");
 					});
 					return;
 				}

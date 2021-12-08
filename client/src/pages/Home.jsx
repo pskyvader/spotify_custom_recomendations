@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, useMemo } from "react";
-import { CircularProgress, Container, Box, Grid } from "@mui/material";
+import { CircularProgress, Container, Grid } from "@mui/material";
 
 import Playlists from "../components/playlist/Playlists";
 import LoginButton from "../modules/LoginButton";
