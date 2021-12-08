@@ -14,11 +14,25 @@ const Home = () => {
 			return;
 		}
 		setHome(
-			<Grid sx={{ flexGrow: 0.5 }} container spacing={2}>
-				<Grid item xs={6}>
-					<LoginButton />
+			<Container  maxWidth="sm">
+				<Grid container p={2} direction="column" alignItems="center" >
+					<Grid item p={2} style={{textAlign:"left"}}>
+						<i> Custom Playlists </i> is created for people who enjoy discover new music, even if it is in a completely different style.
+						<br />
+						You can customize anything you want for a given playlist, including:
+						<ul>
+							<li>How far you want to explore styles unknown to you</li>
+							<li>How often you want to get new songs in your playlist</li>
+							<li>How many new songs you want to get every day</li>
+							<li>And much more...</li>
+						</ul>
+
+					</Grid>
+					<Grid item>
+						<LoginButton />
+					</Grid>
 				</Grid>
-			</Grid>
+			</Container>
 		);
 	}, [LoggedIn]);
 

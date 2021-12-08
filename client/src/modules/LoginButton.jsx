@@ -8,7 +8,7 @@ export const Logout = () => {
 const LoginButton = () => {
 	const uri = "login";
 	return (
-		<Button variant="contained" href={uri} color="inherit">
+		<Button variant="contained" href={uri} sx={{backgroundColor: "#1DB954"}}>
 			Login with Spotify
 		</Button>
 	);
