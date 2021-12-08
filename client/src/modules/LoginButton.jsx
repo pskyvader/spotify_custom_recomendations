@@ -1,11 +1,4 @@
 import { Button } from "@mui/material";
-import { Me } from "../API";
-
-export const is_logged = () => {
-	return Me.LoggedIn().then((response) => {
-		return response.loggedin;
-	});
-};
 
 export const Logout = () => {
 	localStorage.clear();

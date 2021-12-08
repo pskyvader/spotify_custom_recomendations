@@ -7,8 +7,9 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, Button, CircularProgress } from "@mui/material";
 
-import Login, { Logout, is_logged } from "../../modules/LoginButton";
-import ProfileContextProvider, { ProfileContext} from "../../context/ProfileContextProvider";
+import LoginButton, { Logout } from "./LoginButton";
+import { ProfileContext } from "../context/ProfileContextProvider";
+import { SessionContext } from "../context/SessionContextProvider";
 
 const UserInfo = () => {
 	const { profile } = useContext(ProfileContext);
@@ -24,21 +25,16 @@ const UserInfo = () => {
 };
 
 const Header = () => {
+	const { LoggedIn } = useContext(SessionContext);
 	const [header, setHeader] = useState(<CircularProgress />);
 
 	useEffect(() => {
-		is_logged().then((loggedin) => {
-			if (loggedin) {
-				setHeader(
-					<ProfileContextProvider>
-						<UserInfo />
-					</ProfileContextProvider>
-				);
-				return;
-			}
-			setHeader(<Login />);
-		});
-	}, []);
+		if (LoggedIn) {
+			setHeader(<UserInfo />);
+			return;
+		}
+		setHeader(<LoginButton />);
+	}, [LoggedIn]);
 
 	return (
 		<header>

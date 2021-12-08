@@ -39,9 +39,8 @@ export const FormatSongListColumns = (songList, PlaylistId, ActionButton) => {
 			},
 		},
 	];
-	const data = {
+	return {
 		rows,
 		columns,
 	};
-	return data;
 };

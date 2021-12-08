@@ -1,5 +1,5 @@
 import { Grid, Container } from "@mui/material";
-import {  styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 
 
 import PlaylistList from "./actions/PlaylistList";
@@ -10,11 +10,11 @@ import RemoveSongs from "./actions/RemoveSongs";
 const Playlists = () => {
 	const Root = styled("div")(({ theme }) => {
 		return {
-			maxHeight: "calc(33vh - " + theme.mixins.toolbar.minHeight + "px - "+ theme.spacing()+" )",
+			maxHeight: "calc(33vh - " + theme.mixins.toolbar.minHeight + "px - " + theme.spacing() + " )",
 			height: "100vh",
-			overflow:"auto",
+			overflow: "auto",
 			[theme.breakpoints.up("md")]: {
-				maxHeight: "calc(50vh - " + theme.mixins.toolbar.minHeight + "px - "+ theme.spacing()+" )",
+				maxHeight: "calc(50vh - " + theme.mixins.toolbar.minHeight + "px - " + theme.spacing() + " )",
 			},
 		};
 	});
@@ -23,7 +23,7 @@ const Playlists = () => {
 			<Grid container spacing={2}>
 				<Grid item xs={12} md={4}>
 					<Root>
-						<PlaylistList/>
+						<PlaylistList />
 					</Root>
 				</Grid>
 				<Grid item xs={12} md={8}>

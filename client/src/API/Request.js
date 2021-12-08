@@ -1,25 +1,26 @@
-const GetRequest = async (url, method = "GET", body = null,request=null) => {
-	const requestOptions = request || {
+const GetRequest = (url, method = "GET", body = null, requestOverride = null) => {
+	const requestOptions = requestOverride || {
 		method: method,
 		headers: {
-			"Content-Type": "application/json"
+			"Content-Type": "application/json",
 		},
 		body: body,
 	};
+
 	return fetch(url, requestOptions).then(async (response) => {
 		if (!response.ok) {
 			const responsetext = await response.text();
-			let responsejson = responsetext;
+			let finalresponse = {
+				error: true,
+				status: response.status,
+				message: responsetext,
+				url: response.url
+			};
 			try {
-				responsejson = JSON.parse(responsetext);
-			} finally {
-				return {
-					error: true,
-					status: response.status,
-					message: responsetext,
-					url: response.url,
-					detail: responsejson,
-				};
+				finalresponse.detail=JSON.parse(responsetext);
+				return finalresponse;
+			}catch(error){
+				return finalresponse;
 			}
 		}
 		return response.json();

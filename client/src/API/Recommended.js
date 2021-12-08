@@ -1,5 +1,7 @@
 import GetRequest from "./Request";
-import { genres } from "../utils";
+import {
+	genres
+} from "../utils";
 
 const fillOptions = (playlist, topSongs, currentgenres) => {
 	const options = {
@@ -8,9 +10,7 @@ const fillOptions = (playlist, topSongs, currentgenres) => {
 		seed_tracks: [],
 	};
 	const songs =
-		playlist.tracks.items.length > 0
-			? playlist.tracks.items
-			: topSongs.items;
+		playlist.tracks.items.length > 0 ? playlist.tracks.items : topSongs.items;
 
 	if (songs.length > 0) {
 		for (let index = 0; index < 5; index++) {

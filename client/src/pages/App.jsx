@@ -1,29 +1,37 @@
-// import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Home from "./home/Home";
+import Home from "./Home";
 import Callback from "./Callback";
 import Login from "./Login";
-import Header from "./home/Header";
+import Header from "../modules/Header";
 import CssBaseline from "@mui/material/CssBaseline";
+import PlaylistContextProvider from "../context/PlaylistContextProvider";
+import ProfileContextProvider from "../context/ProfileContextProvider";
+import SessionContextProvider from "../context/SessionContextProvider";
 
 function App() {
 	return (
 		<CssBaseline>
 			<Router>
-				<div>
-					<Switch>
-						<Route exact path="/">
-							<Header></Header>
-							<Home />
-						</Route>
-						<Route path="/callback">
-							<Callback />
-						</Route>
-						<Route path="/login">
-							<Login />
-						</Route>
-					</Switch>
-				</div>
+				<SessionContextProvider>
+					<ProfileContextProvider>
+						<PlaylistContextProvider>
+							<div>
+								<Switch>
+									<Route exact path="/">
+										<Header></Header>
+										<Home />
+									</Route>
+									<Route path="/callback">
+										<Callback />
+									</Route>
+									<Route path="/login">
+										<Login />
+									</Route>
+								</Switch>
+							</div>
+						</PlaylistContextProvider>
+					</ProfileContextProvider>
+				</SessionContextProvider>
 			</Router>
 		</CssBaseline>
 	);
