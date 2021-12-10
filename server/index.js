@@ -21,7 +21,8 @@ app.use(express.static("/client/build/"));
 const path = require("path");
 
 app.get("/api/:module/:submodule?", (req, res) => {
-	console.log(req.params.module,req.params.submodule,req.session);
+	console.log(req.params.module,req.params.submodule);
+	// console.log(req.session);
 	switch (req.params.module) {
 		case "authorize":
 			authorize(req, res);

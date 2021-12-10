@@ -1,14 +1,14 @@
-import { useState, useEffect, useContext, useMemo } from "react";
+import { useState, useEffect, useContext, useMemo,useLayoutEffect } from "react";
 import { CircularProgress, Container, Grid } from "@mui/material";
 
 import Playlists from "../components/playlist/Playlists";
-import LoginButton from "../modules/LoginButton";
+import LoginButton from "../components/LoginButton";
 import { SessionContext } from "../context/SessionContextProvider";
 import { genres } from "../utils";
 
 const Home = () => {
 	const { LoggedIn } = useContext(SessionContext);
-	const [home, setHome] = useState(<CircularProgress />);
+	// const [home, setHome] = useState(<CircularProgress />);
 	const styles = useMemo(() => {
 		const styleList = [];
 		for (let index = 0; index < 5; index++) {
@@ -20,13 +20,19 @@ const Home = () => {
 		return styleList;
 	}, []);
 
-	useEffect(() => {
+	if(LoggedIn===null){
+		return <CircularProgress />;
+	}
+
+	// useLayoutEffect(() => {
 		if (LoggedIn) {
-			setHome(<Playlists />);
-			return;
+			// setHome(<Playlists />);
+			return <Playlists />;
 		}
-		setHome(
-			<Container maxWidth="sm">
+
+		
+		// setHome(
+			return <Container maxWidth="sm">
 				<Grid container p={2} direction="column" alignItems="center">
 					<Grid item p={2} style={{ textAlign: "left" }}>
 						<div style={{ textAlign: "center" }}>
@@ -69,9 +75,10 @@ const Home = () => {
 					</Grid>
 				</Grid>
 			</Container>
-		);
-	}, [LoggedIn, styles]);
+		// );
+		
+	// }, [LoggedIn, styles]);
 
-	return home;
+	// return home;
 };
 export default Home;

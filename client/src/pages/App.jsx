@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "./Home";
+import Playlists from "./Playlists";
 import Callback from "./Callback";
 import Login from "./Login";
 import Header from "../modules/Header";
@@ -21,6 +22,12 @@ function App() {
 										<Header></Header>
 										<Home />
 									</Route>
+									<Route exact path="/playlist/:playlistid">
+										<Header></Header>
+										<Playlists />
+									</Route>
+									
+
 									<Route path="/callback">
 										<Callback />
 									</Route>

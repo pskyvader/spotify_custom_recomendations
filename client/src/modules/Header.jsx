@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, Button, CircularProgress } from "@mui/material";
 
-import LoginButton, { Logout } from "./LoginButton";
+import LoginButton, { Logout } from "../components/LoginButton";
 import { ProfileContext } from "../context/ProfileContextProvider";
 import { SessionContext } from "../context/SessionContextProvider";
 
