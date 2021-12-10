@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import {useLayoutEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import GetRequest from "../API/Request";
-import { Redirect } from "react-router";
 
 export default function Callback(props) {
 	const [redirect, SetRedirect] = useState(null);
 	const url = "/api/authorize" + useLocation().search;
-	useEffect(() => {
+	useLayoutEffect(() => {
 		GetRequest(url).then((data) => {
 			if (data.error) {
 				SetRedirect("/#error=" + data.message);
@@ -34,6 +33,9 @@ export default function Callback(props) {
 			});
 		});
 	}, [url]);
+	if (redirect) {
+		window.location = redirect;
+	}
 
-	return redirect ? <Redirect to={redirect} /> : "uwu";
+	return "uwu";
 }

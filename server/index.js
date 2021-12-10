@@ -21,12 +21,10 @@ app.use(express.static("/client/build/"));
 const path = require("path");
 
 app.get("/api/:module/:submodule?", (req, res) => {
+	console.log(req.params.module,req.params.submodule,req.session);
 	switch (req.params.module) {
 		case "authorize":
 			authorize(req, res);
-			break;
-		case "callback":
-			callback(req, res);
 			break;
 		case "pushtoken":
 			pushtoken(req, res);
@@ -47,6 +45,9 @@ app.get("/api/:module/:submodule?", (req, res) => {
 
 app.get("/login", function (req, res) {
 	login(req, res);
+});
+app.get("/callback", function (req, res) {
+	callback(req, res);
 });
 
 app.get("*", (req, res) => {

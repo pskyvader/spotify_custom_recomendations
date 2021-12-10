@@ -1,4 +1,4 @@
-import { createContext, useMemo, useState, useContext } from "react";
+import { createContext, useMemo, useState, useContext,useEffect } from "react";
 import { Me } from "../API";
 import { SessionContext } from "./SessionContextProvider";
 
@@ -9,14 +9,17 @@ const ProfileContextProvider = (props) => {
 	const [profile, setProfile] = useState(null);
 	const provider = useMemo(() => ({ profile, setProfile }), [profile]);
 
-	useMemo(() => {
+	useEffect(() => {
 		if (LoggedIn) {
-			return Me.Me().then((response) => {
-				if (response.error) return false;
+			Me.Me().then((response) => {
+				if (response.error) {
+					console.error(response);
+					return false;
+				}
 				setProfile(response);
 			});
 		}
-		return false;
+		return null;
 	}, [LoggedIn]);
 
 	return (
