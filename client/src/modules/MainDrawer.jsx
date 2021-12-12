@@ -8,7 +8,7 @@ import {
 
 import { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { PlaylistContext } from "../context/PlaylistContextProvider";
 import { ProfileContext } from "../context/ProfileContextProvider";
@@ -26,7 +26,7 @@ const DrawerItems = () => {
 				disabled={currentPlaylist.disabled}
 				key={currentPlaylist.id}
 				selected={currentPlaylist.selected}
-				onClick={() => history.push("/playlists/" + currentPlaylist.id)}
+				onClick={() => history.push("/playlist/" + currentPlaylist.id)}
 			>
 				<ListItemIcon>
 					<Avatar

@@ -1,32 +1,60 @@
-import { useState, useEffect, useContext, useMemo } from "react";
-import { CircularProgress, Container, Grid } from "@mui/material";
+import { Grid, Container } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-import Playlists from "../components/playlist/Playlists";
-import LoginButton from "../components/LoginButton";
-import { SessionContext } from "../context/SessionContextProvider";
-import { genres } from "../utils";
 
-const Home = () => {
-	const { LoggedIn } = useContext(SessionContext);
-	const [home, setHome] = useState(<CircularProgress />);
-	const styles = useMemo(() => {
-		const styleList = [];
-		for (let index = 0; index < 5; index++) {
-			let genre = genres[Math.floor(Math.random() * genres.length)];
-			genre = genre[0].toUpperCase() + genre.substring(1);
-			genre = genre.replace("-", " ");
-			styleList.push(genre);
-		}
-		return styleList;
-	}, []);
+import PlaylistList from "../components/playlist/actions/PlaylistList";
+import PlayListSongs from "../components/playlist/actions/PlayListSongs";
+import AddSongs from "../components/playlist/actions/AddSongs";
+import RemoveSongs from "../components/playlist/actions/RemoveSongs";
 
-	useEffect(() => {
-		if (LoggedIn) {
-			setHome(<Playlists />);
-			return;
-		}
-	}, [LoggedIn, styles]);
-
-	return home;
+const Playlists = () => {
+	const Root = styled("div")(({ theme }) => {
+		return {
+			maxHeight: "calc(33vh - " + theme.mixins.toolbar.minHeight + "px - " + theme.spacing() + " )",
+			height: "100vh",
+			overflow: "auto",
+			[theme.breakpoints.up("md")]: {
+				maxHeight: "calc(50vh - " + theme.mixins.toolbar.minHeight + "px - " + theme.spacing() + " )",
+			},
+		};
+	});
+	return (
+		<Container maxWidth={false}>
+			<Grid container spacing={2}>
+				<Grid item xs={12} md={4}>
+					<Root>
+						<PlaylistList />
+					</Root>
+				</Grid>
+				<Grid item xs={12} md={8}>
+					<Root>
+						<PlayListSongs />
+					</Root>
+				</Grid>
+				{/* <Grid item xs={12} md={6}>
+					<Root>
+						<TopSongs />
+					</Root>
+				</Grid> */}
+				<Grid item xs={12} md={6}>
+					<Root>
+						<AddSongs />
+					</Root>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<Root>
+						<RemoveSongs />
+					</Root>
+				</Grid>
+				{/* <Grid item xs={12} md={6}>
+					<Root>
+						<NoTopSongs />
+					</Root>
+				</Grid> */}
+			</Grid>
+		</Container>
+	);
 };
-export default Home;
+
+
+export default Playlists;

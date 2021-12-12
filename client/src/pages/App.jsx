@@ -1,4 +1,8 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+} from "react-router-dom";
 import Home from "./Home";
 import Playlists from "./Playlists";
 import Callback from "./Callback";
@@ -23,7 +27,7 @@ function App() {
 											<Home />
 										</Header>
 									</Route>
-									<Route exact path="/playlist/:playlistid">
+									<Route path="/playlist/:playlistid">
 										<Header>
 											<Playlists />
 										</Header>
@@ -35,6 +39,8 @@ function App() {
 									<Route path="/login">
 										<Login />
 									</Route>
+
+									<Route path="*">Not found </Route>
 								</Switch>
 							</div>
 						</PlaylistContextProvider>

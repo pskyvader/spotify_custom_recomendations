@@ -1,4 +1,4 @@
-import { useContext, useMemo, Fragment } from "react";
+import { useContext, useMemo, Fragment, useEffect } from "react";
 import { CircularProgress, Container, Grid, Paper } from "@mui/material";
 
 import LoginButton from "../components/LoginButton";
@@ -18,9 +18,7 @@ const InitialText = ({ LoggedIn }) => {
 	}, []);
 
 	if (LoggedIn) {
-		setTimeout(() => {
-			
-		}, 2000);
+		setTimeout(() => {}, 2000);
 		return (
 			<Grid item p={2} style={{ textAlign: "left" }}>
 				Select a playlist from the menu
@@ -65,8 +63,16 @@ const InitialText = ({ LoggedIn }) => {
 	);
 };
 
-const Home = (props) => {
+const Home = ({ setDrawer }) => {
 	const { LoggedIn } = useContext(SessionContext);
+	useEffect(() => {
+		if (LoggedIn) {
+			setTimeout(() => {
+				setDrawer(true);
+			}, 1000);
+		}
+	}, [LoggedIn, setDrawer]);
+
 	if (LoggedIn === null) {
 		return <CircularProgress />;
 	}

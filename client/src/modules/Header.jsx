@@ -1,4 +1,12 @@
-import { useContext, useEffect, useState, Fragment, Children } from "react";
+import {
+	useContext,
+	useEffect,
+	useState,
+	Fragment,
+	Children,
+	cloneElement,
+	isValidElement,
+} from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -48,6 +56,16 @@ const Header = (props) => {
 
 		setDrawer(open || !drawer);
 	};
+
+	const childrenWithProps = Children.map(props.children, (child) => {
+		// Checking isValidElement is the safe way and avoids a TS error too.
+		if (isValidElement(child)) {
+			return cloneElement(child, { setDrawer });
+		}
+
+		return child;
+	});
+
 	return (
 		<Fragment>
 			<header>
@@ -79,10 +97,7 @@ const Header = (props) => {
 					<MainDrawer drawer={drawer} toggleDrawer={toggleDrawer} />
 				) : null}
 			</header>
-			{Children.forEach(props.children, (Child,i) => {
-				console.log(Child, i)
-				return Child;
-			})}
+			{childrenWithProps}
 		</Fragment>
 	);
 };
