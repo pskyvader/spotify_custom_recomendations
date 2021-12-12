@@ -6,5 +6,5 @@ export default function Login(props) {
 				window.location = data.url;
 			}
 		});
-	return "uwu";
+	return null;
 }

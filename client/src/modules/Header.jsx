@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, Fragment, Children } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -25,7 +25,7 @@ const UserInfo = () => {
 	);
 };
 
-const Header = () => {
+const Header = (props) => {
 	const { LoggedIn } = useContext(SessionContext);
 	const [header, setHeader] = useState(<CircularProgress />);
 	const [drawer, setDrawer] = useState(false);
@@ -48,37 +48,42 @@ const Header = () => {
 
 		setDrawer(open || !drawer);
 	};
-
 	return (
-		<header>
-			<Box sx={{ flexGrow: 1 }}>
-				<AppBar position="static">
-					<Toolbar>
-						<IconButton
-							size="large"
-							edge="start"
-							color="inherit"
-							aria-label="menu"
-							sx={{ mr: 2 }}
-							onClick={toggleDrawer()}
-						>
-							<MenuIcon />
-						</IconButton>
-						<Typography
-							variant="h6"
-							component="div"
-							sx={{ flexGrow: 1 }}
-						>
-							Spotify custom playlists
-						</Typography>
-						{header}
-					</Toolbar>
-				</AppBar>
-			</Box>
-			{LoggedIn ? (
-				<MainDrawer drawer={drawer} toggleDrawer={toggleDrawer} />
-			) : null}
-		</header>
+		<Fragment>
+			<header>
+				<Box sx={{ flexGrow: 1 }}>
+					<AppBar position="static">
+						<Toolbar>
+							<IconButton
+								size="large"
+								edge="start"
+								color="inherit"
+								aria-label="menu"
+								sx={{ mr: 2 }}
+								onClick={toggleDrawer()}
+							>
+								<MenuIcon />
+							</IconButton>
+							<Typography
+								variant="h6"
+								component="div"
+								sx={{ flexGrow: 1 }}
+							>
+								Spotify custom playlists
+							</Typography>
+							{header}
+						</Toolbar>
+					</AppBar>
+				</Box>
+				{LoggedIn ? (
+					<MainDrawer drawer={drawer} toggleDrawer={toggleDrawer} />
+				) : null}
+			</header>
+			{Children.forEach(props.children, (Child,i) => {
+				console.log(Child, i)
+				return Child;
+			})}
+		</Fragment>
 	);
 };
 

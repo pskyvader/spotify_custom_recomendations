@@ -19,14 +19,15 @@ function App() {
 							<div>
 								<Switch>
 									<Route exact path="/">
-										<Header></Header>
-										<Home />
+										<Header>
+											<Home />
+										</Header>
 									</Route>
 									<Route exact path="/playlist/:playlistid">
-										<Header ></Header>
-										<Playlists />
+										<Header>
+											<Playlists />
+										</Header>
 									</Route>
-									
 
 									<Route path="/callback">
 										<Callback />

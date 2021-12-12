@@ -37,5 +37,5 @@ export default function Callback(props) {
 		window.location = redirect;
 	}
 
-	return "uwu";
+	return null;
 }
