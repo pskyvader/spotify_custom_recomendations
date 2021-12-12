@@ -28,6 +28,7 @@ const UserInfo = () => {
 const Header = () => {
 	const { LoggedIn } = useContext(SessionContext);
 	const [header, setHeader] = useState(<CircularProgress />);
+	const [drawer, setDrawer] = useState(false);
 
 	useEffect(() => {
 		if (LoggedIn) {
@@ -36,6 +37,17 @@ const Header = () => {
 		}
 		setHeader(<LoginButton />);
 	}, [LoggedIn]);
+
+	const toggleDrawer = (open) => (event) => {
+		if (
+			event.type === "keydown" &&
+			(event.key === "Tab" || event.key === "Shift")
+		) {
+			return;
+		}
+
+		setDrawer(open || !drawer);
+	};
 
 	return (
 		<header>
@@ -48,6 +60,7 @@ const Header = () => {
 							color="inherit"
 							aria-label="menu"
 							sx={{ mr: 2 }}
+							onclick={toggleDrawer}
 						>
 							<MenuIcon />
 						</IconButton>
@@ -62,7 +75,9 @@ const Header = () => {
 					</Toolbar>
 				</AppBar>
 			</Box>
-			{LoggedIn ? <MainDrawer /> : null}
+			{LoggedIn ? (
+				<MainDrawer drawer={drawer} toggleDrawer={toggleDrawer} />
+			) : null}
 		</header>
 	);
 };
