@@ -1,8 +1,4 @@
-import {
-	createContext,
-	useState,
-	useLayoutEffect,
-} from "react";
+import { createContext, useState, useLayoutEffect } from "react";
 import { Me } from "../API";
 
 export const SessionContext = createContext({});
@@ -13,18 +9,20 @@ const SessionContextProvider = (props) => {
 		LoggedIn: LoggedIn,
 		setLoggedIn: setLoggedIn,
 	};
-	
-	// console.log("session provider")
+
+	console.log("session provider");
 
 	useLayoutEffect(() => {
-		// console.log("SessionContext")
-		Me.LoggedIn().then((response) => {
-			// console.log(response);
-			if (response.error) return false;
-			if (response.loggedin !== LoggedIn) {
-				setLoggedIn(response.loggedin);
-			}
-		});
+		if (LoggedIn === null) {
+			Me.LoggedIn().then((response) => {
+				console.log(response);
+				if (response.error) return false;
+				if (response.loggedin !== LoggedIn) {
+					console.log("set loggedin");
+					setLoggedIn(response.loggedin);
+				}
+			});
+		}
 	}, [LoggedIn]);
 
 	return (

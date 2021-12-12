@@ -1,4 +1,4 @@
-import { createContext, useState, useContext,useEffect } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import { Me } from "../API";
 import { SessionContext } from "./SessionContextProvider";
 import { ProfileContext } from "./ProfileContextProvider";
@@ -17,20 +17,18 @@ const PlaylistContextProvider = (props) => {
 		setPlaylists,
 	};
 
-	
-
 	useEffect(() => {
-		if (LoggedIn && profile!==null && playlists===null) {
+		if (LoggedIn && profile !== null && playlists === null) {
 			Me.MePlaylist().then((response) => {
-				if (response.error){
+				if (response.error) {
 					console.log(response);
 					return false;
-				} 
+				}
 				setPlaylists(response);
 			});
 		}
 		return false;
-	}, [LoggedIn,profile,playlists]);
+	}, [LoggedIn, profile, playlists]);
 
 	return (
 		<PlaylistContext.Provider value={provider}>

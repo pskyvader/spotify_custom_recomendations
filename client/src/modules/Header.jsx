@@ -10,6 +10,7 @@ import { Avatar, Button, CircularProgress } from "@mui/material";
 import LoginButton, { Logout } from "../components/LoginButton";
 import { ProfileContext } from "../context/ProfileContextProvider";
 import { SessionContext } from "../context/SessionContextProvider";
+import MainDrawer from "./MainDrawer";
 
 const UserInfo = () => {
 	const { profile } = useContext(ProfileContext);
@@ -61,6 +62,7 @@ const Header = () => {
 					</Toolbar>
 				</AppBar>
 			</Box>
+			{LoggedIn ? <MainDrawer /> : null}
 		</header>
 	);
 };
