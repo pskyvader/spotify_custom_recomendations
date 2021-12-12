@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import {
 	FormatSongList,
@@ -7,7 +7,6 @@ import {
 import { subtractById, objectToList } from "../../../utils";
 import { Playlist, Me } from "../../../API";
 import { SongListTemplate, ButtonRemove } from "../../../modules/SongsView";
-import { PlaylistContext } from "../../../context/PlaylistContextProvider";
 
 const RemoveSongsTemplate = ({ recent, playlist, playlistId }) => {
 	const recentSongs = FormatSongList(recent.items);
@@ -22,9 +21,8 @@ const RemoveSongsTemplate = ({ recent, playlist, playlistId }) => {
 	return <SongListTemplate data={data} title="Recommended to Remove" />;
 };
 
-const RemoveSongs = () => {
+const RemoveSongs = ({ playlistId } ) => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
-	const { playlistId } = useContext(PlaylistContext);
 	useEffect(() => {
 		const fromDate = 0;
 		setPlaylist(<CircularProgress />);

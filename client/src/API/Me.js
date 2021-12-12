@@ -16,11 +16,7 @@ export const MePlaylist = () => {
 };
 
 export const MeTop = (offset = 0, time_range = "long_term") => {
-	const url =
-		"/api/me/top/tracks?limit=50&offset=" +
-		offset +
-		"&time_range=" +
-		time_range;
+	const url = "/api/me/top/tracks?limit=50&offset=" + offset + "&time_range=" + time_range;
 	return GetRequest(url);
 };
 

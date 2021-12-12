@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import {
 	FormatSongList,
@@ -7,7 +7,6 @@ import {
 import { subtractById, objectToList } from "../../../utils";
 import { Playlist, Recommended, Me } from "../../../API";
 import { SongListTemplate, ButtonAdd } from "../../../modules/SongsView";
-import { PlaylistContext } from "../../../context/PlaylistContextProvider";
 
 const AddSongsTemplate = ({ recommended, playlist, playlistId }) => {
 	const recommendedSongs = FormatSongList(recommended.tracks);
@@ -22,9 +21,8 @@ const AddSongsTemplate = ({ recommended, playlist, playlistId }) => {
 	return <SongListTemplate data={data} title="Recommended to Add" />;
 };
 
-const AddSongs = () => {
+const AddSongs = ({ playlistId }) => {
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
-	const { playlistId } = useContext(PlaylistContext);
 	useEffect(() => {
 		setPlaylist(<CircularProgress />);
 		if (playlistId === null) {

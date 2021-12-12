@@ -8,7 +8,8 @@ import {
 
 import { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
-import { useHistory } from "react-router-dom";
+import { useHistory,useParams } from "react-router-dom";
+
 
 import { PlaylistContext } from "../context/PlaylistContextProvider";
 import { ProfileContext } from "../context/ProfileContextProvider";
@@ -17,6 +18,8 @@ const DrawerItems = () => {
 	const { playlists } = useContext(PlaylistContext);
 	const { profile } = useContext(ProfileContext);
 	let history = useHistory();
+	const {playlistid}=useParams();
+	
 
 	if (!profile || !playlists) return null;
 
@@ -25,7 +28,7 @@ const DrawerItems = () => {
 			<ListItemButton
 				disabled={currentPlaylist.disabled}
 				key={currentPlaylist.id}
-				selected={currentPlaylist.selected}
+				selected={playlistid === currentPlaylist.id}
 				onClick={() => history.push("/playlist/" + currentPlaylist.id)}
 			>
 				<ListItemIcon>
@@ -42,7 +45,7 @@ const DrawerItems = () => {
 
 const DrawerList = (props) => (
 	<Box
-		sx={{ width: 250 }}
+		sx={{ width: 300 }}
 		role="presentation"
 		onClick={props.toggleDrawer(false)}
 		onKeyDown={props.toggleDrawer(false)}

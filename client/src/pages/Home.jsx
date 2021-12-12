@@ -69,7 +69,7 @@ const Home = ({ setDrawer }) => {
 		if (LoggedIn) {
 			setTimeout(() => {
 				setDrawer(true);
-			}, 1000);
+			}, 2000);
 		}
 	}, [LoggedIn, setDrawer]);
 

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-const { authorize, pushtoken, loggedin, me } = require("./api");
+const { authorize, pushtoken, loggedin, me,playlist } = require("./api");
 const { callback } = require("./callback");
 const { login } = require("./login");
 const app = express();
@@ -22,7 +22,6 @@ const path = require("path");
 
 app.get("/api/:module/:submodule?", (req, res) => {
 	console.log(req.params.module,req.params.submodule);
-	// console.log(req.session);
 	switch (req.params.module) {
 		case "authorize":
 			authorize(req, res);
@@ -33,6 +32,9 @@ app.get("/api/:module/:submodule?", (req, res) => {
 		case "me":
 			me(req, res);
 			break;
+			case "playlists":
+				playlist(req, res);
+				break;
 		case "loggedin":
 			loggedin(req, res);
 			break;

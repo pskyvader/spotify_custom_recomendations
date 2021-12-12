@@ -1,13 +1,13 @@
 import GetRequest from "./Request";
 
 export const Playlist = async (playlistid) => {
-	const url = "https://api.spotify.com/v1/playlists/" + playlistid;
+	const url = "/api/playlists/" + playlistid;
 	return GetRequest(url);
 };
 
 export const DeleteSong = async (playlistid, songuri) => {
 	const url =
-		"https://api.spotify.com/v1/playlists/" + playlistid + "/tracks";
+		"/api/playlists/" + playlistid + "/tracks";
 
 	const songs = {
 		tracks: [{ uri: songuri }],
@@ -17,7 +17,7 @@ export const DeleteSong = async (playlistid, songuri) => {
 
 export const AddSong = async (playlistid, songuri) => {
 	const url =
-		"https://api.spotify.com/v1/playlists/" + playlistid + "/tracks";
+		"/api/playlists/" + playlistid + "/tracks";
 
 	const songs = {
 		uris: [songuri],

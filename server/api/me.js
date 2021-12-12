@@ -48,17 +48,20 @@ const meplaylists = async (req, res) => {
 		return;
 	}
 	const offset = 0;
-	let playlists=[];
-	const response = await request( req, "https://api.spotify.com/v1/me/playlists?limit=50&offset=" + offset );
+	let playlists = [];
+	const response = await request(
+		req,
+		"https://api.spotify.com/v1/me/playlists?limit=50&offset=" + offset
+	);
 	if (response.error) {
 		res.json(response);
 		return;
 	}
 	playlists.push(...response.items);
 
-	const MyId=meProfileResult.id;
+	const MyId = meProfileResult.id;
 
-	mePlaylistResult = playlists.map((currentPlaylist) =>{
+	mePlaylistResult = playlists.map((currentPlaylist) => {
 		const formattedPlaylist = {};
 		formattedPlaylist.id = currentPlaylist.id;
 		formattedPlaylist.disabled = MyId !== currentPlaylist.owner.id;
@@ -68,7 +71,6 @@ const meplaylists = async (req, res) => {
 			? currentPlaylist.images[0].url
 			: null;
 		return formattedPlaylist;
-
 	});
 	res.json(mePlaylistResult);
 };
