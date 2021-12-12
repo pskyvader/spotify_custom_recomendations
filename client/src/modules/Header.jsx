@@ -60,7 +60,7 @@ const Header = () => {
 							color="inherit"
 							aria-label="menu"
 							sx={{ mr: 2 }}
-							onclick={toggleDrawer}
+							onClick={toggleDrawer()}
 						>
 							<MenuIcon />
 						</IconButton>

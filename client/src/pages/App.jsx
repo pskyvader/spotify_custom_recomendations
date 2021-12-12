@@ -23,7 +23,7 @@ function App() {
 										<Home />
 									</Route>
 									<Route exact path="/playlist/:playlistid">
-										<Header></Header>
+										<Header ></Header>
 										<Playlists />
 									</Route>
 									
