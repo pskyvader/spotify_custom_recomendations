@@ -8,8 +8,7 @@ import {
 
 import { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
-import { useHistory,useParams } from "react-router-dom";
-
+import { useHistory, useParams } from "react-router-dom";
 
 import { PlaylistContext } from "../context/PlaylistContextProvider";
 import { ProfileContext } from "../context/ProfileContextProvider";
@@ -18,8 +17,7 @@ const DrawerItems = () => {
 	const { playlists } = useContext(PlaylistContext);
 	const { profile } = useContext(ProfileContext);
 	let history = useHistory();
-	const {playlistid}=useParams();
-	
+	const { playlistid } = useParams();
 
 	if (!profile || !playlists) return null;
 

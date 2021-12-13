@@ -1,9 +1,9 @@
-import { useContext} from "react";
+import { useContext } from "react";
 import { Grid, Container } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useParams,Redirect } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 
-import {SessionContext} from "../context/SessionContextProvider";
+import { SessionContext } from "../context/SessionContextProvider";
 import PlayListSongs from "../components/playlist/actions/PlayListSongs";
 import AddSongs from "../components/playlist/actions/AddSongs";
 import RemoveSongs from "../components/playlist/actions/RemoveSongs";
@@ -13,10 +13,9 @@ const Playlists = () => {
 
 	const { LoggedIn } = useContext(SessionContext);
 
-	if (!LoggedIn) {
-		return <Redirect to="/"/>
+	if (LoggedIn === false) {
+		return <Redirect to="/" />;
 	}
-
 
 	const Root = styled("div")(({ theme }) => {
 		return {
@@ -38,20 +37,21 @@ const Playlists = () => {
 			},
 		};
 	});
-	return (
-		<Container maxWidth={false}>
-			<Grid container spacing={2}>
-				<Grid item xs={12} md={8}>
-					<Root>
-						<PlayListSongs playlistId={playlistid} />
-					</Root>
-				</Grid>
-				{/* <Grid item xs={12} md={6}>
+	if (LoggedIn) {
+		return (
+			<Container maxWidth={false}>
+				<Grid container spacing={2}>
+					<Grid item xs={12} md={8}>
+						<Root>
+							<PlayListSongs playlistId={playlistid} />
+						</Root>
+					</Grid>
+					{/* <Grid item xs={12} md={6}>
 					<Root>
 						<TopSongs />
 					</Root>
 				</Grid> */}
-				{/* <Grid item xs={12} md={6}>
+					{/* <Grid item xs={12} md={6}>
 					<Root>
 						<AddSongs  playlistId={playlistid} />
 					</Root>
@@ -61,14 +61,16 @@ const Playlists = () => {
 						<RemoveSongs  playlistId={playlistid} />
 					</Root>
 				</Grid> */}
-				{/* <Grid item xs={12} md={6}>
+					{/* <Grid item xs={12} md={6}>
 					<Root>
 						<NoTopSongs />
 					</Root>
 				</Grid> */}
-			</Grid>
-		</Container>
-	);
+				</Grid>
+			</Container>
+		);
+	}
+	return null;
 };
 
 export default Playlists;
