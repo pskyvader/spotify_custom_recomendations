@@ -38,6 +38,7 @@ const Playlists = () => {
 		};
 	});
 	if (LoggedIn) {
+		console.log("Playlists");
 		return (
 			<Container maxWidth={false}>
 				<Grid container spacing={2}>

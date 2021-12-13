@@ -34,12 +34,15 @@ const UserInfo = () => {
 };
 
 const Header = (props) => {
+	
+	console.log("Header");
 	const { LoggedIn } = useContext(SessionContext);
 	const [header, setHeader] = useState(<CircularProgress />);
 	const [drawer, setDrawer] = useState(false);
 
 	useEffect(() => {
 		if (LoggedIn) {
+			console.log("set header")
 			setHeader(<UserInfo />);
 			return;
 		}
@@ -65,7 +68,7 @@ const Header = (props) => {
 
 		return child;
 	});
-
+	
 	return (
 		<Fragment>
 			<header>

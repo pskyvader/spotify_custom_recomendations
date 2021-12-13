@@ -7,15 +7,15 @@ import { SongListTemplate, ButtonRemove } from "../../../modules/SongsView";
 import { PlaylistContext } from "../../../context/PlaylistContextProvider";
 
 const PlayListSongsTemplate = ({ CurrentPlaylist, playlistId }) => {
-	const { playlistTracks, setPlaylistTracks } = useContext(PlaylistContext);
+	// const { playlistTracks, setPlaylistTracks } = useContext(PlaylistContext);
 
-	useEffect(() => {
-		if (!playlistTracks[playlistId]) {
-			const newtracks = {};
-			newtracks[playlistId] = CurrentPlaylist;
-			setPlaylistTracks({ ...newtracks, ...playlistTracks });
-		}
-	}, [CurrentPlaylist, playlistId, playlistTracks, setPlaylistTracks]);
+	// useEffect(() => {
+	// 	if (!playlistTracks[playlistId]) {
+	// 		const newtracks = {};
+	// 		newtracks[playlistId] = CurrentPlaylist;
+	// 		setPlaylistTracks({ ...newtracks, ...playlistTracks });
+	// 	}
+	// }, [CurrentPlaylist, playlistId, playlistTracks, setPlaylistTracks]);
 
 	const data = FormatSongListColumns(
 		CurrentPlaylist,
@@ -26,12 +26,11 @@ const PlayListSongsTemplate = ({ CurrentPlaylist, playlistId }) => {
 };
 
 const PlayListSongs = ({ playlistId }) => {
-	const { playlistTracks } = useContext(PlaylistContext);
+	const { playlistTracks, setPlaylistTracks } = useContext(PlaylistContext);
 	const [playlist, setPlaylist] = useState(<CircularProgress />);
 
 	useEffect(() => {
-		
-		setPlaylist(<CircularProgress />);
+		let mounted = true;
 		if (playlistId === null) {
 			return;
 		}
@@ -44,17 +43,18 @@ const PlayListSongs = ({ playlistId }) => {
 			);
 			return;
 		}
-		
+
 		Playlist.Playlist(playlistId).then((response) => {
 			if (response.error) return setPlaylist(objectToList(response));
-			setPlaylist(
-				<PlayListSongsTemplate
-					CurrentPlaylist={response}
-					playlistId={playlistId}
-				/>
-			);
+			if (mounted) {
+				const newtracks = {};
+				newtracks[playlistId] = response;
+				setPlaylistTracks({ ...newtracks, ...playlistTracks });
+			}
 		});
-	}, [playlistId, playlistTracks]);
+
+		return () => (mounted = false);
+	}, [playlistId, playlistTracks, setPlaylistTracks]);
 
 	return playlist;
 };
