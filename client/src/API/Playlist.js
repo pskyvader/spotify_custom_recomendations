@@ -5,6 +5,11 @@ export const Playlist = async (playlistid) => {
 	return GetRequest(url);
 };
 
+export const PlaylistReccomended = async (playlistid) => {
+	const url = "/api/playlists/recommended/" + playlistid;
+	return GetRequest(url);
+};
+
 export const DeleteSong = async (playlistid, songuri) => {
 	const url =
 		"/api/playlists/" + playlistid + "/tracks";

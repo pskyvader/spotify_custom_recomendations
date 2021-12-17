@@ -4,9 +4,9 @@ import { styled } from "@mui/material/styles";
 import { useParams, Redirect } from "react-router-dom";
 
 import { SessionContext } from "../context/SessionContextProvider";
-import PlayListSongs from "../components/playlist/actions/PlayListSongs";
-import AddSongs from "../components/playlist/actions/AddSongs";
-import RemoveSongs from "../components/playlist/actions/RemoveSongs";
+import PlayListSongs from "../components/playlist/PlayListSongs";
+import RecommendedSongs from "../components/playlist/RecommendedSongs";
+import RemoveSongs from "../components/playlist/RemoveSongs";
 
 const Playlists = () => {
 	const { playlistid } = useParams() || null;
@@ -38,7 +38,6 @@ const Playlists = () => {
 		};
 	});
 	if (LoggedIn) {
-		console.log("Playlists");
 		return (
 			<Container maxWidth={false}>
 				<Grid container spacing={2}>
@@ -48,20 +47,20 @@ const Playlists = () => {
 						</Root>
 					</Grid>
 					{/* <Grid item xs={12} md={6}>
-					<Root>
-						<TopSongs />
-					</Root>
-				</Grid> */}
+						<Root>
+							<TopSongs />
+						</Root>
+					</Grid> */}
+					<Grid item xs={12} md={6}>
+						<Root>
+							<RecommendedSongs playlistId={playlistid} />
+						</Root>
+					</Grid>
 					{/* <Grid item xs={12} md={6}>
-					<Root>
-						<AddSongs  playlistId={playlistid} />
-					</Root>
-				</Grid>
-				<Grid item xs={12} md={6}>
-					<Root>
-						<RemoveSongs  playlistId={playlistid} />
-					</Root>
-				</Grid> */}
+						<Root>
+							<RemoveSongs playlistId={playlistid} />
+						</Root>
+					</Grid> */}
 					{/* <Grid item xs={12} md={6}>
 					<Root>
 						<NoTopSongs />

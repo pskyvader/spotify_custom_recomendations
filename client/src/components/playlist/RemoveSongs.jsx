@@ -3,10 +3,10 @@ import { CircularProgress } from "@mui/material";
 import {
 	FormatSongList,
 	FormatSongListColumns,
-} from "../../../modules/FormatSongs";
-import { subtractById, objectToList } from "../../../utils";
-import { Playlist, Me } from "../../../API";
-import { SongListTemplate, ButtonRemove } from "../../../modules/SongsView";
+} from "../../modules/FormatSongs";
+import { subtractById, objectToList } from "../../utils";
+import { Playlist, Me } from "../../API";
+import { SongListTemplate, ButtonRemove } from "../../modules/SongsView";
 
 const RemoveSongsTemplate = ({ recent, playlist, playlistId }) => {
 	const recentSongs = FormatSongList(recent.items);

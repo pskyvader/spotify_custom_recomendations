@@ -5,7 +5,7 @@ import LoginButton from "../components/LoginButton";
 import { SessionContext } from "../context/SessionContextProvider";
 import { genres } from "../utils";
 
-const InitialText = ({ LoggedIn }) => {
+const InitialText = ({ LoggedIn, setDrawer }) => {
 	const styles = useMemo(() => {
 		const styleList = [];
 		for (let index = 0; index < 5; index++) {
@@ -17,8 +17,15 @@ const InitialText = ({ LoggedIn }) => {
 		return styleList;
 	}, []);
 
+	useEffect(() => {
+		if (LoggedIn) {
+			setTimeout(() => {
+				setDrawer(true);
+			}, 2000);
+		}
+	}, [LoggedIn, setDrawer]);
+
 	if (LoggedIn) {
-		setTimeout(() => {}, 2000);
 		return (
 			<Grid item p={2} style={{ textAlign: "left" }}>
 				Select a playlist from the menu
@@ -63,15 +70,8 @@ const InitialText = ({ LoggedIn }) => {
 	);
 };
 
-const Home = ({ setDrawer }) => {
+const Home = (props) => {
 	const { LoggedIn } = useContext(SessionContext);
-	useEffect(() => {
-		if (LoggedIn) {
-			setTimeout(() => {
-				setDrawer(true);
-			}, 2000);
-		}
-	}, [LoggedIn, setDrawer]);
 
 	if (LoggedIn === null) {
 		return <CircularProgress />;
@@ -87,7 +87,7 @@ const Home = ({ setDrawer }) => {
 						direction="column"
 						alignItems="center"
 					>
-						<InitialText LoggedIn={LoggedIn} />
+						<InitialText LoggedIn={LoggedIn} {...props} />
 					</Grid>
 				</Paper>
 			</Grid>

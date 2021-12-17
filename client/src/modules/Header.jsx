@@ -1,6 +1,5 @@
 import {
 	useContext,
-	useEffect,
 	useState,
 	Fragment,
 	Children,
@@ -13,7 +12,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Avatar, Button, CircularProgress } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 
 import LoginButton, { Logout } from "../components/LoginButton";
 import { ProfileContext } from "../context/ProfileContextProvider";
@@ -34,20 +33,8 @@ const UserInfo = () => {
 };
 
 const Header = (props) => {
-	
-	console.log("Header");
 	const { LoggedIn } = useContext(SessionContext);
-	const [header, setHeader] = useState(<CircularProgress />);
 	const [drawer, setDrawer] = useState(false);
-
-	useEffect(() => {
-		if (LoggedIn) {
-			console.log("set header")
-			setHeader(<UserInfo />);
-			return;
-		}
-		setHeader(<LoginButton />);
-	}, [LoggedIn]);
 
 	const toggleDrawer = (open) => (event) => {
 		if (
@@ -62,13 +49,21 @@ const Header = (props) => {
 
 	const childrenWithProps = Children.map(props.children, (child) => {
 		// Checking isValidElement is the safe way and avoids a TS error too.
-		if (isValidElement(child)) {
+		if (isValidElement(child) && child.type.name === "Home") {
 			return cloneElement(child, { setDrawer });
 		}
 
 		return child;
 	});
-	
+
+	let headerButton = null;
+	if (LoggedIn === true) {
+		headerButton = <UserInfo />;
+	}
+	if (LoggedIn === false) {
+		<LoginButton />;
+	}
+
 	return (
 		<Fragment>
 			<header>
@@ -92,7 +87,7 @@ const Header = (props) => {
 							>
 								Spotify custom playlists
 							</Typography>
-							{header}
+							{headerButton}
 						</Toolbar>
 					</AppBar>
 				</Box>

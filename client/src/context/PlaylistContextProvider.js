@@ -9,11 +9,14 @@ const PlaylistContextProvider = (props) => {
 	const { profile } = useContext(ProfileContext);
 	const [playlists, setPlaylists] = useState(null);
 	const [playlistTracks, setPlaylistTracks] = useState({});
+	const [playlistRecommendedTracks, setPlaylistRecommendedTracks] = useState({});
 	const provider = {
 		playlists,
 		setPlaylists,
 		playlistTracks,
-		setPlaylistTracks
+		setPlaylistTracks,
+		playlistRecommendedTracks,
+		setPlaylistRecommendedTracks
 	};
 
 	useEffect(() => {
