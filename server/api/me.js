@@ -1,27 +1,30 @@
 const { request } = require("../utils");
 
-const me = (req, res) => {
+const me = async (req, res) => {
+	let result;
 	switch (req.params.submodule) {
 		case "playlists":
-			meplaylists(req, res);
+			result = await mePlaylists(req, res);
+			break;
+		case "top":
+			result = await meTop(req, res);
 			break;
 		default:
-			meprofile(req, res);
+			result = await meProfile(req, res);
 			break;
 	}
+	res.json(result);
 };
 
 let meProfileResult = null;
 
-const meprofile = async (req, res) => {
+const meProfile = async (req, res) => {
 	if (meProfileResult) {
-		res.json(meProfileResult);
-		return;
+		return meProfileResult;
 	}
 	const response = await request(req, "https://api.spotify.com/v1/me");
 	if (response.error) {
-		res.json(response);
-		return;
+		return response;
 	}
 
 	meProfileResult = {
@@ -32,20 +35,18 @@ const meprofile = async (req, res) => {
 		image: response.images[0].url,
 	};
 
-	res.json(meProfileResult);
+	return meProfileResult;
 };
 
 let mePlaylistResult = null;
 
-const meplaylists = async (req, res) => {
+const mePlaylists = async (req, res) => {
 	if (!meProfileResult) {
-		res.json({ error: true, message: "No user defined" });
-		return;
+		return { error: true, message: "No user defined" };
 	}
 
 	if (mePlaylistResult && !req.query.force) {
-		res.json(mePlaylistResult);
-		return;
+		return mePlaylistResult;
 	}
 	const offset = 0;
 	let playlists = [];
@@ -54,8 +55,7 @@ const meplaylists = async (req, res) => {
 		"https://api.spotify.com/v1/me/playlists?limit=50&offset=" + offset
 	);
 	if (response.error) {
-		res.json(response);
-		return;
+		return response;
 	}
 	playlists.push(...response.items);
 
@@ -72,7 +72,34 @@ const meplaylists = async (req, res) => {
 			: null;
 		return formattedPlaylist;
 	});
-	res.json(mePlaylistResult);
+	return mePlaylistResult;
 };
 
-module.exports = { me };
+let meTopResult = null;
+
+const meTop = async (req, res) => {
+	if (meTopResult) {
+		return meTopResult;
+	}
+	let offset = 0;
+
+	const url =
+		"/api/me/top/tracks?limit=50&offset=" + offset + "&time_range=long_term";
+	const response = await request(req, url);
+	if (response.error) {
+		return response;
+	}
+	console.log(response);
+
+	meTopResult = {
+		id: response.id,
+		name: response.display_name,
+		email: response.email,
+		url: response.external_urls.spotify,
+		image: response.images[0].url,
+	};
+
+	return meTopResult;
+};
+
+module.exports = { me,meTop };

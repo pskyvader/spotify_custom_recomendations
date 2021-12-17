@@ -20,8 +20,7 @@ app.use(express.static("/client/build/"));
 // serve up the index.html if express does'nt recognize the route
 const path = require("path");
 
-app.get("/api/:module/:submodule?", (req, res) => {
-	console.log(req.params.module, req.params.submodule);
+app.get("/api/:module/:submodule?/:extra?", (req, res) => {
 	switch (req.params.module) {
 		case "authorize":
 			authorize(req, res);
