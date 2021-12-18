@@ -1,4 +1,7 @@
 const { request, formatSongList } = require("../utils");
+const { meTop } = require("./me");
+
+const { recommended: recommendedSongs } = require("./recommended");
 
 let playlists = {};
 let recommended = {};
@@ -7,7 +10,7 @@ const playlist = async (req, res) => {
 	let result;
 	switch (req.params.submodule) {
 		case "recommended":
-			result = await playlistrecommended(req, res);
+			result = await playlistRecommended(req, res);
 			break;
 		default:
 			result = await playlistsongs(req, res);
@@ -34,7 +37,7 @@ const playlistsongs = async (req, res) => {
 	return playlists[playlistId];
 };
 
-const playlistrecommended = async (req, res) => {
+const playlistRecommended = async (req, res) => {
 	const playlistId = req.params.extra;
 
 	if (recommended[playlistId]) {
@@ -53,10 +56,12 @@ const playlistrecommended = async (req, res) => {
 		playlists[playlistId] = formatSongList(response.items);
 	}
 
-	if (playlists[playlistId]) {
-		const currentPlaylist = playlists[playlistId];
-	}
+	// if (playlists[playlistId]) { const currentPlaylist = playlists[playlistId]; }
 
+	const currentPlaylist = playlists[playlistId];
+	const topSongs = await meTop(req, res);
+	recommended[playlistId]= recommendedSongs(req, currentPlaylist, topSongs);
+	
 	return recommended[playlistId];
 };
 

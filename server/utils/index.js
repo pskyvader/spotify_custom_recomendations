@@ -5,7 +5,7 @@ const { genres } = require("./genres");
 
 module.exports = {
 	generateRandomString,
-    request,
-    formatSongList,
-    genres
+	request,
+	formatSongList,
+	genres,
 };

@@ -1,4 +1,4 @@
-const { request } = require("../utils");
+const { request,formatSongList} = require("../utils");
 
 const me = async (req, res) => {
 	let result;
@@ -84,22 +84,15 @@ const meTop = async (req, res) => {
 	let offset = 0;
 
 	const url =
-		"/api/me/top/tracks?limit=50&offset=" + offset + "&time_range=long_term";
+		"https://api.spotify.com/v1/me/top/tracks?limit=50&offset=" +
+		offset +
+		"&time_range=long_term";
 	const response = await request(req, url);
 	if (response.error) {
 		return response;
 	}
-	console.log(response);
-
-	meTopResult = {
-		id: response.id,
-		name: response.display_name,
-		email: response.email,
-		url: response.external_urls.spotify,
-		image: response.images[0].url,
-	};
-
+	meTopResult = formatSongList(response.items);
 	return meTopResult;
 };
 
-module.exports = { me,meTop };
+module.exports = { me, meTop };
