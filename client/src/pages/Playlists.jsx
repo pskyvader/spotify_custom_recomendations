@@ -4,9 +4,9 @@ import { styled } from "@mui/material/styles";
 import { useParams, Redirect } from "react-router-dom";
 
 import { SessionContext } from "../context/SessionContextProvider";
-import PlayListSongs from "../components/playlist/PlayListSongs";
-import RecommendedSongs from "../components/playlist/RecommendedSongs";
-import RemoveSongs from "../components/playlist/RemoveSongs";
+import PlayListSongs from "../modules/playlist/PlayListSongs";
+import RecommendedSongs from "../modules/playlist/RecommendedSongs";
+// import RemoveSongs from "../modules/playlist/RemoveSongs";
 
 const Playlists = () => {
 	const { playlistid } = useParams() || null;

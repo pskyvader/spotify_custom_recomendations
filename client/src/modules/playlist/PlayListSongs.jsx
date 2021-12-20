@@ -1,18 +1,9 @@
 import { useContext } from "react";
 import { CircularProgress } from "@mui/material";
 import { Playlist } from "../../API";
-import { FormatSongListColumns } from "../../modules/FormatSongs";
-import { SongListTemplate, ButtonRemove } from "../../modules/SongsView";
+import SongList, { SongListColumns } from "../../components/SongList";
+import ButtonRemoveSong from "../../components/ButtonRemoveSong";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
-
-const PlayListSongsTemplate = ({ CurrentPlaylist, playlistId }) => {
-	const data = FormatSongListColumns(
-		CurrentPlaylist,
-		playlistId,
-		ButtonRemove
-	);
-	return <SongListTemplate data={data} />;
-};
 
 const PlayListSongs = ({ playlistId }) => {
 	const { playlistTracks, setPlaylistTracks } = useContext(PlaylistContext);
@@ -22,12 +13,12 @@ const PlayListSongs = ({ playlistId }) => {
 	}
 
 	if (playlistTracks[playlistId]) {
-		return (
-			<PlayListSongsTemplate
-				CurrentPlaylist={playlistTracks[playlistId]}
-				playlistId={playlistId}
-			/>
+		const data = SongListColumns(
+			playlistTracks[playlistId],
+			playlistId,
+			ButtonRemoveSong
 		);
+		return <SongList data={data} />;
 	}
 
 	Playlist.Playlist(playlistId).then((response) => {

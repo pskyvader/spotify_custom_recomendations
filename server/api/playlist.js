@@ -56,11 +56,10 @@ const playlistRecommended = async (req, res) => {
 		playlists[playlistId] = formatSongList(response.items);
 	}
 
-	// if (playlists[playlistId]) { const currentPlaylist = playlists[playlistId]; }
 
 	const currentPlaylist = playlists[playlistId];
 	const topSongs = await meTop(req, res);
-	recommended[playlistId]= recommendedSongs(req, currentPlaylist, topSongs);
+	recommended[playlistId]= await recommendedSongs(req, currentPlaylist, topSongs);
 	
 	return recommended[playlistId];
 };
