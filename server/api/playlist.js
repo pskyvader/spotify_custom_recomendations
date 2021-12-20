@@ -19,6 +19,13 @@ const playlist = async (req, res) => {
 	res.json(result);
 };
 
+const invalidatePlaylist = (playlistId) => {
+	if(playlists[playlistId]){
+		delete playlists[playlistId];
+	}
+	return true;
+}
+
 const playlistsongs = async (req, res) => {
 	const playlistId = req.params.submodule;
 	if (playlists[playlistId]) {
@@ -50,7 +57,6 @@ const playlistRecommended = async (req, res) => {
 
 		const response = await request(req, url);
 		if (response.error) {
-			console.log(response);
 			return response;
 		}
 		playlists[playlistId] = formatSongList(response.items);
@@ -64,4 +70,4 @@ const playlistRecommended = async (req, res) => {
 	return recommended[playlistId];
 };
 
-module.exports = { playlist };
+module.exports = { playlist ,invalidatePlaylist};

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-const { authorize, pushtoken, loggedin, me, playlist } = require("./api");
+const { authorize, pushtoken, loggedin, me, playlist,actions } = require("./api");
 const { callback } = require("./callback");
 const { login } = require("./login");
 const app = express();
@@ -20,36 +20,43 @@ app.use(express.static("/client/build/"));
 // serve up the index.html if express does'nt recognize the route
 const path = require("path");
 
-app.get("/api/:module/:submodule?/:extra?", (req, res) => {
-	switch (req.params.module) {
-		case "authorize":
-			authorize(req, res);
-			break;
-		case "pushtoken":
-			pushtoken(req, res);
-			break;
-		case "me":
-			me(req, res);
-			break;
-		case "playlists":
-			playlist(req, res);
-			break;
-		case "loggedin":
-			loggedin(req, res);
-			break;
-		default:
-			res.json({
-				message: "Hello from server!",
-			});
-			break;
-	}
-});
-
 app.get("/login", function (req, res) {
 	login(req, res);
 });
 app.get("/callback", function (req, res) {
 	callback(req, res);
+});
+
+app.get("/api/authorize", function (req, res) {
+	authorize(req, res);
+});
+
+app.get("/api/pushtoken", function (req, res) {
+	pushtoken(req, res);
+});
+
+app.get("/api/loggedin", function (req, res) {
+	loggedin(req, res);
+});
+
+app.get("/api/me/:submodule?", function (req, res) {
+	me(req, res);
+});
+
+app.get("/api/playlists/:submodule?/:extra?", function (req, res) {
+	playlist(req, res);
+});
+
+
+app.get("/api/actions/:module/:playlistid/:songuri", function (req, res) {
+	actions(req, res);
+});
+
+
+app.get("/api/*", (req, res) => {
+	res.json({
+		error: "Unknown module",
+	});
 });
 
 app.get("*", (req, res) => {

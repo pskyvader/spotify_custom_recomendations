@@ -5,13 +5,13 @@ import { PlaylistContext } from "../context/PlaylistContextProvider";
 
 
 const ButtonAddSong = ({ PlaylistId, uri }) => {
-	const { setPlaylistId } = useContext(PlaylistContext);
+	const { playlistTracks, setPlaylistTracks } = useContext(PlaylistContext);
 	return (
 		<Button
 			onClick={() => {
-				setPlaylistId(null);
-				Playlist.AddSong(PlaylistId, uri).then(() => {
-					setPlaylistId(PlaylistId);
+				Playlist.AddSong(PlaylistId, uri).then((response) => {
+					delete playlistTracks[PlaylistId];
+					setPlaylistTracks(playlistTracks);
 				});
 			}}
 		>

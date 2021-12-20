@@ -11,8 +11,7 @@ export const PlaylistReccomended = async (playlistid) => {
 };
 
 export const DeleteSong = async (playlistid, songuri) => {
-	const url =
-		"/api/playlists/" + playlistid + "/tracks";
+	const url = "/api/playlists/" + playlistid + "/tracks";
 
 	const songs = {
 		tracks: [{ uri: songuri }],
@@ -21,13 +20,6 @@ export const DeleteSong = async (playlistid, songuri) => {
 };
 
 export const AddSong = async (playlistid, songuri) => {
-	const url =
-		"/api/playlists/" + playlistid + "/tracks";
-
-	const songs = {
-		uris: [songuri],
-		position: 0,
-	};
-
-	return GetRequest(url, "POST", JSON.stringify(songs));
+	const url = "/api/actions/add/" + playlistid + "/" + songuri;
+	return GetRequest(url);
 };

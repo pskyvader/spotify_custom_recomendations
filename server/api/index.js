@@ -3,11 +3,13 @@ const { pushtoken } = require("./pushtoken");
 const { loggedin } = require("./loggedin");
 const { me } = require("./me");
 const { playlist } = require("./playlist");
+const { actions } = require("./actions");
 
 module.exports = {
 	authorize,
 	pushtoken,
 	loggedin,
 	me,
-	playlist
+	playlist,
+	actions,
 };
