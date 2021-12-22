@@ -6,11 +6,11 @@ const actions = async (req, res) => {
 	let result;
 	switch (req.params.module) {
 		case "add":
-			result = await add(req, res);
+			result = await addSong(req, res);
 			break;
-		// case "top":
-		// 	result = await meTop(req, res);
-		// 	break;
+		case "delete":
+			result = await deleteSong(req, res);
+			break;
 		default:
 			result = {
 				error: "Unknown module",
@@ -20,7 +20,7 @@ const actions = async (req, res) => {
 	res.json(result);
 };
 
-const add = async (req, res) => {
+const addSong = async (req, res) => {
 	const playlistId = req.params.playlistid;
 	const songuri = req.params.songuri;
 	const url =
@@ -32,7 +32,30 @@ const add = async (req, res) => {
 		return response;
 	}
 
-	invalidatePlaylist(playlistId);
+	invalidatePlaylist(playlistId, songuri);
+
+	return {
+		message: "success",
+		snapshot_id: response.snapshot_id,
+	};
+};
+
+const deleteSong = async (req, res) => {
+	const playlistId = req.params.playlistid;
+	const songuri = req.params.songuri;
+	const url =
+		"https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
+
+	const songs = {
+		tracks: [{ uri: songuri }],
+	};
+
+	const response = await request(req, url, "DELETE", JSON.stringify(songs));
+	if (response.error) {
+		return response;
+	}
+
+	invalidatePlaylist(playlistId, songuri);
 
 	return {
 		message: "success",

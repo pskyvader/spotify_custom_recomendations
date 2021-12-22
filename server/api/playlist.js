@@ -19,12 +19,20 @@ const playlist = async (req, res) => {
 	res.json(result);
 };
 
-const invalidatePlaylist = (playlistId) => {
-	if(playlists[playlistId]){
+const invalidatePlaylist = (playlistId, songUri) => {
+	if (playlists[playlistId]) {
 		delete playlists[playlistId];
 	}
+	if (recommended[playlistId]) {
+		recommended[playlistId] = recommended[playlistId].filter(
+			(song) => song.action !== songUri
+		);
+		if (recommended[playlistId].length < 10) {
+			delete recommended[playlistId];
+		}
+	}
 	return true;
-}
+};
 
 const playlistsongs = async (req, res) => {
 	const playlistId = req.params.submodule;
@@ -62,12 +70,15 @@ const playlistRecommended = async (req, res) => {
 		playlists[playlistId] = formatSongList(response.items);
 	}
 
-
 	const currentPlaylist = playlists[playlistId];
 	const topSongs = await meTop(req, res);
-	recommended[playlistId]= await recommendedSongs(req, currentPlaylist, topSongs);
-	
+	recommended[playlistId] = await recommendedSongs(
+		req,
+		currentPlaylist,
+		topSongs
+	);
+
 	return recommended[playlistId];
 };
 
-module.exports = { playlist ,invalidatePlaylist};
+module.exports = { playlist, invalidatePlaylist };

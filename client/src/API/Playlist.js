@@ -11,12 +11,8 @@ export const PlaylistReccomended = async (playlistid) => {
 };
 
 export const DeleteSong = async (playlistid, songuri) => {
-	const url = "/api/playlists/" + playlistid + "/tracks";
-
-	const songs = {
-		tracks: [{ uri: songuri }],
-	};
-	return GetRequest(url, "DELETE", JSON.stringify(songs));
+	const url = "/api/actions/delete/" + playlistid + "/" + songuri;
+	return GetRequest(url);
 };
 
 export const AddSong = async (playlistid, songuri) => {

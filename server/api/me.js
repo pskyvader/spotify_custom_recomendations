@@ -1,4 +1,4 @@
-const { request,formatSongList} = require("../utils");
+const { request, formatSongList } = require("../utils");
 
 const me = async (req, res) => {
 	let result;
@@ -45,7 +45,7 @@ const mePlaylists = async (req, res) => {
 		return { error: true, message: "No user defined" };
 	}
 
-	if (mePlaylistResult && !req.query.force) {
+	if (mePlaylistResult) {
 		return mePlaylistResult;
 	}
 	const offset = 0;
