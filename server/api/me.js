@@ -95,4 +95,34 @@ const meTop = async (req, res) => {
 	return meTopResult;
 };
 
-module.exports = { me, meTop };
+let meRecentResult = {};
+const MeRecently = async (req,res,after = null, limit = 10) => {
+	if (meRecentResult !== null) {
+		return meRecentResult;
+	}
+
+	if (after === null) {
+		after = Date.now() - 604800000; //1 week in milliseconds = (24*60*60*1000) * 7; //7 days)
+	}
+	
+	let recent={cursors:{}};
+	while (recent.cursors) {
+		const url =
+			"https://api.spotify.com/v1/me/player/recently-played?limit=" +
+			limit +
+			"&after=" +
+			after;
+
+		recent = await request(req, url);
+		if (recent.error) {
+			return recent;
+		}
+		meRecentResult.push(...(formatSongList(recent.items)));
+		if (recent.cursors) {
+			after=recent.cursors.after;
+		}
+	}
+	return meRecentResult;
+};
+
+module.exports = { me, meTop,MeRecently };
