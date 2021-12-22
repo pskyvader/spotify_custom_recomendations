@@ -1,12 +1,17 @@
 import GetRequest from "./Request";
 
 export const Playlist = async (playlistid) => {
-	const url = "/api/playlists/" + playlistid;
+	const url = "/api/playlists/get/" + playlistid;
 	return GetRequest(url);
 };
 
-export const PlaylistReccomended = async (playlistid) => {
+export const PlaylistRecommended = async (playlistid) => {
 	const url = "/api/playlists/recommended/" + playlistid;
+	return GetRequest(url);
+};
+
+export const PlaylistDeleteRecommended = async (playlistid) => {
+	const url = "/api/playlists/deleterecommended/" + playlistid;
 	return GetRequest(url);
 };
 

@@ -95,7 +95,7 @@ const meTop = async (req, res) => {
 	return meTopResult;
 };
 
-let meRecentResult = {};
+let meRecentResult = [];
 const MeRecently = async (req,res,after = null, limit = 10) => {
 	if (meRecentResult !== null) {
 		return meRecentResult;

@@ -13,7 +13,7 @@ const actions = async (req, res) => {
 			break;
 		default:
 			result = {
-				error: "Unknown module",
+				error: "Invalid module",
 			};
 			break;
 	}

@@ -43,7 +43,7 @@ app.get("/api/me/:submodule?", function (req, res) {
 	me(req, res);
 });
 
-app.get("/api/playlists/:submodule?/:extra?", function (req, res) {
+app.get("/api/playlists/:action?/:playlistid?", function (req, res) {
 	playlist(req, res);
 });
 

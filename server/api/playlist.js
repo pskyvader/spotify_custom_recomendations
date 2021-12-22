@@ -1,4 +1,4 @@
-const { request, formatSongList } = require("../utils");
+const { request, formatSongList, subtractById } = require("../utils");
 const { meTop, MeRecently } = require("./me");
 
 const { recommended: recommendedSongs } = require("./recommended");
@@ -9,15 +9,20 @@ let deleterecommended = {};
 
 const playlist = async (req, res) => {
 	let result;
-	switch (req.params.submodule) {
+	switch (req.params.action) {
 		case "recommended":
 			result = await playlistRecommended(req, res);
 			break;
 		case "deleterecommended":
 			result = await playlistDeleteRecommended(req, res);
 			break;
-		default:
+		case "get":
 			result = await playlistsongs(req, res);
+			break;
+		default:
+			result = {
+				error: "Invalid module",
+			};
 			break;
 	}
 	res.json(result);
@@ -39,7 +44,7 @@ const invalidatePlaylist = (playlistId, songUri) => {
 };
 
 const playlistsongs = async (req, res) => {
-	const playlistId = req.params.extra || req.params.submodule;
+	const playlistId = req.params.playlistid;
 	if (playlists[playlistId]) {
 		return playlists[playlistId];
 	}
@@ -57,7 +62,7 @@ const playlistsongs = async (req, res) => {
 };
 
 const playlistRecommended = async (req, res) => {
-	const playlistId = req.params.extra;
+	const playlistId = req.params.playlistid;
 
 	if (deleterecommended[playlistId]) {
 		return deleterecommended[playlistId];
@@ -85,7 +90,7 @@ const playlistRecommended = async (req, res) => {
 };
 
 const playlistDeleteRecommended = async (req, res) => {
-	const playlistId = req.params.extra;
+	const playlistId = req.params.playlistid;
 
 	if (deleterecommended[playlistId]) {
 		return deleterecommended[playlistId];

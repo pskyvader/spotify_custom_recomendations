@@ -6,7 +6,7 @@ import { useParams, Redirect } from "react-router-dom";
 import { SessionContext } from "../context/SessionContextProvider";
 import PlayListSongs from "../modules/playlist/PlayListSongs";
 import RecommendedSongs from "../modules/playlist/RecommendedSongs";
-// import RemoveSongs from "../modules/playlist/RemoveSongs";
+import RecommendedDeleteSongs from "../modules/playlist/RecommendedDeleteSongs";
 
 const Playlists = () => {
 	const { playlistid } = useParams() || null;
@@ -56,11 +56,11 @@ const Playlists = () => {
 							<RecommendedSongs playlistId={playlistid} />
 						</Root>
 					</Grid>
-					{/* <Grid item xs={12} md={6}>
+					<Grid item xs={12} md={6}>
 						<Root>
-							<RemoveSongs playlistId={playlistid} />
+							<RecommendedDeleteSongs playlistId={playlistid} />
 						</Root>
-					</Grid> */}
+					</Grid>
 					{/* <Grid item xs={12} md={6}>
 					<Root>
 						<NoTopSongs />
