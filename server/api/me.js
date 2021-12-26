@@ -107,24 +107,21 @@ const MeRecently = async (req, res, after = null, limit = 10) => {
 		after = Date.now() - 604800000; //1 week in milliseconds = (24*60*60*1000) * 7; //7 days)
 	}
 
-	const url =
+	let url =
 		"https://api.spotify.com/v1/me/player/recently-played?limit=" +
 		limit +
 		"&after=" +
 		after;
+	let items = [];
 	while (url) {
-
 		const response = await request(req, url);
 		if (response.error) {
 			return response;
 		}
-		console.log(response);
-		meRecentResult.push(...formatSongList(response.items));
-		if (response.cursors) {
-			after = response.cursors.after;
-		}
-		url=null;
+		url = response.next;
+		items.push(...response.items);
 	}
+	meRecentResult = formatSongList(items);
 	return meRecentResult;
 };
 
