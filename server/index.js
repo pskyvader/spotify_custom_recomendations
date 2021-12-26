@@ -15,7 +15,8 @@ app.use(
 app.disable("x-powered-by");
 
 // serve up production assets
-app.use(express.static("/client/build/"));
+app.use(express.static(__dirname + "/client/build")); //Serves resources from public folder
+
 // let the react app to handle any unknown routes
 // serve up the index.html if express does'nt recognize the route
 const path = require("path");
@@ -60,8 +61,9 @@ app.get("/api/*", (req, res) => {
 });
 
 app.get("*", (req, res) => {
+	console.log(req.params)
 	res.sendFile(
-		path.resolve(__dirname, "..", "client", "build", "index.html")
+		path.resolve(__dirname, "..", "client", "build","index.html")
 	);
 });
 
