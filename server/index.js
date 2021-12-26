@@ -15,7 +15,7 @@ app.use(
 app.disable("x-powered-by");
 
 // serve up production assets
-app.use(express.static(__dirname + "/client/build")); //Serves resources from public folder
+app.use(express.static("client/build")); //Serves resources from public folder
 
 // let the react app to handle any unknown routes
 // serve up the index.html if express does'nt recognize the route
@@ -61,10 +61,12 @@ app.get("/api/*", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-	console.log(req.params)
-	res.sendFile(
-		path.resolve(__dirname, "..", "client", "build","index.html")
-	);
+	res.json({
+		error: "Unknown",
+	});
+	// res.sendFile(
+	// 	path.resolve(__dirname, "..", "client", "build","index.html")
+	// );
 });
 
 // if not in production use the port 5000
