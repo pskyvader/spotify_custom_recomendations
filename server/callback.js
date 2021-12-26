@@ -29,7 +29,6 @@ const callback = async (req, res) => {
 
 	const response = await request(req, "https://accounts.spotify.com/api/token", "POST", null, requestOptions );
 	if (!response.error) {
-		console.log(response);
 		const access_token = response.access_token || null;
 		const refresh_token = response.refresh_token || null;
 
@@ -38,6 +37,7 @@ const callback = async (req, res) => {
 		req.session.refresh_token = refresh_token;
 
 		res.redirect("/#loggedin=true");
+		return;
 	}
 
 	res.redirect("/#error=login_error");
