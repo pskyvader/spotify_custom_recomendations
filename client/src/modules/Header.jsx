@@ -49,7 +49,7 @@ const Header = (props) => {
 
 	const childrenWithProps = Children.map(props.children, (child) => {
 		// Checking isValidElement is the safe way and avoids a TS error too.
-		if (isValidElement(child) && child.type.name === "Home") {
+		if (isValidElement(child)) {
 			return cloneElement(child, { setDrawer });
 		}
 

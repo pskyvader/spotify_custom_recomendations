@@ -61,12 +61,9 @@ app.get("/api/*", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-	res.json({
-		error: "Unknown",
-	});
-	// res.sendFile(
-	// 	path.resolve(__dirname, "..", "client", "build","index.html")
-	// );
+	res.sendFile(
+		path.resolve(__dirname, "..", "client", "build","index.html")
+	);
 });
 
 // if not in production use the port 5000
