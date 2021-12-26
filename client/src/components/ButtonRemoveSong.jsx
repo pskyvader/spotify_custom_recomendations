@@ -9,6 +9,8 @@ const ButtonRemoveSong = ({ PlaylistId, uri, id }) => {
 		setPlaylistTracks,
 		playlistRecommendedTracks,
 		setPlaylistRecommendedTracks,
+		playlistDeleteTracks,
+		setPlaylistDeleteTracks,
 	} = useContext(PlaylistContext);
 	return (
 		<Button
@@ -23,6 +25,10 @@ const ButtonRemoveSong = ({ PlaylistId, uri, id }) => {
 					delete playlistRecommendedTracks[PlaylistId];
 					setPlaylistRecommendedTracks({
 						...playlistRecommendedTracks,
+					});
+					delete playlistDeleteTracks[PlaylistId];
+					setPlaylistDeleteTracks({
+						...playlistDeleteTracks,
 					});
 				});
 			}}

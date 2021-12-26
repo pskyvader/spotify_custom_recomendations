@@ -81,48 +81,51 @@ const meTop = async (req, res) => {
 	if (meTopResult) {
 		return meTopResult;
 	}
-	let offset = 0;
 
-	const url =
-		"https://api.spotify.com/v1/me/top/tracks?limit=50&offset=" +
-		offset +
-		"&time_range=long_term";
-	const response = await request(req, url);
-	if (response.error) {
-		return response;
+	let url =
+		"https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term";
+	let items = [];
+	while (url) {
+		const response = await request(req, url);
+		if (response.error) {
+			return response;
+		}
+		url = response.next;
+		items.push(...response.items);
 	}
-	meTopResult = formatSongList(response.items);
+	meTopResult = formatSongList(items);
 	return meTopResult;
 };
 
-let meRecentResult = [];
-const MeRecently = async (req,res,after = null, limit = 10) => {
-	if (meRecentResult !== null) {
+let meRecentResult = null;
+const MeRecently = async (req, res, after = null, limit = 10) => {
+	if (meRecentResult) {
 		return meRecentResult;
 	}
 
 	if (after === null) {
 		after = Date.now() - 604800000; //1 week in milliseconds = (24*60*60*1000) * 7; //7 days)
 	}
-	
-	let recent={cursors:{}};
-	while (recent.cursors) {
-		const url =
-			"https://api.spotify.com/v1/me/player/recently-played?limit=" +
-			limit +
-			"&after=" +
-			after;
 
-		recent = await request(req, url);
-		if (recent.error) {
-			return recent;
+	const url =
+		"https://api.spotify.com/v1/me/player/recently-played?limit=" +
+		limit +
+		"&after=" +
+		after;
+	while (url) {
+
+		const response = await request(req, url);
+		if (response.error) {
+			return response;
 		}
-		meRecentResult.push(...(formatSongList(recent.items)));
-		if (recent.cursors) {
-			after=recent.cursors.after;
+		console.log(response);
+		meRecentResult.push(...formatSongList(response.items));
+		if (response.cursors) {
+			after = response.cursors.after;
 		}
+		url=null;
 	}
 	return meRecentResult;
 };
 
-module.exports = { me, meTop,MeRecently };
+module.exports = { me, meTop, MeRecently };

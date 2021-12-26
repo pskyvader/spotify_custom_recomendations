@@ -14,7 +14,7 @@ const AddSongs = ({ playlistId }) => {
 			Playlist.PlaylistRecommended(playlistId).then((response) => {
 				if (response.error) return console.log(response);
 				playlistRecommendedTracks[playlistId] = response;
-				setPlaylistRecommendedTracks(playlistRecommendedTracks);
+				setPlaylistRecommendedTracks({...playlistRecommendedTracks});
 			});
 		}
 	}, [playlistId, playlistRecommendedTracks, setPlaylistRecommendedTracks]);
@@ -28,7 +28,7 @@ const AddSongs = ({ playlistId }) => {
 			playlistId,
 			ButtonAddSong
 		);
-		return <SongList data={data} />;
+		return <SongList data={data} title="Recommended Songs"/>;
 	}
 
 	return <CircularProgress />;

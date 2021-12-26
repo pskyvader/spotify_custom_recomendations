@@ -40,6 +40,15 @@ const invalidatePlaylist = (playlistId, songUri) => {
 			delete recommended[playlistId];
 		}
 	}
+
+	if (deleterecommended[playlistId]) {
+		deleterecommended[playlistId] = deleterecommended[playlistId].filter(
+			(song) => song.action !== songUri
+		);
+		if (deleterecommended[playlistId].length < 10) {
+			delete deleterecommended[playlistId];
+		}
+	}
 	return true;
 };
 
@@ -48,15 +57,21 @@ const playlistsongs = async (req, res) => {
 	if (playlists[playlistId]) {
 		return playlists[playlistId];
 	}
-	const url =
+	let url =
 		"https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
 
-	const response = await request(req, url);
-	if (response.error) {
-		return response;
+	let items=[];
+	while(url){
+		const response = await request(req, url);
+		if (response.error) {
+			return response;
+		}
+		url=response.next;
+		items.push(...response.items);
 	}
+	
 
-	playlists[playlistId] = formatSongList(response.items);
+	playlists[playlistId] = formatSongList(items);
 
 	return playlists[playlistId];
 };
@@ -64,8 +79,8 @@ const playlistsongs = async (req, res) => {
 const playlistRecommended = async (req, res) => {
 	const playlistId = req.params.playlistid;
 
-	if (deleterecommended[playlistId]) {
-		return deleterecommended[playlistId];
+	if (recommended[playlistId]) {
+		return recommended[playlistId];
 	}
 
 	const currentPlaylist = await playlistsongs(req, res);

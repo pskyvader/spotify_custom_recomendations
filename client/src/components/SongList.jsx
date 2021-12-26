@@ -5,7 +5,6 @@ import { GridOverlay, DataGrid } from "@mui/x-data-grid";
 
 
 export const SongListColumns = (rows, PlaylistId, ActionButton) => {
-	// const rows = songList;
 	const columns = [
 		{ field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
 		{ field: "name", headerName: "Title", flex: 1 },
@@ -48,7 +47,7 @@ const SongList = ({ data, title = "title" }) => {
 									component="div"
 									sx={{ flexGrow: 1 }}
 								>
-									{title}
+									{title} - {data.rows.length}
 								</Typography>
 							</Toolbar>
 						);
