@@ -1,9 +1,20 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-const { authorize, pushtoken, loggedin, me, playlist,actions } = require("./api");
+const {
+	authorize,
+	pushtoken,
+	loggedin,
+	me,
+	playlist,
+	actions,
+} = require("./api");
 const { callback } = require("./callback");
 const { login } = require("./login");
+const { connection } = require("./database/connection");
+
+connection();
+
 const app = express();
 app.use(
 	session({
@@ -48,11 +59,9 @@ app.get("/api/playlists/:action?/:playlistid?", function (req, res) {
 	playlist(req, res);
 });
 
-
 app.get("/api/actions/:module/:playlistid/:songuri", function (req, res) {
 	actions(req, res);
 });
-
 
 app.get("/api/*", (req, res) => {
 	res.json({
@@ -62,7 +71,7 @@ app.get("/api/*", (req, res) => {
 
 app.get("*", (req, res) => {
 	res.sendFile(
-		path.resolve(__dirname, "..", "client", "build","index.html")
+		path.resolve(__dirname, "..", "client", "build", "index.html")
 	);
 });
 
