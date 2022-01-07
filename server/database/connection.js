@@ -13,8 +13,8 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 		},
 	},
 	// logging: (...msg) => console.log(msg),
-    logging: console.log,
-	// logging: false,
+    // logging: console.log,
+	logging: false,
 });
 
 class User extends Model {
@@ -26,17 +26,13 @@ User.init(
 	{
 		// Model attributes are defined here
 		id: {
-			type: DataTypes.INTEGER,
+			type: DataTypes.BIGINT,
 			// autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 			unique: true,
 		},
 		name: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		},
-		email: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
@@ -74,7 +70,7 @@ const connection = async () => {
 	try {
 		await sequelize.authenticate();
 		console.log("Connection has been established successfully.");
-		sequelize.sync({ alter: true });
+		sequelize.sync({ force: true });
 		// sequelize.sync();
 	} catch (error) {
 		console.error("Unable to connect to the database:", error);

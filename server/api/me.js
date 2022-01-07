@@ -1,4 +1,7 @@
+const { Op } = require("sequelize");
+
 const { request, formatSongList } = require("../utils");
+const { User } = require("../database/connection");
 
 const me = async (req, res) => {
 	let result;
@@ -19,9 +22,31 @@ const me = async (req, res) => {
 let meProfileResult = null;
 
 const meProfile = async (req, res) => {
+	if (!req.session.access_token) {
+		return { error: "Not logged in" };
+	}
 	if (meProfileResult) {
 		return meProfileResult;
 	}
+
+	const currentUser = await User.findOne({
+		where: {
+			[Op.or]: [
+				{ access_token: req.session.access_token },
+				{ refresh_token: req.session.refresh_token },
+			],
+		},
+	});
+	if (currentUser !== null) {
+		meProfileResult = {
+			id: currentUser.id,
+			name: currentUser.name,
+			url: currentUser.url,
+			image: currentUser.image,
+		};
+		return meProfileResult;
+	}
+
 	const response = await request(req, "https://api.spotify.com/v1/me");
 	if (response.error) {
 		return response;
@@ -30,10 +55,32 @@ const meProfile = async (req, res) => {
 	meProfileResult = {
 		id: response.id,
 		name: response.display_name,
-		email: response.email,
 		url: response.external_urls.spotify,
 		image: response.images[0].url,
 	};
+
+	const [user, created] = await User.findOrCreate({
+		where: { id: meProfileResult.id },
+		defaults: {
+			...meProfileResult,
+			access_token: req.session.access_token,
+			refresh_token: req.session.refresh_token,
+			expiration: req.session.expiration,
+		},
+	}).catch((err) => {
+		console.error(err.message);
+		return { error: err.message };
+	});
+	if (!created) {
+		User.update(
+			{ ...user },
+			{
+				where: {
+					id: meProfileResult.id,
+				},
+			}
+		);
+	}
 
 	return meProfileResult;
 };

@@ -31,6 +31,7 @@ const callback = async (req, res) => {
 	if (!response.error) {
 		const access_token = response.access_token || null;
 		const refresh_token = response.refresh_token || null;
+		const expires_in = response.expires_in || null;
 
 		req.session.loggedin = true;
 		req.session.access_token = access_token;
