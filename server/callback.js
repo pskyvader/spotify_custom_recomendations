@@ -35,7 +35,8 @@ const callback = async (req, res) => {
 		req.session.loggedin = true;
 		req.session.access_token = access_token;
 		req.session.refresh_token = refresh_token;
-
+		req.session.expiration=Date.now()+(expires_in*1000)
+		
 		res.redirect("/#loggedin=true");
 		return;
 	}

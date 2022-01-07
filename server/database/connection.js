@@ -51,10 +51,12 @@ User.init(
 		access_token: {
 			type: DataTypes.STRING,
 			allowNull: false,
+			unique: true,
 		},
 		refresh_token: {
 			type: DataTypes.STRING,
 			allowNull: false,
+			unique: true,
 		},
 		expiration: {
 			type: DataTypes.DATE,
@@ -79,4 +81,4 @@ const connection = async () => {
 	}
 };
 
-module.exports = { connection };
+module.exports = { connection,User };
