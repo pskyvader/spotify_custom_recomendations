@@ -21,12 +21,10 @@ const SessionContextProvider = (props) => {
 				}
 			});
 		}
-		console.log(cookies)
 		if (LoggedIn === false && cookies.keep_logged && cookies.access_token) {
 			Me.LoginCookies(cookies.access_token).then((response) => {
 				if (response.error) return false;
 				if (response.loggedin) {
-					setCookie("access_token", response.access_token);
 					setLoggedIn(true);
 				}
 			});

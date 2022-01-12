@@ -2,7 +2,10 @@ const { User } = require("../database/connection");
 
 const logincookie = async (req, res) => {
 	let result = { error: null };
-	if (!req.params.access_token || typeof req.params.access_token==="undefined") {
+	if (
+		!req.params.access_token ||
+		typeof req.params.access_token === "undefined"
+	) {
 		result = { error: "No access token available" };
 	}
 	const currentUser = await User.findOne({
@@ -14,7 +17,14 @@ const logincookie = async (req, res) => {
 			refresh_token: currentUser.refresh_token,
 			expiration: currentUser.expiration,
 		};
+		if (Date.now() < meProfileResult.expiration) {
+			req.session.loggedin = true;
+			req.session.access_token = meProfileResult.access_token;
+			req.session.refresh_token = meProfileResult.refresh_token;
+			req.session.expiration = meProfileResult.expiration;
+			meProfileResult.loggedin=true;
 
+		}
 		result = meProfileResult;
 	}
 
