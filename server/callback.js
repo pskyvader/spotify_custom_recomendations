@@ -44,10 +44,6 @@ const callback = async (req, res) => {
 		req.session.refresh_token = refresh_token;
 		req.session.expiration = Date.now() + expires_in * 1000;
 
-		if (JSON.parse(req.cookies.keep_logged)) {
-			res.cookie('access_token', access_token);
-		}
-
 		res.redirect("/#loggedin=true");
 		return;
 	}

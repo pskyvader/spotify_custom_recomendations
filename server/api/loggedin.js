@@ -3,6 +3,7 @@ const loggedin = (req, res) => {
 		loggedin: req.session
 			? typeof req.session.access_token === "string"
 			: false,
+		access_token: req.session.access_token,
 	});
 };
 

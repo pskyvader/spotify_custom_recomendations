@@ -12,6 +12,8 @@ const KeepLogged = (signed, setCookie) => {
 
 const LoginButton = () => {
 	const [cookies, setCookie] = useCookies(["keep_logged"]);
+	const keepLogged = cookies.keep_logged||false;
+	
 	const uri = "login";
 	return (
 		<div>
@@ -26,7 +28,7 @@ const LoginButton = () => {
 			</div>
 			<div>
 				<FormControlLabel
-					control={<Checkbox checked={JSON.parse(cookies["keep_logged"])} />}
+					control={<Checkbox checked={JSON.parse(keepLogged)} />}
 					label="Keep me signed in"
 					onChange={(e, signed) => KeepLogged(signed, setCookie)}
 				/>

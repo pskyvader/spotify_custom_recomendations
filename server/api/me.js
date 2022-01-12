@@ -31,10 +31,7 @@ const meProfile = async (req, res) => {
 
 	const currentUser = await User.findOne({
 		where: {
-			[Op.or]: [
-				{ access_token: req.session.access_token },
-				{ refresh_token: req.session.refresh_token },
-			],
+			access_token: req.session.access_token,
 		},
 	});
 	if (currentUser !== null) {
@@ -43,6 +40,7 @@ const meProfile = async (req, res) => {
 			name: currentUser.name,
 			url: currentUser.url,
 			image: currentUser.image,
+			access_token: req.session.access_token,
 		};
 		return meProfileResult;
 	}
@@ -57,29 +55,28 @@ const meProfile = async (req, res) => {
 		name: response.display_name,
 		url: response.external_urls.spotify,
 		image: response.images[0].url,
+		access_token: req.session.access_token,
 	};
+
+	const defaultValues = {
+		...meProfileResult,
+		access_token: req.session.access_token,
+		refresh_token: req.session.refresh_token,
+		expiration: req.session.expiration,
+	}
 
 	const [user, created] = await User.findOrCreate({
 		where: { id: meProfileResult.id },
-		defaults: {
-			...meProfileResult,
-			access_token: req.session.access_token,
-			refresh_token: req.session.refresh_token,
-			expiration: req.session.expiration,
-		},
+		defaults: defaultValues,
 	}).catch((err) => {
-		console.error(err);
 		return { error: err.message };
 	});
 	if (!created) {
-		User.update(
-			{ ...user },
-			{
-				where: {
-					id: meProfileResult.id,
-				},
-			}
-		);
+		User.update(defaultValues, {
+			where: {
+				id: meProfileResult.id,
+			},
+		});
 	}
 
 	return meProfileResult;
