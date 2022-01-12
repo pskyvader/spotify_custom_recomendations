@@ -34,6 +34,15 @@ app.use(express.static("client/build")); //Serves resources from public folder
 // serve up the index.html if express does'nt recognize the route
 const path = require("path");
 
+app.get("/", (req, res, next) => {
+	console.log("a",req.cookies);
+	if (req.cookies.keep_logged && req.cookies.access_token) {
+		console.log(req.cookies);
+	}else{
+		next();
+	}
+});
+
 app.get("/login", function (req, res) {
 	login(req, res);
 });
@@ -72,6 +81,7 @@ app.get("/api/*", (req, res) => {
 });
 
 app.get("*", (req, res) => {
+	console.log(req.params,req.cookies)
 	res.sendFile(
 		path.resolve(__dirname, "..", "client", "build", "index.html")
 	);

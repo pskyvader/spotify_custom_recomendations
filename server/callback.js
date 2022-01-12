@@ -1,5 +1,5 @@
 const { credentials } = require("./credentials");
-const {request} = require("./utils");
+const { request } = require("./utils");
 
 const callback = async (req, res) => {
 	var code = req.query.code || null;
@@ -27,7 +27,13 @@ const callback = async (req, res) => {
 		}).toString(),
 	};
 
-	const response = await request(req, "https://accounts.spotify.com/api/token", "POST", null, requestOptions );
+	const response = await request(
+		req,
+		"https://accounts.spotify.com/api/token",
+		"POST",
+		null,
+		requestOptions
+	);
 	if (!response.error) {
 		const access_token = response.access_token || null;
 		const refresh_token = response.refresh_token || null;
@@ -36,8 +42,12 @@ const callback = async (req, res) => {
 		req.session.loggedin = true;
 		req.session.access_token = access_token;
 		req.session.refresh_token = refresh_token;
-		req.session.expiration=Date.now()+(expires_in*1000)
-		
+		req.session.expiration = Date.now() + expires_in * 1000;
+
+		if (JSON.parse(req.cookies.keep_logged)) {
+			res.cookie('access_token', access_token);
+		}
+
 		res.redirect("/#loggedin=true");
 		return;
 	}
