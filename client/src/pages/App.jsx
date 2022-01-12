@@ -15,8 +15,8 @@ function App() {
 	return (
 		<CssBaseline>
 			<Router>
-				<SessionContextProvider>
-					<CookiesProvider>
+				<CookiesProvider>
+					<SessionContextProvider>
 						<ProfileContextProvider>
 							<PlaylistContextProvider>
 								<div>
@@ -44,8 +44,8 @@ function App() {
 								</div>
 							</PlaylistContextProvider>
 						</ProfileContextProvider>
-					</CookiesProvider>
-				</SessionContextProvider>
+					</SessionContextProvider>
+				</CookiesProvider>
 			</Router>
 		</CssBaseline>
 	);
