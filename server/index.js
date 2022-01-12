@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const {
 	authorize,
 	pushtoken,
@@ -23,6 +24,7 @@ app.use(
 		resave: false,
 	})
 );
+app.use(cookieParser(process.env.SESSION_SECRET));
 app.disable("x-powered-by");
 
 // serve up production assets

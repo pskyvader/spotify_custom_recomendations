@@ -6,9 +6,8 @@ const pushtoken = (req, res) => {
 
 	req.session.access_token = access_token;
 	req.session.refresh_token = refresh_token;
-	req.session.expiration=Date.now()+(expires_in*1000)
+	req.session.expiration=Date.now()+(expires_in*1000);
 	req.session.save((err) =>{
-		// console.log("err:",err);
 		res.json({ loggedin: (req.session.access_token!==null && req.session.refresh_token!==null) });	
 	});
 

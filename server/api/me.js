@@ -68,7 +68,7 @@ const meProfile = async (req, res) => {
 			expiration: req.session.expiration,
 		},
 	}).catch((err) => {
-		console.error(err.message);
+		console.error(err);
 		return { error: err.message };
 	});
 	if (!created) {
