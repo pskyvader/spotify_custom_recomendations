@@ -1,4 +1,6 @@
 const { User } = require("../database/connection");
+const { credentials } = require("../credentials");
+const { request } = require("../utils");
 
 const refreshcookie = async (req, res, currentUser) => {
 	const refresh_token = currentUser.refresh_token;
@@ -25,20 +27,27 @@ const refreshcookie = async (req, res, currentUser) => {
 		requestOptions
 	);
 	if (!response.error) {
-		console.log(response);
-		// const access_token = response.access_token || null;
-		// const refresh_token = response.refresh_token || null;
-		// const expires_in = response.expires_in || null;
+		const meProfileResult = {
+			access_token: response.access_token,
+			refresh_token: refresh_token,
+			expiration: Date.now() + response.expires_in * 1000,
+		};
+		req.session.loggedin = true;
+		req.session.access_token = meProfileResult.access_token;
+		req.session.refresh_token = meProfileResult.refresh_token;
+		req.session.expiration = meProfileResult.expiration;
 
-		// req.session.loggedin = true;
-		// req.session.access_token = access_token;
-		// req.session.refresh_token = refresh_token;
-		// req.session.expiration = Date.now() + expires_in * 1000;
+		User.update(meProfileResult, {
+			where: {
+				id: currentUser.id,
+			},
+		});
 
-		res.redirect("/#loggedin=true");
+		meProfileResult.loggedin = true;
+		res.json(meProfileResult);
 		return;
 	}
-	res.redirect("/#error=login_error");
+	res.json({ error: response.error });
 };
 
 const logincookie = async (req, res) => {
@@ -70,7 +79,6 @@ const logincookie = async (req, res) => {
 		}
 		return refreshcookie(req, res, currentUser);
 	}
-	console.log(currentUser)
 
 	res.json(result);
 };
