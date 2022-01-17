@@ -1,5 +1,12 @@
 const { User } = require("../database/connection");
 
+
+const refreshcookie= async(req, res,currentUser) => {
+
+}
+
+
+
 const logincookie = async (req, res) => {
 	let result = { error: null };
 	if (
@@ -23,9 +30,11 @@ const logincookie = async (req, res) => {
 			req.session.refresh_token = meProfileResult.refresh_token;
 			req.session.expiration = meProfileResult.expiration;
 			meProfileResult.loggedin=true;
-
+			result = meProfileResult;
+			res.json(result);		
+			return;
 		}
-		result = meProfileResult;
+		await refreshcookie(req,res,currentUser);
 	}
 
 	res.json(result);
