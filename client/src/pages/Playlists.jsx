@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Grid, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useParams, Redirect } from "react-router-dom";
 
@@ -28,66 +28,47 @@ const Playlists = () => {
 	const Root = styled("div")(({ theme }) => {
 		return {
 			maxHeight:
-				"calc(33vh - " +
+				"calc(100vh - " +
 				theme.mixins.toolbar.minHeight +
 				"px - " +
-				theme.spacing() +
+				theme.spacing(7) +
 				" )",
 			height: "100vh",
 			overflow: "auto",
-			[theme.breakpoints.up("md")]: {
-				maxHeight:
-					"calc(50vh - " +
-					theme.mixins.toolbar.minHeight +
-					"px - " +
-					theme.spacing() +
-					" )",
-			},
+			// [theme.breakpoints.up("md")]: {
+			// 	maxHeight:
+			// 		"calc(50vh - " +
+			// 		theme.mixins.toolbar.minHeight +
+			// 		"px - " +
+			// 		theme.spacing() +
+			// 		" )",
+			// },
 		};
 	});
 	if (LoggedIn) {
 		return (
 			<Container maxWidth={false}>
-				<Grid container spacing={2}>
-					<Tabs
-						value={tabNumber}
-						onChange={handleChangeTab}
-						aria-label="basic tabs example"
-					>
-						<Tab label="Item One" />
-						<Tab label="Item Two" />
-						<Tab label="Item Three" />
-					</Tabs>
-					<div role="tabpanel" hidden={tabNumber !== 0}>
-						<PlayListSongs playlistId={playlistid} />
-					</div>
-
-					{/* <Grid item xs={12} md={8}>
-						<Root>
-							<PlayListSongs playlistId={playlistid} />
-						</Root>
-					</Grid> */}
-					{/* <Grid item xs={12} md={6}>
-						<Root>
-							<TopSongs />
-						</Root>
-					</Grid> */}
-					{/* <Grid item xs={12} md={6}>
-						<Root>
-							<RecommendedSongs playlistId={playlistid} />
-						</Root>
-					</Grid>
-					<Grid item xs={12} md={6}>
-						<Root>
-							<RecommendedDeleteSongs playlistId={playlistid} />
-						</Root>
-					</Grid> */}
-					{/* <Grid item xs={12} md={6}>
-					<Root>
-						<NoTopSongs />
-					</Root>
-				</Grid> */}
-				</Grid>
+				<Tabs
+					value={tabNumber}
+					onChange={handleChangeTab}
+					aria-label="basic tabs example"
+				>
+					<Tab label="Songs" />
+					<Tab label="Recommended" />
+					<Tab label="Delete" />
+				</Tabs>
+				<div role="tabpanel" hidden={tabNumber !== 0}>
+				<Root >
+					<PlayListSongs playlistId={playlistid} />
+				</Root>
+				</div>
+				
+				<Root role="tabpanel" hidden={tabNumber !== 1}>
+					<RecommendedSongs playlistId={playlistid} />
+				</Root>
+				<Root role="tabpanel" hidden={tabNumber !== 2}>
+					<RecommendedDeleteSongs playlistId={playlistid} />
+				</Root>
 			</Container>
 		);
 	}

@@ -6,15 +6,16 @@ import ButtonRemoveSong from "../../components/ButtonRemoveSong";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
 const PlayListSongs = ({ playlistId }) => {
 	const { playlistTracks, setPlaylistTracks } = useContext(PlaylistContext);
-	useEffect(() => {
-		if (!playlistTracks[playlistId]) {
+	// useEffect(() => {
+		if (playlistId !== null && !playlistTracks[playlistId]) {
 			Playlist.Playlist(playlistId).then((response) => {
 				if (response.error) return console.log(response);
 				playlistTracks[playlistId] = response;
 				setPlaylistTracks({ ...playlistTracks });
 			});
 		}
-	}, [playlistId, playlistTracks, setPlaylistTracks]);
+	// }, [playlistId, playlistTracks, setPlaylistTracks]);
+
 	if (playlistId === null) {
 		return null;
 	}
