@@ -21,8 +21,8 @@ const SessionContextProvider = (props) => {
 				}
 			});
 		}
-		if (LoggedIn === false && cookies.keep_logged && cookies.access_token) {
-			Me.LoginCookies(cookies.access_token).then((response) => {
+		if (LoggedIn === false && cookies.keep_logged && (cookies.access_token|| cookies.refresh_token)) {
+			Me.LoginCookies().then((response) => {
 				if (response.error) return false;
 				if (response.loggedin) {
 					setLoggedIn(true);

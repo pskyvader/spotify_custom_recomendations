@@ -5,8 +5,8 @@ export const LoggedIn = () => {
 	return GetRequest(url);
 };
 
-export const LoginCookies = (access_token) => {
-	const url = "/api/logincookie/" + access_token;
+export const LoginCookies = () => {
+	const url = "/api/logincookie/";
 	return GetRequest(url);
 };
 

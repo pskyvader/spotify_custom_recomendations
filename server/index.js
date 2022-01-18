@@ -54,7 +54,7 @@ app.get("/api/loggedin", function (req, res) {
 	loggedin(req, res);
 });
 
-app.get("/api/logincookie/:access_token", function (req, res) {
+app.get("/api/logincookie", function (req, res) {
 	logincookie(req, res);
 });
 

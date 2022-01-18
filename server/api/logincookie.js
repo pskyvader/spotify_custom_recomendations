@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { User } = require("../database/connection");
 const { credentials } = require("../credentials");
 const { request } = require("../utils");
@@ -52,15 +53,19 @@ const refreshcookie = async (req, res, currentUser) => {
 
 const logincookie = async (req, res) => {
 	let result = { error: null };
-	if (
-		!req.params.access_token ||
-		typeof req.params.access_token === "undefined"
-	) {
+
+	if (!req.cookies.access_token && !req.cookies.refresh_token) {
 		result = { error: "No access token available" };
 	}
 	const currentUser = await User.findOne({
-		where: { access_token: req.params.access_token },
+		where: {
+			[Op.or]: [
+				{ access_token: req.cookies.access_token },
+				{ refresh_token: req.cookies.refresh_token },
+			],
+		},
 	});
+
 	if (currentUser !== null) {
 		const meProfileResult = {
 			access_token: currentUser.access_token,
