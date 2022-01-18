@@ -41,6 +41,7 @@ const meProfile = async (req, res) => {
 			url: currentUser.url,
 			image: currentUser.image,
 			access_token: req.session.access_token,
+			refresh_token: req.session.refresh_token,
 		};
 		return meProfileResult;
 	}
@@ -56,12 +57,11 @@ const meProfile = async (req, res) => {
 		url: response.external_urls.spotify,
 		image: response.images[0].url,
 		access_token: req.session.access_token,
+		refresh_token: req.session.refresh_token,
 	};
 
 	const defaultValues = {
 		...meProfileResult,
-		access_token: req.session.access_token,
-		refresh_token: req.session.refresh_token,
 		expiration: req.session.expiration,
 	}
 

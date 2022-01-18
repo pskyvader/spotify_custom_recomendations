@@ -18,17 +18,20 @@ const ProfileContextProvider = (props) => {
 					console.error(response);
 					return false;
 				}
-				if (
-					cookies.keep_logged &&
-					response.access_token !== cookies.access_token
-				) {
-					setCookie("access_token", response.access_token);
+				if (cookies.keep_logged) {
+					if (response.access_token !== cookies.access_token) {
+						setCookie("access_token", response.access_token);
+					}
+					if (response.refresh_token !== cookies.refresh_token) {
+						setCookie("refresh_token", response.refresh_token);
+					}
 				}
+
 				setProfile(response);
 			});
 		}
 		return null;
-	}, [LoggedIn,cookies, setCookie]);
+	}, [LoggedIn, cookies, setCookie]);
 
 	return (
 		<ProfileContext.Provider value={provider}>
