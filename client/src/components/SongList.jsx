@@ -1,8 +1,5 @@
 import { Toolbar, Typography } from "@mui/material";
-import { createTheme } from "@mui/material/styles";
-import { Box } from "@mui/system";
 import { GridOverlay, DataGrid } from "@mui/x-data-grid";
-
 
 export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 	const columns = [
@@ -30,40 +27,34 @@ export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 	};
 };
 
-
 const SongList = ({ data, title = "title" }) => {
-	const theme = createTheme();
 	return (
-		<Box sx={{ height: "100%", padding: theme.spacing() }}>
-			<DataGrid
-				hideFooter
-				disableSelectionOnClick
-				components={{
-					Toolbar: () => {
-						return (
-							<Toolbar variant="dense">
-								<Typography
-									variant="h6"
-									component="div"
-									sx={{ flexGrow: 1 }}
-								>
-									{title} - {data.rows.length}
-								</Typography>
-							</Toolbar>
-						);
-					},
-					NoRowsOverlay: () => {
-						return (
-							<GridOverlay>No songs in this playlist</GridOverlay>
-						);
-					},
-				}}
-				{...data}
-				columnBuffer={2}
-				columnThreshold={2}
-				// disableExtendRowFullWidth
-			/>
-		</Box>
+		<DataGrid
+			hideFooter
+			disableSelectionOnClick
+			components={{
+				Toolbar: () => {
+					return (
+						<Toolbar variant="dense">
+							<Typography
+								variant="h6"
+								component="div"
+								sx={{ flexGrow: 1 }}
+							>
+								{title} - {data.rows.length}
+							</Typography>
+						</Toolbar>
+					);
+				},
+				NoRowsOverlay: () => {
+					return <GridOverlay>No songs in this playlist</GridOverlay>;
+				},
+			}}
+			{...data}
+			columnBuffer={2}
+			columnThreshold={2}
+			// disableExtendRowFullWidth
+		/>
 	);
 };
 

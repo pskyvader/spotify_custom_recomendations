@@ -57,17 +57,14 @@ const Playlists = () => {
 					<Tab label="Recommended" />
 					<Tab label="Delete" />
 				</Tabs>
-				<div role="tabpanel" hidden={tabNumber !== 0}>
-				<Root >
-					<PlayListSongs playlistId={playlistid} />
+				<Root role="tabpanel" hidden={tabNumber !== 0}>
+					<PlayListSongs playlistId={playlistid}  hidden={tabNumber !== 0}/>
 				</Root>
-				</div>
-				
 				<Root role="tabpanel" hidden={tabNumber !== 1}>
-					<RecommendedSongs playlistId={playlistid} />
+					<RecommendedSongs playlistId={playlistid}  hidden={tabNumber !== 1} />
 				</Root>
 				<Root role="tabpanel" hidden={tabNumber !== 2}>
-					<RecommendedDeleteSongs playlistId={playlistid} />
+					<RecommendedDeleteSongs playlistId={playlistid}   hidden={tabNumber !== 2}/>
 				</Root>
 			</Container>
 		);
