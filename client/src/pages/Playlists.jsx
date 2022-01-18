@@ -1,7 +1,10 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { Grid, Container } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useParams, Redirect } from "react-router-dom";
+
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 
 import { SessionContext } from "../context/SessionContextProvider";
 import PlayListSongs from "../modules/playlist/PlayListSongs";
@@ -10,8 +13,13 @@ import RecommendedDeleteSongs from "../modules/playlist/RecommendedDeleteSongs";
 
 const Playlists = () => {
 	const { playlistid } = useParams() || null;
-
 	const { LoggedIn } = useContext(SessionContext);
+
+	const [tabNumber, setTabNumber] = useState(0);
+
+	const handleChangeTab = (event, newValue) => {
+		setTabNumber(newValue);
+	};
 
 	if (LoggedIn === false) {
 		return <Redirect to="/" />;
@@ -41,17 +49,30 @@ const Playlists = () => {
 		return (
 			<Container maxWidth={false}>
 				<Grid container spacing={2}>
-					<Grid item xs={12} md={8}>
+					<Tabs
+						value={tabNumber}
+						onChange={handleChangeTab}
+						aria-label="basic tabs example"
+					>
+						<Tab label="Item One" />
+						<Tab label="Item Two" />
+						<Tab label="Item Three" />
+					</Tabs>
+					<div role="tabpanel" hidden={tabNumber !== 0}>
+						<PlayListSongs playlistId={playlistid} />
+					</div>
+
+					{/* <Grid item xs={12} md={8}>
 						<Root>
 							<PlayListSongs playlistId={playlistid} />
 						</Root>
-					</Grid>
+					</Grid> */}
 					{/* <Grid item xs={12} md={6}>
 						<Root>
 							<TopSongs />
 						</Root>
 					</Grid> */}
-					<Grid item xs={12} md={6}>
+					{/* <Grid item xs={12} md={6}>
 						<Root>
 							<RecommendedSongs playlistId={playlistid} />
 						</Root>
@@ -60,7 +81,7 @@ const Playlists = () => {
 						<Root>
 							<RecommendedDeleteSongs playlistId={playlistid} />
 						</Root>
-					</Grid>
+					</Grid> */}
 					{/* <Grid item xs={12} md={6}>
 					<Root>
 						<NoTopSongs />
