@@ -19,14 +19,14 @@ const me = async (req, res) => {
 	res.json(result);
 };
 
-let meProfileResult = null;
+let meProfileResult = {};
 
 const meProfile = async (req, res) => {
 	if (!req.session.access_token) {
 		return { error: "Not logged in" };
 	}
-	if (meProfileResult) {
-		return meProfileResult;
+	if (meProfileResult[req.session.access_token]) {
+		return meProfileResult[req.session.access_token];
 	}
 
 	const currentUser = await User.findOne({
@@ -35,7 +35,7 @@ const meProfile = async (req, res) => {
 		},
 	});
 	if (currentUser !== null) {
-		meProfileResult = {
+		meProfileResult[req.session.access_token] = {
 			id: currentUser.id,
 			name: currentUser.name,
 			url: currentUser.url,
@@ -43,7 +43,7 @@ const meProfile = async (req, res) => {
 			access_token: req.session.access_token,
 			refresh_token: req.session.refresh_token,
 		};
-		return meProfileResult;
+		return meProfileResult[req.session.access_token];
 	}
 
 	const response = await request(req, "https://api.spotify.com/v1/me");
@@ -51,7 +51,7 @@ const meProfile = async (req, res) => {
 		return response;
 	}
 
-	meProfileResult = {
+	meProfileResult[req.session.access_token] = {
 		id: response.id,
 		name: response.display_name,
 		url: response.external_urls.spotify,
@@ -61,12 +61,12 @@ const meProfile = async (req, res) => {
 	};
 
 	const defaultValues = {
-		...meProfileResult,
+		...meProfileResult[req.session.access_token],
 		expiration: req.session.expiration,
 	}
 
 	const [user, created] = await User.findOrCreate({
-		where: { id: meProfileResult.id },
+		where: { id: meProfileResult[req.session.access_token].id },
 		defaults: defaultValues,
 	}).catch((err) => {
 		return { error: err.message };
@@ -74,23 +74,23 @@ const meProfile = async (req, res) => {
 	if (!created) {
 		User.update(defaultValues, {
 			where: {
-				id: meProfileResult.id,
+				id: meProfileResult[req.session.access_token].id,
 			},
 		});
 	}
 
-	return meProfileResult;
+	return meProfileResult[req.session.access_token];
 };
 
-let mePlaylistResult = null;
+let mePlaylistResult = {};
 
 const mePlaylists = async (req, res) => {
-	if (!meProfileResult) {
+	if (!meProfileResult[req.session.access_token]) {
 		return { error: true, message: "No user defined" };
 	}
 
-	if (mePlaylistResult) {
-		return mePlaylistResult;
+	if (mePlaylistResult[req.session.access_token]) {
+		return mePlaylistResult[req.session.access_token];
 	}
 	const offset = 0;
 	let playlists = [];
@@ -103,9 +103,9 @@ const mePlaylists = async (req, res) => {
 	}
 	playlists.push(...response.items);
 
-	const MyId = meProfileResult.id;
+	const MyId = meProfileResult[req.session.access_token].id;
 
-	mePlaylistResult = playlists.map((currentPlaylist) => {
+	mePlaylistResult[req.session.access_token] = playlists.map((currentPlaylist) => {
 		const formattedPlaylist = {};
 		formattedPlaylist.id = currentPlaylist.id;
 		formattedPlaylist.disabled = MyId !== currentPlaylist.owner.id;
@@ -116,14 +116,14 @@ const mePlaylists = async (req, res) => {
 			: null;
 		return formattedPlaylist;
 	});
-	return mePlaylistResult;
+	return mePlaylistResult[req.session.access_token];
 };
 
-let meTopResult = null;
+let meTopResult = {};
 
 const meTop = async (req, res) => {
-	if (meTopResult) {
-		return meTopResult;
+	if (meTopResult[req.session.access_token]) {
+		return meTopResult[req.session.access_token];
 	}
 
 	let url =
@@ -137,14 +137,14 @@ const meTop = async (req, res) => {
 		url = response.next;
 		items.push(...response.items);
 	}
-	meTopResult = formatSongList(items);
-	return meTopResult;
+	meTopResult[req.session.access_token] = formatSongList(items);
+	return meTopResult[req.session.access_token];
 };
 
-let meRecentResult = null;
+let meRecentResult = {};
 const MeRecently = async (req, res, after = null, limit = 10) => {
-	if (meRecentResult) {
-		return meRecentResult;
+	if (meRecentResult[req.session.access_token]) {
+		return meRecentResult[req.session.access_token];
 	}
 
 	if (after === null) {
@@ -165,8 +165,8 @@ const MeRecently = async (req, res, after = null, limit = 10) => {
 		url = response.next;
 		items.push(...response.items);
 	}
-	meRecentResult = formatSongList(items);
-	return meRecentResult;
+	meRecentResult[req.session.access_token] = formatSongList(items);
+	return meRecentResult[req.session.access_token];
 };
 
 module.exports = { me, meTop, MeRecently };
