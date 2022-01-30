@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const pgSession = require("connect-pg-simple")(session);
+
 const {
 	authorize,
 	pushtoken,
@@ -20,6 +22,10 @@ connection();
 const app = express();
 app.use(
 	session({
+		store: new pgSession({
+			conString: process.env.DATABASE_URL,
+			createTableIfMissing: true,
+		}),
 		secret: process.env.SESSION_SECRET,
 		saveUninitialized: false,
 		resave: false,
@@ -57,7 +63,6 @@ app.get("/api/loggedin", function (req, res) {
 app.get("/api/logincookie", function (req, res) {
 	logincookie(req, res);
 });
-
 
 app.get("/api/me/:submodule?", function (req, res) {
 	me(req, res);
