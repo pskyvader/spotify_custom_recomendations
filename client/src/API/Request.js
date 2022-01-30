@@ -18,8 +18,10 @@ const GetRequest = (url, method = "GET", body = null, requestOverride = null) =>
 			};
 			try {
 				finalresponse.detail=JSON.parse(responsetext);
+				alert(finalresponse.detail);
 				return finalresponse;
 			}catch(error){
+				alert(finalresponse.message);
 				return finalresponse;
 			}
 		}
