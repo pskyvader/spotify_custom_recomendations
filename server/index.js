@@ -23,8 +23,14 @@ const app = express();
 app.use(
 	session({
 		store: new pgSession({
-			conString: process.env.DATABASE_URL,
 			createTableIfMissing: true,
+			conObject: {
+				connectionString: process.env.DATABASE_URL,
+				ssl: {
+					// require: true,
+					rejectUnauthorized: false,
+				},
+			},
 		}),
 		secret: process.env.SESSION_SECRET,
 		saveUninitialized: false,
