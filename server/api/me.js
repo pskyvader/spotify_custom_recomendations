@@ -23,7 +23,7 @@ let meProfileResult = {};
 
 const meProfile = async (req, res) => {
 	if (!req.session.access_token) {
-		console.log("No session access token", req.session);
+		console.log("No session access token",req.session);
 		return { error: "Not logged in" };
 	}
 	if (meProfileResult[req.session.access_token]) {
@@ -43,7 +43,6 @@ const meProfile = async (req, res) => {
 			image: currentUser.image,
 			access_token: req.session.access_token,
 			refresh_token: req.session.refresh_token,
-			expiration: req.session.expiration,
 		};
 		return meProfileResult[req.session.access_token];
 	}
@@ -61,10 +60,12 @@ const meProfile = async (req, res) => {
 		image: response.images[0].url,
 		access_token: req.session.access_token,
 		refresh_token: req.session.refresh_token,
-		expiration: req.session.expiration,
 	};
 
-	const defaultValues = { ...meProfileResult[req.session.access_token] };
+	const defaultValues = {
+		...meProfileResult[req.session.access_token],
+		expiration: req.session.expiration,
+	};
 
 	const [user, created] = await User.findOrCreate({
 		where: { id: meProfileResult[req.session.access_token].id },

@@ -1,4 +1,9 @@
-const GetRequest = (url, method = "GET", body = null, requestOverride = null) => {
+const GetRequest = (
+	url,
+	method = "GET",
+	body = null,
+	requestOverride = null
+) => {
 	const requestOptions = requestOverride || {
 		method: method,
 		headers: {
@@ -14,12 +19,16 @@ const GetRequest = (url, method = "GET", body = null, requestOverride = null) =>
 				error: true,
 				status: response.status,
 				message: responsetext,
-				url: response.url
+				url: response.url,
 			};
+
+			if (finalresponse.status === 401) {
+				window.location.reload();
+			}
 			try {
-				finalresponse.detail=JSON.parse(responsetext);
+				finalresponse.detail = JSON.parse(responsetext);
 				return finalresponse;
-			}catch(error){
+			} catch (error) {
 				return finalresponse;
 			}
 		}

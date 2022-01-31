@@ -6,7 +6,7 @@ import { SessionContext } from "./SessionContextProvider";
 export const ProfileContext = createContext({});
 
 const ProfileContextProvider = (props) => {
-	const [cookies, setCookie] = useCookies(["keep_logged", "access_token","expiration"]);
+	const [cookies, setCookie] = useCookies(["keep_logged", "access_token"]);
 	const { LoggedIn } = useContext(SessionContext);
 	const [profile, setProfile] = useState(null);
 	const provider = useMemo(() => ({ profile, setProfile }), [profile]);
@@ -25,9 +25,6 @@ const ProfileContextProvider = (props) => {
 					}
 					if (response.refresh_token !== cookies.refresh_token) {
 						setCookie("refresh_token", response.refresh_token);
-					}
-					if (response.expiration !== cookies.expiration) {
-						setCookie("expiration", response.expiration);
 					}
 				}
 				console.log("Profile context",response);

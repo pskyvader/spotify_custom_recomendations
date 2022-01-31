@@ -5,7 +5,11 @@ import { Me } from "../API";
 export const SessionContext = createContext({});
 
 const SessionContextProvider = (props) => {
-	const [cookies, setCookie] = useCookies(["keep_logged", "access_token","refresh_token"]);
+	const [cookies, setCookie] = useCookies([
+		"keep_logged",
+		"access_token",
+		"refresh_token",
+	]);
 	const [LoggedIn, setLoggedIn] = useState(null);
 	const provider = {
 		LoggedIn: LoggedIn,
@@ -21,7 +25,11 @@ const SessionContextProvider = (props) => {
 				}
 			});
 		}
-		if (LoggedIn === false && cookies.keep_logged && (cookies.access_token|| cookies.refresh_token)) {
+		if (
+			LoggedIn === false &&
+			cookies.keep_logged &&
+			(cookies.access_token || cookies.refresh_token)
+		) {
 			Me.LoginCookies().then((response) => {
 				if (response.error) return false;
 				if (response.loggedin) {
