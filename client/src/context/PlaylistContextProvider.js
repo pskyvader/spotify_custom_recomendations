@@ -31,7 +31,6 @@ const PlaylistContextProvider = (props) => {
 				setPlaylists(response);
 			});
 		}
-		return false;
 	}, [LoggedIn, profile, playlists]);
 
 	return (

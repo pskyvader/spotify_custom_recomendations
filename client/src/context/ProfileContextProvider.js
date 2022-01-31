@@ -16,6 +16,7 @@ const ProfileContextProvider = (props) => {
 			Me.Me().then((response) => {
 				if (response.error) {
 					console.error(response);
+					alert(JSON.stringify(response));
 					return false;
 				}
 				if (cookies.keep_logged) {

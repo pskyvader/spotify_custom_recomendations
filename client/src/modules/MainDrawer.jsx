@@ -19,6 +19,8 @@ const DrawerItems = () => {
 	let history = useHistory();
 	const { playlistid } = useParams();
 
+	if(!profile) return "Profile Error";
+	if(!playlists) return "Playlists Error";
 	if (!profile || !playlists) return null;
 
 	return playlists.map((currentPlaylist) => {

@@ -48,6 +48,7 @@ const meProfile = async (req, res) => {
 
 	const response = await request(req, "https://api.spotify.com/v1/me");
 	if (response.error) {
+		console.log(response);
 		return response;
 	}
 
@@ -63,7 +64,7 @@ const meProfile = async (req, res) => {
 	const defaultValues = {
 		...meProfileResult[req.session.access_token],
 		expiration: req.session.expiration,
-	}
+	};
 
 	const [user, created] = await User.findOrCreate({
 		where: { id: meProfileResult[req.session.access_token].id },
@@ -99,23 +100,26 @@ const mePlaylists = async (req, res) => {
 		"https://api.spotify.com/v1/me/playlists?limit=50&offset=" + offset
 	);
 	if (response.error) {
+		console.log(response);
 		return response;
 	}
 	playlists.push(...response.items);
 
 	const MyId = meProfileResult[req.session.access_token].id;
 
-	mePlaylistResult[req.session.access_token] = playlists.map((currentPlaylist) => {
-		const formattedPlaylist = {};
-		formattedPlaylist.id = currentPlaylist.id;
-		formattedPlaylist.disabled = MyId !== currentPlaylist.owner.id;
-		formattedPlaylist.selected = false;
-		formattedPlaylist.name = currentPlaylist.name;
-		formattedPlaylist.image = currentPlaylist.images[0]
-			? currentPlaylist.images[0].url
-			: null;
-		return formattedPlaylist;
-	});
+	mePlaylistResult[req.session.access_token] = playlists.map(
+		(currentPlaylist) => {
+			const formattedPlaylist = {};
+			formattedPlaylist.id = currentPlaylist.id;
+			formattedPlaylist.disabled = MyId !== currentPlaylist.owner.id;
+			formattedPlaylist.selected = false;
+			formattedPlaylist.name = currentPlaylist.name;
+			formattedPlaylist.image = currentPlaylist.images[0]
+				? currentPlaylist.images[0].url
+				: null;
+			return formattedPlaylist;
+		}
+	);
 	return mePlaylistResult[req.session.access_token];
 };
 
@@ -132,6 +136,7 @@ const meTop = async (req, res) => {
 	while (url) {
 		const response = await request(req, url);
 		if (response.error) {
+			console.log(response);
 			return response;
 		}
 		url = response.next;
@@ -160,6 +165,7 @@ const MeRecently = async (req, res, after = null, limit = 10) => {
 	while (url) {
 		const response = await request(req, url);
 		if (response.error) {
+			console.log(response);
 			return response;
 		}
 		url = response.next;
