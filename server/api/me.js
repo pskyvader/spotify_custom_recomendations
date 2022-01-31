@@ -23,6 +23,7 @@ let meProfileResult = {};
 
 const meProfile = async (req, res) => {
 	if (!req.session.access_token) {
+		console.log("No session access token",req.session);
 		return { error: "Not logged in" };
 	}
 	if (meProfileResult[req.session.access_token]) {
