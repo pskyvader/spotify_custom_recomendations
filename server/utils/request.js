@@ -1,7 +1,19 @@
-const fetch = (...args) => import("node-fetch").then(({ default: fetchFunction }) => fetchFunction(...args));
+const fetch = (...args) =>
+	import("node-fetch").then(({ default: fetchFunction }) =>
+		fetchFunction(...args)
+	);
 
-const request = (req, url, method = "GET", body = null, requestOverride = null) => {
-	if (!req.session) return { error: true, message: "No session available" };
+const request = (
+	req,
+	url,
+	method = "GET",
+	body = null,
+	requestOverride = null
+) => {
+	if (!req.session) {
+		console.log({ error: true, message: "No session available" });
+		return { error: true, message: "No session available" };
+	}
 
 	const requestOptions = requestOverride || {
 		method: method,
@@ -19,12 +31,14 @@ const request = (req, url, method = "GET", body = null, requestOverride = null) 
 				error: true,
 				status: response.status,
 				message: responsetext,
-				url: response.url
+				url: response.url,
 			};
 			try {
-				finalresponse.detail=JSON.parse(responsetext);
+				finalresponse.detail = JSON.parse(responsetext);
+				console.log(finalresponse)
 				return finalresponse;
-			}catch(error){
+			} catch (error) {
+				console.log(finalresponse)
 				return finalresponse;
 			}
 		}
