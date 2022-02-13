@@ -162,6 +162,12 @@ const UpdateRecently = async (
 		"&after=" +
 		after;
 	let items = [];
+
+	if (!meProfileResult[req.session.access_token]) {
+		return { error: true, message: "No user defined" };
+	}
+	const iduser = meProfileResult[req.session.access_token].id;
+
 	while (url) {
 		const response = await request(req, url);
 		if (response.error) {
@@ -172,25 +178,31 @@ const UpdateRecently = async (
 		items.push(...response.items);
 	}
 	const newRecent = formatSongList(items);
+	await newRecent.forEach(async (newsong) => {
+		// const found = oldRecent.find(element => element.id===newsong.id);
+		// if(found) {
+		// 	continue;
+		// }
+		const data = newsong;
+		data.iduser = iduser;
+		data.song_added = Date.now();
+		const result = await Song.upsert(data).catch((err) => {
+			return { error: err.message };
+		});
+		console.log("result",typeof result);
+	});
 
 	const oldRecent = await Song.findAll({
 		where: {
-			[Op.and]: [
-				{ id: meProfileResult[req.session.access_token].id },
-				{ removed: false },
-			],
+			[Op.and]: [{ iduser: iduser }, { removed: false }],
 		},
 		order: [["song_added", "ASC"]],
 	}).catch((err) => {
 		return { error: err.message };
 	});
 
-	// console.log(newRecent);
-	// console.log(oldRecent);
-
-	// newRecent.foreach((newsong) => {
-
-	// });
+	console.log("old", oldRecent);
+	console.log("new", newRecent);
 };
 
 const MeRecently = async (req, res, after = null, limit = 10) => {

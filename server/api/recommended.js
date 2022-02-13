@@ -14,7 +14,7 @@ const fillOptions = (playlist, topSongs, currentgenres) => {
 			const currentSong = songs[idsong];
 			switch (Math.floor(Math.random() * 3)) {
 				case 0:
-					options.seed_artists.push(currentSong.artistid);
+					options.seed_artists.push(currentSong.idartist);
 					break;
 				case 1:
 					options.seed_tracks.push(currentSong.id);

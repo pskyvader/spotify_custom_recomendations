@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const SongConfiguration = {
 	// Model attributes are defined here
 	id: {
-		type: DataTypes.BIGINT,
+		type: DataTypes.STRING,
 		// autoIncrement: true,
 		allowNull: false,
 		primaryKey: true,
@@ -22,7 +22,7 @@ const SongConfiguration = {
 		allowNull: false,
 	},
 	idartist: {
-		type: DataTypes.BIGINT,
+		type: DataTypes.STRING,
 		// autoIncrement: true,
 		allowNull: false,
 	},
@@ -45,7 +45,7 @@ const SongConfiguration = {
 	removed: {
 		type: DataTypes.BOOLEAN,
 		allowNull: false,
-		default: false,
+		defaultValue: false,
 	},
 };
 module.exports = { SongConfiguration };
