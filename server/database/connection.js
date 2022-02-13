@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes, Model } = require("sequelize");
 const { UserConfiguration } = require("./User");
+const { SongConfiguration } = require("./Song");
 
 // const sequelize = new Sequelize(process.env.DATABASE_URL+'?ssl=true' || "sqlite::memory:"); // Example for sqlite
 // const sequelize = new Sequelize("sqlite::memory:"); // Example for sqlite
@@ -18,17 +19,14 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 	logging: false,
 });
 
-class User extends Model {
-}
+class User extends Model {}
 User.init(UserConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
 	modelName: "User", // We need to choose the model name
 });
 
-
-class Song extends Model {
-}
+class Song extends Model {}
 Song.init(SongConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
@@ -46,4 +44,4 @@ const connection = async () => {
 	}
 };
 
-module.exports = { connection, User };
+module.exports = { connection, User, Song };

@@ -11,8 +11,8 @@ const request = (
 	requestOverride = null
 ) => {
 	if (!req.session) {
-		console.log({ error: true, message: "No session available" });
-		return { error: true, message: "No session available" };
+		console.log({ error: true, message: "No session available",url });
+		return { error: true, message: "No session available",url };
 	}
 
 	const requestOptions = requestOverride || {

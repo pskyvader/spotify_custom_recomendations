@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 
 const { request, formatSongList } = require("../utils");
+
 const { User, Song } = require("../database/connection");
 
 const me = async (req, res) => {
@@ -174,17 +175,29 @@ const UpdateRecently = async (
 
 	const oldRecent = await Song.findAll({
 		where: {
-			id: meProfileResult[req.session.access_token].id,
+			[Op.and]: [
+				{ id: meProfileResult[req.session.access_token].id },
+				{ removed: false },
+			],
 		},
+		order: [["song_added", "ASC"]],
 	}).catch((err) => {
 		return { error: err.message };
 	});
+
+	// console.log(newRecent);
+	// console.log(oldRecent);
+
+	// newRecent.foreach((newsong) => {
+
+	// });
 };
 
 const MeRecently = async (req, res, after = null, limit = 10) => {
 	if (meRecentResult[req.session.access_token]) {
 		return meRecentResult[req.session.access_token];
 	}
+	await UpdateRecently(req, res);
 
 	if (after === null) {
 		after = Date.now() - 604800000; //1 week in milliseconds = (24*60*60*1000) * 7; //7 days)
