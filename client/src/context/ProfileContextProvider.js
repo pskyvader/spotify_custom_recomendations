@@ -12,27 +12,32 @@ const ProfileContextProvider = (props) => {
 	const provider = useMemo(() => ({ profile, setProfile }), [profile]);
 
 	useEffect(() => {
-		if (LoggedIn) {
+		if (LoggedIn && profile === null) {
 			Me.Me().then((response) => {
 				if (response.error) {
 					console.error(response);
 					alert(JSON.stringify(response));
 					return false;
 				}
-				if (cookies.keep_logged) {
-					if (response.access_token !== cookies.access_token) {
-						setCookie("access_token", response.access_token);
-					}
-					if (response.refresh_token !== cookies.refresh_token) {
-						setCookie("refresh_token", response.refresh_token);
-					}
+
+				if (
+					cookies.keep_logged &&
+					response.access_token !== cookies.access_token
+				) {
+					setCookie("access_token", response.access_token);
 				}
-				console.log("Profile context",response);
+				if (
+					cookies.keep_logged &&
+					response.refresh_token !== cookies.refresh_token
+				) {
+					setCookie("refresh_token", response.refresh_token);
+				}
+
+				console.log("Profile context", response);
 				setProfile(response);
 			});
 		}
-		return null;
-	}, [LoggedIn, cookies, setCookie]);
+	}, [LoggedIn, cookies, setCookie, profile, setProfile]);
 
 	return (
 		<ProfileContext.Provider value={provider}>

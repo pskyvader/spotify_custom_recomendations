@@ -2,16 +2,16 @@ const formatSongList = (songList) => {
 	const formattedList = [];
 	songList.forEach((song) => {
 		const currentSong = song.track || song;
-		const art = currentSong.artists.map(
-			(artist) => " " + artist.name + " "
+		const art = currentSong.artists.reduce(
+			(accumulator, artist) => accumulator + ", " + artist.name
 		);
-		const artistid=currentSong.artists[0].id;
+		const artistid = currentSong.artists[0].id;
 
 		const row = {
 			id: currentSong.id,
 			name: currentSong.name,
 			artist: art,
-			artistid:artistid,
+			artistid: artistid,
 			album: currentSong.album.name,
 			action: currentSong.uri,
 		};
@@ -20,6 +20,5 @@ const formatSongList = (songList) => {
 
 	return formattedList;
 };
-
 
 module.exports = { formatSongList };

@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
 
 const { request, formatSongList } = require("../utils");
-const { User } = require("../database/connection");
+const { User, Song } = require("../database/connection");
 
 const me = async (req, res) => {
 	let result;
@@ -23,7 +23,7 @@ let meProfileResult = {};
 
 const meProfile = async (req, res) => {
 	if (!req.session.access_token) {
-		console.log("No session access token",req.session);
+		console.log("No session access token", req.session);
 		return { error: "Not logged in" };
 	}
 	if (meProfileResult[req.session.access_token]) {
@@ -148,6 +148,39 @@ const meTop = async (req, res) => {
 };
 
 let meRecentResult = {};
+
+const UpdateRecently = async (
+	req,
+	res,
+	after = Date.now() - 604800000,
+	limit = 10
+) => {
+	let url =
+		"https://api.spotify.com/v1/me/player/recently-played?limit=" +
+		limit +
+		"&after=" +
+		after;
+	let items = [];
+	while (url) {
+		const response = await request(req, url);
+		if (response.error) {
+			console.log(response);
+			return response;
+		}
+		url = response.next;
+		items.push(...response.items);
+	}
+	const newRecent = formatSongList(items);
+
+	const oldRecent = await Song.findAll({
+		where: {
+			id: meProfileResult[req.session.access_token].id,
+		},
+	}).catch((err) => {
+		return { error: err.message };
+	});
+};
+
 const MeRecently = async (req, res, after = null, limit = 10) => {
 	if (meRecentResult[req.session.access_token]) {
 		return meRecentResult[req.session.access_token];
