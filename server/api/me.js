@@ -145,9 +145,7 @@ let meRecentResult = {};
 
 const MeRecently = async (
 	req,
-	res,
-	after = Date.now() - 604800000,
-	limit = 10
+	res
 ) => {
 	if (!meProfileResult[req.session.access_token]) {
 		return { error: true, message: "No user defined" };

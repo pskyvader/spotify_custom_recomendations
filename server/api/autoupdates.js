@@ -4,12 +4,20 @@ const { request, formatSongList } = require("../utils");
 
 const { Song } = require("../database/connection");
 
-const updateRecentlyPlayed = async (req, res, iduser) => {
+const updateRecentlyPlayed = async (
+	req,
+	res,
+	iduser,
+	after = Date.now() - 604800000,
+	limit = 10
+) => {
 	const lastSong = await Song.findOne({
 		where: {
 			[Op.and]: [{ iduser: iduser }, { removed: false }],
 		},
 		order: [["song_added", "ASC"]],
+	}).catch((err) => {
+		return { error: err.message };
 	});
 
 	//check every 1 hour
