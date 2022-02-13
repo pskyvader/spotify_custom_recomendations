@@ -4,6 +4,8 @@ const { request, formatSongList } = require("../utils");
 
 const { User, Song } = require("../database/connection");
 
+const { updateRecentlyPlayed } = require("./autoupdates");
+
 const me = async (req, res) => {
 	let result;
 	switch (req.params.submodule) {
@@ -68,20 +70,9 @@ const meProfile = async (req, res) => {
 		expiration: req.session.expiration,
 	};
 
-	const [user, created] = await User.findOrCreate({
-		where: { id: meProfileResult[req.session.access_token].id },
-		defaults: defaultValues,
-	}).catch((err) => {
+	User.upsert(defaultValues).catch((err) => {
 		return { error: err.message };
 	});
-	if (!created) {
-		User.update(defaultValues, {
-			where: {
-				id: meProfileResult[req.session.access_token].id,
-			},
-		});
-	}
-
 	return meProfileResult[req.session.access_token];
 };
 
@@ -96,7 +87,7 @@ const mePlaylists = async (req, res) => {
 		return mePlaylistResult[req.session.access_token];
 	}
 	const offset = 0;
-	let playlists = [];
+	// let playlists = [];
 	const response = await request(
 		req,
 		"https://api.spotify.com/v1/me/playlists?limit=50&offset=" + offset
@@ -105,7 +96,9 @@ const mePlaylists = async (req, res) => {
 		console.log(response);
 		return response;
 	}
-	playlists.push(...response.items);
+
+	const playlists = response.items;
+	// playlists.push(...response.items);
 
 	const MyId = meProfileResult[req.session.access_token].id;
 
@@ -150,44 +143,22 @@ const meTop = async (req, res) => {
 
 let meRecentResult = {};
 
-const UpdateRecently = async (
+const MeRecently = async (
 	req,
 	res,
 	after = Date.now() - 604800000,
 	limit = 10
 ) => {
-	let url =
-		"https://api.spotify.com/v1/me/player/recently-played?limit=" +
-		limit +
-		"&after=" +
-		after;
-	let items = [];
-
 	if (!meProfileResult[req.session.access_token]) {
 		return { error: true, message: "No user defined" };
 	}
+	if (meRecentResult[req.session.access_token]) {
+		return meRecentResult[req.session.access_token];
+	}
+
 	const iduser = meProfileResult[req.session.access_token].id;
 
-	while (url) {
-		const response = await request(req, url);
-		if (response.error) {
-			console.log(response);
-			return response;
-		}
-		url = response.next;
-		items.push(...response.items);
-	}
-	const newRecent = formatSongList(items);
-
-	for (const newsong of newRecent) {
-		const data = newsong;
-		data.iduser = iduser;
-		data.song_added = Date.now();
-		const result = await Song.upsert(data).catch((err) => {
-			return { error: err.message };
-		});
-		console.log("result", typeof result);
-	}
+	await updateRecentlyPlayed(req, res, iduser);
 
 	const oldRecent = await Song.findAll({
 		where: {
@@ -210,13 +181,6 @@ const UpdateRecently = async (
 			action: currentSong.action,
 		};
 	});
-};
-
-const MeRecently = async (req, res) => {
-	if (meRecentResult[req.session.access_token]) {
-		return meRecentResult[req.session.access_token];
-	}
-	await UpdateRecently(req, res);
 	return meRecentResult[req.session.access_token];
 };
 
