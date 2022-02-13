@@ -34,5 +34,9 @@ const UserConfiguration = {
 		type: DataTypes.DATE,
 		allowNull: false,
 	},
+	songs_updated: {
+		type: DataTypes.DATE,
+		allowNull: true,
+	},
 };
 module.exports = { UserConfiguration };

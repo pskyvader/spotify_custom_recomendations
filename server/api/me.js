@@ -178,59 +178,45 @@ const UpdateRecently = async (
 		items.push(...response.items);
 	}
 	const newRecent = formatSongList(items);
-	await newRecent.forEach(async (newsong) => {
-		// const found = oldRecent.find(element => element.id===newsong.id);
-		// if(found) {
-		// 	continue;
-		// }
+
+	for (const newsong of newRecent) {
 		const data = newsong;
 		data.iduser = iduser;
 		data.song_added = Date.now();
 		const result = await Song.upsert(data).catch((err) => {
 			return { error: err.message };
 		});
-		console.log("result",typeof result);
-	});
+		console.log("result", typeof result);
+	}
 
 	const oldRecent = await Song.findAll({
 		where: {
 			[Op.and]: [{ iduser: iduser }, { removed: false }],
 		},
 		order: [["song_added", "ASC"]],
+		raw: true,
+		nest: true,
 	}).catch((err) => {
 		return { error: err.message };
 	});
 
-	console.log("old", oldRecent);
-	console.log("new", newRecent);
+	meRecentResult[req.session.access_token] = oldRecent.map((currentSong) => {
+		return {
+			id: currentSong.id,
+			name: currentSong.name,
+			artist: currentSong.artist,
+			idartist: currentSong.idartist,
+			album: currentSong.album,
+			action: currentSong.action,
+		};
+	});
 };
 
-const MeRecently = async (req, res, after = null, limit = 10) => {
+const MeRecently = async (req, res) => {
 	if (meRecentResult[req.session.access_token]) {
 		return meRecentResult[req.session.access_token];
 	}
 	await UpdateRecently(req, res);
-
-	if (after === null) {
-		after = Date.now() - 604800000; //1 week in milliseconds = (24*60*60*1000) * 7; //7 days)
-	}
-
-	let url =
-		"https://api.spotify.com/v1/me/player/recently-played?limit=" +
-		limit +
-		"&after=" +
-		after;
-	let items = [];
-	while (url) {
-		const response = await request(req, url);
-		if (response.error) {
-			console.log(response);
-			return response;
-		}
-		url = response.next;
-		items.push(...response.items);
-	}
-	meRecentResult[req.session.access_token] = formatSongList(items);
 	return meRecentResult[req.session.access_token];
 };
 
