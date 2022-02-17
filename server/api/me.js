@@ -22,59 +22,6 @@ const me = async (req, res) => {
 	res.json(result);
 };
 
-let meProfileResult = {};
-
-const meProfile = async (req, res) => {
-	if (!req.session.access_token) {
-		console.log("No session access token", req.session);
-		return { error: "Not logged in" };
-	}
-	if (meProfileResult[req.session.access_token]) {
-		return meProfileResult[req.session.access_token];
-	}
-
-	const currentUser = await User.findOne({
-		where: {
-			access_token: req.session.access_token,
-		},
-	});
-	if (currentUser !== null) {
-		meProfileResult[req.session.access_token] = {
-			id: currentUser.id,
-			name: currentUser.name,
-			url: currentUser.url,
-			image: currentUser.image,
-			access_token: req.session.access_token,
-			refresh_token: req.session.refresh_token,
-		};
-		return meProfileResult[req.session.access_token];
-	}
-
-	const response = await request(req, "https://api.spotify.com/v1/me");
-	if (response.error) {
-		console.log(response);
-		return response;
-	}
-
-	meProfileResult[req.session.access_token] = {
-		id: response.id,
-		name: response.display_name,
-		url: response.external_urls.spotify,
-		image: response.images[0].url,
-		access_token: req.session.access_token,
-		refresh_token: req.session.refresh_token,
-	};
-
-	const defaultValues = {
-		...meProfileResult[req.session.access_token],
-		expiration: req.session.expiration,
-	};
-
-	User.upsert(defaultValues).catch((err) => {
-		return { error: err.message };
-	});
-	return meProfileResult[req.session.access_token];
-};
 
 let mePlaylistResult = {};
 
@@ -182,4 +129,4 @@ const MeRecently = async (
 	return meRecentResult[req.session.access_token];
 };
 
-module.exports = { me, meTop, MeRecently };
+module.exports = { me,meProfile, meTop, MeRecently };
