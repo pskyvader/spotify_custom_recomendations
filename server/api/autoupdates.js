@@ -21,7 +21,7 @@ const updateRecentlyPlayed = async (
 	});
 
 	//check every 1 hour
-	if (lastSong.song_added > Date.now() - 3600000) {
+	if (lastSong!==null && lastSong.song_added > Date.now() - 3600000) {
 		return true;
 	}
 
