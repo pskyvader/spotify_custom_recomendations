@@ -40,7 +40,7 @@ const fillOptions = (playlist, topSongs, currentgenres) => {
 	return options;
 };
 
-const myApiRecommended = async (session, playlist, topSongs, currentgenres) => {
+const myApiRecommended = async (access_token, playlist, topSongs, currentgenres) => {
 	const options = fillOptions(playlist, topSongs, currentgenres || genres);
 
 	const url = "https://api.spotify.com/v1/recommendations";

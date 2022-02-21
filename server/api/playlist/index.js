@@ -1,11 +1,11 @@
 const { addSongPlaylist } = require("./addSongPlaylist");
 const { getMyPlaylists } = require("./getMyPlaylists");
-const { getPlaylistsongs } = require("./getPlaylistsongs");
+const { getPlaylistSongs } = require("./getPlaylistSongs");
 const { removeSongPlaylist } = require("./removeSongPlaylist");
 
 module.exports = {
 	addSongPlaylist,
 	getMyPlaylists,
-	getPlaylistsongs,
+	getPlaylistSongs,
 	removeSongPlaylist,
 };

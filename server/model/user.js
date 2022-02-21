@@ -17,6 +17,7 @@ const getUser = async (session) => {
 			access_token: access_token,
 		},
 	});
+	
 	if (thisUser !== null) {
 		UserlistCache[access_token] = {
 			id: thisUser.id,
@@ -28,8 +29,13 @@ const getUser = async (session) => {
 		};
 		return UserlistCache[access_token];
 	}
+	
 
-	const response = await request(access_token, "https://api.spotify.com/v1/me");
+	const response = await request(
+		access_token,
+		"https://api.spotify.com/v1/me"
+	);
+	
 	if (response.error) {
 		console.log(response);
 		return response;
@@ -50,6 +56,7 @@ const getUser = async (session) => {
 	};
 
 	User.upsert(defaultValues).catch((err) => {
+		console.log(err);
 		return { error: err.message };
 	});
 	return UserlistCache[access_token];

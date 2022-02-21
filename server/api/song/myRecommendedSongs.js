@@ -1,7 +1,5 @@
-const myRecommendedSongs = async (req) => {
-	const playlistId = req.params.playlistid;
-	const session = req.session;
-
+const recommended = {};
+const myRecommendedSongs = async (session, playlistId) => {
 	if (recommended[playlistId]) {
 		return recommended[playlistId];
 	}

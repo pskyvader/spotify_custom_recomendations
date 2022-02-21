@@ -1,7 +1,7 @@
-const { Op } = require("sequelize");
-const { User } = require("../database");
-const { credentials } = require("../credentials");
-const { request } = require("../utils");
+
+const { User } = require("../../database");
+const { credentials } = require("../../credentials");
+const { request } = require("../../utils");
 
 const requestOptions = (refresh_token) => {
 	return {

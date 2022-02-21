@@ -1,12 +1,12 @@
-const myRemoveRecommended = async (req) => {
-	const playlistId = req.params.playlistid;
-	const session = req.session;
-
+const { getPlaylistSongs } = require("../playlist");
+const { myRecentSongs } = require("./");
+const deleterecommended = {};
+const myRemoveRecommended = async (session, playlistId) => {
 	if (deleterecommended[playlistId]) {
 		return deleterecommended[playlistId];
 	}
 
-	const currentPlaylist = await playlistsongs(session, playlistId);
+	const currentPlaylist = await getPlaylistSongs(session, playlistId);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}

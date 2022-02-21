@@ -1,5 +1,5 @@
 const myTopSongs = async (session) => {
-	const currentUser = getUser(session);
+	const currentUser = await getUser(session);
 	if (currentUser.error) {
 		return currentUser;
 	}

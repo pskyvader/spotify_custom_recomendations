@@ -1,3 +1,7 @@
+const { Op } = require("sequelize");
+const { User } = require("../../database");
+const { refreshCookie } = require("./refreshCookie");
+
 const loginCookie = async (req) => {
 	const cookies = req.cookies;
 
@@ -27,7 +31,7 @@ const loginCookie = async (req) => {
 			meProfileResult.loggedin = true;
 			return meProfileResult;
 		}
-		return refreshcookie(req, currentUser);
+		return refreshCookie(req, currentUser);
 	}
 	return { error: "No user found" };
 };

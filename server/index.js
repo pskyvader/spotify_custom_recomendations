@@ -21,6 +21,14 @@ const {
 	removeSongPlaylist,
 } = require("./api/playlist");
 
+const {
+	myApiRecommended,
+	myRecentSongs,
+	myRecommendedSongs,
+	myRemoveRecommended,
+	myTopSongs,
+} = require("./api/song");
+
 const { getUser } = require("./model");
 
 connection();
@@ -75,31 +83,55 @@ app.get("/api/loggedin", function (req, res) {
 	res.json(result);
 });
 
-app.get("/api/logincookie", function (req, res) {
-	const result = loginCookie(req);
+app.get("/api/logincookie", async (req, res) => {
+	const result = await loginCookie(req);
 	res.json(result);
 });
 
-app.get("/api/me", function (req, res) {
-	const result = getUser(req.session);
+app.get("/api/me", async (req, res) => {
+	const result = await getUser(req.session);
 	res.json(result);
 });
 
-app.get("/api/me/playlist", function (req, res) {
-	const result = getMyPlaylists(req.session);
+app.get("/api/me/playlists", async (req, res) => {
+	const result = await getMyPlaylists(req.session);
 	res.json(result);
 });
 
-app.get("/api/actions/add/:playlistid/:songuri", function (req, res) {
-	const result = addSongPlaylist(
+app.get("/api/playlists/get/:playlistId", async (req, res) => {
+	const result = await getMyPlaylists(
+		req.session.access_token,
+		req.params.playlistId
+	);
+	res.json(result);
+});
+
+app.get("/api/playlists/recommended/:playlistId", async (req, res) => {
+	const result = await myRecommendedSongs(
+		req.session.access_token,
+		req.params.playlistId
+	);
+	res.json(result);
+});
+
+app.get("/api/playlists/deleterecommended/:playlistId", async (req, res) => {
+	const result = await myRemoveRecommended(
+		req.session.access_token,
+		req.params.playlistId
+	);
+	res.json(result);
+});
+
+app.get("/api/actions/add/:playlistid/:songuri", async (req, res) => {
+	const result = await addSongPlaylist(
 		req.session,
 		req.params.songuri,
 		req.params.playlistid
 	);
 	res.json(result);
 });
-app.get("/api/actions/remove/:playlistid/:songuri", function (req, res) {
-	const result = removeSongPlaylist(
+app.get("/api/actions/remove/:playlistid/:songuri", async (req, res) => {
+	const result = await removeSongPlaylist(
 		req.session,
 		req.params.songuri,
 		req.params.playlistid

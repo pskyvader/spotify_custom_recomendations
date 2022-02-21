@@ -4,7 +4,7 @@ let mePlaylistResult = {};
 
 const getMyPlaylists = async (session) => {
 	const access_token = session.access_token;
-	const currentUser = getUser(session);
+	const currentUser = await getUser(session);
 	if (currentUser.error) {
 		return currentUser;
 	}

@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const myRecentSongs = async (session) => {
-	const currentUser = getUser(session);
+	const currentUser = await getUser(session);
 	if (currentUser.error) {
 		return currentUser;
 	}

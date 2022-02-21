@@ -1,4 +1,5 @@
-const getPlaylistsongs = async (playlists, access_token, playlistId) => {
+const playlists = {};
+const getPlaylistSongs = async (access_token, playlistId) => {
 	if (playlists[playlistId]) {
 		return playlists[playlistId];
 	}
@@ -18,4 +19,4 @@ const getPlaylistsongs = async (playlists, access_token, playlistId) => {
 	return playlists[playlistId];
 };
 
-module.exports = { getPlaylistsongs };
+module.exports = { getPlaylistSongs };
