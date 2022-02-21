@@ -8,7 +8,20 @@ const { connection } = require("./database");
 const { login } = require("./pages/login");
 const { callback } = require("./pages/callback");
 
-const { authorizeUser, CheckLogin, logincookie, pushToken} = require("./api/user");
+const {
+	authorizeUser,
+	CheckLogin,
+	loginCookie,
+	pushToken,
+} = require("./api/user");
+const {
+	addSongPlaylist,
+	getMyPlaylists,
+	getPlaylistsongs,
+	removeSongPlaylist,
+} = require("./api/playlist");
+
+const { getUser } = require("./model");
 
 connection();
 
@@ -48,42 +61,56 @@ app.get("/callback", function (req, res) {
 });
 
 app.get("/api/authorize", function (req, res) {
-	authorizeUser(req, res);
+	const result = authorizeUser(req);
+	res.json(result);
 });
 
 app.get("/api/pushtoken", function (req, res) {
-	pushToken(req, res);
+	const result = pushToken(req);
+	res.json(result);
 });
 
 app.get("/api/loggedin", function (req, res) {
-	CheckLogin(req, res);
+	const result = CheckLogin(req.session);
+	res.json(result);
 });
 
 app.get("/api/logincookie", function (req, res) {
-	const result = logincookie(req, res);
+	const result = loginCookie(req);
 	res.json(result);
 });
 
-app.get("/api/me/:submodule?", function (req, res) {
-	me(req, res);
+app.get("/api/me", function (req, res) {
+	const result = getUser(req.session);
+	res.json(result);
 });
 
-app.get("/api/playlists/:action?/:playlistid?", function (req, res) {
-	playlist(req, res);
+app.get("/api/me/playlist", function (req, res) {
+	const result = getMyPlaylists(req.session);
+	res.json(result);
 });
 
 app.get("/api/actions/add/:playlistid/:songuri", function (req, res) {
-	const result = addSongPlaylist(req, res);
+	const result = addSongPlaylist(
+		req.session,
+		req.params.songuri,
+		req.params.playlistid
+	);
 	res.json(result);
 });
 app.get("/api/actions/remove/:playlistid/:songuri", function (req, res) {
-	const result = removeSongPlaylist(req, res);
+	const result = removeSongPlaylist(
+		req.session,
+		req.params.songuri,
+		req.params.playlistid
+	);
 	res.json(result);
 });
 
 app.get("/api/*", (req, res) => {
 	res.json({
 		error: "Unknown module",
+		params: req.params,
 	});
 });
 

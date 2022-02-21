@@ -28,7 +28,7 @@ const callback = async (req, res) => {
 	};
 
 	const response = await request(
-		req,
+		req.session,
 		"https://accounts.spotify.com/api/token",
 		"POST",
 		null,

@@ -1,7 +1,8 @@
-const request = require("../utils");
+const { request } = require("../utils");
+const { User } = require("../database");
 
 const UserlistCache = {};
-const getUser = (session) => {
+const getUser = async (session) => {
 	if (!session.access_token) {
 		console.log("No session access token", session);
 		return { error: "Not logged in" };
@@ -28,7 +29,7 @@ const getUser = (session) => {
 		return UserlistCache[access_token];
 	}
 
-	const response = await request(req, "https://api.spotify.com/v1/me");
+	const response = await request(access_token, "https://api.spotify.com/v1/me");
 	if (response.error) {
 		console.log(response);
 		return response;

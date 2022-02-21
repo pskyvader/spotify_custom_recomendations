@@ -1,12 +1,9 @@
 const { request } = require("../../utils");
-const { invalidatePlaylist } = require("../playlist");
+const { invalidatePlaylist } = require("./invalidatePlaylist");
 const { Song } = require("../../database");
 const { getSong } = require("../../model");
 
-const removeSongPlaylist = async (req, res) => {
-	const playlistId = req.params.playlistid;
-	const songuri = req.params.songuri;
-	const session = req.session;
+const removeSongPlaylist = async (session, songuri, playlistId) => {
 	const url =
 		"https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
 
@@ -15,7 +12,7 @@ const removeSongPlaylist = async (req, res) => {
 	};
 
 	const response = await request(
-		session,
+		session.access_token,
 		url,
 		"DELETE",
 		JSON.stringify(songs)

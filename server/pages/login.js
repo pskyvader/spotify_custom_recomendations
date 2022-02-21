@@ -1,5 +1,5 @@
-const { generateRandomString } = require("./utils/generateRandomString");
-const { credentials } = require("./credentials");
+const { generateRandomString } = require("../utils/generateRandomString");
+const { credentials } = require("../credentials");
 // your application requests authorization
 const permissions = [
 	// "user-read-private",

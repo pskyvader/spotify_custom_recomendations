@@ -1,18 +1,16 @@
 const { credentials } = require("../../credentials");
-const authorizeUser = (req, res) => {
-	const code = req.query.code || null;
-	const state = req.query.state || null;
+const authorizeUser = ({ query }) => {
+	const code = query.code || null;
+	const state = query.state || null;
 
 	if (code === null) {
-		res.json({ error: true, message: "Missing code" });
-		return;
+		return { error: true, message: "Missing code" };
 	}
 	if (state === null) {
-		res.json({ error: true, message: "Missing state" });
-		return;
+		return { error: true, message: "Missing state" };
 	}
 
-	const requestOptions = {
+	return {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded",
@@ -28,8 +26,6 @@ const authorizeUser = (req, res) => {
 			grant_type: "authorization_code",
 		}).toString(),
 	};
-
-	res.json(requestOptions);
 };
 
 module.exports = { authorizeUser };

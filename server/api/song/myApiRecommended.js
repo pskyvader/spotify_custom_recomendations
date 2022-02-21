@@ -48,7 +48,7 @@ const myApiRecommended = async (session, playlist, topSongs, currentgenres) => {
 	Object.entries(options).forEach((option) => {
 		urlOptions += option[0] + "=" + option[1] + "&";
 	});
-	const response = await request(session, url + urlOptions);
+	const response = await request(access_token, url + urlOptions);
 	if (response.error) {
 		return response;
 	}

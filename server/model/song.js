@@ -27,8 +27,6 @@ const formatSongList = (songList) => {
 	return songList.map((song) => formatSongAPI(song.track || song));
 };
 
-module.exports = { formatSongList };
-
 const formatSong = (song) => {
 	return {
 		id: song.id,
@@ -40,7 +38,7 @@ const formatSong = (song) => {
 	};
 };
 
-const getSong = (session, idsong) => {
+const getSong = async (session, idsong) => {
 	const user = currentUser(session);
 	if (user.error) {
 		return user;
@@ -52,7 +50,7 @@ const getSong = (session, idsong) => {
 		return formatSong(currentSong);
 	}
 	let url = `https://api.spotify.com/v1/tracks/${idsong}`;
-	const response = await request(req, url);
+	const response = await request(access_token, url);
 	if (response.error) {
 		return response;
 	}

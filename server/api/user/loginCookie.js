@@ -1,4 +1,4 @@
-const logincookie = async (req, res) => {
+const loginCookie = async (req) => {
 	const cookies = req.cookies;
 
 	if (!cookies.access_token && !cookies.refresh_token) {
@@ -32,4 +32,4 @@ const logincookie = async (req, res) => {
 	return { error: "No user found" };
 };
 
-module.exports = { logincookie };
+module.exports = { loginCookie };

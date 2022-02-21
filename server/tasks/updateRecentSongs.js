@@ -21,7 +21,7 @@ const updateRecentSongs = async (session, iduser) => {
 	let items = [];
 
 	while (url) {
-		const response = await request(session, url);
+		const response = await request(access_token, url);
 		if (response.error) {
 			console.log(response);
 			return response;
