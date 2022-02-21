@@ -1,5 +1,5 @@
-const { credentials } = require("./credentials");
-const { request } = require("./utils");
+const { credentials } = require("../credentials");
+const { request } = require("../utils");
 
 const callback = async (req, res) => {
 	var code = req.query.code || null;

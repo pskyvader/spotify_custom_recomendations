@@ -1,5 +1,5 @@
-const { credentials } = require("../credentials");
-const authorize = (req, res) => {
+const { credentials } = require("../../credentials");
+const authorizeUser = (req, res) => {
 	const code = req.query.code || null;
 	const state = req.query.state || null;
 
@@ -32,4 +32,4 @@ const authorize = (req, res) => {
 	res.json(requestOptions);
 };
 
-module.exports = { authorize };
+module.exports = { authorizeUser };

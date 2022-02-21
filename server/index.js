@@ -3,20 +3,12 @@ const express = require("express");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const pgSession = require("connect-pg-simple")(session);
+const { connection } = require("./database");
 
-const {
-	authorize,
-	pushtoken,
-	loggedin,
-	me,
-	playlist,
-	addSongPlaylist,
-	deleteSongPlaylist,
-	logincookie,
-} = require("./api");
-const { callback } = require("./callback");
-const { login } = require("./login");
-const { connection } = require("./database/connection");
+const { login } = require("./pages/login");
+const { callback } = require("./pages/callback");
+
+const { authorizeUser, CheckLogin, logincookie, pushToken} = require("./api/user");
 
 connection();
 
@@ -56,15 +48,15 @@ app.get("/callback", function (req, res) {
 });
 
 app.get("/api/authorize", function (req, res) {
-	authorize(req, res);
+	authorizeUser(req, res);
 });
 
 app.get("/api/pushtoken", function (req, res) {
-	pushtoken(req, res);
+	pushToken(req, res);
 });
 
 app.get("/api/loggedin", function (req, res) {
-	loggedin(req, res);
+	CheckLogin(req, res);
 });
 
 app.get("/api/logincookie", function (req, res) {

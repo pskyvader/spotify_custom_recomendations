@@ -1,4 +1,4 @@
-const pushtoken = (req) => {
+const pushToken = (req) => {
 	const access_token = req.query.access_token || null;
 	const refresh_token = req.query.refresh_token || null;
 	const expires_in = req.query.expires_in || null;
@@ -17,4 +17,4 @@ const pushtoken = (req) => {
 	return { error: null };
 };
 
-module.exports = { pushtoken };
+module.exports = { pushToken };

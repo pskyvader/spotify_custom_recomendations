@@ -1,5 +1,5 @@
-const { request, genres } = require("../utils");
-const { formatSongList } = require("../model");
+const { request, genres } = require("../../utils");
+const { formatSongList } = require("../../model");
 
 const fillOptions = (playlist, topSongs, currentgenres) => {
 	const options = {
@@ -40,7 +40,7 @@ const fillOptions = (playlist, topSongs, currentgenres) => {
 	return options;
 };
 
-const recommended = async (session, playlist, topSongs, currentgenres) => {
+const myApiRecommended = async (session, playlist, topSongs, currentgenres) => {
 	const options = fillOptions(playlist, topSongs, currentgenres || genres);
 
 	const url = "https://api.spotify.com/v1/recommendations";
@@ -56,4 +56,4 @@ const recommended = async (session, playlist, topSongs, currentgenres) => {
 	return formatSongList(response.tracks);
 };
 
-module.exports = { recommended };
+module.exports = { myApiRecommended };

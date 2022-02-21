@@ -1,11 +1,6 @@
 const { Op } = require("sequelize");
 
-const { request } = require("../utils");
-
-const { Song } = require("../database");
-const { formatSongList } = require("../model");
-
-const updateRecentlyPlayed = async (session, iduser) => {
+const updateRecentSongs = async (session, iduser) => {
 	const after = Date.now() - 604800000;
 	const lastSong = await Song.findOne({
 		where: {
@@ -46,18 +41,4 @@ const updateRecentlyPlayed = async (session, iduser) => {
 	}
 };
 
-const updateRecentlyDeleted = async (req, res, iduser) => {
-	await Song.destroy({
-		where: {
-			[Op.and]: [
-				{ iduser: iduser },
-				{ removed: true },
-				{ song_added: { [Op.lt]: Date.now() - 604800000 } },
-			],
-		},
-	}).catch((err) => {
-		return { error: err.message };
-	});
-};
-
-module.exports = { updateRecentlyPlayed, updateRecentlyDeleted };
+module.exports = { updateRecentSongs };
