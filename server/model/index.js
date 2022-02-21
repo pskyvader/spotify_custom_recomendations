@@ -1,3 +1,3 @@
-const { getSong } = require("./song");
+const { getSong, formatSongList } = require("./song");
 const { getUser } = require("./user");
-module.exports = { getSong, getUser };
+module.exports = { getSong, formatSongList, getUser };

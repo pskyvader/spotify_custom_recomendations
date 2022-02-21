@@ -1,59 +1,38 @@
 const { Op } = require("sequelize");
 
-const { request, formatSongList } = require("../utils");
-
-const { User, Song } = require("../database");
-
-const { updateRecentlyPlayed } = require("./autoupdates");
-
-const me = async (req, res) => {
-	let result;
-	switch (req.params.submodule) {
-		case "playlists":
-			result = await mePlaylists(req, res);
-			break;
-		case "top":
-			result = await meTop(req, res);
-			break;
-		default:
-			result = await meProfile(req, res);
-			break;
-	}
-	res.json(result);
-};
-
-
+const { request } = require("../utils");
+const { getUser, formatSongList } = require("../model");
 let mePlaylistResult = {};
 
-const mePlaylists = async (req, res) => {
-	if (!meProfileResult[req.session.access_token]) {
-		return { error: true, message: "No user defined" };
+const mePlaylists = async (req) => {
+	const session = req.session;
+	const currentUser = getUser(session);
+	if (currentUser.error) {
+		return currentUser;
 	}
 
-	if (mePlaylistResult[req.session.access_token]) {
-		return mePlaylistResult[req.session.access_token];
+	if (mePlaylistResult[session.access_token]) {
+		return mePlaylistResult[session.access_token];
 	}
-	const offset = 0;
-	// let playlists = [];
-	const response = await request(
-		req,
-		"https://api.spotify.com/v1/me/playlists?limit=50&offset=" + offset
-	);
-	if (response.error) {
-		console.log(response);
-		return response;
+	let url = "https://api.spotify.com/v1/me/playlists?limit=50";
+
+	let playlists = [];
+	while (url) {
+		const response = await request(session, url);
+		if (response.error) {
+			console.log(response);
+			return response;
+		}
+		url = response.next;
+		playlists.push(...response.items);
 	}
 
-	const playlists = response.items;
-	// playlists.push(...response.items);
-
-	const MyId = meProfileResult[req.session.access_token].id;
-
-	mePlaylistResult[req.session.access_token] = playlists.map(
+	mePlaylistResult[session.access_token] = playlists.map(
 		(currentPlaylist) => {
 			const formattedPlaylist = {};
 			formattedPlaylist.id = currentPlaylist.id;
-			formattedPlaylist.disabled = MyId !== currentPlaylist.owner.id;
+			formattedPlaylist.disabled =
+				currentUser.id !== currentPlaylist.owner.id;
 			formattedPlaylist.selected = false;
 			formattedPlaylist.name = currentPlaylist.name;
 			formattedPlaylist.image = currentPlaylist.images[0]
@@ -62,21 +41,27 @@ const mePlaylists = async (req, res) => {
 			return formattedPlaylist;
 		}
 	);
-	return mePlaylistResult[req.session.access_token];
+	return mePlaylistResult[session.access_token];
 };
 
 let meTopResult = {};
 
-const meTop = async (req, res) => {
-	if (meTopResult[req.session.access_token]) {
-		return meTopResult[req.session.access_token];
+const meTop = async (session) => {
+	const currentUser = getUser(session);
+	if (currentUser.error) {
+		return currentUser;
+	}
+	const access_token = session.access_token;
+
+	if (meTopResult[access_token]) {
+		return meTopResult[access_token];
 	}
 
 	let url =
 		"https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term";
 	let items = [];
 	while (url) {
-		const response = await request(req, url);
+		const response = await request(session, url);
 		if (response.error) {
 			console.log(response);
 			return response;
@@ -84,26 +69,26 @@ const meTop = async (req, res) => {
 		url = response.next;
 		items.push(...response.items);
 	}
-	meTopResult[req.session.access_token] = formatSongList(items);
-	return meTopResult[req.session.access_token];
+	meTopResult[access_token] = formatSongList(items);
+	return meTopResult[access_token];
 };
 
 let meRecentResult = {};
 
-const MeRecently = async (
-	req,
-	res
-) => {
-	if (!meProfileResult[req.session.access_token]) {
-		return { error: true, message: "No user defined" };
+const MeRecently = async (session) => {
+	const currentUser = getUser(session);
+	if (currentUser.error) {
+		return currentUser;
 	}
-	if (meRecentResult[req.session.access_token]) {
-		return meRecentResult[req.session.access_token];
+	const access_token = session.access_token;
+
+	if (meRecentResult[access_token]) {
+		return meRecentResult[access_token];
 	}
 
-	const iduser = meProfileResult[req.session.access_token].id;
+	const iduser = currentUser.id;
 
-	await updateRecentlyPlayed(req, res, iduser);
+	await updateRecentlyPlayed(session, iduser);
 
 	const oldRecent = await Song.findAll({
 		where: {
@@ -116,17 +101,10 @@ const MeRecently = async (
 		return { error: err.message };
 	});
 
-	meRecentResult[req.session.access_token] = oldRecent.map((currentSong) => {
-		return {
-			id: currentSong.id,
-			name: currentSong.name,
-			artist: currentSong.artist,
-			idartist: currentSong.idartist,
-			album: currentSong.album,
-			action: currentSong.action,
-		};
-	});
-	return meRecentResult[req.session.access_token];
+	meRecentResult[access_token] = oldRecent.map((currentSong) =>
+		formatSong(currentSong)
+	);
+	return meRecentResult[access_token];
 };
 
-module.exports = { me,meProfile, meTop, MeRecently };
+module.exports = { mePlaylists, meTop, MeRecently };

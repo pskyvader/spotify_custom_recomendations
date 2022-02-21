@@ -18,6 +18,16 @@ const formatSongAPI = (song) => {
 		action: song.uri,
 	};
 };
+const formatSongList = (songList) => {
+	// const formattedList = [];
+	// songList.forEach((song) => {
+	// 	const currentSong = song.track || song;
+	// 	formattedList.push(formatSongAPI(currentSong));
+	// });
+	return songList.map((song) => formatSongAPI(song.track || song));
+};
+
+module.exports = { formatSongList };
 
 const formatSong = (song) => {
 	return {
@@ -56,4 +66,4 @@ const getSong = (session, idsong) => {
 	return newsong;
 };
 
-module.exports = { getSong };
+module.exports = { getSong, formatSongList };

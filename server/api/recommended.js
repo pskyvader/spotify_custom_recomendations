@@ -1,4 +1,5 @@
-const { request, genres, formatSongList } = require("../utils");
+const { request, genres } = require("../utils");
+const { formatSongList } = require("../model");
 
 const fillOptions = (playlist, topSongs, currentgenres) => {
 	const options = {
@@ -39,7 +40,7 @@ const fillOptions = (playlist, topSongs, currentgenres) => {
 	return options;
 };
 
-const recommended = async (req, playlist, topSongs, currentgenres) => {
+const recommended = async (session, playlist, topSongs, currentgenres) => {
 	const options = fillOptions(playlist, topSongs, currentgenres || genres);
 
 	const url = "https://api.spotify.com/v1/recommendations";
@@ -47,7 +48,7 @@ const recommended = async (req, playlist, topSongs, currentgenres) => {
 	Object.entries(options).forEach((option) => {
 		urlOptions += option[0] + "=" + option[1] + "&";
 	});
-	const response = await request(req, url + urlOptions);
+	const response = await request(session, url + urlOptions);
 	if (response.error) {
 		return response;
 	}

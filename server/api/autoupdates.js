@@ -1,16 +1,12 @@
 const { Op } = require("sequelize");
 
-const { request, formatSongList } = require("../utils");
+const { request } = require("../utils");
 
 const { Song } = require("../database");
+const { formatSongList } = require("../model");
 
-const updateRecentlyPlayed = async (
-	req,
-	res,
-	iduser,
-	after = Date.now() - 604800000,
-	limit = 10
-) => {
+const updateRecentlyPlayed = async (session, iduser) => {
+	const after = Date.now() - 604800000;
 	const lastSong = await Song.findOne({
 		where: {
 			[Op.and]: [{ iduser: iduser }, { removed: false }],
@@ -26,14 +22,11 @@ const updateRecentlyPlayed = async (
 	}
 
 	let url =
-		"https://api.spotify.com/v1/me/player/recently-played?limit=" +
-		limit +
-		"&after=" +
-		after;
+		"https://api.spotify.com/v1/me/player/recently-played?after=" + after;
 	let items = [];
 
 	while (url) {
-		const response = await request(req, url);
+		const response = await request(session, url);
 		if (response.error) {
 			console.log(response);
 			return response;

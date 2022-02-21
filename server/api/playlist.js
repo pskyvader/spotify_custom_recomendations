@@ -1,32 +1,12 @@
-const { request, formatSongList, subtractById } = require("../utils");
+const { request, subtractById } = require("../utils");
 const { meTop, MeRecently } = require("./me");
 
 const { recommended: recommendedSongs } = require("./recommended");
+const { formatSongList } = require("../model");
 
 let playlists = {};
 let recommended = {};
 let deleterecommended = {};
-
-const playlist = async (req, res) => {
-	let result;
-	switch (req.params.action) {
-		case "recommended":
-			result = await playlistRecommended(req, res);
-			break;
-		case "deleterecommended":
-			result = await playlistDeleteRecommended(req, res);
-			break;
-		case "get":
-			result = await playlistsongs(req, res);
-			break;
-		default:
-			result = {
-				error: "Invalid module",
-			};
-			break;
-	}
-	res.json(result);
-};
 
 const invalidatePlaylist = (playlistId, songUri) => {
 	if (playlists[playlistId]) {
@@ -52,48 +32,45 @@ const invalidatePlaylist = (playlistId, songUri) => {
 	return true;
 };
 
-const playlistsongs = async (req, res) => {
-	const playlistId = req.params.playlistid;
+const playlistsongs = async (session, playlistId) => {
 	if (playlists[playlistId]) {
 		return playlists[playlistId];
 	}
-	let url =
-		"https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
-
-	let items=[];
-	while(url){
-		const response = await request(req, url);
+	let url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+	let items = [];
+	while (url) {
+		const response = await request(session, url);
 		if (response.error) {
 			return response;
 		}
-		url=response.next;
+		url = response.next;
 		items.push(...response.items);
 	}
-	
 
 	playlists[playlistId] = formatSongList(items);
 
 	return playlists[playlistId];
 };
 
-const playlistRecommended = async (req, res) => {
+const playlistRecommended = async (req) => {
 	const playlistId = req.params.playlistid;
+	const session = req.session;
 
 	if (recommended[playlistId]) {
 		return recommended[playlistId];
 	}
 
-	const currentPlaylist = await playlistsongs(req, res);
+	const currentPlaylist = await playlistsongs(session, playlistId);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
-	const topSongs = await meTop(req, res);
+	const topSongs = await meTop(session);
 	if (topSongs.error) {
 		return topSongs;
 	}
 
 	const recommendedTrack = await recommendedSongs(
-		req,
+		session,
 		currentPlaylist,
 		topSongs
 	);
@@ -104,23 +81,24 @@ const playlistRecommended = async (req, res) => {
 	return recommended[playlistId];
 };
 
-const playlistDeleteRecommended = async (req, res) => {
+const playlistDeleteRecommended = async (req) => {
 	const playlistId = req.params.playlistid;
+	const session = req.session;
 
 	if (deleterecommended[playlistId]) {
 		return deleterecommended[playlistId];
 	}
 
-	const currentPlaylist = await playlistsongs(req, res);
+	const currentPlaylist = await playlistsongs(session, playlistId);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
 
-	const recentSongs = await MeRecently(req, res, 0);
+	const recentSongs = await MeRecently(session);
 	if (recentSongs.error) {
 		return recentSongs;
 	}
 	return subtractById(currentPlaylist, recentSongs);
 };
 
-module.exports = { playlist, invalidatePlaylist };
+module.exports = { invalidatePlaylist };
