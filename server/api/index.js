@@ -3,7 +3,7 @@ const { pushtoken } = require("./pushtoken");
 const { loggedin } = require("./loggedin");
 const { me } = require("./me");
 const { playlist } = require("./playlist");
-const { actions } = require("./actions");
+const { addSongPlaylist, removeSongPlaylist } = require("./actions");
 const { logincookie } = require("./logincookie");
 
 module.exports = {
@@ -12,6 +12,7 @@ module.exports = {
 	loggedin,
 	me,
 	playlist,
-	actions,
-	logincookie
+	addSongPlaylist,
+	removeSongPlaylist,
+	logincookie,
 };

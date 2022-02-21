@@ -1,38 +1,24 @@
 const { request } = require("../utils");
-
 const { invalidatePlaylist } = require("./playlist");
+const { Song } = require("../database");
+const { getSong } = require("../model");
 
-const actions = async (req, res) => {
-	let result;
-	switch (req.params.module) {
-		case "add":
-			result = await addSong(req, res);
-			break;
-		case "delete":
-			result = await deleteSong(req, res);
-			break;
-		default:
-			result = {
-				error: "Invalid module",
-			};
-			break;
-	}
-	res.json(result);
-};
-
-const addSong = async (req, res) => {
+const addSongPlaylist = async (req, res) => {
 	const playlistId = req.params.playlistid;
 	const songuri = req.params.songuri;
+	const session = req.session;
+
 	const url =
 		"https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
 	const songs = { uris: [songuri], position: 0 };
 
-	const response = await request(req, url, "POST", JSON.stringify(songs));
+	const response = await request(session, url, "POST", JSON.stringify(songs));
 	if (response.error) {
 		return response;
 	}
 
 	invalidatePlaylist(playlistId, songuri);
+	getSong(session, songuri);
 
 	return {
 		message: "success",
@@ -40,9 +26,10 @@ const addSong = async (req, res) => {
 	};
 };
 
-const deleteSong = async (req, res) => {
+const removeSongPlaylist = async (req, res) => {
 	const playlistId = req.params.playlistid;
 	const songuri = req.params.songuri;
+	const session = req.session;
 	const url =
 		"https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
 
@@ -50,12 +37,21 @@ const deleteSong = async (req, res) => {
 		tracks: [{ uri: songuri }],
 	};
 
-	const response = await request(req, url, "DELETE", JSON.stringify(songs));
+	const response = await request(
+		session,
+		url,
+		"DELETE",
+		JSON.stringify(songs)
+	);
 	if (response.error) {
 		return response;
 	}
 
 	invalidatePlaylist(playlistId, songuri);
+	const deletedSong = getSong(session, songuri);
+	deletedSong.removed = true;
+	deletedSong.song_removed = Date.now();
+	Song.update(deletedSong);
 
 	return {
 		message: "success",
@@ -63,4 +59,4 @@ const deleteSong = async (req, res) => {
 	};
 };
 
-module.exports = { actions };
+module.exports = { addSongPlaylist, removeSongPlaylist };

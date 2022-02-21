@@ -2,24 +2,13 @@ const fetch = (...args) =>
 	import("node-fetch").then(({ default: fetchFunction }) =>
 		fetchFunction(...args)
 	);
-
-const request = (
-	req,
-	url,
-	method = "GET",
-	body = null,
-	requestOverride = null
-) => {
-	if (!req.session) {
-		console.log({ error: true, message: "No session available",url });
-		return { error: true, message: "No session available",url };
-	}
+const request = ( access_token, url, method = "GET", body = null, requestOverride = null ) => {
 
 	const requestOptions = requestOverride || {
 		method: method,
 		headers: {
 			"Content-Type": "application/json",
-			Authorization: "Bearer " + req.session.access_token,
+			Authorization: "Bearer " + access_token,
 		},
 		body: body,
 	};

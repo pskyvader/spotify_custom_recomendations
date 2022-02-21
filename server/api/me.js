@@ -2,7 +2,7 @@ const { Op } = require("sequelize");
 
 const { request, formatSongList } = require("../utils");
 
-const { User, Song } = require("../database/connection");
+const { User, Song } = require("../database");
 
 const { updateRecentlyPlayed } = require("./autoupdates");
 

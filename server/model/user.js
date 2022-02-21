@@ -1,7 +1,7 @@
 const request = require("../utils");
 
 const UserlistCache = {};
-const currentUser = (session) => {
+const getUser = (session) => {
 	if (!session.access_token) {
 		console.log("No session access token", session);
 		return { error: "Not logged in" };
@@ -53,4 +53,4 @@ const currentUser = (session) => {
 	return UserlistCache[session.access_token];
 };
 
-module.exports = { currentUser };
+module.exports = { getUser };

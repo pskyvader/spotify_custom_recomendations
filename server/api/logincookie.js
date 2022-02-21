@@ -1,11 +1,10 @@
 const { Op } = require("sequelize");
-const { User } = require("../database/connection");
+const { User } = require("../database");
 const { credentials } = require("../credentials");
 const { request } = require("../utils");
 
-const refreshcookie = async (req, res, currentUser) => {
-	const refresh_token = currentUser.refresh_token;
-	const requestOptions = {
+const requestOptions = (refresh_token) => {
+	return {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded",
@@ -20,13 +19,19 @@ const refreshcookie = async (req, res, currentUser) => {
 			refresh_token: refresh_token,
 		}).toString(),
 	};
+};
+
+const refreshcookie = async (req, currentUser) => {
+	const refresh_token = currentUser.refresh_token;
+
 	const response = await request(
-		req,
+		req.session,
 		"https://accounts.spotify.com/api/token",
 		"POST",
 		null,
-		requestOptions
+		requestOptions(refresh_token)
 	);
+
 	if (!response.error) {
 		const meProfileResult = {
 			access_token: response.access_token,
@@ -43,25 +48,23 @@ const refreshcookie = async (req, res, currentUser) => {
 				id: currentUser.id,
 			},
 		});
-
 		meProfileResult.loggedin = true;
-		res.json(meProfileResult);
-		return;
+		return meProfileResult;
 	}
-	res.json({ error: response.error });
+	return { error: response.error };
 };
 
 const logincookie = async (req, res) => {
-	let result = { error: null };
+	const cookies = req.cookies;
 
-	if (!req.cookies.access_token && !req.cookies.refresh_token) {
-		result = { error: "No access token available" };
+	if (!cookies.access_token && !cookies.refresh_token) {
+		return { error: "No access token available" };
 	}
 	const currentUser = await User.findOne({
 		where: {
 			[Op.or]: [
-				{ access_token: req.cookies.access_token },
-				{ refresh_token: req.cookies.refresh_token },
+				{ access_token: cookies.access_token },
+				{ refresh_token: cookies.refresh_token },
 			],
 		},
 	});
@@ -78,14 +81,11 @@ const logincookie = async (req, res) => {
 			req.session.refresh_token = meProfileResult.refresh_token;
 			req.session.expiration = meProfileResult.expiration;
 			meProfileResult.loggedin = true;
-			result = meProfileResult;
-			res.json(result);
-			return;
+			return meProfileResult;
 		}
-		return refreshcookie(req, res, currentUser);
+		return refreshcookie(req, currentUser);
 	}
-
-	res.json(result);
+	return { error: "No user found" };
 };
 
 module.exports = { logincookie };

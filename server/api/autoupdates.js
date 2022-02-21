@@ -2,7 +2,7 @@ const { Op } = require("sequelize");
 
 const { request, formatSongList } = require("../utils");
 
-const { Song } = require("../database/connection");
+const { Song } = require("../database");
 
 const updateRecentlyPlayed = async (
 	req,
@@ -21,7 +21,7 @@ const updateRecentlyPlayed = async (
 	});
 
 	//check every 1 hour
-	if (lastSong!==null && lastSong.song_added > Date.now() - 3600000) {
+	if (lastSong !== null && lastSong.song_added > Date.now() - 3600000) {
 		return true;
 	}
 

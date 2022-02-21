@@ -10,7 +10,8 @@ const {
 	loggedin,
 	me,
 	playlist,
-	actions,
+	addSongPlaylist,
+	deleteSongPlaylist,
 	logincookie,
 } = require("./api");
 const { callback } = require("./callback");
@@ -67,7 +68,8 @@ app.get("/api/loggedin", function (req, res) {
 });
 
 app.get("/api/logincookie", function (req, res) {
-	logincookie(req, res);
+	const result = logincookie(req, res);
+	res.json(result);
 });
 
 app.get("/api/me/:submodule?", function (req, res) {
@@ -78,8 +80,13 @@ app.get("/api/playlists/:action?/:playlistid?", function (req, res) {
 	playlist(req, res);
 });
 
-app.get("/api/actions/:module/:playlistid/:songuri", function (req, res) {
-	actions(req, res);
+app.get("/api/actions/add/:playlistid/:songuri", function (req, res) {
+	const result = addSongPlaylist(req, res);
+	res.json(result);
+});
+app.get("/api/actions/remove/:playlistid/:songuri", function (req, res) {
+	const result = removeSongPlaylist(req, res);
+	res.json(result);
 });
 
 app.get("/api/*", (req, res) => {

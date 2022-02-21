@@ -38,6 +38,10 @@ const SongConfiguration = {
 		type: DataTypes.DATE,
 		allowNull: false,
 	},
+	song_last_played: {
+		type: DataTypes.DATE,
+		allowNull: true,
+	},
 	song_removed: {
 		type: DataTypes.DATE,
 		allowNull: true,
