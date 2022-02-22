@@ -1,21 +1,29 @@
 const { getPlaylistSongs } = require("../playlist");
-const { myRecentSongs } = require("./");
-const deleterecommended = {};
+const { myRecentSongs } = require("./myRecentSongs");
+const { getUser } = require("../../model");
+const { subtractById } = require("../../utils");
+
+const removeRecommendedResult = {};
 const myRemoveRecommended = async (session, playlistId) => {
-	if (deleterecommended[playlistId]) {
-		return deleterecommended[playlistId];
+	const currentUser = await getUser(session);
+	if (currentUser.error) {
+		return currentUser;
+	}
+	const access_token = session.access_token;
+	if (removeRecommendedResult[playlistId]) {
+		return removeRecommendedResult[playlistId];
 	}
 
-	const currentPlaylist = await getPlaylistSongs(session, playlistId);
+	const currentPlaylist = await getPlaylistSongs(access_token, playlistId);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
 
-	const recentSongs = await MeRecently(session);
+	const recentSongs = await myRecentSongs(access_token, currentUser.id);
 	if (recentSongs.error) {
 		return recentSongs;
 	}
 	return subtractById(currentPlaylist, recentSongs);
 };
 
-module.exports = { myRemoveRecommended };
+module.exports = { myRemoveRecommended, removeRecommendedResult };

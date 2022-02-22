@@ -7,14 +7,18 @@ const pushToken = (req) => {
 	req.session.refresh_token = refresh_token;
 	req.session.expiration = Date.now() + expires_in * 1000;
 
-	req.session.save((err) => {
-		return {
-			loggedin:
-				req.session.access_token !== null &&
-				req.session.refresh_token !== null,
-		};
-	});
-	return { error: null };
+	// req.session.save((err) => {
+	// 	return {
+	// 		loggedin:
+	// 			req.session.access_token !== null &&
+	// 			req.session.refresh_token !== null,
+	// 	};
+	// });
+	return {
+		loggedin:
+			req.session.access_token !== null &&
+			req.session.refresh_token !== null,
+	};
 };
 
 module.exports = { pushToken };

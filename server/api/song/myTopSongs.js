@@ -1,9 +1,8 @@
-const myTopSongs = async (session) => {
-	const currentUser = await getUser(session);
-	if (currentUser.error) {
-		return currentUser;
-	}
-	const access_token = session.access_token;
+const { request } = require("../../utils");
+const { formatSongList } = require("../../model");
+
+const meTopResult = {};
+const myTopSongs = async (access_token) => {
 
 	if (meTopResult[access_token]) {
 		return meTopResult[access_token];

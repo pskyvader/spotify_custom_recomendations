@@ -1,20 +1,24 @@
+const { getPlaylistSongs } = require("../playlist");
+const { myTopSongs } = require("./myTopSongs");
+const { myApiRecommended } = require("./myApiRecommended");
+
 const recommended = {};
-const myRecommendedSongs = async (session, playlistId) => {
+const myRecommendedSongs = async (access_token, playlistId) => {
 	if (recommended[playlistId]) {
 		return recommended[playlistId];
 	}
 
-	const currentPlaylist = await playlistsongs(session, playlistId);
+	const currentPlaylist = await getPlaylistSongs(access_token, playlistId);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
-	const topSongs = await meTop(session);
+	const topSongs = await myTopSongs(access_token);
 	if (topSongs.error) {
 		return topSongs;
 	}
 
-	const recommendedTrack = await recommendedSongs(
-		session,
+	const recommendedTrack = await myApiRecommended(
+		access_token,
 		currentPlaylist,
 		topSongs
 	);
@@ -25,4 +29,4 @@ const myRecommendedSongs = async (session, playlistId) => {
 	return recommended[playlistId];
 };
 
-module.exports = { myRecommendedSongs };
+module.exports = { myRecommendedSongs, recommended };

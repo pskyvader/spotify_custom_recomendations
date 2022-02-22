@@ -16,7 +16,7 @@ const ProfileContextProvider = (props) => {
 			Me.Me().then((response) => {
 				if (response.error) {
 					console.error(response);
-					alert(JSON.stringify(response));
+					// alert(JSON.stringify(response));
 					return false;
 				}
 
@@ -32,8 +32,6 @@ const ProfileContextProvider = (props) => {
 				) {
 					setCookie("refresh_token", response.refresh_token);
 				}
-
-				console.log("Profile context", response);
 				setProfile(response);
 			});
 		}

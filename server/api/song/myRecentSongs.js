@@ -1,22 +1,16 @@
 const { Op } = require("sequelize");
-const myRecentSongs = async (session) => {
-	const currentUser = await getUser(session);
-	if (currentUser.error) {
-		return currentUser;
+const { updateRecentSongs } = require("../../tasks/updateRecentSongs");
+const { Song } = require("../../database");
+const myRecentResult = {};
+const myRecentSongs = async (access_token, userId) => {
+	if (myRecentResult[access_token]) {
+		return myRecentResult[access_token];
 	}
-	const access_token = session.access_token;
-
-	if (meRecentResult[access_token]) {
-		return meRecentResult[access_token];
-	}
-
-	const iduser = currentUser.id;
-
-	await updateRecentlyPlayed(session, iduser);
+	await updateRecentSongs(access_token, userId);
 
 	const oldRecent = await Song.findAll({
 		where: {
-			[Op.and]: [{ iduser: iduser }, { removed: false }],
+			[Op.and]: [{ iduser: userId }, { removed: false }],
 		},
 		order: [["song_added", "ASC"]],
 		raw: true,
@@ -25,10 +19,10 @@ const myRecentSongs = async (session) => {
 		return { error: err.message };
 	});
 
-	meRecentResult[access_token] = oldRecent.map((currentSong) =>
+	myRecentResult[access_token] = oldRecent.map((currentSong) =>
 		formatSong(currentSong)
 	);
-	return meRecentResult[access_token];
+	return myRecentResult[access_token];
 };
 
 module.exports = { myRecentSongs };

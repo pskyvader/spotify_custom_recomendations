@@ -25,7 +25,7 @@ const refreshCookie = async (req, currentUser) => {
 	const refresh_token = currentUser.refresh_token;
 
 	const response = await request(
-		req.session,
+		req.session.access_token,
 		"https://accounts.spotify.com/api/token",
 		"POST",
 		null,

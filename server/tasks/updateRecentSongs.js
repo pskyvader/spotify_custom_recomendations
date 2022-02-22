@@ -1,6 +1,9 @@
 const { Op } = require("sequelize");
+const { Song } = require("../database");
+const { request } = require("../utils");
+const { formatSongList } = require("../model");
 
-const updateRecentSongs = async (session, iduser) => {
+const updateRecentSongs = async (access_token, iduser) => {
 	const after = Date.now() - 604800000;
 	const lastSong = await Song.findOne({
 		where: {

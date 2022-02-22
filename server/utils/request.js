@@ -2,8 +2,13 @@ const fetch = (...args) =>
 	import("node-fetch").then(({ default: fetchFunction }) =>
 		fetchFunction(...args)
 	);
-const request = ( access_token, url, method = "GET", body = null, requestOverride = null ) => {
-
+const request = (
+	access_token,
+	url,
+	method = "GET",
+	body = null,
+	requestOverride = null
+) => {
 	const requestOptions = requestOverride || {
 		method: method,
 		headers: {
@@ -24,10 +29,10 @@ const request = ( access_token, url, method = "GET", body = null, requestOverrid
 			};
 			try {
 				finalresponse.detail = JSON.parse(responsetext);
-				console.log(finalresponse)
+				console.log(finalresponse);
 				return finalresponse;
 			} catch (error) {
-				console.log(finalresponse)
+				console.log(finalresponse);
 				return finalresponse;
 			}
 		}

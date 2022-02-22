@@ -1,12 +1,10 @@
-const invalidatePlaylist = (
-	playlists,
-	recommended,
-	deleterecommended,
-	playlistId,
-	songUri
-) => {
-	if (playlists[playlistId]) {
-		delete playlists[playlistId];
+// const { playlist } = require("./getPlaylistSongs");
+const { recommended } = require("../song/myRecommendedSongs");
+const { removeRecommendedResult } = require("../song/myRemoveRecommended");
+
+const invalidatePlaylist = (playlistId, songUri) => {
+	if (playlist[playlistId]) {
+		delete playlist[playlistId];
 	}
 	if (recommended[playlistId]) {
 		recommended[playlistId] = recommended[playlistId].filter(
@@ -17,12 +15,12 @@ const invalidatePlaylist = (
 		}
 	}
 
-	if (deleterecommended[playlistId]) {
-		deleterecommended[playlistId] = deleterecommended[playlistId].filter(
-			(song) => song.action !== songUri
-		);
-		if (deleterecommended[playlistId].length < 10) {
-			delete deleterecommended[playlistId];
+	if (removeRecommendedResult[playlistId]) {
+		removeRecommendedResult[playlistId] = removeRecommendedResult[
+			playlistId
+		].filter((song) => song.action !== songUri);
+		if (removeRecommendedResult[playlistId].length < 10) {
+			delete removeRecommendedResult[playlistId];
 		}
 	}
 	return true;

@@ -17,16 +17,13 @@ const {
 const {
 	addSongPlaylist,
 	getMyPlaylists,
-	getPlaylistsongs,
+	getPlaylistSongs,
 	removeSongPlaylist,
 } = require("./api/playlist");
 
 const {
-	myApiRecommended,
-	myRecentSongs,
 	myRecommendedSongs,
 	myRemoveRecommended,
-	myTopSongs,
 } = require("./api/song");
 
 const { getUser } = require("./model");
@@ -99,7 +96,7 @@ app.get("/api/me/playlists", async (req, res) => {
 });
 
 app.get("/api/playlists/get/:playlistId", async (req, res) => {
-	const result = await getMyPlaylists(
+	const result = await getPlaylistSongs(
 		req.session.access_token,
 		req.params.playlistId
 	);
@@ -116,7 +113,7 @@ app.get("/api/playlists/recommended/:playlistId", async (req, res) => {
 
 app.get("/api/playlists/deleterecommended/:playlistId", async (req, res) => {
 	const result = await myRemoveRecommended(
-		req.session.access_token,
+		req.session,
 		req.params.playlistId
 	);
 	res.json(result);

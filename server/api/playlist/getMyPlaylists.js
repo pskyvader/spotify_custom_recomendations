@@ -1,6 +1,6 @@
 const { request } = require("../../utils");
 const { getUser } = require("../../model");
-let mePlaylistResult = {};
+let myPlaylistResult = {};
 
 const getMyPlaylists = async (session) => {
 	const access_token = session.access_token;
@@ -9,8 +9,8 @@ const getMyPlaylists = async (session) => {
 		return currentUser;
 	}
 
-	if (mePlaylistResult[access_token]) {
-		return mePlaylistResult[access_token];
+	if (myPlaylistResult[access_token]) {
+		return myPlaylistResult[access_token];
 	}
 	let url = "https://api.spotify.com/v1/me/playlists?limit=50";
 
@@ -25,7 +25,7 @@ const getMyPlaylists = async (session) => {
 		playlists.push(...response.items);
 	}
 
-	mePlaylistResult[access_token] = playlists.map((currentPlaylist) => {
+	myPlaylistResult[access_token] = playlists.map((currentPlaylist) => {
 		const formattedPlaylist = {};
 		formattedPlaylist.id = currentPlaylist.id;
 		formattedPlaylist.disabled =
@@ -37,7 +37,7 @@ const getMyPlaylists = async (session) => {
 			: null;
 		return formattedPlaylist;
 	});
-	return mePlaylistResult[access_token];
+	return myPlaylistResult[access_token];
 };
 
 module.exports = { getMyPlaylists };

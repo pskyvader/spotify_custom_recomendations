@@ -1,3 +1,6 @@
+const { request } = require("../../utils");
+const { formatSongList } = require("../../model");
+
 const playlists = {};
 const getPlaylistSongs = async (access_token, playlistId) => {
 	if (playlists[playlistId]) {
@@ -19,4 +22,4 @@ const getPlaylistSongs = async (access_token, playlistId) => {
 	return playlists[playlistId];
 };
 
-module.exports = { getPlaylistSongs };
+module.exports = { getPlaylistSongs, playlists };
