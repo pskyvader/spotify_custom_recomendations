@@ -1,4 +1,4 @@
-const { getPlaylistSongs } = require("../playlist");
+const { getPlaylistSongs } = require("./getPlaylistSongs");
 const { myRecentSongs } = require("./myRecentSongs");
 const { getUser } = require("../../model");
 const { subtractById } = require("../../utils");

@@ -6,7 +6,7 @@ const SongConfiguration = {
 		// autoIncrement: true,
 		allowNull: false,
 		primaryKey: true,
-		unique: true,
+		unique: false,
 	},
 	iduser: {
 		type: DataTypes.BIGINT,

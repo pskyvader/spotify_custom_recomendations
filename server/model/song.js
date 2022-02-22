@@ -1,5 +1,7 @@
-const { Song } = require("../database/Song");
-const { currentUser } = require("./user");
+const { Op } = require("sequelize");
+
+const { Song } = require("../database");
+const { getUser } = require("./user");
 const { request } = require("../utils");
 
 const formatSongAPI = (song) => {
@@ -39,7 +41,7 @@ const formatSong = (song) => {
 };
 
 const getSong = async (session, idsong) => {
-	const user = currentUser(session);
+	const user = getUser(session);
 	if (user.error) {
 		return user;
 	}

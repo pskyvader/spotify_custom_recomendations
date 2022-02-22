@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { request } = require("../../utils");
 const { invalidatePlaylist } = require("./invalidatePlaylist");
 const { Song } = require("../../database");
@@ -25,7 +26,11 @@ const removeSongPlaylist = async (session, songuri, playlistId) => {
 	const deletedSong = getSong(session, songuri);
 	deletedSong.removed = true;
 	deletedSong.song_removed = Date.now();
-	Song.update(deletedSong);
+	Song.update(deletedSong, {
+		where: {
+			[Op.and]: [{ iduser: deletedSong.iduser }, { id: deletedSong.id }],
+		},
+	});
 
 	return {
 		message: "success",

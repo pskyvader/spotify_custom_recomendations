@@ -17,13 +17,13 @@ const {
 const {
 	addSongPlaylist,
 	getMyPlaylists,
-	getPlaylistSongs,
 	removeSongPlaylist,
 } = require("./api/playlist");
 
 const {
 	myRecommendedSongs,
 	myRemoveRecommended,
+	getPlaylistSongs,
 } = require("./api/song");
 
 const { getUser } = require("./model");

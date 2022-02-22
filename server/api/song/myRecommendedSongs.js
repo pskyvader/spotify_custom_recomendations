@@ -1,4 +1,4 @@
-const { getPlaylistSongs } = require("../playlist");
+const { getPlaylistSongs } = require("./getPlaylistSongs");
 const { myTopSongs } = require("./myTopSongs");
 const { myApiRecommended } = require("./myApiRecommended");
 

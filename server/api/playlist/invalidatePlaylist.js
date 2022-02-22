@@ -1,10 +1,10 @@
-// const { playlist } = require("./getPlaylistSongs");
+const { playlists } = require("../song/getPlaylistSongs");
 const { recommended } = require("../song/myRecommendedSongs");
 const { removeRecommendedResult } = require("../song/myRemoveRecommended");
 
 const invalidatePlaylist = (playlistId, songUri) => {
-	if (playlist[playlistId]) {
-		delete playlist[playlistId];
+	if (playlists[playlistId]) {
+		delete playlists[playlistId];
 	}
 	if (recommended[playlistId]) {
 		recommended[playlistId] = recommended[playlistId].filter(
