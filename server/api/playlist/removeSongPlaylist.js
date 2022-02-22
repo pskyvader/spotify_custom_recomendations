@@ -23,10 +23,10 @@ const removeSongPlaylist = async (session, songuri, playlistId) => {
 	}
 
 	invalidatePlaylist(playlistId, songuri);
-	const deletedSong = getSong(session, songuri);
+	const deletedSong = await getSong(session, songuri);
 	deletedSong.removed = true;
 	deletedSong.song_removed = Date.now();
-	Song.update(deletedSong, {
+	await Song.update(deletedSong, {
 		where: {
 			[Op.and]: [{ iduser: deletedSong.iduser }, { id: deletedSong.id }],
 		},

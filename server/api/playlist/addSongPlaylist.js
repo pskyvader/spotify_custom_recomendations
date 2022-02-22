@@ -18,7 +18,7 @@ const addSongPlaylist = async (session, songuri, playlistId) => {
 	}
 
 	invalidatePlaylist(playlistId, songuri);
-	getSong(session, songuri);
+	await getSong(session, songuri);
 
 	return {
 		message: "success",

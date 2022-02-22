@@ -41,24 +41,25 @@ const formatSong = (song) => {
 };
 
 const getSong = async (session, idsong) => {
-	const user = getUser(session);
+	const user = await getUser(session);
+	let a = 0;
 	if (user.error) {
 		return user;
 	}
-	const currentSong = Song.findOne({
+	const currentSong = await Song.findOne({
 		where: { [Op.and]: [{ iduser: user.id }, { id: idsong }] },
 	});
 	if (currentSong !== null) {
 		return formatSong(currentSong);
 	}
 	let url = `https://api.spotify.com/v1/tracks/${idsong}`;
-	const response = await request(access_token, url);
+	const response = await request(session.access_token, url);
 	if (response.error) {
 		return response;
 	}
 	const newsong = formatSongAPI(response);
 	const data = newsong;
-	data.iduser = user.iduser;
+	data.iduser = user.id;
 	data.song_added = Date.now();
 	await Song.upsert(data).catch((err) => {
 		return { error: err.message };

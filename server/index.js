@@ -128,6 +128,7 @@ app.get("/api/actions/add/:playlistid/:songuri", async (req, res) => {
 	res.json(result);
 });
 app.get("/api/actions/remove/:playlistid/:songuri", async (req, res) => {
+	console.log(req.params);
 	const result = await removeSongPlaylist(
 		req.session,
 		req.params.songuri,
