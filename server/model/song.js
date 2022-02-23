@@ -29,6 +29,11 @@ const formatSongList = (songList) => {
 	return songList.map((song) => formatSongAPI(song.track || song));
 };
 
+const songIdFromURI = (songuri) => {
+	const split = songuri.split(":");
+	return split.pop();
+};
+
 const formatSong = (song) => {
 	return {
 		id: song.id,
@@ -42,7 +47,6 @@ const formatSong = (song) => {
 
 const getSong = async (session, idsong) => {
 	const user = await getUser(session);
-	let a = 0;
 	if (user.error) {
 		return user;
 	}
@@ -67,4 +71,4 @@ const getSong = async (session, idsong) => {
 	return newsong;
 };
 
-module.exports = { getSong, formatSongList };
+module.exports = { getSong, formatSongList, songIdFromURI };

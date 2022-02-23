@@ -2,7 +2,7 @@ const { Op } = require("sequelize");
 const { request } = require("../../utils");
 const { invalidatePlaylist } = require("./invalidatePlaylist");
 const { Song } = require("../../database");
-const { getSong } = require("../../model");
+const { getSong, songIdFromURI } = require("../../model");
 
 const removeSongPlaylist = async (session, songuri, playlistId) => {
 	const url =
@@ -23,7 +23,7 @@ const removeSongPlaylist = async (session, songuri, playlistId) => {
 	}
 
 	invalidatePlaylist(playlistId, songuri);
-	const deletedSong = await getSong(session, songuri);
+	const deletedSong = await getSong(session, songIdFromURI(songuri));
 	deletedSong.removed = true;
 	deletedSong.song_removed = Date.now();
 	await Song.update(deletedSong, {

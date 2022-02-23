@@ -2,6 +2,23 @@ const { request } = require("../../utils");
 const { formatSongList } = require("../../model");
 
 const playlists = {};
+
+const addSongPlaylistCache = (playlistId, song) => {
+	if (playlists[playlistId]) {
+		playlists[playlistId].unshift(song);
+	}
+};
+const removeSongPlaylistCache = (playlistId, song) => {
+	if (playlists[playlistId]) {
+		const songindex = playlists[playlistId].findIndex(
+			(currentSong) => currentSong.id === song.id
+		);
+		if (songindex !== -1) {
+			playlists[playlistId].splice(songindex, 1);
+		}
+	}
+};
+
 const getPlaylistSongs = async (access_token, playlistId) => {
 	if (playlists[playlistId]) {
 		return playlists[playlistId];
@@ -22,4 +39,4 @@ const getPlaylistSongs = async (access_token, playlistId) => {
 	return playlists[playlistId];
 };
 
-module.exports = { getPlaylistSongs, playlists };
+module.exports = { getPlaylistSongs,addSongPlaylistCache,removeSongPlaylistCache };

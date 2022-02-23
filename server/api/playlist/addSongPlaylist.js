@@ -1,6 +1,7 @@
 const { request } = require("../../utils");
-const { invalidatePlaylist } = require("./invalidatePlaylist");
-const { getSong } = require("../../model");
+const { getSong, songIdFromURI } = require("../../model");
+const { addSongPlaylistCache } = require("../song/getPlaylistSongs");
+const { removeSongRecommendedCache } = require("../song/myRecommendedSongs");
 
 const addSongPlaylist = async (session, songuri, playlistId) => {
 	const url =
@@ -17,8 +18,9 @@ const addSongPlaylist = async (session, songuri, playlistId) => {
 		return response;
 	}
 
-	invalidatePlaylist(playlistId, songuri);
-	await getSong(session, songuri);
+	const currentSong = await getSong(session, songIdFromURI(songuri));
+	addSongPlaylistCache(playlistId, currentSong);
+	removeSongRecommendedCache(playlistId, currentSong);
 
 	return {
 		message: "success",
