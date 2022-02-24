@@ -9,10 +9,19 @@ const updateRecentSongs = async (access_token, iduser) => {
 		where: {
 			[Op.and]: [{ iduser: iduser }, { removed: false }],
 		},
-		order: [["song_added", "ASC"]],
+		order: [["song_added", "DESC"]],
 	}).catch((err) => {
+		console.error(err);
 		return { error: err.message };
 	});
+
+	console.log(
+		lastSong,
+		lastSong.song_added > Date.now() - 3600000,
+		lastSong.song_added,
+		typeof lastSong.song_added,
+		Date.now() - 3600000
+	);
 
 	//check every 1 hour
 	if (lastSong !== null && lastSong.song_added > Date.now() - 3600000) {
@@ -38,7 +47,7 @@ const updateRecentSongs = async (access_token, iduser) => {
 		const data = newsong;
 		data.iduser = iduser;
 		data.song_added = Date.now();
-		await Song.upsert(data).catch((err) => {
+		const response = await Song.upsert(data).catch((err) => {
 			return { error: err.message };
 		});
 	}

@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const { updateRecentSongs } = require("../../tasks/updateRecentSongs");
 const { Song } = require("../../database");
+const { formatSong } = require("../../model");
 const myRecentResult = {};
 const myRecentSongs = async (access_token, userId) => {
 	if (myRecentResult[access_token]) {
@@ -12,7 +13,7 @@ const myRecentSongs = async (access_token, userId) => {
 		where: {
 			[Op.and]: [{ iduser: userId }, { removed: false }],
 		},
-		order: [["song_added", "ASC"]],
+		order: [["song_added", "DESC"]],
 		raw: true,
 		nest: true,
 	}).catch((err) => {

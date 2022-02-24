@@ -71,4 +71,4 @@ const getSong = async (session, idsong) => {
 	return newsong;
 };
 
-module.exports = { getSong, formatSongList, songIdFromURI };
+module.exports = { getSong, formatSong, formatSongList, songIdFromURI };
