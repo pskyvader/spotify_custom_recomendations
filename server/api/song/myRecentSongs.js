@@ -14,7 +14,7 @@ const myRecentSongs = async (access_token, userId) => {
 		where: {
 			[Op.and]: [{ iduser: userId }, { removed: false }],
 		},
-		order: [["song_added", "DESC"]],
+		order: [["song_last_played", "DESC"]],
 		raw: true,
 		nest: true,
 	}).catch((err) => {

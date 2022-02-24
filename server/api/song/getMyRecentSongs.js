@@ -18,7 +18,7 @@ const getMyRecentSongs = async (session) => {
 		where: {
 			[Op.and]: [{ iduser: userId }, { removed: false }],
 		},
-		order: [["song_added", "DESC"]],
+		order: [["song_last_played", "DESC"]],
 		raw: true,
 		nest: true,
 	}).catch((err) => {
@@ -26,7 +26,8 @@ const getMyRecentSongs = async (session) => {
 	});
 
 	myRecentResult[access_token] = oldRecent.map((currentSong) => {
-		currentSong.action = currentSong.song_added.toLocaleString();
+		console.log(currentSong.song_last_played, currentSong.song_added);
+		currentSong.action = currentSong.song_last_played.toLocaleString();
 		return formatSong(currentSong);
 	});
 	return myRecentResult[access_token];

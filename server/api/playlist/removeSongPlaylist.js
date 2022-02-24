@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
 const { request } = require("../../utils");
 const { Song } = require("../../database");
-const { getSong, songIdFromURI } = require("../../model");
+const { getUser, getSong, songIdFromURI } = require("../../model");
 
 const { removeSongPlaylistCache } = require("../song/getPlaylistSongs");
 const {
@@ -9,6 +9,10 @@ const {
 } = require("../song/myRemoveRecommended");
 
 const removeSongPlaylist = async (session, songuri, playlistId) => {
+	const user = await getUser(session);
+	if (user.error) {
+		return user;
+	}
 	const url =
 		"https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
 
@@ -29,7 +33,11 @@ const removeSongPlaylist = async (session, songuri, playlistId) => {
 	removeSongPlaylistCache(playlistId, currentSong);
 	removeSongRemoveRecommendedCache(playlistId, currentSong);
 
-	const deletedSong = await getSong(session, songIdFromURI(songuri));
+	const deletedSong = await getSong(
+		session.access_token,
+		songIdFromURI(songuri),
+		user.id
+	);
 	deletedSong.removed = true;
 	deletedSong.song_removed = Date.now();
 	await Song.update(deletedSong, {

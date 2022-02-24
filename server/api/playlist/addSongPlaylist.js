@@ -1,5 +1,5 @@
 const { request } = require("../../utils");
-const { getSong, songIdFromURI } = require("../../model");
+const { getUser, getSong, songIdFromURI } = require("../../model");
 const { addSongPlaylistCache } = require("../song/getPlaylistSongs");
 const { removeSongRecommendedCache } = require("../song/myRecommendedSongs");
 const {
@@ -7,6 +7,10 @@ const {
 } = require("../song/myRemoveRecommended");
 
 const addSongPlaylist = async (session, songuri, playlistId) => {
+	const user = await getUser(session);
+	if (user.error) {
+		return user;
+	}
 	const url =
 		"https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
 	const songs = { uris: [songuri], position: 0 };
@@ -21,7 +25,11 @@ const addSongPlaylist = async (session, songuri, playlistId) => {
 		return response;
 	}
 
-	const currentSong = await getSong(session, songIdFromURI(songuri));
+	const currentSong = await getSong(
+		session.access_token,
+		songIdFromURI(songuri),
+		user.id
+	);
 	addSongPlaylistCache(playlistId, currentSong);
 	removeSongRecommendedCache(playlistId, currentSong);
 	removeSongRemoveRecommendedCache(playlistId, currentSong);

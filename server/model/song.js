@@ -45,19 +45,15 @@ const formatSong = (song) => {
 	};
 };
 
-const getSong = async (session, idsong) => {
-	const user = await getUser(session);
-	if (user.error) {
-		return user;
-	}
+const getSong = async (access_token, idsong, iduser) => {
 	const currentSong = await Song.findOne({
-		where: { [Op.and]: [{ iduser: user.id }, { id: idsong }] },
+		where: { [Op.and]: [{ iduser: iduser }, { id: idsong }] },
 	});
 	if (currentSong !== null) {
 		return formatSong(currentSong);
 	}
 	let url = `https://api.spotify.com/v1/tracks/${idsong}`;
-	const response = await request(session.access_token, url);
+	const response = await request(access_token, url);
 	if (response.error) {
 		return response;
 	}

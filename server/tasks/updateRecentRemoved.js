@@ -6,7 +6,7 @@ const updateRecentRemoved = async (iduser) => {
 			[Op.and]: [
 				{ iduser: iduser },
 				{ removed: true },
-				{ song_added: { [Op.lt]: Date.now() - 604800000 } },
+				{ song_removed: { [Op.lt]: Date.now() - 604800000 } },
 			],
 		},
 	}).catch((err) => {
