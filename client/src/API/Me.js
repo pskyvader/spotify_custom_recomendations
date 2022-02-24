@@ -5,6 +5,10 @@ export const LoggedIn = () => {
 	return GetRequest(url);
 };
 
+export const LogOut = () => {
+	const url = "/api/logout";
+	return GetRequest(url);
+};
 export const LoginCookies = () => {
 	const url = "/api/logincookie/";
 	return GetRequest(url);

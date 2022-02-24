@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, Button } from "@mui/material";
+import { useCookies } from "react-cookie";
 
 import LoginButton, { Logout } from "../components/LoginButton";
 import { ProfileContext } from "../context/ProfileContextProvider";
@@ -20,12 +21,17 @@ import { SessionContext } from "../context/SessionContextProvider";
 import MainDrawer from "./MainDrawer";
 
 const UserInfo = () => {
+	const [cookies, setCookie] = useCookies(["keep_logged"]);
 	const { profile } = useContext(ProfileContext);
+	const { setLoggedIn } = useContext(SessionContext);
 	if (!profile) return null;
 	return (
 		<Box sx={{ display: "flex" }}>
 			<Avatar sx={{ mr: 2 }} alt={profile.name} src={profile.image} />
-			<Button variant="contained" onClick={Logout}>
+			<Button
+				variant="contained"
+				onClick={() => Logout(setCookie, setLoggedIn)}
+			>
 				Logout
 			</Button>
 		</Box>
