@@ -66,10 +66,9 @@ app.get("/callback", function (req, res) {
 	callback(req, res);
 });
 
-app.get("/api/logout", function (req, res) {
-	logOut(req).then(() => {
-		res.json({ logout: true });
-	});
+app.get("/api/logout", async function (req, res) {
+	await logOut(req);
+	res.json({ logout: true });
 });
 
 app.get("/api/authorize", function (req, res) {
