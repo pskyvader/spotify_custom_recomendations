@@ -10,6 +10,7 @@ import { SessionContext } from "../context/SessionContextProvider";
 import PlayListSongs from "../modules/playlist/PlayListSongs";
 import RecommendedSongs from "../modules/playlist/RecommendedSongs";
 import RecommendedDeleteSongs from "../modules/playlist/RecommendedDeleteSongs";
+import LastPlayedSongs from "../modules/playlist/LastPlayedSongs";
 
 const Playlists = () => {
 	const { playlistid } = useParams() || null;
@@ -56,15 +57,28 @@ const Playlists = () => {
 					<Tab label="Songs" />
 					<Tab label="Recommended" />
 					<Tab label="Delete" />
+					<Tab label="Last Played" />
 				</Tabs>
 				<Root role="tabpanel" hidden={tabNumber !== 0}>
-					<PlayListSongs playlistId={playlistid}  hidden={tabNumber !== 0}/>
+					<PlayListSongs
+						playlistId={playlistid}
+						hidden={tabNumber !== 0}
+					/>
 				</Root>
 				<Root role="tabpanel" hidden={tabNumber !== 1}>
-					<RecommendedSongs playlistId={playlistid}  hidden={tabNumber !== 1} />
+					<RecommendedSongs
+						playlistId={playlistid}
+						hidden={tabNumber !== 1}
+					/>
 				</Root>
 				<Root role="tabpanel" hidden={tabNumber !== 2}>
-					<RecommendedDeleteSongs playlistId={playlistid}   hidden={tabNumber !== 2}/>
+					<RecommendedDeleteSongs
+						playlistId={playlistid}
+						hidden={tabNumber !== 2}
+					/>
+				</Root>
+				<Root role="tabpanel" hidden={tabNumber !== 3}>
+					<LastPlayedSongs hidden={tabNumber !== 3} />
 				</Root>
 			</Container>
 		);

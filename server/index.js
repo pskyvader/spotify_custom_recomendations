@@ -25,6 +25,7 @@ const {
 	myRecommendedSongs,
 	myRemoveRecommended,
 	getPlaylistSongs,
+	myRecentSongs,
 } = require("./api/song");
 
 const { getUser } = require("./model");
@@ -121,6 +122,14 @@ app.get("/api/playlists/deleterecommended/:playlistId", async (req, res) => {
 	const result = await myRemoveRecommended(
 		req.session,
 		req.params.playlistId
+	);
+	res.json(result);
+});
+app.get("/api/playlists/lastplayed", async (req, res) => {
+	const currentUser = await getUser(req.session);
+	const result = await myRecentSongs(
+		req.session.access_token,
+		currentUser.id
 	);
 	res.json(result);
 });

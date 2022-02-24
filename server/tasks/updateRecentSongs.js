@@ -14,17 +14,8 @@ const updateRecentSongs = async (access_token, iduser) => {
 		console.error(err);
 		return { error: err.message };
 	});
-
-	console.log(
-		lastSong,
-		lastSong.song_added > Date.now() - 3600000,
-		lastSong.song_added,
-		typeof lastSong.song_added,
-		Date.now() - 3600000
-	);
-
 	//check every 1 hour
-	if (lastSong !== null && lastSong.song_added > Date.now() - 3600000) {
+	if (lastSong !== null && lastSong.song_added < Date.now() - 3600000) {
 		return true;
 	}
 

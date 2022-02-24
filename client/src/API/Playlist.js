@@ -15,6 +15,12 @@ export const PlaylistDeleteRecommended = async (playlistid) => {
 	return GetRequest(url);
 };
 
+export const LastPlayed = async () => {
+	const url = "/api/playlists/lastplayed";
+	return GetRequest(url);
+};
+
+
 export const DeleteSong = async (playlistid, songuri) => {
 	const url = "/api/actions/remove/" + playlistid + "/" + songuri;
 	return GetRequest(url);

@@ -2,6 +2,21 @@ import { Toolbar, Typography } from "@mui/material";
 import { GridOverlay, DataGrid } from "@mui/x-data-grid";
 
 export const SongListColumns = (rows, PlaylistId, ActionButton) => {
+	const renderCell =
+		PlaylistId === null || ActionButton === null
+			? (cellData) => {
+					const id = cellData.id;
+					const uri = cellData.formattedValue;
+					return (
+						<ActionButton
+							PlaylistId={PlaylistId}
+							uri={uri}
+							id={id}
+						/>
+					);
+			  }
+			: null;
+
 	const columns = [
 		{ field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
 		{ field: "name", headerName: "Title", flex: 1 },
@@ -12,13 +27,7 @@ export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 			headerName: "",
 			minWidth: 120,
 			flex: 1,
-			renderCell: (cellData) => {
-				const id = cellData.id;
-				const uri = cellData.formattedValue;
-				return (
-					<ActionButton PlaylistId={PlaylistId} uri={uri} id={id} />
-				);
-			},
+			renderCell: renderCell,
 		},
 	];
 	return {
