@@ -21,7 +21,9 @@ import { SessionContext } from "../context/SessionContextProvider";
 import MainDrawer from "./MainDrawer";
 
 const UserInfo = () => {
-	const [cookies, setCookie] = useCookies(["keep_logged"]);
+	const cookiefunctions = useCookies();
+	const removeCookie = cookiefunctions[2];
+	// console.log(cookiefunctions, removeCookie);
 	const { profile } = useContext(ProfileContext);
 	const { setLoggedIn } = useContext(SessionContext);
 	if (!profile) return null;
@@ -30,7 +32,7 @@ const UserInfo = () => {
 			<Avatar sx={{ mr: 2 }} alt={profile.name} src={profile.image} />
 			<Button
 				variant="contained"
-				onClick={() => Logout(setCookie, setLoggedIn)}
+				onClick={() => Logout(removeCookie, setLoggedIn)}
 			>
 				Logout
 			</Button>

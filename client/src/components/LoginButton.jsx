@@ -2,16 +2,12 @@ import { Button, FormControlLabel, Checkbox } from "@mui/material";
 import { useCookies } from "react-cookie";
 import { Me } from "../API";
 
-export const Logout = (setCookie, setLoggedIn) => {
-	setCookie("keep_logged", false);
-	Me.LogOut().then(() => {
-		// console.log("logout");
-		// setCookie("access_token", null);
-		// setCookie("refresh_token", null);
-		// localStorage.clear();
-		setLoggedIn(false);
-		// window.location = "/";
-	});
+export const Logout = (removeCookie, setLoggedIn) => {
+	removeCookie("keep_logged");
+	removeCookie("access_token");
+	removeCookie("refresh_token");
+	Me.LogOut();
+	setLoggedIn(false);
 };
 
 const KeepLogged = (signed, setCookie) => {

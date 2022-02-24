@@ -27,7 +27,7 @@ const SessionContextProvider = (props) => {
 		}
 		if (
 			LoggedIn === false &&
-			cookies.keep_logged &&
+			cookies.keep_logged === "true" &&
 			(cookies.access_token || cookies.refresh_token)
 		) {
 			Me.LoginCookies().then((response) => {
