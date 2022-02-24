@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
 const { Song } = require("../database");
 const { request } = require("../utils");
-const { getSong, formatSongList } = require("../model");
+const { getSong } = require("../model");
 
 const updateRecentSongs = async (access_token, iduser) => {
 	const after = Date.now() - 604800000;
@@ -31,7 +31,6 @@ const updateRecentSongs = async (access_token, iduser) => {
 		url = response.next;
 		items.push(...response.items);
 	}
-	// const newRecent = formatSongList(items);
 
 	for (const newsong of items) {
 		const currentSong = await getSong(
@@ -39,8 +38,15 @@ const updateRecentSongs = async (access_token, iduser) => {
 			newsong.track.id,
 			iduser
 		);
-		currentSong.song_last_played = Date.now();
-		await Song.upsert(currentSong).catch((err) => {
+		await Song.update(
+			{ song_last_played: Date.now() },
+			{
+				where: {
+					[Op.and]: [{ iduser: iduser }, { id: currentSong.id }],
+				},
+			}
+		).catch((err) => {
+			console.error(err);
 			return { error: err.message };
 		});
 	}

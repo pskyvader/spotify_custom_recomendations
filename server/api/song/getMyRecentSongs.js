@@ -12,7 +12,7 @@ const getMyRecentSongs = async (session) => {
 	if (myRecentResult[access_token]) {
 		return myRecentResult[access_token];
 	}
-	await updateRecentSongs(access_token, userId);
+	// await updateRecentSongs(access_token, userId);
 
 	const oldRecent = await Song.findAll({
 		where: {
@@ -26,7 +26,6 @@ const getMyRecentSongs = async (session) => {
 	});
 
 	myRecentResult[access_token] = oldRecent.map((currentSong) => {
-		console.log(currentSong.song_last_played, currentSong.song_added);
 		currentSong.action = currentSong.song_last_played.toLocaleString();
 		return formatSong(currentSong);
 	});
