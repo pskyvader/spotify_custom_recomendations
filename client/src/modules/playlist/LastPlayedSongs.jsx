@@ -11,7 +11,7 @@ const LastPlayedSongs = ({ hidden }) => {
 		if (!lastPlayedTracks) {
 			Playlist.LastPlayed().then((response) => {
 				if (response.error) return console.log(response);
-				setLastPlayedTracks({ ...response });
+				setLastPlayedTracks(response);
 			});
 		}
 	}, [lastPlayedTracks, setLastPlayedTracks]);

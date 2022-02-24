@@ -3,7 +3,7 @@ import { GridOverlay, DataGrid } from "@mui/x-data-grid";
 
 export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 	const renderCell =
-		PlaylistId === null || ActionButton === null
+		PlaylistId !== null && ActionButton !== null
 			? (cellData) => {
 					const id = cellData.id;
 					const uri = cellData.formattedValue;
@@ -30,6 +30,7 @@ export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 			renderCell: renderCell,
 		},
 	];
+
 	return {
 		rows,
 		columns,

@@ -1,10 +1,14 @@
 const { Op } = require("sequelize");
 const { updateRecentSongs } = require("../../tasks/updateRecentSongs");
 const { Song } = require("../../database");
-const { formatSong } = require("../../model");
+const { getUser, formatSong } = require("../../model");
 
 const myRecentResult = {};
-const myRecentSongs = async (access_token, userId) => {
+const getMyRecentSongs = async (session) => {
+	const currentUser = await getUser(session);
+	const access_token = session.access_token;
+	const userId = currentUser.id;
+
 	if (myRecentResult[access_token]) {
 		return myRecentResult[access_token];
 	}
@@ -21,10 +25,11 @@ const myRecentSongs = async (access_token, userId) => {
 		return { error: err.message };
 	});
 
-	myRecentResult[access_token] = oldRecent.map((currentSong) =>
-		formatSong(currentSong)
-	);
+	myRecentResult[access_token] = oldRecent.map((currentSong) => {
+		currentSong.action = currentSong.song_added.toLocaleString();
+		return formatSong(currentSong);
+	});
 	return myRecentResult[access_token];
 };
 
-module.exports = { myRecentSongs };
+module.exports = { getMyRecentSongs };

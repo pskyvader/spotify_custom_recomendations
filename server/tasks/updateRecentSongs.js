@@ -18,6 +18,12 @@ const updateRecentSongs = async (access_token, iduser) => {
 	if (lastSong !== null && lastSong.song_added < Date.now() - 3600000) {
 		return true;
 	}
+	console.error(
+		"update",
+		lastSong.song_added,
+		lastSong.song_added.valueOf(),
+		Date.now() - 3600000
+	);
 
 	let url =
 		"https://api.spotify.com/v1/me/player/recently-played?after=" + after;

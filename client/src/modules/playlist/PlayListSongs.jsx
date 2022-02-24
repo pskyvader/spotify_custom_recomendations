@@ -4,7 +4,7 @@ import { Playlist } from "../../API";
 import SongList, { SongListColumns } from "../../components/SongList";
 import ButtonRemoveSong from "../../components/ButtonRemoveSong";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
-const PlayListSongs = ({ playlistId,hidden }) => {
+const PlayListSongs = ({ playlistId, hidden }) => {
 	const { playlistTracks, setPlaylistTracks } = useContext(PlaylistContext);
 	useEffect(() => {
 		if (!playlistTracks[playlistId]) {
@@ -18,7 +18,7 @@ const PlayListSongs = ({ playlistId,hidden }) => {
 	if (playlistId === null) {
 		return null;
 	}
-	if(hidden) {
+	if (hidden) {
 		return null;
 	}
 	if (playlistTracks[playlistId]) {
