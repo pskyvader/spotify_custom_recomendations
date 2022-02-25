@@ -59,7 +59,7 @@ const getSong = async (access_token, idsong, iduser) => {
 	}
 	const newsong = formatSongAPI(response);
 	const data = newsong;
-	data.iduser = user.id;
+	data.iduser = iduser;
 	data.song_added = Date.now();
 	await Song.upsert(data).catch((err) => {
 		return { error: err.message };
