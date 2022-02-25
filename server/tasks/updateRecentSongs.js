@@ -38,8 +38,8 @@ const updateRecentSongs = async (access_token, iduser) => {
 			newsong.track.id,
 			iduser
 		);
-		await Song.update(
-			{ song_last_played: newsong.track.played_at }, // Date.now()
+		const response=await Song.update(
+			{ song_last_played: newsong.played_at }, // Date.now()
 			{
 				where: {
 					[Op.and]: [{ iduser: iduser }, { id: currentSong.id }],
