@@ -9,7 +9,7 @@ const myRecentSongs = async (access_token, userId) => {
 	if (!myRecentResult[access_token] || lastUpdated < Date.now() - 3600000) {
 		myRecentResult[access_token] = null;
 		await updateRecentSongs(access_token, userId);
-		lastUpdated = now();
+		lastUpdated = Date.now();
 	}
 
 	if (myRecentResult[access_token]) {
