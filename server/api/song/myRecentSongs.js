@@ -4,11 +4,17 @@ const { Song } = require("../../database");
 const { formatSong } = require("../../model");
 
 const myRecentResult = {};
+let lastUpdated = Date.now();
 const myRecentSongs = async (access_token, userId) => {
+	if (!myRecentResult[access_token] || lastUpdated < Date.now() - 3600000) {
+		myRecentResult[access_token] = null;
+		await updateRecentSongs(access_token, userId);
+		lastUpdated = now();
+	}
+
 	if (myRecentResult[access_token]) {
 		return myRecentResult[access_token];
 	}
-	await updateRecentSongs(access_token, userId);
 
 	const oldRecent = await Song.findAll({
 		where: {
