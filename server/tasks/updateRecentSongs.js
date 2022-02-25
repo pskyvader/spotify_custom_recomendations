@@ -14,8 +14,14 @@ const updateRecentSongs = async (access_token, iduser) => {
 		console.error(err);
 		return { error: err.message };
 	});
+
 	//check every 1 hour
 	if (lastSong !== null && lastSong.song_last_played > Date.now() - 3600000) {
+		console.log(
+			"skip update recents",
+			lastSong.song_last_played,
+			Date.now() - 3600000
+		);
 		return true;
 	}
 	let url =
@@ -38,7 +44,7 @@ const updateRecentSongs = async (access_token, iduser) => {
 			newsong.track.id,
 			iduser
 		);
-		const response=await Song.update(
+		const response = await Song.update(
 			{ song_last_played: newsong.played_at }, // Date.now()
 			{
 				where: {
