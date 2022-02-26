@@ -25,7 +25,8 @@ const updateRecentSongs = async (access_token, iduser) => {
 		return true;
 	}
 	let url =
-		"https://api.spotify.com/v1/me/player/recently-played?after=" + after;
+		"https://api.spotify.com/v1/me/player/recently-played?limit=50&after" +
+		after;
 	let items = [];
 
 	while (url) {
@@ -44,8 +45,8 @@ const updateRecentSongs = async (access_token, iduser) => {
 			newsong.track.id,
 			iduser
 		);
-		const response = await Song.update(
-			{ song_last_played: newsong.played_at }, // Date.now()
+		await Song.update(
+			{ song_last_played: newsong.played_at },
 			{
 				where: {
 					[Op.and]: [{ iduser: iduser }, { id: currentSong.id }],
