@@ -16,17 +16,23 @@ const automaticTasks = async (req, res) => {
 	const UserList = await User.findAll({
 		attributes: ["id", "access_token", "refresh_token", "expiration"],
 	});
-	for (const user in UserList) {
+	UserList.every(async (user) => {
 		if (user.expiration < Date.now()) {
+			console.log(
+				"token expired for user:",
+				user.id,
+				". Getting new token"
+			);
 			const falseReq = { session: { access_token: user.access_token } };
 			const result = await refreshCookie(falseReq, user);
 			if (result.error) {
 				console.error("access token error for user", user.id);
-				continue;
+				return;
 			}
 		}
 		updateRecentSongs(user.access_token, user.id);
-	}
+	});
+
 	updateOldRecent();
 	deleteOldRemoved();
 	response.message = "Success";

@@ -9,7 +9,7 @@ const updateRecentSongs = async (access_token, iduser) => {
 		where: {
 			[Op.and]: [{ iduser: iduser }, { removed: false }],
 		},
-		order: [["song_last_played", "ASC"]],
+		order: [["updatedAt", "DESC"]],
 	}).catch((err) => {
 		console.error(err);
 		return { error: err.message };
@@ -17,13 +17,12 @@ const updateRecentSongs = async (access_token, iduser) => {
 	// check every 1 hour
 	if (lastSong !== null && lastSong.updatedAt > Date.now() - 3600000) {
 		console.log(
-			"skip update recents",
-			lastSong.song_last_played,
-			Date.now() - 3600000,
+			"skip update recents, user:",
+			iduser,
 			"updated at",
 			lastSong.updatedAt
 		);
-		return true;
+		return { error: "skip update recents" };
 	}
 
 	let url =
