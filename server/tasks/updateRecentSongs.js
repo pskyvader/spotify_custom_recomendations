@@ -9,21 +9,23 @@ const updateRecentSongs = async (access_token, iduser) => {
 		where: {
 			[Op.and]: [{ iduser: iduser }, { removed: false }],
 		},
-		order: [["song_last_played", "DESC"]],
+		order: [["song_last_played", "ASC"]],
 	}).catch((err) => {
 		console.error(err);
 		return { error: err.message };
 	});
-
-	//check every 1 hour
-	if (lastSong !== null && lastSong.song_last_played > Date.now() - 3600000) {
+	// check every 1 hour
+	if (lastSong !== null && lastSong.updatedAt > Date.now() - 3600000) {
 		console.log(
 			"skip update recents",
 			lastSong.song_last_played,
-			Date.now() - 3600000
+			Date.now() - 3600000,
+			"updated at",
+			lastSong.updatedAt
 		);
 		return true;
 	}
+
 	let url =
 		"https://api.spotify.com/v1/me/player/recently-played?limit=50&after" +
 		after;

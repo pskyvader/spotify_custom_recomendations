@@ -5,8 +5,7 @@ const cookieParser = require("cookie-parser");
 const pgSession = require("connect-pg-simple")(session);
 const { connection } = require("./database");
 
-const { login } = require("./pages/login");
-const { callback } = require("./pages/callback");
+const { login, callback, automaticTasks } = require("./pages");
 
 const {
 	authorizeUser,
@@ -65,6 +64,9 @@ app.get("/login", function (req, res) {
 });
 app.get("/callback", function (req, res) {
 	callback(req, res);
+});
+app.get("/tasks", function (req, res) {
+	automaticTasks(req, res);
 });
 
 app.get("/api/logout", async function (req, res) {
