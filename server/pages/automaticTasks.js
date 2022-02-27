@@ -12,6 +12,8 @@ const automaticTasks = async (req, res) => {
 	if (LastTask > Date.now() - 3600000) {
 		response.error = true;
 		response.message = "Not able to run task for next hour";
+		res.json(response);
+		return;
 	}
 	const UserList = await User.findAll({
 		attributes: ["id", "access_token", "refresh_token", "expiration"],
