@@ -30,9 +30,6 @@ const removeSongPlaylist = async (session, songuri, playlistId) => {
 		return response;
 	}
 
-	removeSongPlaylistCache(playlistId, currentSong);
-	removeSongRemoveRecommendedCache(playlistId, currentSong);
-
 	const deletedSong = await getSong(
 		session.access_token,
 		songIdFromURI(songuri),
@@ -45,6 +42,9 @@ const removeSongPlaylist = async (session, songuri, playlistId) => {
 			[Op.and]: [{ iduser: deletedSong.iduser }, { id: deletedSong.id }],
 		},
 	});
+	removeSongPlaylistCache(playlistId, deletedSong);
+	removeSongRemoveRecommendedCache(playlistId, deletedSong);
+
 
 	return {
 		message: "success",
