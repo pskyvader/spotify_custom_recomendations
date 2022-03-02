@@ -5,7 +5,7 @@ const { updateRecentSongs } = require("../tasks/updateRecentSongs");
 const { updateOldRecent } = require("../tasks/updateOldRecent");
 const { deleteOldRemoved } = require("../tasks/deleteOldRemoved");
 
-let LastTask = Date.now();
+let LastTask = null;
 
 const automaticTasks = async (req, res) => {
 	const response = { error: false };
