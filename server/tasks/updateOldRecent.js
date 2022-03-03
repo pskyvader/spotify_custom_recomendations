@@ -1,6 +1,29 @@
 const { Op } = require("sequelize");
-const { Song } = require("../database");
-const updateOldRecent = async () => {
+const { Playlist, Song } = require("../database");
+const updateOldRecent = async (access_token, iduser) => {
+	const playlists = await Playlist.getall({
+		where: {
+			[Op.and]: [{ iduser: iduser }, { active: true }],
+		},
+	});
+
+	const url =
+		"https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
+
+	const songs = {
+		tracks: [{ uri: songuri }],
+	};
+
+	const response = await request(
+		session.access_token,
+		url,
+		"DELETE",
+		JSON.stringify(songs)
+	);
+	if (response.error) {
+		return response;
+	}
+
 	await Song.update(
 		{ removed: true, song_removed: Date.now() },
 		{

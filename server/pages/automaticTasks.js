@@ -33,9 +33,9 @@ const automaticTasks = async (req, res) => {
 			}
 		}
 		updateRecentSongs(user.access_token, user.id);
+		updateOldRecent(user.access_token, user.id);
 	});
 
-	updateOldRecent();
 	deleteOldRemoved();
 	response.message = "Success";
 
