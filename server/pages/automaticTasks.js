@@ -2,8 +2,9 @@ const { User } = require("../database");
 const { refreshCookie } = require("../api/user/refreshCookie");
 
 const { updateRecentSongs } = require("../tasks/updateRecentSongs");
-const { updateOldRecent } = require("../tasks/updateOldRecent");
+const { removeFromPlaylist } = require("../tasks/removeFromPlaylist");
 const { deleteOldRemoved } = require("../tasks/deleteOldRemoved");
+const { addToPlaylist } = require("../tasks/addToPlaylist");
 
 let LastTask = null;
 
@@ -33,7 +34,8 @@ const automaticTasks = async (req, res) => {
 			}
 		}
 		updateRecentSongs(user.access_token, user.id);
-		updateOldRecent(user.access_token, user.id);
+		removeFromPlaylist(user.access_token, user.id);
+		addToPlaylist(user.access_token, user.id);
 	});
 
 	deleteOldRemoved();
