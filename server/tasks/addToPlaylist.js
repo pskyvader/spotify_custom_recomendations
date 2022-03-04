@@ -17,7 +17,7 @@ const addToPlaylist = async (access_token, iduser) => {
 			return songlist;
 		}
 		let i = 0;
-		songlist.forEach((songInList) => {
+		songlist.forEach(async (songInList) => {
 			if (i > 5) {
 				return;
 			}
