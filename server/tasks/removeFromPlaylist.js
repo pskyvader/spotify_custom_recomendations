@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Playlist } = require("../database");
+const { Playlist, Song } = require("../database");
 const { myRemoveRecommended } = require("../api/song");
 const { removeSongPlaylist } = require("../api/playlist");
 
@@ -19,6 +19,21 @@ const removeFromPlaylist = async (access_token, iduser) => {
 		let i = 0;
 		songlist.forEach((songInList) => {
 			if (i > 5) {
+				return;
+			}
+			const currentSong = await Song.findOne({
+				where: {
+					[Op.and]: [
+						{ iduser: iduser },
+						{ id: songInList.id },
+						{ removed: false },
+					],
+				},
+			});
+			if (
+				currentSong !== null &&
+				currentSong.song_added > Date.now() - 604800000
+			) {
 				return;
 			}
 			//await ?

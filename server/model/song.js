@@ -21,11 +21,6 @@ const formatSongAPI = (song) => {
 	};
 };
 const formatSongList = (songList) => {
-	// const formattedList = [];
-	// songList.forEach((song) => {
-	// 	const currentSong = song.track || song;
-	// 	formattedList.push(formatSongAPI(currentSong));
-	// });
 	return songList.map((song) => formatSongAPI(song.track || song));
 };
 

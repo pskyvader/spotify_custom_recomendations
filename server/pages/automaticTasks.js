@@ -9,10 +9,12 @@ const { addToPlaylist } = require("../tasks/addToPlaylist");
 let LastTask = null;
 
 const automaticTasks = async (req, res) => {
-	const response = { error: false };
+	const response = {
+		error: false,
+		message: "Not able to run task for next hour",
+	};
 	if (LastTask > Date.now() - 3600000) {
 		response.error = true;
-		response.message = "Not able to run task for next hour";
 		res.json(response);
 		return;
 	}
