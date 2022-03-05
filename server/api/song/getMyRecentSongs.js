@@ -4,12 +4,13 @@ const { Song } = require("../../database");
 const { getUser, formatSong } = require("../../model");
 
 const myRecentResult = {};
+let lastGetResult = null;
 const getMyRecentSongs = async (session) => {
 	const currentUser = await getUser(session);
 	const access_token = session.access_token;
 	const userId = currentUser.id;
 
-	if (myRecentResult[access_token]) {
+	if (myRecentResult[access_token] && lastGetResult > Date.now() - 3600000) {
 		return myRecentResult[access_token];
 	}
 	// await updateRecentSongs(access_token, userId);
@@ -31,6 +32,7 @@ const getMyRecentSongs = async (session) => {
 			: "";
 		return formatSong(currentSong);
 	});
+	lastGetResult = Date.now();
 	return myRecentResult[access_token];
 };
 

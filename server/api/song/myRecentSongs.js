@@ -6,13 +6,11 @@ const { formatSong } = require("../../model");
 const myRecentResult = {};
 let lastUpdated = null;
 const myRecentSongs = async (access_token, userId) => {
-	if (!myRecentResult[access_token] || lastUpdated < Date.now() - 3600000) {
-		myRecentResult[access_token] = null;
+	if (lastUpdated < Date.now() - 3600000) {
 		await updateRecentSongs(access_token, userId);
-		lastUpdated = Date.now();
 	}
 
-	if (myRecentResult[access_token]) {
+	if (myRecentResult[access_token] && lastUpdated > Date.now() - 3600000) {
 		return myRecentResult[access_token];
 	}
 
@@ -30,6 +28,7 @@ const myRecentSongs = async (access_token, userId) => {
 	myRecentResult[access_token] = oldRecent.map((currentSong) =>
 		formatSong(currentSong)
 	);
+	lastUpdated = Date.now();
 	return myRecentResult[access_token];
 };
 

@@ -1,6 +1,7 @@
 const { request } = require("../../utils");
 const { getUser } = require("../../model");
 let myPlaylistResult = {};
+let lastGetResult = null;
 
 const getMyPlaylists = async (session) => {
 	const access_token = session.access_token;
@@ -9,7 +10,10 @@ const getMyPlaylists = async (session) => {
 		return currentUser;
 	}
 
-	if (myPlaylistResult[access_token]) {
+	if (
+		myPlaylistResult[access_token] &&
+		lastGetResult > Date.now() - 3600000
+	) {
 		return myPlaylistResult[access_token];
 	}
 	let url = "https://api.spotify.com/v1/me/playlists?limit=50";
@@ -37,6 +41,7 @@ const getMyPlaylists = async (session) => {
 			: null;
 		return formattedPlaylist;
 	});
+	lastGetResult = Date.now();
 	return myPlaylistResult[access_token];
 };
 

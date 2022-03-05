@@ -3,6 +3,7 @@ const { myTopSongs } = require("./myTopSongs");
 const { myApiRecommended } = require("./myApiRecommended");
 
 const recommended = {};
+let lastGetResult = null;
 
 const addSongRecommendedCache = (playlistId, song) => {
 	if (recommended[playlistId]) {
@@ -21,7 +22,7 @@ const removeSongRecommendedCache = (playlistId, song) => {
 };
 
 const myRecommendedSongs = async (access_token, playlistId) => {
-	if (recommended[playlistId]) {
+	if (recommended[playlistId] && lastGetResult > Date.now() - 3600000) {
 		return recommended[playlistId];
 	}
 
@@ -43,6 +44,7 @@ const myRecommendedSongs = async (access_token, playlistId) => {
 		return recommendedTrack;
 	}
 	recommended[playlistId] = recommendedTrack;
+	lastGetResult = Date.now();
 	return recommended[playlistId];
 };
 

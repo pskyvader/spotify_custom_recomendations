@@ -4,6 +4,7 @@ const { getUser } = require("../../model");
 const { subtractById } = require("../../utils");
 
 const removerecommended = {};
+let lastGetResult = null;
 
 const addSongRemoveRecommendedCache = (playlistId, song) => {
 	if (removerecommended[playlistId]) {
@@ -27,7 +28,7 @@ const myRemoveRecommended = async (session, playlistId) => {
 		return currentUser;
 	}
 	const access_token = session.access_token;
-	if (removerecommended[playlistId]) {
+	if (removerecommended[playlistId] && lastGetResult > Date.now() - 3600000) {
 		return removerecommended[playlistId];
 	}
 
@@ -40,6 +41,7 @@ const myRemoveRecommended = async (session, playlistId) => {
 	if (recentSongs.error) {
 		return recentSongs;
 	}
+	lastGetResult = Date.now();
 	return subtractById(currentPlaylist, recentSongs);
 };
 
