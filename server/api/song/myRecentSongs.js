@@ -4,7 +4,7 @@ const { Song } = require("../../database");
 const { formatSong } = require("../../model");
 
 const myRecentResult = {};
-let lastUpdated = Date.now();
+let lastUpdated = null;
 const myRecentSongs = async (access_token, userId) => {
 	if (!myRecentResult[access_token] || lastUpdated < Date.now() - 3600000) {
 		myRecentResult[access_token] = null;
@@ -18,7 +18,7 @@ const myRecentSongs = async (access_token, userId) => {
 
 	const oldRecent = await Song.findAll({
 		where: {
-			[Op.and]: [{ iduser: userId }, { removed: false }],
+			[Op.and]: [{ iduser: userId }],
 		},
 		order: [["song_last_played", "DESC"]],
 		raw: true,

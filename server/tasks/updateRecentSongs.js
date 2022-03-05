@@ -7,7 +7,7 @@ const updateRecentSongs = async (access_token, iduser) => {
 	const after = Date.now() - 604800000;
 	const lastSong = await Song.findOne({
 		where: {
-			[Op.and]: [{ iduser: iduser }, { removed: false }],
+			[Op.and]: [{ iduser: iduser }],
 		},
 		order: [["updatedAt", "DESC"]],
 	}).catch((err) => {

@@ -16,7 +16,7 @@ const getMyRecentSongs = async (session) => {
 
 	const oldRecent = await Song.findAll({
 		where: {
-			[Op.and]: [{ iduser: userId }, { removed: false }],
+			[Op.and]: [{ iduser: userId }],
 		},
 		order: [["song_last_played", "DESC"]],
 		raw: true,
