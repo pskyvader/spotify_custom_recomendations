@@ -5,7 +5,7 @@ import { Me } from "../API";
 export const SessionContext = createContext({});
 
 const SessionContextProvider = (props) => {
-	const [cookies, setCookie] = useCookies(["keep_logged", "hash"]);
+	const [cookies] = useCookies(["keep_logged", "hash"]);
 	const [LoggedIn, setLoggedIn] = useState(null);
 	const provider = {
 		LoggedIn: LoggedIn,

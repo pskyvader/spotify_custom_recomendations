@@ -1,5 +1,5 @@
 const { credentials } = require("../credentials");
-const { request } = require("../utils");
+const { request, generateRandomString } = require("../utils");
 
 const callback = async (req, res) => {
 	var code = req.query.code || null;
@@ -43,6 +43,7 @@ const callback = async (req, res) => {
 		req.session.access_token = access_token;
 		req.session.refresh_token = refresh_token;
 		req.session.expiration = Date.now() + expires_in * 1000;
+		req.session.hash = generateRandomString(10);
 
 		res.redirect("/#loggedin=true");
 		return;

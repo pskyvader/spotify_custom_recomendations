@@ -57,6 +57,7 @@ const getSong = async (access_token, idsong, iduser) => {
 	data.iduser = iduser;
 	data.song_added = Date.now();
 	await Song.upsert(data).catch((err) => {
+		console.error(err);
 		return { error: err.message };
 	});
 	return newsong;
