@@ -20,7 +20,6 @@ export const LastPlayed = async () => {
 	return GetRequest(url);
 };
 
-
 export const DeleteSong = async (playlistid, songuri) => {
 	const url = "/api/actions/remove/" + playlistid + "/" + songuri;
 	return GetRequest(url);
@@ -28,5 +27,19 @@ export const DeleteSong = async (playlistid, songuri) => {
 
 export const AddSong = async (playlistid, songuri) => {
 	const url = "/api/actions/add/" + playlistid + "/" + songuri;
+	return GetRequest(url);
+};
+
+export const ActivatePlaylist = async (playlistid) => {
+	const url = `/api/playlist/${playlistid}/activate`;
+	return GetRequest(url);
+};
+
+export const DeactivatePlaylist = async (playlistid) => {
+	const url = `/api/playlist/${playlistid}/deactivate`;
+	return GetRequest(url);
+};
+export const PlaylistStatus = async (playlistid) => {
+	const url = `/api/playlist/${playlistid}/status`;
 	return GetRequest(url);
 };

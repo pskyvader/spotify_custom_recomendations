@@ -27,7 +27,7 @@ const {
 	getMyRecentSongs,
 } = require("./api/song");
 
-const { getUser } = require("./model");
+const { getUser, togglePlaylist, playlistStatus } = require("./model");
 
 connection();
 
@@ -115,6 +115,21 @@ app.get("/api/playlists/get/:playlistId", async (req, res) => {
 		req.params.playlistId,
 		currentUser.id
 	);
+	res.json(result);
+});
+
+app.get("/api/playlists/:playlistId/status", async (req, res) => {
+	const result = playlistStatus(req.session, req.params.playlistId);
+	res.json(result);
+});
+
+app.get("/api/playlists/:playlistId/activate", async (req, res) => {
+	const result = togglePlaylist(req.session, req.params.playlistId, true);
+	res.json(result);
+});
+
+app.get("/api/playlists/:playlistId/deactivate", async (req, res) => {
+	const result = togglePlaylist(req.session, req.params.playlistId, false);
 	res.json(result);
 });
 

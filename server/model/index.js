@@ -5,7 +5,7 @@ const {
 	formatSong,
 } = require("./song");
 const { getUser } = require("./user");
-const { getPlaylist } = require("./playlist");
+const { getPlaylist, togglePlaylist, playlistStatus } = require("./playlist");
 module.exports = {
 	getSong,
 	formatSongList,
@@ -13,4 +13,6 @@ module.exports = {
 	songIdFromURI,
 	formatSong,
 	getPlaylist,
+	togglePlaylist,
+	playlistStatus,
 };
