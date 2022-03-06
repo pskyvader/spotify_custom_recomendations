@@ -20,17 +20,8 @@ const ProfileContextProvider = (props) => {
 					return false;
 				}
 
-				if (
-					cookies.keep_logged &&
-					response.access_token !== cookies.access_token
-				) {
-					setCookie("access_token", response.access_token);
-				}
-				if (
-					cookies.keep_logged &&
-					response.refresh_token !== cookies.refresh_token
-				) {
-					setCookie("refresh_token", response.refresh_token);
+				if (cookies.keep_logged && response.hash !== cookies.hash) {
+					setCookie("hash", response.hash);
 				}
 				setProfile(response);
 			});
