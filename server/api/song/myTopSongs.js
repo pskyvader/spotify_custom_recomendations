@@ -8,7 +8,7 @@ const myTopSongs = async (access_token) => {
 		return meTopResult[access_token];
 	}
 
-	let url = "https://api.spotify.com/v1/me/top/tracks?limit=50m"; //&time_range=long_ter
+	let url = "https://api.spotify.com/v1/me/top/tracks?limit=50"; //&time_range=long_term
 	let items = [];
 	while (url) {
 		const response = await request(access_token, url);

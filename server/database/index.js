@@ -24,21 +24,21 @@ class User extends Model {}
 User.init(UserConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
-	modelName: "User", // We need to choose the model name
+	// modelName: "User", // We need to choose the model name
 });
 
 class Song extends Model {}
 Song.init(SongConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
-	modelName: "Song", // We need to choose the model name
+	// modelName: "Song", // We need to choose the model name
 });
 
 class Playlist extends Model {}
 Playlist.init(PlaylistConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
-	modelName: "Playlist", // We need to choose the model name
+	// modelName: "Playlist", // We need to choose the model name
 });
 
 const connection = async () => {
