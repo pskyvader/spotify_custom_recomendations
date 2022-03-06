@@ -1,14 +1,18 @@
-const CheckLogin = (session) => {
-	let isLoggedIn = false;
+const { getUser } = require("../../model");
+const CheckLogin = async (session) => {
 	if (
 		session &&
 		typeof session.hash === "string" &&
 		Date.now() < session.expiration
 	) {
-		isLoggedIn = true;
+		const currentUser = await getUser(session);
+		if (currentUser.error) {
+			return { loggedin: false };
+		}
+		return { loggedin: true, hash: currentUser.hash };
 	}
 
-	return { loggedin: isLoggedIn, hash: session.hash };
+	return { loggedin: false };
 };
 
 module.exports = { CheckLogin };

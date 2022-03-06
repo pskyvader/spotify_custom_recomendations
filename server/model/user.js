@@ -1,5 +1,6 @@
 const { request } = require("../utils");
 const { User } = require("../database");
+const { Op } = require("sequelize");
 
 const UserlistCache = {};
 const getUser = async (session) => {
@@ -7,28 +8,31 @@ const getUser = async (session) => {
 		console.log("No session access token", session);
 		return { error: "Not logged in" };
 	}
-	const hash = session.hash;
-	if (UserlistCache[hash]) {
-		return UserlistCache[hash];
+	if (UserlistCache[session.hash]) {
+		return UserlistCache[session.hash];
 	}
 
 	const thisUser = await User.findOne({
 		where: {
-			hash: hash,
+			[Op.or]: [
+				{ hash: session.hash },
+				{ access_token: session.access_token },
+				{ refresh_token: session.refresh_token },
+			],
 		},
 	});
 
 	if (thisUser !== null) {
-		UserlistCache[hash] = {
+		UserlistCache[thisUser.hash] = {
 			id: thisUser.id,
 			name: thisUser.name,
 			url: thisUser.url,
 			image: thisUser.image,
-			access_token: session.access_token,
-			refresh_token: session.refresh_token,
-			hash: session.hash,
+			access_token: thisUser.access_token,
+			refresh_token: thisUser.refresh_token,
+			hash: thisUser.hash,
 		};
-		return UserlistCache[hash];
+		return UserlistCache[thisUser.hash];
 	}
 
 	const response = await request(
@@ -40,8 +44,7 @@ const getUser = async (session) => {
 		console.log(response);
 		return response;
 	}
-
-	UserlistCache[hash] = {
+	UserlistCache[session.hash] = {
 		id: response.id,
 		name: response.display_name,
 		url: response.external_urls.spotify,
@@ -49,14 +52,14 @@ const getUser = async (session) => {
 		access_token: session.access_token,
 		refresh_token: session.refresh_token,
 		expiration: session.expiration,
-		hash: hash,
+		hash: session.hash,
 	};
 
-	User.upsert(UserlistCache[hash]).catch((err) => {
+	User.upsert(UserlistCache[session.hash]).catch((err) => {
 		console.log(err);
 		return { error: err.message };
 	});
-	return UserlistCache[hash];
+	return UserlistCache[session.hash];
 };
 
 module.exports = { getUser };
