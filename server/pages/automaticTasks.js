@@ -35,8 +35,8 @@ const automaticTasks = async (req, res) => {
 				return;
 			}
 		}
-		updateRecentSongs(user.access_token, user.id);
-		removeFromPlaylist(user.access_token, user.id);
+		await updateRecentSongs(user.access_token, user.id);
+		await removeFromPlaylist(user.access_token, user.id);
 		addToPlaylist(user.access_token, user.id);
 	});
 

@@ -1,5 +1,5 @@
 const { request } = require("../../utils");
-const { formatSongList } = require("../../model");
+const { formatSongList, getPlaylist } = require("../../model");
 
 const playlists = {};
 let lastGetResult = null;
@@ -20,10 +20,15 @@ const removeSongPlaylistCache = (playlistId, song) => {
 	}
 };
 
-const getPlaylistSongs = async (access_token, playlistId) => {
+const getPlaylistSongs = async (access_token, playlistId, iduser) => {
 	if (playlists[playlistId] && lastGetResult > Date.now() - 3600000) {
 		return playlists[playlistId];
 	}
+	const playlistActive = getPlaylist(access_token, playlistId, iduser);
+	if (!playlistActive.active) {
+		return { error: true, message: "Playlist not active" };
+	}
+
 	let url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
 	let items = [];
 	while (url) {

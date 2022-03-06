@@ -1,7 +1,6 @@
 const { Op } = require("sequelize");
 
 const { Song } = require("../database");
-const { getUser } = require("./user");
 const { request } = require("../utils");
 
 const formatSongAPI = (song) => {

@@ -21,12 +21,17 @@ const removeSongRecommendedCache = (playlistId, song) => {
 	}
 };
 
-const myRecommendedSongs = async (access_token, playlistId) => {
+const myRecommendedSongs = async (session, playlistId) => {
+	const currentUser = await getUser(session);
+	if (currentUser.error) {
+		return currentUser;
+	}
+	const access_token = session.access_token;
 	if (recommended[playlistId] && lastGetResult > Date.now() - 3600000) {
 		return recommended[playlistId];
 	}
 
-	const currentPlaylist = await getPlaylistSongs(access_token, playlistId);
+	const currentPlaylist = await getPlaylistSongs(access_token, playlistId,currentUser.id);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}

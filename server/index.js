@@ -105,18 +105,21 @@ app.get("/api/me/playlists", async (req, res) => {
 });
 
 app.get("/api/playlists/get/:playlistId", async (req, res) => {
+	const currentUser = await getUser(req.session);
+	if (currentUser.error) {
+		res.json(currentUser);
+		return;
+	}
 	const result = await getPlaylistSongs(
 		req.session.access_token,
-		req.params.playlistId
+		req.params.playlistId,
+		currentUser.id
 	);
 	res.json(result);
 });
 
 app.get("/api/playlists/recommended/:playlistId", async (req, res) => {
-	const result = await myRecommendedSongs(
-		req.session.access_token,
-		req.params.playlistId
-	);
+	const result = await myRecommendedSongs(req.session, req.params.playlistId);
 	res.json(result);
 });
 

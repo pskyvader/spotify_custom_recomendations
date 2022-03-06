@@ -20,7 +20,7 @@ const PlaylistConfiguration = {
 	active: {
 		type: DataTypes.BOOLEAN,
 		allowNull: false,
-		defaultValue: true,
+		defaultValue: false,
 	},
 };
 module.exports = { PlaylistConfiguration };
