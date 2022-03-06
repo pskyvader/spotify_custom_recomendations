@@ -18,10 +18,10 @@ export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 			: null;
 
 	const columns = [
-		{ field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
-		{ field: "name", headerName: "Title", flex: 1 },
-		{ field: "artist", headerName: "Artist", flex: 1 },
-		{ field: "album", headerName: "Album", flex: 1 },
+		// { field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
+		{ field: "name", headerName: "Title", minWidth: 200, flex: 1 },
+		{ field: "artist", headerName: "Artist", minWidth: 200, flex: 1 },
+		{ field: "album", headerName: "Album", minWidth: 200, flex: 1 },
 		{
 			field: "action",
 			headerName: "",
