@@ -1,4 +1,4 @@
-const { DataTypes} = require("sequelize");
+const { DataTypes } = require("sequelize");
 const UserConfiguration = {
 	// Model attributes are defined here
 	id: {
@@ -6,6 +6,11 @@ const UserConfiguration = {
 		// autoIncrement: true,
 		allowNull: false,
 		primaryKey: true,
+		unique: true,
+	},
+	hash: {
+		type: DataTypes.STRING,
+		allowNull: false,
 		unique: true,
 	},
 	name: {
