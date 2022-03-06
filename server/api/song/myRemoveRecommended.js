@@ -32,7 +32,7 @@ const myRemoveRecommended = async (session, playlistId) => {
 		return removerecommended[playlistId];
 	}
 
-	const currentPlaylist = await getPlaylistSongs(access_token, playlistId,currentUser.id);
+	const currentPlaylist = await getPlaylistSongs(session, playlistId);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}

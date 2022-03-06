@@ -32,11 +32,7 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return recommended[playlistId];
 	}
 
-	const currentPlaylist = await getPlaylistSongs(
-		access_token,
-		playlistId,
-		currentUser.id
-	);
+	const currentPlaylist = await getPlaylistSongs(session, playlistId);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}

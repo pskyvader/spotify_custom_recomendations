@@ -17,7 +17,6 @@ const togglePlaylist = async (session, idplaylist, active = false) => {
 		return currentPlaylist;
 	}
 	currentPlaylist.active = active;
-	console.log(currentPlaylist);
 	await Playlist.update(currentPlaylist, {
 		where: { [Op.and]: [{ iduser: iduser }, { id: idplaylist }] },
 	}).catch((err) => {
@@ -44,6 +43,7 @@ const playlistStatus = async (session, idplaylist) => {
 const getPlaylist = async (access_token, idplaylist, iduser) => {
 	const currentPlaylist = await Playlist.findOne({
 		where: { [Op.and]: [{ iduser: iduser }, { id: idplaylist }] },
+		raw: true,
 	});
 	if (currentPlaylist !== null) {
 		return currentPlaylist;

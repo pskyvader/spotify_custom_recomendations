@@ -22,6 +22,10 @@ const Root = styled("div")(({ theme }) => {
 			"px - " +
 			theme.spacing(7) +
 			" )",
+
+		[theme.breakpoints.down("md")]: {
+			maxHeight: "none",
+		},
 		height: "100vh",
 		overflow: "auto",
 	};
@@ -91,6 +95,8 @@ const Playlists = () => {
 					value={tabNumber}
 					onChange={handleChangeTab}
 					aria-label="basic tabs example"
+					variant="scrollable"
+					scrollButtons="auto"
 				>
 					<Tab label="Songs" />
 					<Tab label="Recommended" />
