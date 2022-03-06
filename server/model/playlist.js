@@ -4,18 +4,20 @@ const { Playlist } = require("../database");
 const { request } = require("../utils");
 const { getUser } = require("./user");
 
-const togglePlaylist = (session, idplaylist, active = false) => {
-	const currentUser = getUser(session);
+const togglePlaylist = async (session, idplaylist, active = false) => {
+	const access_token = session.access_token;
+	const currentUser = await getUser(session);
 	if (currentUser.error) {
 		return currentUser;
 	}
 	const iduser = currentUser.id;
 
-	const currentPlaylist = getPlaylist(access_token, idplaylist, iduser);
+	const currentPlaylist = await getPlaylist(access_token, idplaylist, iduser);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
 	currentPlaylist.active = active;
+	console.log(currentPlaylist);
 	await Playlist.update(currentPlaylist, {
 		where: { [Op.and]: [{ iduser: iduser }, { id: idplaylist }] },
 	}).catch((err) => {
@@ -25,20 +27,21 @@ const togglePlaylist = (session, idplaylist, active = false) => {
 	return currentPlaylist;
 };
 
-const playlistStatus = (session, idplaylist) => {
-	const currentUser = getUser(session);
+const playlistStatus = async (session, idplaylist) => {
+	const currentUser = await getUser(session);
+	const access_token = session.access_token;
 	if (currentUser.error) {
 		return currentUser;
 	}
 	const iduser = currentUser.id;
-	const currentPlaylist = getPlaylist(access_token, idplaylist, iduser);
+	const currentPlaylist = await getPlaylist(access_token, idplaylist, iduser);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
 	return { active: currentPlaylist.active };
 };
 
-const getPlaylist = (access_token, idplaylist, iduser) => {
+const getPlaylist = async (access_token, idplaylist, iduser) => {
 	const currentPlaylist = await Playlist.findOne({
 		where: { [Op.and]: [{ iduser: iduser }, { id: idplaylist }] },
 	});
@@ -51,7 +54,12 @@ const getPlaylist = (access_token, idplaylist, iduser) => {
 	if (response.error) {
 		return response;
 	}
-	const data = { iduser: iduser, name: response.name, active: false };
+	const data = {
+		id: idplaylist,
+		iduser: iduser,
+		name: response.name,
+		active: false,
+	};
 
 	await Playlist.upsert(data).catch((err) => {
 		console.error(err);
@@ -60,4 +68,4 @@ const getPlaylist = (access_token, idplaylist, iduser) => {
 	return data;
 };
 
-module.exports = { getPlaylist, togglePlaylist ,playlistStatus};
+module.exports = { getPlaylist, togglePlaylist, playlistStatus };

@@ -1,6 +1,7 @@
 const { getPlaylistSongs } = require("./getPlaylistSongs");
 const { myTopSongs } = require("./myTopSongs");
 const { myApiRecommended } = require("./myApiRecommended");
+const { getUser } = require("../../model");
 
 const recommended = {};
 let lastGetResult = null;
@@ -31,7 +32,11 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return recommended[playlistId];
 	}
 
-	const currentPlaylist = await getPlaylistSongs(access_token, playlistId,currentUser.id);
+	const currentPlaylist = await getPlaylistSongs(
+		access_token,
+		playlistId,
+		currentUser.id
+	);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}

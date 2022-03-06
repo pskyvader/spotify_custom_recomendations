@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { Container, CircularProgress } from "@mui/material";
+import { Container, CircularProgress, Switch } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useParams, Redirect } from "react-router-dom";
 
@@ -27,21 +27,34 @@ const Root = styled("div")(({ theme }) => {
 	};
 });
 const Playlists = () => {
-	const { playlistId } = useParams() || null;
+	const { playlistid } = useParams() || null;
 	const { LoggedIn } = useContext(SessionContext);
 	const { playlistActive, setPlaylistActive } = useContext(PlaylistContext);
 	const [tabNumber, setTabNumber] = useState(0);
 
 	useEffect(() => {
-		if (!playlistActive[playlistId]) {
-			Playlist.PlaylistStatus(playlistId).then((response) => {
+		if (!playlistActive[playlistid]) {
+			Playlist.PlaylistStatus(playlistid).then((response) => {
 				if (response.error) return console.log(response);
-				playlistActive[playlistId] = response;
+				playlistActive[playlistid] = response;
 				setPlaylistActive({ ...playlistActive });
 			});
 		}
-	}, [playlistId, playlistActive, setPlaylistActive]);
+	}, [playlistid, playlistActive, setPlaylistActive]);
 
+	const handleChange = (event) => {
+		playlistActive[playlistid].active = event.target.checked;
+
+		const currentFunction = event.target.checked
+			? Playlist.ActivatePlaylist
+			: Playlist.DeactivatePlaylist;
+
+		currentFunction(playlistid).then((response) => {
+			if (response.error) return console.log(response);
+			playlistActive[playlistid] = response;
+			setPlaylistActive({ ...playlistActive });
+		});
+	};
 	const handleChangeTab = (event, newValue) => {
 		setTabNumber(newValue);
 	};
@@ -51,14 +64,29 @@ const Playlists = () => {
 	}
 
 	if (LoggedIn) {
-		if (!playlistActive[playlistId]) {
+		if (!playlistActive[playlistid]) {
 			return <CircularProgress />;
 		}
-		if (!playlistActive[playlistId].active) {
-			return <div>This Playlist is not active</div>;
+		if (!playlistActive[playlistid].active) {
+			return (
+				<div>
+					Playlist inactive
+					<Switch
+						checked={playlistActive[playlistid].active}
+						onChange={handleChange}
+						inputProps={{ "aria-label": "controlled" }}
+					/>
+				</div>
+			);
 		}
 		return (
 			<Container maxWidth={false}>
+				Playlist Active
+				<Switch
+					checked={playlistActive[playlistid].active}
+					onChange={handleChange}
+					inputProps={{ "aria-label": "controlled" }}
+				/>
 				<Tabs
 					value={tabNumber}
 					onChange={handleChangeTab}
@@ -71,19 +99,19 @@ const Playlists = () => {
 				</Tabs>
 				<Root role="tabpanel" hidden={tabNumber !== 0}>
 					<PlayListSongs
-						playlistId={playlistId}
+						playlistId={playlistid}
 						hidden={tabNumber !== 0}
 					/>
 				</Root>
 				<Root role="tabpanel" hidden={tabNumber !== 1}>
 					<RecommendedSongs
-						playlistId={playlistId}
+						playlistId={playlistid}
 						hidden={tabNumber !== 1}
 					/>
 				</Root>
 				<Root role="tabpanel" hidden={tabNumber !== 2}>
 					<RecommendedDeleteSongs
-						playlistId={playlistId}
+						playlistId={playlistid}
 						hidden={tabNumber !== 2}
 					/>
 				</Root>

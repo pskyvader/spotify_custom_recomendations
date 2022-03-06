@@ -118,18 +118,26 @@ app.get("/api/playlists/get/:playlistId", async (req, res) => {
 	res.json(result);
 });
 
-app.get("/api/playlists/:playlistId/status", async (req, res) => {
-	const result = playlistStatus(req.session, req.params.playlistId);
+app.get("/api/playlist/:playlistId/status", async (req, res) => {
+	const result = await playlistStatus(req.session, req.params.playlistId);
 	res.json(result);
 });
 
-app.get("/api/playlists/:playlistId/activate", async (req, res) => {
-	const result = togglePlaylist(req.session, req.params.playlistId, true);
+app.get("/api/playlist/:playlistId/activate", async (req, res) => {
+	const result = await togglePlaylist(
+		req.session,
+		req.params.playlistId,
+		true
+	);
 	res.json(result);
 });
 
-app.get("/api/playlists/:playlistId/deactivate", async (req, res) => {
-	const result = togglePlaylist(req.session, req.params.playlistId, false);
+app.get("/api/playlist/:playlistId/deactivate", async (req, res) => {
+	const result = await togglePlaylist(
+		req.session,
+		req.params.playlistId,
+		false
+	);
 	res.json(result);
 });
 
