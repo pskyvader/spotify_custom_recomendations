@@ -2,6 +2,7 @@ const { request } = require("../../utils");
 const { getUser, getSong, songIdFromURI } = require("../../model");
 const { addSongPlaylistCache } = require("../song/getPlaylistSongs");
 const { removeSongRecommendedCache } = require("../song/myRecommendedSongs");
+const { Song } = require("../../database");
 const {
 	removeSongRemoveRecommendedCache,
 } = require("../song/myRemoveRecommended");
@@ -30,6 +31,17 @@ const addSongPlaylist = async (session, songuri, playlistId) => {
 		session.access_token,
 		songIdFromURI(songuri),
 		user.id
+	);
+	await Song.update(
+		{ song_added: Date.now() },
+		{
+			where: {
+				[Op.and]: [
+					{ iduser: currentSong.iduser },
+					{ id: currentSong.id },
+				],
+			},
+		}
 	);
 	addSongPlaylistCache(playlistId, currentSong);
 	removeSongRecommendedCache(playlistId, currentSong);

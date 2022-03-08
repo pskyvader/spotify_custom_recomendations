@@ -10,6 +10,30 @@ const removeFromPlaylist = async (user) => {
 		refresh_token: user.refresh_token,
 	};
 	const iduser = user.id;
+
+	const lastSong = await Song.findOne({
+		where: {
+			[Op.and]: [{ iduser: iduser }, { removed: true }],
+		},
+		order: [["song_removed", "DESC"]],
+	}).catch((err) => {
+		console.error(err);
+		return { error: err.message };
+	});
+	// check every 1 day
+	if (
+		lastSong !== null &&
+		lastSong.song_removed > Date.now() - 24 * 3600 * 1000
+	) {
+		console.log(
+			"skip remove from playlist, user:",
+			iduser,
+			"removed at",
+			lastSong.song_removed
+		);
+		return { error: "skip remove from playlist" };
+	}
+
 	const playlists = await Playlist.findAll({
 		where: {
 			[Op.and]: [{ iduser: iduser }, { active: true }],
@@ -22,9 +46,9 @@ const removeFromPlaylist = async (user) => {
 			return songlist;
 		}
 		let i = 0;
-		songlist.forEach(async (songInList) => {
+		for (const songInList of songlist) {
 			if (i > 5) {
-				return;
+				break;
 			}
 			const currentSong = await Song.findOne({
 				where: {
@@ -39,12 +63,12 @@ const removeFromPlaylist = async (user) => {
 				currentSong !== null &&
 				currentSong.song_added > Date.now() - 604800000
 			) {
-				return;
+				continue;
 			}
 			//await ?
 			removeSongPlaylist(fakesession, songInList.action, playlist.id);
 			i++;
-		});
+		}
 	});
 
 	if (updateResponse.error) {
