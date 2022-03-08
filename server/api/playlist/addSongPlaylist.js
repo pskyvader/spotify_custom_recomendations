@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { request } = require("../../utils");
 const { getUser, getSong, songIdFromURI } = require("../../model");
 const { addSongPlaylistCache } = require("../song/getPlaylistSongs");
