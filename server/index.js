@@ -84,8 +84,8 @@ app.get("/api/pushtoken", function (req, res) {
 	res.json(result);
 });
 
-app.get("/api/loggedin", function (req, res) {
-	const result = CheckLogin(req.session);
+app.get("/api/loggedin", async function (req, res) {
+	const result = await CheckLogin(req.session);
 	res.json(result);
 });
 

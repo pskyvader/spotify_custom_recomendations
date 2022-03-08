@@ -3,8 +3,13 @@ const { Playlist, Song } = require("../database");
 const { myRemoveRecommended } = require("../api/song");
 const { removeSongPlaylist } = require("../api/playlist");
 
-const removeFromPlaylist = async (access_token, iduser) => {
-	const fakesession = { access_token: access_token };
+const removeFromPlaylist = async (user) => {
+	const fakesession = {
+		hash: user.hash,
+		access_token: user.access_token,
+		refresh_token: user.refresh_token,
+	};
+	const iduser = user.id;
 	const playlists = await Playlist.findAll({
 		where: {
 			[Op.and]: [{ iduser: iduser }, { active: true }],

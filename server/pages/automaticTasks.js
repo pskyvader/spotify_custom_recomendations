@@ -19,7 +19,13 @@ const automaticTasks = async (req, res) => {
 		return;
 	}
 	const UserList = await User.findAll({
-		attributes: ["id", "access_token", "refresh_token", "expiration"],
+		attributes: [
+			"id",
+			"access_token",
+			"refresh_token",
+			"expiration",
+			"hash",
+		],
 	});
 	UserList.every(async (user) => {
 		if (user.expiration < Date.now()) {
@@ -36,8 +42,8 @@ const automaticTasks = async (req, res) => {
 			}
 		}
 		await updateRecentSongs(user.access_token, user.id);
-		await removeFromPlaylist(user.access_token, user.id);
-		addToPlaylist(user.access_token, user.id);
+		await removeFromPlaylist(user);
+		addToPlaylist(user);
 	});
 
 	deleteOldRemoved();

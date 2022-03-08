@@ -3,20 +3,25 @@ const { Playlist, Song } = require("../database");
 const { myRecommendedSongs } = require("../api/song");
 const { addSongPlaylist } = require("../api/playlist");
 
-const addToPlaylist = async (access_token, iduser) => {
-	const fakesession = { access_token: access_token };
+const addToPlaylist = async (user) => {
+	const fakesession = {
+		hash: user.hash,
+		access_token: user.access_token,
+		refresh_token: user.refresh_token,
+	};
+	const iduser = user.id;
 	const playlists = await Playlist.findAll({
 		where: {
 			[Op.and]: [{ iduser: iduser }, { active: true }],
 		},
 	});
-
 	const updateResponse = playlists.every(async (playlist) => {
-		const songlist = await myRecommendedSongs(access_token, playlist.id);
+		const songlist = await myRecommendedSongs(fakesession, playlist.id);
 		if (songlist.error) {
 			return songlist;
 		}
 		let i = 0;
+
 		songlist.forEach(async (songInList) => {
 			if (i > 5) {
 				return;
@@ -30,12 +35,13 @@ const addToPlaylist = async (access_token, iduser) => {
 					],
 				},
 			});
+
 			if (currentSong !== null) {
 				return;
 			}
 
 			//await ?
-			addSongPlaylist(fakesession, songInList.action, playlist.id);
+			await addSongPlaylist(fakesession, songInList.action, playlist.id);
 			i++;
 		});
 	});
