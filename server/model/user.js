@@ -44,6 +44,15 @@ const getUser = async (session) => {
 		console.log(response);
 		return response;
 	}
+
+	const thisUserById = await User.findOne({
+		where: {
+			id: response.id,
+		},
+	});
+	if (thisUserById !== null) {
+		session.hash = thisUserById.hash;
+	}
 	UserlistCache[session.hash] = {
 		id: response.id,
 		name: response.display_name,
