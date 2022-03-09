@@ -1,4 +1,4 @@
-import { Toolbar, Typography, Box } from "@mui/material";
+import { Toolbar, Typography } from "@mui/material";
 import { GridOverlay, DataGrid } from "@mui/x-data-grid";
 
 export const SongListColumns = (rows, PlaylistId, ActionButton) => {
@@ -40,7 +40,9 @@ export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 const SongList = ({ data, title = "title" }) => {
 	return (
 		<DataGrid
-			hideFooter
+			autoPageSize={true}
+			// hideFooter
+			// pageSize={data.rows.length}
 			disableSelectionOnClick
 			components={{
 				Toolbar: () => {
@@ -63,7 +65,7 @@ const SongList = ({ data, title = "title" }) => {
 			{...data}
 			columnBuffer={2}
 			columnThreshold={2}
-			autoHeight={true}
+			// autoHeight={true}
 			// disableExtendRowFullWidth
 		/>
 	);

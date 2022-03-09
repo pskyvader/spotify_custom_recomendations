@@ -17,7 +17,14 @@ const getMyRecentSongs = async (session) => {
 
 	const oldRecent = await Song.findAll({
 		where: {
-			[Op.and]: [{ iduser: userId }],
+			[Op.and]: [
+				{ iduser: userId },
+				{
+					song_last_played: {
+						[Op.ne]: null,
+					},
+				},
+			],
 		},
 		order: [["song_last_played", "DESC"]],
 		raw: true,
@@ -25,7 +32,6 @@ const getMyRecentSongs = async (session) => {
 	}).catch((err) => {
 		return { error: err.message };
 	});
-
 	myRecentResult[access_token] = oldRecent.map((currentSong) => {
 		currentSong.action = currentSong.song_last_played
 			? currentSong.song_last_played.toLocaleString()

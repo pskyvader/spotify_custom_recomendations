@@ -26,6 +26,7 @@ const Root = styled("div")(({ theme }) => {
 		[theme.breakpoints.down("md")]: {
 			maxHeight: "none",
 		},
+		minHeight: 400,
 		height: "100vh",
 		overflow: "auto",
 	};
