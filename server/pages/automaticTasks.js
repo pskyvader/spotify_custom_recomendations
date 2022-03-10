@@ -51,7 +51,7 @@ const automaticTasks = async (req, res) => {
 			const falseReq = { session: { access_token: user.access_token } };
 			const result = await refreshCookie(falseReq, user);
 			if (result.error) {
-				console.error("access token error for user", user.id);
+				console.error(`access token error for user ${user.id}`);
 				response.message += `access token error for user ${user.id}`;
 				return;
 			}
@@ -61,6 +61,7 @@ const automaticTasks = async (req, res) => {
 			await removeFromPlaylist(user);
 			await addToPlaylist(user);
 		}
+		response.message += `User ${user.id} has been updated`;
 	});
 
 	deleteOldRemoved();

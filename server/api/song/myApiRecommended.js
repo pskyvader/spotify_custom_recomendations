@@ -40,7 +40,12 @@ const fillOptions = (playlist, topSongs, currentgenres) => {
 	return options;
 };
 
-const myApiRecommended = async (access_token, playlist, topSongs, currentgenres) => {
+const myApiRecommended = async (
+	access_token,
+	playlist,
+	topSongs,
+	currentgenres
+) => {
 	const options = fillOptions(playlist, topSongs, currentgenres || genres);
 
 	const url = "https://api.spotify.com/v1/recommendations";
@@ -48,6 +53,7 @@ const myApiRecommended = async (access_token, playlist, topSongs, currentgenres)
 	Object.entries(options).forEach((option) => {
 		urlOptions += option[0] + "=" + option[1] + "&";
 	});
+	console.log(url + urlOptions);
 	const response = await request(access_token, url + urlOptions);
 	if (response.error) {
 		return response;

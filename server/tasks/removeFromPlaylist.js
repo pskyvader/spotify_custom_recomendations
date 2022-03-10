@@ -27,23 +27,11 @@ const removeFromPlaylist = async (user) => {
 			if (i > 5) {
 				break;
 			}
-			const currentSong = await Song.findOne({
-				where: {
-					[Op.and]: [
-						{ iduser: iduser },
-						{ id: songInList.id },
-						{ removed: false },
-					],
-				},
-			});
-			if (
-				currentSong !== null &&
-				currentSong.song_added > Date.now() - 604800000
-			) {
-				continue;
-			}
-			//await ?
-			removeSongPlaylist(fakesession, songInList.action, playlist.id);
+			await removeSongPlaylist(
+				fakesession,
+				songInList.action,
+				playlist.id
+			);
 			i++;
 		}
 	});
