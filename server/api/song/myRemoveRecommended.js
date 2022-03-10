@@ -37,7 +37,7 @@ const myRemoveRecommended = async (session, playlistId) => {
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
-	const recentAdded = await myRecentAdded(playlistId);
+	const recentAdded = await myRecentAdded(currentUser.id, playlistId);
 	if (recentAdded.error) {
 		return recentAdded;
 	}
