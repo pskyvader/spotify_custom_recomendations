@@ -12,7 +12,11 @@ const CheckLogin = async (session) => {
 		return { loggedin: true, hash: currentUser.hash };
 	}
 
-	return { loggedin: false };
+	return {
+		loggedin: false,
+		hash: session.hash,
+		expiration: session.expiration,
+	};
 };
 
 module.exports = { CheckLogin };
