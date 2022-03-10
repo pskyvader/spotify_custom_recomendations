@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { User } = require("../database");
 const { refreshCookie } = require("../api/user/refreshCookie");
 
@@ -11,22 +12,35 @@ let LastTask = null;
 const automaticTasks = async (req, res) => {
 	const response = {
 		error: false,
-		message: "Not able to run task for next hour",
+		message: "",
 	};
 	if (LastTask > Date.now() - 3600000) {
 		response.error = true;
+		response.message = "Not able to run task for next hour";
 		res.json(response);
 		return;
 	}
-	const UserList = await User.findAll({
+	const { count, UserList } = await User.findAndCountAll({
 		attributes: [
 			"id",
 			"access_token",
 			"refresh_token",
 			"expiration",
 			"hash",
+			"last_modified",
 		],
+		where: {
+			last_modified: {
+				[Op.lte]: Date.now() - 3600000,
+			},
+		},
 	});
+	if (count === 0) {
+		response.message = "No users to update at this time";
+		res.json(response);
+		return;
+	}
+
 	UserList.every(async (user) => {
 		if (user.expiration < Date.now()) {
 			console.log(
@@ -38,16 +52,18 @@ const automaticTasks = async (req, res) => {
 			const result = await refreshCookie(falseReq, user);
 			if (result.error) {
 				console.error("access token error for user", user.id);
+				response.message += `access token error for user ${user.id}`;
 				return;
 			}
 		}
 		await updateRecentSongs(user.access_token, user.id);
-		await removeFromPlaylist(user);
-		addToPlaylist(user);
+		if (user.last_modified > Date.now() - 24 * 3600000) {
+			await removeFromPlaylist(user);
+			await addToPlaylist(user);
+		}
 	});
 
 	deleteOldRemoved();
-	response.message = "Success";
 
 	LastTask = Date.now();
 	res.json(response);

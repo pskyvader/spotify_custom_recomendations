@@ -11,29 +11,6 @@ const removeFromPlaylist = async (user) => {
 	};
 	const iduser = user.id;
 
-	const lastSong = await Song.findOne({
-		where: {
-			[Op.and]: [{ iduser: iduser }, { removed: true }],
-		},
-		order: [["song_removed", "DESC"]],
-	}).catch((err) => {
-		console.error(err);
-		return { error: err.message };
-	});
-	// check every 1 day
-	if (
-		lastSong !== null &&
-		lastSong.song_removed > Date.now() - 24 * 3600 * 1000
-	) {
-		console.log(
-			"skip remove from playlist, user:",
-			iduser,
-			"removed at",
-			lastSong.song_removed
-		);
-		return { error: "skip remove from playlist" };
-	}
-
 	const playlists = await Playlist.findAll({
 		where: {
 			[Op.and]: [{ iduser: iduser }, { active: true }],

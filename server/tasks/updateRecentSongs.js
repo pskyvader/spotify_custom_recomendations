@@ -5,26 +5,6 @@ const { getSong } = require("../model");
 
 const updateRecentSongs = async (access_token, iduser) => {
 	const after = Date.now() - 604800000;
-	const lastSong = await Song.findOne({
-		where: {
-			[Op.and]: [{ iduser: iduser }],
-		},
-		order: [["updatedAt", "DESC"]],
-	}).catch((err) => {
-		console.error(err);
-		return { error: err.message };
-	});
-	// check every 1 hour
-	if (lastSong !== null && lastSong.updatedAt > Date.now() - 3600000) {
-		console.log(
-			"skip update recents, user:",
-			iduser,
-			"updated at",
-			lastSong.updatedAt
-		);
-		return { error: "skip update recents" };
-	}
-
 	let url =
 		"https://api.spotify.com/v1/me/player/recently-played?limit=50&after" +
 		after;

@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { updateRecentSongs } = require("../../tasks/updateRecentSongs");
+// const { updateRecentSongs } = require("../../tasks/updateRecentSongs");
 const { Song } = require("../../database");
 const { getUser, formatSong } = require("../../model");
 
