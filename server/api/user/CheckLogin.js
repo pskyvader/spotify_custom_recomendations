@@ -7,7 +7,8 @@ const CheckLogin = async (session) => {
 	) {
 		const currentUser = await getUser(session);
 		if (currentUser.error) {
-			return { loggedin: false };
+			currentUser.loggedin = false;
+			return currentUser;
 		}
 		return { loggedin: true, hash: currentUser.hash };
 	}
