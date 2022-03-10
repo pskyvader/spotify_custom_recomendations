@@ -17,6 +17,8 @@ const CheckLogin = async (session) => {
 		loggedin: false,
 		hash: session.hash,
 		expiration: session.expiration,
+		is_string: typeof session.hash === "string",
+		is_expired: Date.now() < session.expiration,
 	};
 };
 
