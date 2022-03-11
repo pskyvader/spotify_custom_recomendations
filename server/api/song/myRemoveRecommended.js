@@ -48,7 +48,8 @@ const myRemoveRecommended = async (session, playlistId) => {
 		return recentSongs;
 	}
 	lastGetResult = Date.now();
-	return subtractById(newplaylist, recentSongs);
+	removerecommended[playlistId] = subtractById(newplaylist, recentSongs);
+	return removerecommended[playlistId];
 };
 
 module.exports = {
