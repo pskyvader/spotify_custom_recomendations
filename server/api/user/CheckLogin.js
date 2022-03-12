@@ -3,7 +3,7 @@ const CheckLogin = async (session) => {
 	if (
 		session &&
 		typeof session.hash === "string" &&
-		Date.now() < session.expiration
+		Date.now() < new Date(session.expiration) 
 	) {
 		const currentUser = await getUser(session);
 		if (currentUser.error) {
@@ -15,11 +15,12 @@ const CheckLogin = async (session) => {
 
 	return {
 		loggedin: false,
-		hash: session.hash,
-		expiration: session.expiration,
-		current_date: Date.now(),
-		is_string: typeof session.hash === "string",
-		is_valid: Date.now() < session.expiration,
+		// hash: session.hash,
+		// expiration: session.expiration,
+		// current_date: Date.now(),
+		// difference: new Date(session.expiration) - Date.now(),
+		// is_string: typeof session.hash === "string",
+		// is_valid: Date.now() < session.expiration,
 	};
 };
 

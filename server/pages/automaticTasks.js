@@ -12,7 +12,7 @@ let LastTask = null;
 const automaticTasks = async (req, res) => {
 	const response = {
 		error: false,
-		message: "",
+		message: [],
 	};
 	if (LastTask > Date.now() - 3600000) {
 		response.error = true;
@@ -20,7 +20,7 @@ const automaticTasks = async (req, res) => {
 		res.json(response);
 		return;
 	}
-	const { count, UserList } = await User.findAndCountAll({
+	const { count, rows } = await User.findAndCountAll({
 		attributes: [
 			"id",
 			"access_token",
@@ -40,8 +40,9 @@ const automaticTasks = async (req, res) => {
 		res.json(response);
 		return;
 	}
+	const UserList = rows;
 
-	UserList.every(async (user) => {
+	for (const user of UserList) {
 		if (user.expiration < Date.now()) {
 			console.log(
 				"token expired for user:",
@@ -52,19 +53,30 @@ const automaticTasks = async (req, res) => {
 			const result = await refreshCookie(falseReq, user);
 			if (result.error) {
 				console.error(`access token error for user ${user.id}`);
-				response.message += `access token error for user ${user.id}`;
-				return;
+				response.message.push(`access token error for user ${user.id}`);
+				continue;
 			}
 		}
+
+		response.message.push(
+			`User ${user.id} last modified: ${user.last_modified}`
+		);
 		await updateRecentSongs(user.access_token, user.id);
-		if (user.last_modified > Date.now() - 24 * 3600000) {
+		if (user.last_modified < Date.now() - 24 * 3600000) {
 			await removeFromPlaylist(user);
 			await addToPlaylist(user);
+			await User.update(
+				{ last_modified: Date.now() },
+				{ where: { id: user.id } }
+			);
+			response.message.push(
+				`User ${user.id} Daily playlists has been updated`
+			);
 		}
-		response.message += `User ${user.id} has been updated`;
-	});
+		response.message.push(`User ${user.id} has been updated`);
+	}
 
-	deleteOldRemoved();
+	await deleteOldRemoved();
 
 	LastTask = Date.now();
 	res.json(response);
