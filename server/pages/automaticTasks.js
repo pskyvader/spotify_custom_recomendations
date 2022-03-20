@@ -44,11 +44,11 @@ const automaticTasks = async (req, res) => {
 
 	for (const user of UserList) {
 		if (user.expiration < Date.now()) {
-			console.log(
-				"token expired for user:",
-				user.id,
-				". Getting new token"
-			);
+			// console.log(
+			// 	"token expired for user:",
+			// 	user.id,
+			// 	". Getting new token"
+			// );
 			const falseReq = { session: { access_token: user.access_token } };
 			const result = await refreshCookie(falseReq, user);
 			if (result.error) {
@@ -61,10 +61,14 @@ const automaticTasks = async (req, res) => {
 		response.message.push(
 			`User ${user.id} last modified: ${user.last_modified}`
 		);
+		console.log(`Updating recents for user ${user.id}`);
 		await updateRecentSongs(user.access_token, user.id);
 		if (user.last_modified < Date.now() - 24 * 3600000) {
+			console.log(`Remove for user ${user.id}`);
 			await removeFromPlaylist(user);
+			console.log(`Add for user ${user.id}`);
 			await addToPlaylist(user);
+			console.log(`Date for user ${user.id}`);
 			await User.update(
 				{ last_modified: Date.now() },
 				{ where: { id: user.id } }
@@ -75,7 +79,6 @@ const automaticTasks = async (req, res) => {
 		}
 		response.message.push(`User ${user.id} has been updated`);
 	}
-
 	await deleteOldRemoved();
 
 	LastTask = Date.now();
