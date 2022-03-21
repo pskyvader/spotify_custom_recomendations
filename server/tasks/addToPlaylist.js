@@ -16,7 +16,7 @@ const addToPlaylist = async (user) => {
 			[Op.and]: [{ iduser: iduser }, { active: true }],
 		},
 	});
-	const updateResponse = playlists.every(async (playlist) => {
+	const updateResponse = await playlists.every(async (playlist) => {
 		const songlist = await myRecommendedSongs(fakesession, playlist.id);
 		if (songlist.error) {
 			return songlist;
