@@ -6,6 +6,7 @@ const fillOptions = (playlist, topSongs, currentgenres) => {
 		seed_artists: [],
 		seed_genres: [],
 		seed_tracks: [],
+		market: "from_token",
 	};
 	const songs = playlist.length > 0 ? playlist : topSongs;
 

@@ -20,7 +20,18 @@ const formatSongAPI = (song) => {
 	};
 };
 const formatSongList = (songList) => {
-	return songList.map((song) => formatSongAPI(song.track || song));
+	const filteredSongs = songList.filter((song) => {
+		const currentSong = song.track || song;
+		return (
+			currentSong.is_playable === undefined ||
+			currentSong.is_playable === true
+		);
+	});
+
+	return filteredSongs.map((song) => {
+		const currentSong = song.track || song;
+		formatSongAPI(currentSong);
+	});
 };
 
 const songIdFromURI = (songuri) => {
@@ -55,7 +66,8 @@ const getSong = async (access_token, idsong, iduser) => {
 	const data = newsong;
 	data.iduser = iduser;
 	data.song_added = Date.now();
-	await Song.create(data).catch((err) => { //upsert?
+	await Song.create(data).catch((err) => {
+		//upsert?
 		console.error(err);
 		return { error: err.message };
 	});
