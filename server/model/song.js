@@ -22,6 +22,7 @@ const formatSongAPI = (song) => {
 const formatSongList = (songList) => {
 	const filteredSongs = songList.filter((song) => {
 		const currentSong = song.track || song;
+		console.log(currentSong.is_playable);
 		return (
 			currentSong.is_playable === undefined ||
 			currentSong.is_playable === true
