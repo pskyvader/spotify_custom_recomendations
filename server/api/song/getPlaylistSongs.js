@@ -45,7 +45,6 @@ const getPlaylistSongs = async (session, playlistId) => {
 	}
 
 	playlists[playlistId] = formatSongList(items);
-	console.log(playlists[playlistId], items);
 	lastGetResult = Date.now();
 	return playlists[playlistId];
 };

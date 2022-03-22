@@ -6,7 +6,7 @@ import { PlaylistContext } from "../../context/PlaylistContextProvider";
 
 import SongList, { SongListColumns } from "../../components/SongList";
 
-const AddSongs = ({ playlistId ,hidden}) => {
+const RecommendedSongs = ({ playlistId, hidden }) => {
 	const { playlistRecommendedTracks, setPlaylistRecommendedTracks } =
 		useContext(PlaylistContext);
 	useEffect(() => {
@@ -14,7 +14,7 @@ const AddSongs = ({ playlistId ,hidden}) => {
 			Playlist.PlaylistRecommended(playlistId).then((response) => {
 				if (response.error) return console.log(response);
 				playlistRecommendedTracks[playlistId] = response;
-				setPlaylistRecommendedTracks({...playlistRecommendedTracks});
+				setPlaylistRecommendedTracks({ ...playlistRecommendedTracks });
 			});
 		}
 	}, [playlistId, playlistRecommendedTracks, setPlaylistRecommendedTracks]);
@@ -22,7 +22,7 @@ const AddSongs = ({ playlistId ,hidden}) => {
 	if (playlistId === null) {
 		return null;
 	}
-	if(hidden) {
+	if (hidden) {
 		return null;
 	}
 	if (playlistRecommendedTracks[playlistId]) {
@@ -31,10 +31,10 @@ const AddSongs = ({ playlistId ,hidden}) => {
 			playlistId,
 			ButtonAddSong
 		);
-		return <SongList data={data} title="Recommended Songs"/>;
+		return <SongList data={data} title="Recommended Songs" />;
 	}
 
 	return <CircularProgress />;
 };
 
-export default AddSongs;
+export default RecommendedSongs;

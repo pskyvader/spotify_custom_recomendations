@@ -22,7 +22,7 @@ const formatSongAPI = (song) => {
 const formatSongList = (songList) => {
 	return songList.map((song) => {
 		const currentSong = song.track || song;
-		formatSongAPI(currentSong);
+		return formatSongAPI(currentSong);
 	});
 };
 

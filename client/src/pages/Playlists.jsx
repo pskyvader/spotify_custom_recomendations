@@ -12,6 +12,7 @@ import PlayListSongs from "../modules/playlist/PlayListSongs";
 import RecommendedSongs from "../modules/playlist/RecommendedSongs";
 import RecommendedDeleteSongs from "../modules/playlist/RecommendedDeleteSongs";
 import LastPlayedSongs from "../modules/playlist/LastPlayedSongs";
+import DeletedSongs from "../modules/playlist/DeletedSongs";
 import { Playlist } from "../API";
 
 const Root = styled("div")(({ theme }) => {
@@ -103,6 +104,7 @@ const Playlists = () => {
 					<Tab label="Recommended" />
 					<Tab label="Delete" />
 					<Tab label="Last Played" />
+					<Tab label="Deleted Songs" />
 				</Tabs>
 				<Root role="tabpanel" hidden={tabNumber !== 0}>
 					<PlayListSongs
@@ -124,6 +126,12 @@ const Playlists = () => {
 				</Root>
 				<Root role="tabpanel" hidden={tabNumber !== 3}>
 					<LastPlayedSongs hidden={tabNumber !== 3} />
+				</Root>
+				<Root role="tabpanel" hidden={tabNumber !== 4}>
+					<DeletedSongs
+						playlistId={playlistid}
+						hidden={tabNumber !== 4}
+					/>
 				</Root>
 			</Container>
 		);

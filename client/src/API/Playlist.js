@@ -43,3 +43,8 @@ export const PlaylistStatus = async (playlistid) => {
 	const url = `/api/playlist/${playlistid}/status`;
 	return GetRequest(url);
 };
+
+export const DeletedSongs = async (playlistid) => {
+	const url = `/api/playlists/deletedsongs/${playlistid}`;
+	return GetRequest(url);
+};

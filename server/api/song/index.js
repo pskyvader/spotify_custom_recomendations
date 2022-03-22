@@ -4,6 +4,8 @@ const { myRecommendedSongs } = require("./myRecommendedSongs");
 const { myRemoveRecommended } = require("./myRemoveRecommended");
 const { getPlaylistSongs } = require("./getPlaylistSongs");
 const { myTopSongs } = require("./myTopSongs");
+const { getMyDeletedSongs } = require("./getMyDeletedSongs");
+
 
 module.exports = {
 	myApiRecommended,
@@ -11,5 +13,5 @@ module.exports = {
 	myRecommendedSongs,
 	myRemoveRecommended,
 	getPlaylistSongs,
-	myTopSongs,
+	myTopSongs,getMyDeletedSongs
 };

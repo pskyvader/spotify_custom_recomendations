@@ -15,6 +15,7 @@ const PlaylistContextProvider = (props) => {
 	);
 	const [playlistDeleteTracks, setPlaylistDeleteTracks] = useState({});
 	const [lastPlayedTracks, setLastPlayedTracks] = useState(null);
+	const [playlistDeletedSongs, setPlaylistDeletedSongs] = useState({});
 	const provider = {
 		playlists,
 		setPlaylists,
@@ -28,6 +29,8 @@ const PlaylistContextProvider = (props) => {
 		setLastPlayedTracks,
 		playlistActive,
 		setPlaylistActive,
+		playlistDeletedSongs,
+		setPlaylistDeletedSongs,
 	};
 
 	useEffect(() => {

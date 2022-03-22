@@ -64,8 +64,6 @@ const myApiRecommended = async (
 		const currentSong = song.track || song;
 		return currentSong.is_playable;
 	});
-	console.log("filtered", filtered);
-
 	return formatSongList(filtered);
 };
 
