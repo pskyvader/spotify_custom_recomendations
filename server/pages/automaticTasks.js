@@ -62,12 +62,23 @@ const automaticTasks = async (req, res) => {
 			`User ${user.id} last modified: ${user.last_modified}`
 		);
 		console.log(`Updating recents for user ${user.id}`);
-		await updateRecentSongs(user.access_token, user.id);
+		const updateResult = await updateRecentSongs(
+			user.access_token,
+			user.id
+		);
+		if (updateResult.error) {
+			console.log(updateResult);
+		} else {
+			console.log(`User ${user.id} updated`);
+		}
+
 		if (user.last_modified < Date.now() - 24 * 3600000) {
 			console.log(`Remove for user ${user.id}`);
 			await removeFromPlaylist(user);
 			console.log(`Add for user ${user.id}`);
-			await addToPlaylist(user);
+			const addResponse = await addToPlaylist(user);
+			console.log(`User ${user}`, addResponse);
+
 			console.log(`Date for user ${user.id}`);
 			await User.update(
 				{ last_modified: Date.now() },

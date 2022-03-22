@@ -53,7 +53,7 @@ const myApiRecommended = async (
 	Object.entries(options).forEach((option) => {
 		urlOptions += option[0] + "=" + option[1] + "&";
 	});
-	console.log(url + urlOptions);
+	// console.log(url + urlOptions);
 	const response = await request(access_token, url + urlOptions);
 	if (response.error) {
 		return response;

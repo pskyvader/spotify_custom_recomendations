@@ -33,6 +33,9 @@ const addSongPlaylist = async (session, songuri, playlistId) => {
 		songIdFromURI(songuri),
 		user.id
 	);
+	if (currentSong.error) {
+		return currentSong;
+	}
 	await Song.update(
 		{ song_added: Date.now() },
 		{
@@ -43,7 +46,10 @@ const addSongPlaylist = async (session, songuri, playlistId) => {
 				],
 			},
 		}
-	);
+	).catch((err) => {
+		return { error: err.message };
+	});
+
 	addSongPlaylistCache(playlistId, currentSong);
 	removeSongRecommendedCache(playlistId, currentSong);
 	removeSongRemoveRecommendedCache(playlistId, currentSong);

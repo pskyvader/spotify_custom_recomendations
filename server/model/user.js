@@ -65,7 +65,7 @@ const getUser = async (session) => {
 	};
 
 	User.upsert(UserlistCache[session.hash]).catch((err) => {
-		console.log(err);
+		console.log("user Upsert", err);
 		return { error: err.message };
 	});
 	return UserlistCache[session.hash];

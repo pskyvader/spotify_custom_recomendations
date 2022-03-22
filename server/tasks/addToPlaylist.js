@@ -4,6 +4,7 @@ const { myRecommendedSongs } = require("../api/song");
 const { addSongPlaylist } = require("../api/playlist");
 
 const addToPlaylist = async (user) => {
+	const response = { error: false, message: [] };
 	const fakesession = {
 		hash: user.hash,
 		access_token: user.access_token,
@@ -16,11 +17,13 @@ const addToPlaylist = async (user) => {
 			[Op.and]: [{ iduser: iduser }, { active: true }],
 		},
 	});
-	const updateResponse = await playlists.every(async (playlist) => {
+
+	for (const playlist of playlists) {
 		const songlist = await myRecommendedSongs(fakesession, playlist.id);
 		if (songlist.error) {
 			return songlist;
 		}
+		response.message.push(`Max songs available: ${songlist.length}`);
 		let i = 0;
 		for (const songInList of songlist) {
 			if (i > 5) {
@@ -41,14 +44,20 @@ const addToPlaylist = async (user) => {
 			}
 
 			//await ?
-			await addSongPlaylist(fakesession, songInList.action, playlist.id);
+			const addSongResult = await addSongPlaylist(
+				fakesession,
+				songInList.action,
+				playlist.id
+			);
+			if (addSongResult.error) {
+				return addSongResult;
+			}
 			i++;
+			response.message.push(`Added song: ${songInList.name}`);
 		}
-	});
-
-	if (updateResponse.error) {
-		return updateResponse;
 	}
+
+	return response;
 };
 
 module.exports = { addToPlaylist };
