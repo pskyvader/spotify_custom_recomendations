@@ -13,7 +13,7 @@ const updateRecentSongs = async (access_token, iduser) => {
 	while (url) {
 		const response = await request(access_token, url);
 		if (response.error) {
-			console.log(response);
+			// console.log(response);
 			return response;
 		}
 		url = response.next;

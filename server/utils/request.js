@@ -29,10 +29,10 @@ const request = (
 			};
 			try {
 				finalresponse.detail = JSON.parse(responsetext);
-				console.log(finalresponse);
+				// console.log(finalresponse);
 				return finalresponse;
 			} catch (error) {
-				console.log(finalresponse);
+				// console.log(finalresponse);
 				return finalresponse;
 			}
 		}
