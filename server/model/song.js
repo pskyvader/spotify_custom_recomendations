@@ -20,15 +20,7 @@ const formatSongAPI = (song) => {
 	};
 };
 const formatSongList = (songList) => {
-	const filteredSongs = songList.filter((song) => {
-		const currentSong = song.track || song;
-		return (
-			typeof currentSong.is_playable === "undefined" ||
-			currentSong.is_playable === true
-		);
-	});
-
-	return filteredSongs.map((song) => {
+	return songList.map((song) => {
 		const currentSong = song.track || song;
 		formatSongAPI(currentSong);
 	});

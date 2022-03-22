@@ -60,7 +60,12 @@ const myApiRecommended = async (
 		return response;
 	}
 
-	return formatSongList(response.tracks);
+	const filtered = response.tracks.filter((song) => {
+		const currentSong = song.track || song;
+		return currentSong.is_playable;
+	});
+
+	return formatSongList(filtered);
 };
 
 module.exports = { myApiRecommended };
