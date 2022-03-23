@@ -38,6 +38,8 @@ const updateRecentSongs = async (access_token, iduser) => {
 			return { error: err.message };
 		});
 	}
+
+	return { error: false, message: "Songs updated" };
 };
 
 module.exports = { updateRecentSongs };
