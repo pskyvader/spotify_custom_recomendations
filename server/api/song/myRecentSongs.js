@@ -6,12 +6,11 @@ const { formatSong } = require("../../model");
 const myRecentResult = {};
 let lastUpdated = null;
 const myRecentSongs = async (access_token, userId) => {
-	if (lastUpdated === null || lastUpdated < Date.now() - 3600000) {
-		await updateRecentSongs(access_token, userId);
-	}
 	if (myRecentResult[access_token] && lastUpdated > Date.now() - 3600000) {
 		return myRecentResult[access_token];
 	}
+	await updateRecentSongs(access_token, userId);
+
 	const oldRecent = await Song.findAll({
 		where: {
 			[Op.and]: [{ iduser: userId }],

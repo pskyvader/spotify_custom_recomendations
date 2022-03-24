@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
 const { Song } = require("../database");
 const deleteOldRemoved = async () => {
-	await Song.destroy({
+	return Song.destroy({
 		where: {
 			[Op.and]: [
 				{ removed: true },

@@ -25,7 +25,11 @@ const getPlaylistSongs = async (session, playlistId) => {
 	if (currentUser.error) {
 		return currentUser;
 	}
-	if (playlists[playlistId] && lastGetResult > Date.now() - 3600000) {
+	if (
+		playlists[playlistId] &&
+		lastGetResult > Date.now() - 3600000 &&
+		currentUser.last_modified < Date.now() - 3600000
+	) {
 		return playlists[playlistId];
 	}
 	const playlistActive = await playlistStatus(session, playlistId);
