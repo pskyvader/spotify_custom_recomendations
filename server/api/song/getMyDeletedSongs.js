@@ -4,14 +4,15 @@ const { getUser, formatSong } = require("../../model");
 
 const myDeletedSongsResult = {};
 let lastGetResult = null;
-const getMyDeletedSongs = async (session,playlistId) => {
+const getMyDeletedSongs = async (session, playlistId) => {
 	const currentUser = await getUser(session);
 	const access_token = session.access_token;
 	const userId = currentUser.id;
 
 	if (
 		myDeletedSongsResult[access_token] &&
-		lastGetResult > Date.now() - 3600000
+		lastGetResult > Date.now() - 3600000 &&
+		currentUser.last_modified < Date.now() - 3600000
 	) {
 		return myDeletedSongsResult[access_token];
 	}

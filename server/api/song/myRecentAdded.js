@@ -6,7 +6,7 @@ const recentadded = {};
 let lastGetResult = null;
 
 const myRecentAdded = async (userId, playlistId) => {
-	if (recentadded[playlistId] && lastGetResult > Date.now() - 3600000) {
+	if (recentadded[playlistId] && lastGetResult > Date.now() - 3600000 ) {
 		return recentadded[playlistId];
 	}
 

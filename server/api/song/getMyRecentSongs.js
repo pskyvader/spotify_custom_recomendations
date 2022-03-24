@@ -10,7 +10,11 @@ const getMyRecentSongs = async (session) => {
 	const access_token = session.access_token;
 	const userId = currentUser.id;
 
-	if (myRecentResult[access_token] && lastGetResult > Date.now() - 3600000) {
+	if (
+		myRecentResult[access_token] &&
+		lastGetResult > Date.now() - 3600000 &&
+		currentUser.last_modified < Date.now() - 3600000
+	) {
 		return myRecentResult[access_token];
 	}
 	// await updateRecentSongs(access_token, userId);
