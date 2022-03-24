@@ -14,7 +14,7 @@ const automaticTasks = async (req, res) => {
 		error: false,
 		message: [],
 	};
-	if (false && LastTask > Date.now() - 3600000) {
+	if (LastTask > Date.now() - 3600000) {
 		response.error = true;
 		response.message = "Not able to run task for next hour";
 		res.json(response);
@@ -29,11 +29,11 @@ const automaticTasks = async (req, res) => {
 			"hash",
 			"last_modified",
 		],
-		// where: {
-		// 	last_modified: {
-		// 		[Op.lte]: Date.now() - 3600000,
-		// 	},
-		// },
+		where: {
+			last_modified: {
+				[Op.lte]: Date.now() - 3600000,
+			},
+		},
 	});
 	if (count === 0) {
 		response.message = "No users to update at this time";
@@ -78,9 +78,10 @@ const automaticTasks = async (req, res) => {
 			console.log(`User ${user.id} updated`);
 		}
 
-		if (true || user.last_modified < Date.now() - 86400000) {
+		if (user.last_modified < Date.now() - 86400000) {
 			console.log(`Remove for user ${user.id}`);
-			await removeFromPlaylist(user);
+			const removeResponse = await removeFromPlaylist(user);
+			console.log(`User ${user}`, removeResponse);
 			console.log(`Add for user ${user.id}`);
 			const addResponse = await addToPlaylist(user);
 			console.log(`User ${user}`, addResponse);

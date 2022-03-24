@@ -4,6 +4,7 @@ const { myRemoveRecommended } = require("../api/song");
 const { removeSongPlaylist } = require("../api/playlist");
 
 const removeFromPlaylist = async (user) => {
+	const response = { error: false, message: [] };
 	const fakesession = {
 		hash: user.hash,
 		access_token: user.access_token,
@@ -17,14 +18,17 @@ const removeFromPlaylist = async (user) => {
 		},
 	});
 
-	const updateResponse = playlists.every(async (playlist) => {
+	for (const playlist of playlists) {
 		const songlist = await myRemoveRecommended(fakesession, playlist.id);
 		if (songlist.error) {
 			return songlist;
 		}
+		response.message.push(
+			`Max songs available for deletion: ${songlist.length}`
+		);
 		let i = 0;
 		for (const songInList of songlist) {
-			if (i > 5) {
+			if (i >= 5) {
 				break;
 			}
 			await removeSongPlaylist(
@@ -33,12 +37,11 @@ const removeFromPlaylist = async (user) => {
 				playlist.id
 			);
 			i++;
+			response.message.push(`Added song: ${songInList.name}`);
 		}
-	});
-
-	if (updateResponse.error) {
-		return updateResponse;
 	}
+
+	return response;
 };
 
 module.exports = { removeFromPlaylist };

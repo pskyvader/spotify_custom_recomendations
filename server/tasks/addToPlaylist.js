@@ -26,7 +26,7 @@ const addToPlaylist = async (user) => {
 		response.message.push(`Max songs available: ${songlist.length}`);
 		let i = 0;
 		for (const songInList of songlist) {
-			if (i > 5) {
+			if (i >= 5) {
 				break;
 			}
 			const currentSong = await Song.findOne({
