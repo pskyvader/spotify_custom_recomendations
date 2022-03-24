@@ -11,8 +11,7 @@ const getMyDeletedSongs = async (session, playlistId) => {
 
 	if (
 		myDeletedSongsResult[access_token] &&
-		lastGetResult > Date.now() - 3600000 &&
-		currentUser.last_modified < Date.now() - 3600000
+		lastGetResult > Date.now() - 3600000
 	) {
 		return myDeletedSongsResult[access_token];
 	}

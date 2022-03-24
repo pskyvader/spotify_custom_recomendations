@@ -8,8 +8,7 @@ let lastUpdated = null;
 const myRecentSongs = async (access_token, userId) => {
 	if (
 		myRecentResult[access_token] &&
-		lastUpdated > Date.now() - 3600000 &&
-		currentUser.last_modified < Date.now() - 3600000
+		lastUpdated > Date.now() - 3600000
 	) {
 		return myRecentResult[access_token];
 	}

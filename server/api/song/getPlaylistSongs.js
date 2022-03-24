@@ -27,8 +27,7 @@ const getPlaylistSongs = async (session, playlistId) => {
 	}
 	if (
 		playlists[playlistId] &&
-		lastGetResult > Date.now() - 3600000 &&
-		currentUser.last_modified < Date.now() - 3600000
+		lastGetResult > Date.now() - 3600000
 	) {
 		return playlists[playlistId];
 	}
