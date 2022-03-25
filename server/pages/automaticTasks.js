@@ -64,9 +64,9 @@ const automaticTasks = async (req, res) => {
 			console.log(
 				`user ${
 					user.id
-				} should be able to process requests, date: ${Date.now().toLocaleString()}, expiration:${
-					user.expiration
-				}`
+				} should be able to process requests, date: ${new Date(
+					Date.now()
+				).toString()}, expiration:${user.expiration}`
 			);
 		}
 
@@ -102,8 +102,8 @@ const automaticTasks = async (req, res) => {
 		} else {
 			console.log(
 				`User ${user.id} not yet able for daily updates`,
-				user.last_modified,
-				Date.now()
+				new Date(user.last_modified).toString(),
+				new Date(Date.now()).toString()
 			);
 		}
 		response.message.push(`User ${user.id} has been updated`);
