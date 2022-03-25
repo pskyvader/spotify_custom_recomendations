@@ -43,7 +43,7 @@ const automaticTasks = async (req, res) => {
 	const UserList = rows;
 
 	for (const user of UserList) {
-		if (user.expiration < Date.now()) {
+		if (user.expiration < Date.now() - 600000) {
 			// console.log(
 			// 	"token expired for user:",
 			// 	user.id,
@@ -61,7 +61,13 @@ const automaticTasks = async (req, res) => {
 			console.log(`user ${user.id} Refresh token`, result);
 			user.access_token = result.access_token;
 		} else {
-			console.log(`user ${user.id} should be able to process requests`);
+			console.log(
+				`user ${
+					user.id
+				} should be able to process requests, date: ${Date.now().toLocaleString()}, expiration:${
+					user.expiration
+				}`
+			);
 		}
 
 		response.message.push(
@@ -81,10 +87,10 @@ const automaticTasks = async (req, res) => {
 		if (user.last_modified < Date.now() - 86400000) {
 			console.log(`Remove for user ${user.id}`);
 			const removeResponse = await removeFromPlaylist(user);
-			console.log(`User ${user}`, removeResponse);
+			console.log(`User ${user.id}`, removeResponse);
 			console.log(`Add for user ${user.id}`);
 			const addResponse = await addToPlaylist(user);
-			console.log(`User ${user}`, addResponse);
+			console.log(`User ${user.id} Added response:`, addResponse);
 			console.log(`Date for user ${user.id}`);
 			await User.update(
 				{ last_modified: Date.now() },
