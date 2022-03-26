@@ -8,7 +8,6 @@ const { deleteOldRemoved } = require("../tasks/deleteOldRemoved");
 const { addToPlaylist } = require("../tasks/addToPlaylist");
 
 let LastTask = null;
-
 const automaticTasks = async (req, res) => {
 	const response = {
 		error: false,
@@ -44,11 +43,6 @@ const automaticTasks = async (req, res) => {
 
 	for (const user of UserList) {
 		if (user.expiration < Date.now() - 600000) {
-			// console.log(
-			// 	"token expired for user:",
-			// 	user.id,
-			// 	". Getting new token"
-			// );
 			const falseReq = { session: { access_token: user.access_token } };
 			const result = await refreshCookie(falseReq, user);
 			if (result.error) {
@@ -65,8 +59,12 @@ const automaticTasks = async (req, res) => {
 				`user ${
 					user.id
 				} should be able to process requests, date: ${new Date(
-					Date.now()
-				).toString()}, expiration:${user.expiration}`
+					Date.now() - 600000
+				).toString()}, expiration:${user.expiration}, Minus: ${
+					Date.now() - 600000 - user.expiration
+				}, Minus:${user.expiration < Date.now() - 600000},is date:${
+					user.expiration instanceof Date
+				} `
 			);
 		}
 
