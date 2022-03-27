@@ -42,7 +42,7 @@ const automaticTasks = async (req, res) => {
 	const UserList = rows;
 
 	for (const user of UserList) {
-		if (user.expiration < Date.now() - 600000) {
+		if (user.expiration < Date.now() - 1200000) {
 			const falseReq = { session: { access_token: user.access_token } };
 			const result = await refreshCookie(falseReq, user);
 			if (result.error) {
