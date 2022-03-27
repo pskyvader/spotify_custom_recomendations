@@ -30,6 +30,7 @@ const getUser = async (session) => {
 			image: thisUser.image,
 			access_token: thisUser.access_token,
 			refresh_token: thisUser.refresh_token,
+			expiration: thisUser.expiration,
 			hash: thisUser.hash,
 		};
 		return UserlistCache[thisUser.hash];
