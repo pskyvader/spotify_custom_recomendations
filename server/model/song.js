@@ -59,7 +59,6 @@ const getSong = async (access_token, idsong, iduser) => {
 	data.iduser = iduser;
 	data.song_added = Date.now();
 	await Song.create(data).catch((err) => {
-		//upsert?
 		console.error(err);
 		return { error: err.message };
 	});

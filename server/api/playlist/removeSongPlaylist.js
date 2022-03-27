@@ -7,6 +7,7 @@ const { removeSongPlaylistCache } = require("../song/getPlaylistSongs");
 const {
 	removeSongRemoveRecommendedCache,
 } = require("../song/myRemoveRecommended");
+const { addDeletedSongsCache } = require("../song/getMyDeletedSongs");
 
 const removeSongPlaylist = async (session, songuri, playlistId) => {
 	const user = await getUser(session);
@@ -35,16 +36,17 @@ const removeSongPlaylist = async (session, songuri, playlistId) => {
 		songIdFromURI(songuri),
 		user.id
 	);
+
 	deletedSong.removed = true;
 	deletedSong.song_removed = Date.now();
 	await Song.update(deletedSong, {
 		where: {
-			[Op.and]: [{ iduser: deletedSong.iduser }, { id: deletedSong.id }],
+			[Op.and]: [{ iduser: user.id }, { id: deletedSong.id }],
 		},
 	});
 	removeSongPlaylistCache(playlistId, deletedSong);
 	removeSongRemoveRecommendedCache(playlistId, deletedSong);
-
+	addDeletedSongsCache(playlistId, deletedSong);
 
 	return {
 		message: "success",
