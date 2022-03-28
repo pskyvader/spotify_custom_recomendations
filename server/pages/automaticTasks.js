@@ -62,7 +62,7 @@ const automaticTasks = async (req, res) => {
 					Date.now() - 600000
 				).toString()}, expiration:${user.expiration}, Minus: ${
 					Date.now() - 600000 - user.expiration
-				}, Minus:${user.expiration < Date.now() - 600000},is date:${
+				}, Minus:${user.expiration < Date.now() - 1200000},is date:${
 					user.expiration instanceof Date
 				} `
 			);
