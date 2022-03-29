@@ -2,6 +2,8 @@ const { getPlaylistSongs } = require("./getPlaylistSongs");
 const { myTopSongs } = require("./myTopSongs");
 const { myApiRecommended } = require("./myApiRecommended");
 const { getUser } = require("../../model");
+const { myRecentSongs } = require("./myRecentSongs");
+const { subtractById } = require("../../utils");
 
 const recommended = {};
 let lastGetResult = null;
@@ -28,10 +30,7 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return currentUser;
 	}
 	const access_token = session.access_token;
-	if (
-		recommended[playlistId] &&
-		lastGetResult > Date.now() - 3600000
-	) {
+	if (recommended[playlistId] && lastGetResult > Date.now() - 3600000) {
 		return recommended[playlistId];
 	}
 
@@ -39,6 +38,13 @@ const myRecommendedSongs = async (session, playlistId) => {
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
+
+	const recentSongs = await myRecentSongs(access_token, currentUser.id);
+	if (recentSongs.error) {
+		return recentSongs;
+	}
+	const playlistFiltered = subtractById(currentPlaylist, recentSongs);
+
 	const topSongs = await myTopSongs(access_token);
 	if (topSongs.error) {
 		return topSongs;
@@ -46,7 +52,7 @@ const myRecommendedSongs = async (session, playlistId) => {
 
 	const recommendedTrack = await myApiRecommended(
 		access_token,
-		currentPlaylist,
+		playlistFiltered,
 		topSongs
 	);
 	if (recommendedTrack.error) {
