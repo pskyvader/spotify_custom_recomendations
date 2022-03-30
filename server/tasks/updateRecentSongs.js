@@ -25,8 +25,8 @@ const updateRecentSongs = async (access_token, iduser) => {
 			newsong.track.id,
 			iduser
 		);
-		if (response.error) {
-			return response;
+		if (currentSong.error) {
+			return currentSong;
 		}
 		await Song.update(
 			{ song_last_played: newsong.played_at },
