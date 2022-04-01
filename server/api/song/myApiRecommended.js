@@ -13,22 +13,24 @@ const fillOptions = (playlist, topSongs, currentgenres) => {
 	if (songs.length > 0) {
 		for (let index = 0; index < 5; index++) {
 			const idsong = Math.floor(Math.random() * songs.length);
-			const currentSong = songs[idsong];
-			switch (Math.floor(Math.random() * 3)) {
-				case 0:
-					options.seed_artists.push(currentSong.idartist);
-					break;
-				case 1:
-					options.seed_tracks.push(currentSong.id);
-					break;
-				default:
-					options.seed_genres.push(
-						currentgenres[
-							Math.floor(Math.random() * currentgenres.length)
-						]
-					);
-					break;
+			const randomSong = songs[idsong];
+			const randomNumber = Math.floor(Math.random() * 10);
+			const randomGenre =
+				currentgenres[Math.floor(Math.random() * currentgenres.length)];
+
+			//50%
+			if (randomNumber < 5) {
+				options.seed_tracks.push(randomSong.id);
+				continue;
 			}
+			//30%
+			if (randomNumber < 8) {
+				options.seed_artists.push(randomSong.idartist);
+				continue;
+			}
+
+			//20%
+			options.seed_genres.push(randomGenre);
 		}
 	} else {
 		for (let index = 0; index < 5; index++) {
