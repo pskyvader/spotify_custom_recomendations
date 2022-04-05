@@ -31,6 +31,9 @@ const getMyDeletedSongs = async (session, playlistId) => {
 		return myDeletedSongsResult[playlistId];
 	}
 
+
+	// fooInstance.getBar()
+
 	const DeletedSongs = await Song.findAll({
 		where: {
 			[Op.and]: [
@@ -46,6 +49,9 @@ const getMyDeletedSongs = async (session, playlistId) => {
 	}).catch((err) => {
 		return { error: err.message };
 	});
+
+	console.log(DeletedSongs);
+
 	myDeletedSongsResult[playlistId] = DeletedSongs.map((currentSong) => {
 		return formatSong(currentSong);
 	});

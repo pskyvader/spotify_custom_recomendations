@@ -43,6 +43,13 @@ const formatSong = (song) => {
 };
 
 const getSong = async (access_token, idsong, iduser) => {
+	const a = await Song.findOne({
+		where: {
+			id: idsong,
+		},
+	});
+	console.log(a);
+
 	const currentSong = await Song.findOne({
 		where: { [Op.and]: [{ iduser: iduser }, { id: idsong }] },
 	});
@@ -62,7 +69,7 @@ const getSong = async (access_token, idsong, iduser) => {
 		console.error(err);
 		return { error: err.message };
 	});
-	
+
 	return newsong;
 };
 

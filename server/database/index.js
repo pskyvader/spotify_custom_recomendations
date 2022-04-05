@@ -41,24 +41,15 @@ Playlist.init(PlaylistConfiguration, {
 	// modelName: "Playlist", // We need to choose the model name
 });
 
-User.belongsToMany(Song, {
-	through: "user_song",
-	as: "songs",
-	foreignKey: "user_id",
-});
-
-Song.belongsToMany(User, {
-	through: "user_song",
-	as: "users",
-	foreignKey: "song_id",
-});
+User.belongsToMany(Song, { through: "user_song" });
+Song.belongsToMany(User, { through: "user_song" });
 
 
 const connection = async () => {
 	try {
 		await sequelize.authenticate();
 		console.log("Connection has been established successfully.");
-		// sequelize.sync({ force: true ,alter:true});
+		// sequelize.sync({ force: true});
 		// sequelize.sync({ alter: true });
 		// sequelize.sync();
 	} catch (error) {
