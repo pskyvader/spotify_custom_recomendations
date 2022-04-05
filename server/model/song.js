@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 
-const { Song } = require("../database");
+const { Song, User } = require("../database");
 const { request } = require("../utils");
 
 const formatSongAPI = (song) => {
@@ -42,16 +42,13 @@ const formatSong = (song) => {
 	};
 };
 
-const getSong = async (access_token, idsong, iduser) => {
-	const a = await Song.findOne({
-		where: {
-			id: idsong,
-		},
-	});
-	console.log(a);
-
+const getSong = async (access_token, idsong, userId) => {
 	const currentSong = await Song.findOne({
-		where: { [Op.and]: [{ iduser: iduser }, { id: idsong }] },
+		where: { id: idsong },
+		include: {
+			model: User,
+			where: { id: userId },
+		},
 	});
 	if (currentSong !== null) {
 		return formatSong(currentSong);
@@ -63,12 +60,13 @@ const getSong = async (access_token, idsong, iduser) => {
 	}
 	const newsong = formatSongAPI(response);
 	const data = newsong;
-	data.iduser = iduser;
+	// data.iduser = userId;
 	data.song_added = Date.now();
-	await Song.create(data).catch((err) => {
+	const createdSong = await Song.findOrCreate(data).catch((err) => {
 		console.error(err);
 		return { error: err.message };
 	});
+	console.log(createdSong);
 
 	return newsong;
 };

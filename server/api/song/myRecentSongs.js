@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const { updateRecentSongs } = require("../../tasks/updateRecentSongs");
-const { Song } = require("../../database");
+const { Song, User } = require("../../database");
 const { formatSong } = require("../../model");
 
 const myRecentResult = {};
@@ -12,11 +12,11 @@ const myRecentSongs = async (access_token, userId) => {
 	await updateRecentSongs(access_token, userId);
 
 	const oldRecent = await Song.findAll({
-		where: {
-			[Op.and]: [
-				{ iduser: userId },
-				{ song_last_played: { [Op.lt]: Date.now() - 86400000 } },
-			],
+		where: { song_last_played: { [Op.lt]: Date.now() - 86400000 } },
+
+		include: {
+			model: User,
+			where: { id: userId },
 		},
 		order: [["song_last_played", "DESC"]],
 		raw: true,
