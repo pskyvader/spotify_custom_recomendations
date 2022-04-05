@@ -41,9 +41,8 @@ Playlist.init(PlaylistConfiguration, {
 	// modelName: "Playlist", // We need to choose the model name
 });
 
-User.belongsToMany(Song, { through: "user_song" });
-Song.belongsToMany(User, { through: "user_song" });
-
+User.belongsToMany(Song, { through: "user_song", as: "songs" });
+Song.belongsToMany(User, { through: "user_song", as: "users" });
 
 const connection = async () => {
 	try {

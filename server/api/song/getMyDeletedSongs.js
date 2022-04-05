@@ -25,38 +25,28 @@ const getMyDeletedSongs = async (session, playlistId) => {
 	const userId = currentUser.id;
 
 	if (
-		myDeletedSongsResult[playlistId] &&
-		lastGetResult > Date.now() - 3600000
+		true ||
+		(myDeletedSongsResult[playlistId] &&
+			lastGetResult > Date.now() - 3600000)
 	) {
+		const DeletedSongs = await Song.findAll({
+			where: { removed: true },
+			include: "users",
+			order: [["song_removed", "DESC"]],
+			raw: true,
+			nest: true,
+		}).catch((err) => {
+			return { error: err.message };
+		});
+
+		console.log(DeletedSongs);
+
+		myDeletedSongsResult[playlistId] = DeletedSongs.map((currentSong) => {
+			return formatSong(currentSong);
+		});
+		lastGetResult = Date.now();
 		return myDeletedSongsResult[playlistId];
 	}
-
-
-	// fooInstance.getBar()
-
-	const DeletedSongs = await Song.findAll({
-		where: {
-			[Op.and]: [
-				{ iduser: userId },
-				{
-					removed: true,
-				},
-			],
-		},
-		order: [["song_removed", "DESC"]],
-		raw: true,
-		nest: true,
-	}).catch((err) => {
-		return { error: err.message };
-	});
-
-	console.log(DeletedSongs);
-
-	myDeletedSongsResult[playlistId] = DeletedSongs.map((currentSong) => {
-		return formatSong(currentSong);
-	});
-	lastGetResult = Date.now();
-	return myDeletedSongsResult[playlistId];
 };
 
 module.exports = {

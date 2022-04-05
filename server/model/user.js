@@ -20,10 +20,7 @@ const getUser = async (session) => {
 				{ refresh_token: session.refresh_token },
 			],
 		},
-		include: "Song",
 	});
-
-	console.log("thisUser", thisUser);
 
 	if (thisUser !== null) {
 		UserlistCache[thisUser.hash] = {
