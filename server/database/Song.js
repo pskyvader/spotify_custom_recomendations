@@ -6,13 +6,13 @@ const SongConfiguration = {
 		// autoIncrement: true,
 		allowNull: false,
 		primaryKey: true,
-		unique: false,
+		unique: true,
 	},
-	iduser: {
-		type: DataTypes.BIGINT,
-		// autoIncrement: true,
-		allowNull: false,
-	},
+	// iduser: {
+	// 	type: DataTypes.BIGINT,
+	// 	// autoIncrement: true,
+	// 	allowNull: false,
+	// },
 	name: {
 		type: DataTypes.STRING,
 		allowNull: false,
