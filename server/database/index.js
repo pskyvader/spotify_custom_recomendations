@@ -43,7 +43,7 @@ Playlist.init(PlaylistConfiguration, {
 });
 
 class UserSong extends Model {}
-Playlist.init(UserSongConfiguration, {
+UserSong.init(UserSongConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
 	// modelName: "Playlist", // We need to choose the model name
@@ -55,7 +55,7 @@ const connection = async () => {
 	try {
 		await sequelize.authenticate();
 		console.log("Connection has been established successfully.");
-		sequelize.sync({ force: true});
+		// sequelize.sync({ force: true});
 		// sequelize.sync({ alter: true });
 		// sequelize.sync();
 	} catch (error) {

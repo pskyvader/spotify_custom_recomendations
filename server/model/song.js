@@ -47,10 +47,25 @@ const getSong = async (access_token, idsong, userId) => {
 		where: { id: idsong },
 		include: {
 			model: User,
-			where: { id: userId },
+			// where: { id: userId },
 		},
 	});
+	console.log("current song", currentSong);
+
 	if (currentSong !== null) {
+		const exists = await currentSong.getUsers({ where: { id: userId } });
+		console.log("exists", exists);
+		if (exists.length === 0) {
+			console.log(
+				"added",
+				await currentSong.addUser(
+					{ where: { id: userId } },
+					{
+						through: { song_added: Date.now() },
+					}
+				)
+			);
+		}
 		return formatSong(currentSong);
 	}
 	let url = `https://api.spotify.com/v1/tracks/${idsong}`;
@@ -62,11 +77,11 @@ const getSong = async (access_token, idsong, userId) => {
 	const data = newsong;
 	// data.iduser = userId;
 	data.song_added = Date.now();
-	const createdSong = await Song.findOrCreate(data).catch((err) => {
+	const createdSong = await Song.create(data).catch((err) => {
 		console.error(err);
 		return { error: err.message };
 	});
-	console.log(createdSong);
+	console.log("createdSong", createdSong);
 
 	return newsong;
 };

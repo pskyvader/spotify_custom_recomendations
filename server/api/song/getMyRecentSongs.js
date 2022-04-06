@@ -14,23 +14,30 @@ const getMyRecentSongs = async (session) => {
 		return myRecentResult[access_token];
 	}
 	// await updateRecentSongs(access_token, userId);
-
 	const oldRecent = await Song.findAll({
-		where: {
-			song_last_played: {
-				[Op.ne]: null,
-			},
-		},
+		// where: {
+		// 	song_last_played: {
+		// 		[Op.ne]: null,
+		// 	},
+		// },
 		include: {
 			model: User,
 			where: { id: userId },
 		},
-		order: [["song_last_played", "DESC"]],
+		through: {
+			song_last_played: {
+				[Op.ne]: null,
+			},
+		},
+		// order: [["song_last_played", "DESC"]],
 		raw: true,
 		nest: true,
 	}).catch((err) => {
 		return { error: err.message };
 	});
+
+	// console.log("oldRecent", oldRecent);
+
 	myRecentResult[access_token] = oldRecent.map((currentSong) => {
 		currentSong.action = currentSong.song_last_played
 			? currentSong.song_last_played.toLocaleString()
