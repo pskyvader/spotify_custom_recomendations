@@ -1,6 +1,7 @@
 const { Sequelize, Model } = require("sequelize");
 const { UserConfiguration } = require("./User");
 const { SongConfiguration } = require("./Song");
+const { UserSongConfiguration } = require("./UserSong");
 const { PlaylistConfiguration } = require("./Playlist");
 
 // const sequelize = new Sequelize(process.env.DATABASE_URL+'?ssl=true' || "sqlite::memory:"); // Example for sqlite
@@ -41,8 +42,14 @@ Playlist.init(PlaylistConfiguration, {
 	// modelName: "Playlist", // We need to choose the model name
 });
 
-User.belongsToMany(Song, { through: "user_song"});
-Song.belongsToMany(User, { through: "user_song"});
+class UserSong extends Model {}
+Playlist.init(UserSongConfiguration, {
+	// Other model options go here
+	sequelize, // We need to pass the connection instance
+	// modelName: "Playlist", // We need to choose the model name
+});
+User.belongsToMany(Song, { through: UserSong });
+Song.belongsToMany(User, { through: UserSong });
 
 const connection = async () => {
 	try {
