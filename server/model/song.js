@@ -42,46 +42,44 @@ const formatSong = (song) => {
 	};
 };
 
-const getSong = async (access_token, idsong, userId) => {
+const addUserToSong = async (currentSong, userId) => {
+	console.log(currentSong);
+	await currentSong
+		.addUser(userId, { through: { song_added: Date.now() } })
+		.catch((err) => {
+			console.error(err);
+			return { error: err.message };
+		});
+	return { error: false };
+};
+
+const getSong = async (access_token, songId, userId) => {
 	const currentSong = await Song.findOne({
-		where: { id: idsong },
-		include: {
-			model: User,
-			// where: { id: userId },
-		},
+		where: { id: songId },
 	});
-	console.log("current song", currentSong);
 
 	if (currentSong !== null) {
 		const exists = await currentSong.getUsers({ where: { id: userId } });
-		console.log("exists", exists);
 		if (exists.length === 0) {
-			console.log(
-				"added",
-				await currentSong.addUser(
-					{ where: { id: userId } },
-					{
-						through: { song_added: Date.now() },
-					}
-				)
-			);
+			await addUserToSong(currentSong, userId);
 		}
 		return formatSong(currentSong);
 	}
-	let url = `https://api.spotify.com/v1/tracks/${idsong}`;
+	let url = `https://api.spotify.com/v1/tracks/${songId}`;
 	const response = await request(access_token, url);
 	if (response.error) {
 		return response;
 	}
 	const newsong = formatSongAPI(response);
 	const data = newsong;
-	// data.iduser = userId;
-	data.song_added = Date.now();
-	const createdSong = await Song.create(data).catch((err) => {
-		console.error(err);
+	const createdSong = await Song.findOrCreate({
+		where: { id: songId },
+		defaults: data,
+	}).catch((err) => {
+		console.error("create error", err);
 		return { error: err.message };
 	});
-	console.log("createdSong", createdSong);
+	await addUserToSong(createdSong, userId);
 
 	return newsong;
 };
