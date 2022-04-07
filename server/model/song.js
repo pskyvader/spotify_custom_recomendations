@@ -43,13 +43,15 @@ const formatSong = (song) => {
 };
 
 const addUserToSong = async (currentSong, userId) => {
-	console.log(currentSong);
-	await currentSong
-		.addUser(userId, { through: { song_added: Date.now() } })
-		.catch((err) => {
-			console.error(err);
-			return { error: err.message };
-		});
+	const exists = await currentSong.hasUser(userId);
+	if (!exists) {
+		await currentSong
+			.addUser(userId, { through: { song_added: Date.now() } })
+			.catch((err) => {
+				console.error(err);
+				return { error: err.message };
+			});
+	}
 	return { error: false };
 };
 
@@ -59,10 +61,7 @@ const getSong = async (access_token, songId, userId) => {
 	});
 
 	if (currentSong !== null) {
-		const exists = await currentSong.getUsers({ where: { id: userId } });
-		if (exists.length === 0) {
-			await addUserToSong(currentSong, userId);
-		}
+		await addUserToSong(currentSong, userId);
 		return formatSong(currentSong);
 	}
 	let url = `https://api.spotify.com/v1/tracks/${songId}`;
@@ -79,7 +78,9 @@ const getSong = async (access_token, songId, userId) => {
 		console.error("create error", err);
 		return { error: err.message };
 	});
-	await addUserToSong(createdSong, userId);
+	// console.log("created song", createdSong);
+
+	await addUserToSong(createdSong[0], userId);
 
 	return newsong;
 };

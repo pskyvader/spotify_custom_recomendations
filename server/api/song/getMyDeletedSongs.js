@@ -24,17 +24,17 @@ const getMyDeletedSongs = async (session, playlistId) => {
 	const currentUser = await getUser(session);
 	const userId = currentUser.id;
 
-	if (
-		myDeletedSongsResult[playlistId] &&
+	if (myDeletedSongsResult[playlistId] &&
 		lastGetResult > Date.now() - 3600000
 	) {
 		const DeletedSongs = await Song.findAll({
-			where: { removed: true },
+			// where: { removed: true },
 			include: {
 				model: User,
 				where: { id: userId },
 			},
-			order: [["song_removed", "DESC"]],
+			through: { removed: true },
+			// order: [["song_removed", "DESC"]],
 			raw: true,
 			nest: true,
 		}).catch((err) => {
