@@ -32,7 +32,11 @@ const GetRequest = (
 				return finalresponse;
 			}
 		}
-		return response.json();
+		try {
+			return response.json();
+		} catch (error) {
+			return { error: true, message: response };
+		}
 	});
 };
 

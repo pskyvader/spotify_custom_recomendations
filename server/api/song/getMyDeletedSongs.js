@@ -24,29 +24,31 @@ const getMyDeletedSongs = async (session, playlistId) => {
 	const currentUser = await getUser(session);
 	const userId = currentUser.id;
 
-	if (myDeletedSongsResult[playlistId] &&
+	if (
+		myDeletedSongsResult[playlistId] &&
 		lastGetResult > Date.now() - 3600000
 	) {
-		const DeletedSongs = await Song.findAll({
-			// where: { removed: true },
-			include: {
-				model: User,
-				where: { id: userId },
-			},
-			through: { removed: true },
-			// order: [["song_removed", "DESC"]],
-			raw: true,
-			nest: true,
-		}).catch((err) => {
-			return { error: err.message };
-		});
-
-		myDeletedSongsResult[playlistId] = DeletedSongs.map((currentSong) => {
-			return formatSong(currentSong);
-		});
-		lastGetResult = Date.now();
 		return myDeletedSongsResult[playlistId];
 	}
+	const DeletedSongs = await Song.findAll({
+		// where: { removed: true },
+		include: {
+			model: User,
+			where: { id: userId },
+		},
+		through: { removed: true },
+		// order: [["song_removed", "DESC"]],
+		raw: true,
+		nest: true,
+	}).catch((err) => {
+		return { error: err.message };
+	});
+
+	myDeletedSongsResult[playlistId] = DeletedSongs.map((currentSong) => {
+		return formatSong(currentSong);
+	});
+	lastGetResult = Date.now();
+	return myDeletedSongsResult[playlistId];
 };
 
 module.exports = {

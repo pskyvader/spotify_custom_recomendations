@@ -15,7 +15,10 @@ const SessionContextProvider = (props) => {
 	useLayoutEffect(() => {
 		if (LoggedIn === null) {
 			Me.LoggedIn().then((response) => {
-				if (response.error) return false;
+				if (response.error) {
+					setLoggedIn(false);
+					return false;
+				}
 				if (response.loggedin !== LoggedIn) {
 					setLoggedIn(response.loggedin);
 				}
