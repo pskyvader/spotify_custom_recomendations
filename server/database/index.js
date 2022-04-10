@@ -63,4 +63,4 @@ const connection = async () => {
 	}
 };
 
-module.exports = { connection, User, Song, Playlist };
+module.exports = { connection, User, Song, Playlist, UserSong };
