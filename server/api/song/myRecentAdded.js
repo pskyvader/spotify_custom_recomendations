@@ -21,8 +21,10 @@ const myRecentAdded = async (userId, playlistId) => {
 			where: { id: userId },
 		},
 		through: {
-			song_added: {
-				[Op.gte]: Date.now() - 604800000,
+			where: {
+				song_added: {
+					[Op.gte]: Date.now() - 604800000,
+				},
 			},
 		},
 		raw: true,

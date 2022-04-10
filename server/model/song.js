@@ -48,7 +48,7 @@ const addUserToSong = async (currentSong, userId) => {
 		await currentSong
 			.addUser(userId, { through: { song_added: Date.now() } })
 			.catch((err) => {
-				console.error(err);
+				console.error(err.message);
 				return { error: err.message };
 			});
 	}

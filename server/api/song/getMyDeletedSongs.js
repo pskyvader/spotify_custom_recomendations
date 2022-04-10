@@ -37,8 +37,9 @@ const getMyDeletedSongs = async (session, playlistId) => {
 		include: {
 			model: User,
 			where: { id: userId },
+			attributes: [],
 			through: {
-				attributes: ["song_removed", "removed"],
+				attributes: [],
 				where: { removed: true },
 			},
 		},

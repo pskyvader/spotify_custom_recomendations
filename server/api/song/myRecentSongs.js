@@ -18,8 +18,10 @@ const myRecentSongs = async (access_token, userId) => {
 			where: { id: userId },
 		},
 		through: {
-			song_added: {
-				[Op.gte]: Date.now() - 86400000,
+			where: {
+				song_added: {
+					[Op.gte]: Date.now() - 86400000,
+				},
 			},
 		},
 		// order: [["song_last_played", "DESC"]],
@@ -28,7 +30,7 @@ const myRecentSongs = async (access_token, userId) => {
 	}).catch((err) => {
 		return { error: err.message };
 	});
-	
+
 	myRecentResult[access_token] = oldRecent.map((currentSong) =>
 		formatSong(currentSong)
 	);

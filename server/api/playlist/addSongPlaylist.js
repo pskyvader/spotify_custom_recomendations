@@ -3,7 +3,7 @@ const { request } = require("../../utils");
 const { getUser, getSong, songIdFromURI } = require("../../model");
 const { addSongPlaylistCache } = require("../song/getPlaylistSongs");
 const { removeSongRecommendedCache } = require("../song/myRecommendedSongs");
-const { Song } = require("../../database");
+const { Song,User } = require("../../database");
 const {
 	removeSongRemoveRecommendedCache,
 } = require("../song/myRemoveRecommended");
@@ -36,19 +36,34 @@ const addSongPlaylist = async (session, songuri, playlistId) => {
 	if (currentSong.error) {
 		return currentSong;
 	}
-	await Song.update(
-		{ song_added: Date.now() },
+
+	const updatedSong = await Song.update(
+		{ song_added: undefined },
 		{
-			where: {
-				[Op.and]: [
-					{ iduser: currentSong.iduser },
-					{ id: currentSong.id },
-				],
+			where: { id: currentSong.id },
+			include: {
+				model: User,
+				where: { id: currentSong.iduser },
 			},
 		}
 	).catch((err) => {
 		return { error: err.message };
 	});
+	console.log(updatedSong);
+
+	// await Song.update(
+	// 	{ song_added: Date.now() },
+	// 	{
+	// 		where: {
+	// 			[Op.and]: [
+	// 				{ iduser: currentSong.iduser },
+	// 				{ id: currentSong.id },
+	// 			],
+	// 		},
+	// 	}
+	// ).catch((err) => {
+	// 	return { error: err.message };
+	// });
 
 	addSongPlaylistCache(playlistId, currentSong);
 	removeSongRecommendedCache(playlistId, currentSong);
