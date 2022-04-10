@@ -43,6 +43,7 @@ const getMyDeletedSongs = async (session, playlistId) => {
 	}).catch((err) => {
 		return { error: err.message };
 	});
+	// console.log(DeletedSongs[0])
 
 	myDeletedSongsResult[playlistId] = DeletedSongs.map((currentSong) => {
 		return formatSong(currentSong);

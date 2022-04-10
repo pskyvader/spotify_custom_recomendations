@@ -5,7 +5,7 @@ const { Op } = require("sequelize");
 const UserlistCache = {};
 const getUser = async (session) => {
 	if (!session.hash) {
-		console.log("No session Hash", session);
+		// console.log("No session Hash", session);
 		return { error: "Not logged in" };
 	}
 	if (UserlistCache[session.hash]) {

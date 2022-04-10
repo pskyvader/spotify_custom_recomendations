@@ -152,8 +152,6 @@ app.get("/api/playlists/lastplayed", async (req, res) => {
 
 app.get("/api/playlists/deletedsongs/:playlistId", async (req, res) => {
 	const result = await getMyDeletedSongs(req.session, req.params.playlistId);
-	console.log("deleted songs", result);
-
 	res.json(result);
 });
 
