@@ -1,9 +1,9 @@
 const { Op } = require("sequelize");
-const { Song } = require("../database");
+const { Song, User } = require("../database");
 const { request } = require("../utils");
 const { getSong } = require("../model");
 
-const updateRecentSongs = async (access_token, iduser) => {
+const updateRecentSongs = async (access_token, userId) => {
 	const after = Date.now() - 604800000;
 	let url =
 		"https://api.spotify.com/v1/me/player/recently-played?limit=50&after" +
@@ -23,26 +23,26 @@ const updateRecentSongs = async (access_token, iduser) => {
 		const currentSong = await getSong(
 			access_token,
 			newsong.track.id,
-			iduser
+			userId
 		);
 		if (currentSong.error) {
 			return currentSong;
 		}
-		await Song.update(
-			{ song_last_played: newsong.played_at },
-			{
-				where: {
-					[Op.and]: [{ iduser: iduser }, { id: currentSong.id }],
-				},
-			}
-		).catch((err) => {
-			console.error(
-				`Song Update, song ID:${currentSong.id}, user :${iduser}`,
-				err,
-				currentSong
-			);
-			return { error: true, message: err.message };
+		const updatingSong = await Song.findByPk(currentSong.id, {
+			include: { model: User, where: { id: userId } },
 		});
+		await updatingSong
+			.addUser(userId, {
+				through: { song_last_played: newsong.played_at },
+			})
+			.catch((err) => {
+				console.error(
+					`Song Update, song ID:${currentSong.id}, user :${userId}`,
+					err,
+					currentSong
+				);
+				return { error: true, message: err.message };
+			});
 	}
 
 	return { error: false, message: "Songs updated" };

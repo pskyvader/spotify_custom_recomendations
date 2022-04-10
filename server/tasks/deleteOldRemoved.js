@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
 const { UserSong } = require("../database");
 const deleteOldRemoved = async () => {
-	const songList = await UserSong.destroy({
+	return UserSong.destroy({
 		where: {
 			[Op.and]: [
 				{ removed: true },
@@ -13,8 +13,6 @@ const deleteOldRemoved = async () => {
 	}).catch((err) => {
 		return { error: err.message };
 	});
-	return songList;
-
 };
 
 module.exports = { deleteOldRemoved };

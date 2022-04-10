@@ -1,5 +1,10 @@
 const { request } = require("../../utils");
-const { getUser, formatSongList, playlistStatus } = require("../../model");
+const {
+	getUser,
+	formatSongList,
+	playlistStatus,
+	getSong,
+} = require("../../model");
 
 const playlists = {};
 let lastGetResult = null;
@@ -25,10 +30,7 @@ const getPlaylistSongs = async (session, playlistId) => {
 	if (currentUser.error) {
 		return currentUser;
 	}
-	if (
-		playlists[playlistId] &&
-		lastGetResult > Date.now() - 3600000
-	) {
+	if (playlists[playlistId] && lastGetResult > Date.now() - 3600000) {
 		return playlists[playlistId];
 	}
 	const playlistActive = await playlistStatus(session, playlistId);
@@ -48,6 +50,12 @@ const getPlaylistSongs = async (session, playlistId) => {
 	}
 
 	playlists[playlistId] = formatSongList(items);
+
+	for (const song of playlists[playlistId]) {
+		console.log("getting song", song.id);
+		await getSong(session.access_token, song.id, currentUser.id);
+	}
+
 	lastGetResult = Date.now();
 	return playlists[playlistId];
 };

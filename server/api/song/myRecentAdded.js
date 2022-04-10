@@ -11,11 +11,6 @@ const myRecentAdded = async (userId, playlistId) => {
 	}
 
 	const newRecentAdded = await Song.findAll({
-		// where: {
-		// 	song_added: {
-		// 		[Op.gte]: Date.now() - 604800000,
-		// 	},
-		// },
 		include: {
 			model: User,
 			where: { id: userId },

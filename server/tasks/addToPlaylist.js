@@ -10,11 +10,11 @@ const addToPlaylist = async (user) => {
 		access_token: user.access_token,
 		refresh_token: user.refresh_token,
 	};
-	const iduser = user.id;
+	const userId = user.id;
 
 	const playlists = await Playlist.findAll({
 		where: {
-			[Op.and]: [{ iduser: iduser }, { active: true }],
+			[Op.and]: [{ iduser: userId }, { active: true }],
 		},
 	});
 
@@ -34,7 +34,7 @@ const addToPlaylist = async (user) => {
 				include: {
 					model: User,
 					where: {
-						id: iduser,
+						id: userId,
 					},
 				},
 				through: {

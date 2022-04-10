@@ -37,7 +37,7 @@ const removeFromPlaylist = async (user) => {
 				playlist.id
 			);
 			i++;
-			response.message.push(`Added song: ${songInList.name}`);
+			response.message.push(`Removed song: ${songInList.name}`);
 		}
 	}
 
