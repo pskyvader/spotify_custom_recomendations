@@ -56,6 +56,17 @@ const addUserToSong = async (currentSong, userId) => {
 };
 
 const getSong = async (access_token, songId, userId) => {
+	const currentSongUser = await Song.findOne({
+		where: { id: songId },
+		include: {
+			model: User,
+			where: { id: userId },
+		},
+	});
+	if (currentSongUser !== null) {
+		return formatSong(currentSongUser);
+	}
+
 	const currentSong = await Song.findOne({
 		where: { id: songId },
 	});

@@ -7,9 +7,15 @@ import { PlaylistContext } from "../../context/PlaylistContextProvider";
 import SongList, { SongListColumns } from "../../components/SongList";
 
 const RecommendedSongs = ({ playlistId, hidden }) => {
-	const { playlistRecommendedTracks, setPlaylistRecommendedTracks } =
-		useContext(PlaylistContext);
+	const {
+		playlistRecommendedTracks,
+		setPlaylistRecommendedTracks,
+		playlistTracks,
+	} = useContext(PlaylistContext);
 	useEffect(() => {
+		if (!playlistTracks[playlistId]) {
+			return;
+		}
 		if (!playlistRecommendedTracks[playlistId]) {
 			Playlist.PlaylistRecommended(playlistId).then((response) => {
 				if (response.error) return console.log(response);
@@ -17,7 +23,12 @@ const RecommendedSongs = ({ playlistId, hidden }) => {
 				setPlaylistRecommendedTracks({ ...playlistRecommendedTracks });
 			});
 		}
-	}, [playlistId, playlistRecommendedTracks, setPlaylistRecommendedTracks]);
+	}, [
+		playlistId,
+		playlistRecommendedTracks,
+		setPlaylistRecommendedTracks,
+		playlistTracks,
+	]);
 
 	if (playlistId === null) {
 		return null;

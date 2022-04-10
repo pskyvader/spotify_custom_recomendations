@@ -5,9 +5,11 @@ import SongList, { SongListColumns } from "../../components/SongList";
 import ButtonRemoveSong from "../../components/ButtonRemoveSong";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
 const RecommendedDeleteSongs = ({ playlistId,hidden }) => {
-	const { playlistDeleteTracks, setPlaylistDeleteTracks } =
-		useContext(PlaylistContext);
+	const { playlistDeleteTracks, setPlaylistDeleteTracks,playlistTracks } = useContext(PlaylistContext);
 	useEffect(() => {
+		if(!playlistTracks[playlistId]){
+			return;
+		}
 		if (!playlistDeleteTracks[playlistId]) {
 			Playlist.PlaylistDeleteRecommended(playlistId).then((response) => {
 				if (response.error) return console.log(response);
@@ -15,7 +17,7 @@ const RecommendedDeleteSongs = ({ playlistId,hidden }) => {
 				setPlaylistDeleteTracks({ ...playlistDeleteTracks });
 			});
 		}
-	}, [playlistId, playlistDeleteTracks, setPlaylistDeleteTracks]);
+	}, [playlistId, playlistDeleteTracks, setPlaylistDeleteTracks,playlistTracks]);
 	if (playlistId === null) {
 		return null;
 	}

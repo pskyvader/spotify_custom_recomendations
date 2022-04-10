@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const { Playlist, Song } = require("../database");
-const { myRemoveRecommended } = require("../api/song");
+const { myRemoveRecommended, getPlaylistSongs } = require("../api/song");
 const { removeSongPlaylist } = require("../api/playlist");
 
 const removeFromPlaylist = async (user) => {
@@ -19,6 +19,7 @@ const removeFromPlaylist = async (user) => {
 	});
 
 	for (const playlist of playlists) {
+		await getPlaylistSongs(fakesession, playlist.id, true);
 		const songlist = await myRemoveRecommended(fakesession, playlist.id);
 		if (songlist.error) {
 			return songlist;

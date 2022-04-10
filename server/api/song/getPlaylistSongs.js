@@ -25,12 +25,16 @@ const removeSongPlaylistCache = (playlistId, song) => {
 	}
 };
 
-const getPlaylistSongs = async (session, playlistId) => {
+const getPlaylistSongs = async (session, playlistId, syncSongs = false) => {
 	const currentUser = await getUser(session);
 	if (currentUser.error) {
 		return currentUser;
 	}
-	if (playlists[playlistId] && lastGetResult > Date.now() - 3600000) {
+	if (
+		playlists[playlistId] &&
+		lastGetResult > Date.now() - 3600000 &&
+		!syncSongs
+	) {
 		return playlists[playlistId];
 	}
 	const playlistActive = await playlistStatus(session, playlistId);
@@ -51,9 +55,17 @@ const getPlaylistSongs = async (session, playlistId) => {
 
 	playlists[playlistId] = formatSongList(items);
 
-	for (const song of playlists[playlistId]) {
-		console.log("getting song", song.id);
-		await getSong(session.access_token, song.id, currentUser.id);
+	if (syncSongs) {
+		let i = 0;
+		for (const song of playlists[playlistId]) {
+			if (i % 10 === 0) {
+				console.log(
+					`getting song ${song.id} (${i}/${playlists[playlistId].length})`
+				);
+			}
+			await getSong(session.access_token, song.id, currentUser.id);
+			i++;
+		}
 	}
 
 	lastGetResult = Date.now();
