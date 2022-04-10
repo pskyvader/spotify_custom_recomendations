@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Playlist, Song } = require("../database");
+const { Playlist, Song, User } = require("../database");
 const { myRecommendedSongs } = require("../api/song");
 const { addSongPlaylist } = require("../api/playlist");
 
@@ -30,12 +30,17 @@ const addToPlaylist = async (user) => {
 				break;
 			}
 			const currentSong = await Song.findOne({
-				where: {
-					[Op.and]: [
-						{ iduser: iduser },
-						{ id: songInList.id },
-						{ removed: true },
-					],
+				where: { id: songInList.id },
+				include: {
+					model: User,
+					where: {
+						id: iduser,
+					},
+				},
+				through: {
+					where: {
+						removed: true,
+					},
 				},
 			});
 

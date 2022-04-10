@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const { request } = require("../../utils");
-const { Song } = require("../../database");
+const { Song,User } = require("../../database");
 const { getUser, getSong, songIdFromURI } = require("../../model");
 
 const { removeSongPlaylistCache } = require("../song/getPlaylistSongs");
@@ -31,22 +31,27 @@ const removeSongPlaylist = async (session, songuri, playlistId) => {
 		return response;
 	}
 
-	const deletedSong = await getSong(
+	const currentSong = await getSong(
 		session.access_token,
 		songIdFromURI(songuri),
 		user.id
 	);
 
-	deletedSong.removed = true;
-	deletedSong.song_removed = Date.now();
-	await Song.update(deletedSong, {
-		where: {
-			[Op.and]: [{ iduser: user.id }, { id: deletedSong.id }],
-		},
+	const updatingSong = await Song.findByPk(currentSong.id, {
+		include: { model: User, where: { id: user.id } },
 	});
-	removeSongPlaylistCache(playlistId, deletedSong);
-	removeSongRemoveRecommendedCache(playlistId, deletedSong);
-	addDeletedSongsCache(playlistId, deletedSong);
+
+	await updatingSong
+		.addUser(user.id, {
+			through: { song_removed: Date.now(), removed: true },
+		})
+		.catch((err) => {
+			return { error: err.message };
+		});
+
+	removeSongPlaylistCache(playlistId, currentSong);
+	removeSongRemoveRecommendedCache(playlistId, currentSong);
+	addDeletedSongsCache(playlistId, currentSong);
 
 	return {
 		message: "success",

@@ -52,7 +52,7 @@ const automaticTasks = async (req, res) => {
 				response.message.push(`access token error for user ${user.id}`);
 				continue;
 			}
-			console.log(`user ${user.id} Refresh token`, result);
+			// console.log(`user ${user.id} Refresh token`, result);
 			user.access_token = result.access_token;
 		} else {
 			console.log(
