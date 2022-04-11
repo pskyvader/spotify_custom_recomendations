@@ -19,16 +19,19 @@ const updateRecentSongs = async (access_token, userId) => {
 		items.push(...response.items);
 	}
 
-	for (const newsong of items) {
-		const currentSong = await getSong(
-			access_token,
-			newsong.track.id,
-			userId
-		);
-		if (currentSong.error) {
-			return currentSong;
+	const allsongs = await Song.findAll({ attributes: ["id"] });
+	const allsongsIds = allsongs.map((song) => song.id);
+	const songsToAdd = items.filter((song) => !allsongsIds.includes(song.id));
+
+	for (const song of songsToAdd) {
+		const songData = await getSong(access_token, song.track.id, userId);
+		if (songData.error) {
+			return songData;
 		}
-		const updatingSong = await Song.findByPk(currentSong.id, {
+	}
+
+	for (const newsong of items) {
+		const updatingSong = await Song.findByPk(newsong.track.id, {
 			include: { model: User, where: { id: userId } },
 		});
 		await updatingSong
@@ -37,9 +40,9 @@ const updateRecentSongs = async (access_token, userId) => {
 			})
 			.catch((err) => {
 				console.error(
-					`Song Update, song ID:${currentSong.id}, user :${userId}`,
+					`Song Update, song ID:${newsong.track.id}, user :${userId}`,
 					err,
-					currentSong
+					newsong.track
 				);
 				return { error: true, message: err.message };
 			});
