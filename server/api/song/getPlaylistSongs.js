@@ -5,6 +5,7 @@ const {
 	playlistStatus,
 	getSong,
 } = require("../../model");
+const { Song } = require("../../database");
 
 const playlists = {};
 let lastGetResult = null;
@@ -56,11 +57,18 @@ const getPlaylistSongs = async (session, playlistId, syncSongs = false) => {
 	playlists[playlistId] = formatSongList(items);
 
 	if (syncSongs) {
+		const allsongs = await Song.findAll({ attributes: ["id"] });
+		const allsongsIds = allsongs.map((song) => song.id);
+		const songsToAdd = playlists[playlistId].filter(
+			(song) => !allsongsIds.includes(song.id)
+		);
+		console.log("Songs to add to cache", songsToAdd.length);
+
 		let i = 0;
-		for (const song of playlists[playlistId]) {
+		for (const song of songsToAdd) {
 			if (i % 10 === 0) {
 				console.log(
-					`getting song ${song.id} (${i}/${playlists[playlistId].length})`
+					`getting song ${song.id} (${i}/${songsToAdd.length})`
 				);
 			}
 			await getSong(session.access_token, song.id, currentUser.id);

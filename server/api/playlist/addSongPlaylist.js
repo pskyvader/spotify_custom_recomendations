@@ -3,6 +3,8 @@ const { request } = require("../../utils");
 const { getUser, getSong, songIdFromURI } = require("../../model");
 const { addSongPlaylistCache } = require("../song/getPlaylistSongs");
 const { removeSongRecommendedCache } = require("../song/myRecommendedSongs");
+const { removeDeletedSongsCache } = require("../song/getMyDeletedSongs");
+
 const { Song, User } = require("../../database");
 const {
 	removeSongRemoveRecommendedCache,
@@ -50,6 +52,7 @@ const addSongPlaylist = async (session, songuri, playlistId) => {
 	addSongPlaylistCache(playlistId, currentSong);
 	removeSongRecommendedCache(playlistId, currentSong);
 	removeSongRemoveRecommendedCache(playlistId, currentSong);
+	removeDeletedSongsCache(playlistId, currentSong);
 
 	return {
 		message: "success",
