@@ -3,7 +3,17 @@ const { Song, User } = require("../database");
 const { request } = require("../utils");
 const { getSong } = require("../model");
 
+const lastUpdate = {};
+
 const updateRecentSongs = async (access_token, userId) => {
+	// check if last update is less than 10 minutes ago
+	if (lastUpdate[userId] && lastUpdate[userId] > Date.now() - 600000) {
+		return {
+			error: false,
+			message: "Songs updated less than 10 minutes ago",
+		};
+	}
+
 	const after = Date.now() - 604800000;
 	let url =
 		"https://api.spotify.com/v1/me/player/recently-played?limit=50&after" +
@@ -47,6 +57,7 @@ const updateRecentSongs = async (access_token, userId) => {
 				return { error: true, message: err.message };
 			});
 	}
+	lastUpdate[userId] = Date.now();
 
 	return { error: false, message: "Songs updated" };
 };
