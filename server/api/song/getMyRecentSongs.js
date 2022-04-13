@@ -32,8 +32,9 @@ const getMyRecentSongs = async (session) => {
 	});
 
 	myRecentResult[access_token] = oldRecent.map((currentSong) => {
-		currentSong.action = currentSong.Songs[0].UserSong.song_last_played
-			? currentSong.Songs[0].UserSong.song_last_played.toLocaleString()
+		const currentUserInSong = currentSong.Users[0] || currentSong.Users;
+		currentSong.action = currentUserInSong.UserSong.song_last_played
+			? currentUserInSong.UserSong.song_last_played.toLocaleString()
 			: "";
 		return formatSong(currentSong);
 	});

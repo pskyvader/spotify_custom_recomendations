@@ -9,7 +9,7 @@ const myRecentSongs = async (access_token, userId) => {
 	if (myRecentResult[access_token] && lastUpdated > Date.now() - 3600000) {
 		return myRecentResult[access_token];
 	}
-	await updateRecentSongs(access_token, userId);
+	updateRecentSongs(access_token, userId); //asyncronous update
 
 	const oldRecent = await Song.findAll({
 		include: {
