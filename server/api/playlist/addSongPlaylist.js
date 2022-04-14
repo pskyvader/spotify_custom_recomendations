@@ -44,7 +44,9 @@ const addSongPlaylist = async (session, songuri, playlistId) => {
 	});
 
 	await updatingSong
-		.addUser(user.id, { through: { song_added: Date.now() } })
+		.addUser(user.id, {
+			through: { song_added: Date.now(), removed: false },
+		})
 		.catch((err) => {
 			return { error: err.message };
 		});
