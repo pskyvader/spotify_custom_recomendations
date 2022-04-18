@@ -36,6 +36,9 @@ const getMyRecentSongs = async (session) => {
 		currentSong.action = currentUserInSong.UserSong.song_last_played
 			? currentUserInSong.UserSong.song_last_played.toLocaleString()
 			: "";
+		if (currentSong.action === "") {
+			console.log("No action found for this user", currentSong);
+		}
 		return formatSong(currentSong);
 	});
 	lastGetResult = Date.now();
