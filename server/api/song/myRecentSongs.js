@@ -5,8 +5,16 @@ const { formatSong } = require("../../model");
 
 const myRecentResult = {};
 let lastUpdated = null;
+// variable week= 1 week in ms
+const week = 604800000;
+// variable day= 1 day in ms
+// const day = 86400000;
+// variable hour= 1 hour in ms
+const hour = 3600000;
+
+
 const myRecentSongs = async (access_token, userId) => {
-	if (myRecentResult[access_token] && lastUpdated > Date.now() - 3600000) {
+	if (myRecentResult[access_token] && lastUpdated > Date.now() - hour) {
 		return myRecentResult[access_token];
 	}
 	updateRecentSongs(access_token, userId); //asyncronous update
@@ -18,8 +26,8 @@ const myRecentSongs = async (access_token, userId) => {
 		},
 		through: {
 			where: {
-				song_added: {
-					[Op.gte]: Date.now() - 86400000,
+				song_last_played: {
+					[Op.gte]: Date.now() - week,
 				},
 			},
 		},

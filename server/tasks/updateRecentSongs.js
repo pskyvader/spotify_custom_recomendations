@@ -3,6 +3,9 @@ const { Song, User } = require("../database");
 const { request } = require("../utils");
 const { getSong } = require("../model");
 
+// variable week= 1 week in ms
+const week = 604800000;
+
 const lastUpdate = {};
 
 const updateRecentSongs = async (access_token, userId) => {
@@ -14,7 +17,7 @@ const updateRecentSongs = async (access_token, userId) => {
 		};
 	}
 
-	const after = Date.now() - 604800000;
+	const after = Date.now() - week;
 	let url =
 		"https://api.spotify.com/v1/me/player/recently-played?limit=50&after" +
 		after;
