@@ -13,15 +13,16 @@ const myRecentAdded = async (userId, playlistId) => {
 	}
 
 	const newRecentAdded = await UserSong.findAll({
-		include: {
-			model: Song,
-		},
 		where: {
-			id: userId,
+			UserId: userId,
 			song_added: {
 				[Op.gte]: Date.now() - week,
 			},
 		},
+		include: {
+			model: Song,
+		},
+		order: [["song_added", "ASC"]],
 		raw: true,
 		nest: true,
 	}).catch((err) => {

@@ -25,7 +25,7 @@ const myRecentSongs = async (access_token, userId) => {
 				[Op.gte]: Date.now() - week,
 			},
 		},
-		order: [["song_last_played", "DESC"]],
+		order: [["song_last_played", "ASC"]],
 		include: {
 			model: Song,
 		},

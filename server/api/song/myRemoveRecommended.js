@@ -37,30 +37,20 @@ const myRemoveRecommended = async (session, playlistId) => {
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
-	console.log("currentPlaylist", currentPlaylist.length);
 
 	const recentAdded = await myRecentAdded(currentUser.id, playlistId);
 	if (recentAdded.error) {
 		return recentAdded;
 	}
-	console.log("recentAdded", recentAdded.length);
-
-	const newplaylist = subtractById(currentPlaylist, recentAdded);
-
-	console.log("newplaylist", newplaylist.length);
 
 	const recentSongs = await myRecentSongs(access_token, currentUser.id);
 	if (recentSongs.error) {
 		return recentSongs;
 	}
+	const newplaylist = subtractById(currentPlaylist, recentSongs);
+	removerecommended[playlistId] = subtractById(newplaylist, recentAdded);
 
-	console.log("recentSongs", recentSongs.length);
 	lastGetResult = Date.now();
-	removerecommended[playlistId] = subtractById(newplaylist, recentSongs);
-	console.log(
-		"removerecommended[playlistId]",
-		removerecommended[playlistId].length
-	);
 	return removerecommended[playlistId];
 };
 

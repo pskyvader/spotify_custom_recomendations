@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Song, User, UserSong } = require("../../database");
+const { Song, UserSong } = require("../../database");
 const { getUser, formatSong } = require("../../model");
 
 const myDeletedSongsResult = {};
@@ -31,18 +31,12 @@ const getMyDeletedSongs = async (session, playlistId) => {
 		return myDeletedSongsResult[playlistId];
 	}
 
-	// Company.findAll({ include: [ Division ], order: [ [ Division, 'name', 'DESC' ] ] });
-
-	const DeletedSongs = await Song.findAll({
+	const DeletedSongs = await UserSong.findAll({
 		include: {
-			model: User,
-			where: { id: userId },
-			attributes: [],
-			through: {
-				attributes: [],
-				where: { removed: true },
-			},
+			model: Song,
 		},
+
+		where: { UserId: userId, removed: true },
 		raw: true,
 		nest: true,
 	}).catch((err) => {
@@ -50,7 +44,7 @@ const getMyDeletedSongs = async (session, playlistId) => {
 	});
 
 	myDeletedSongsResult[playlistId] = DeletedSongs.map((currentSong) => {
-		return formatSong(currentSong);
+		return formatSong(currentSong.Song);
 	});
 	lastGetResult = Date.now();
 	return myDeletedSongsResult[playlistId];
