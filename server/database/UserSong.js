@@ -1,5 +1,12 @@
 const { DataTypes } = require("sequelize");
 const UserSongConfiguration = {
+	id: {
+		type: DataTypes.BIGINT,
+		autoIncrement: true,
+		allowNull: false,
+		primaryKey: true,
+		unique: true,
+	},
 	song_added: {
 		type: DataTypes.DATE,
 		allowNull: false,

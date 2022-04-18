@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 // const { updateRecentSongs } = require("../../tasks/updateRecentSongs");
-const { Song, User } = require("../../database");
+const { Song, UserSong } = require("../../database");
 const { getUser, formatSong } = require("../../model");
 
 const myRecentResult = {};
@@ -13,32 +13,27 @@ const getMyRecentSongs = async (session) => {
 	if (myRecentResult[access_token] && lastGetResult > Date.now() - 3600000) {
 		return myRecentResult[access_token];
 	}
-	const oldRecent = await Song.findAll({
-		include: {
-			model: User,
-			where: { id: userId },
-		},
-		through: {
-			where: {
-				song_last_played: {
-					[Op.ne]: null,
-				},
+	const oldRecent = await UserSong.findAll({
+		where: {
+			UserId: userId,
+			song_last_played: {
+				[Op.ne]: null,
 			},
+		},
+		order: [["song_last_played", "DESC"]],
+		include: {
+			model: Song,
 		},
 		raw: true,
 		nest: true,
 	}).catch((err) => {
 		return { error: err.message };
 	});
-
-	myRecentResult[access_token] = oldRecent.map((currentSong) => {
-		const currentUserInSong = currentSong.Users[0] || currentSong.Users;
-		currentSong.action = currentUserInSong.UserSong.song_last_played
-			? currentUserInSong.UserSong.song_last_played.toLocaleString()
+	myRecentResult[access_token] = oldRecent.map((currentUserSong) => {
+		const currentSong = currentUserSong.Song;
+		currentSong.action = currentUserSong.song_last_played
+			? currentUserSong.song_last_played.toLocaleString()
 			: "";
-		if (currentSong.action === "") {
-			console.log("No action found for this user", currentSong);
-		}
 		return formatSong(currentSong);
 	});
 	lastGetResult = Date.now();

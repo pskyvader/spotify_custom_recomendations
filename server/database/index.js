@@ -51,6 +51,11 @@ UserSong.init(UserSongConfiguration, {
 User.belongsToMany(Song, { through: UserSong });
 Song.belongsToMany(User, { through: UserSong });
 
+User.hasMany(UserSong);
+UserSong.belongsTo(User);
+Song.hasMany(UserSong);
+UserSong.belongsTo(Song);
+
 const connection = async () => {
 	try {
 		await sequelize.authenticate();
