@@ -42,7 +42,8 @@ const UserConfiguration = {
 	last_modified: {
 		type: DataTypes.DATE,
 		allowNull: false,
-		defaultValue: Date.now(),
+		defaultValue: Date.now() - 1000 * 60 * 60 * 24,
 	},
 };
+
 module.exports = { UserConfiguration };
