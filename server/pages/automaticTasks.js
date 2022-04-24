@@ -22,6 +22,7 @@ const automaticTasks = async (req, res) => {
 	const { count, rows } = await User.findAndCountAll({
 		attributes: [
 			"id",
+			"name",
 			"access_token",
 			"refresh_token",
 			"expiration",
@@ -47,12 +48,12 @@ const automaticTasks = async (req, res) => {
 			const result = await refreshCookie(falseReq, user);
 			if (result.error) {
 				console.error(
-					`access token error for user ${user.id}, cannot continue`
+					`access token error for user ${user.name}, cannot continue`
 				);
-				response.message.push(`access token error for user ${user.id}`);
+				response.message.push(`access token error for user ${user.name}`);
 				continue;
 			}
-			console.log(`user ${user.id} Refresh token`); //, result);
+			console.log(`user ${user.name} Refresh token`); //, result);
 			user.access_token = result.access_token;
 		} else {
 			console.log(
@@ -65,9 +66,9 @@ const automaticTasks = async (req, res) => {
 		}
 
 		response.message.push(
-			`User ${user.id} last modified: ${user.last_modified}`
+			`User ${user.name} last modified: ${user.last_modified}`
 		);
-		console.log(`Updating recents for user ${user.id}`);
+		console.log(`Updating recents for user ${user.name}`);
 		const updateResult = await updateRecentSongs(
 			user.access_token,
 			user.id
@@ -75,32 +76,32 @@ const automaticTasks = async (req, res) => {
 		if (updateResult.error) {
 			console.log(updateResult, user.expiration);
 		} else {
-			console.log(`User ${user.id} updated`);
+			console.log(`User ${user.name} updated`);
 		}
 
 		if (user.last_modified < Date.now() - 86400000) {
-			console.log(`Remove for user ${user.id}`);
+			console.log(`Remove for user ${user.name}`);
 			const removeResponse = await removeFromPlaylist(user);
-			console.log(`User ${user.id}`, removeResponse);
-			console.log(`Add for user ${user.id}`);
+			console.log(`User ${user.name}`, removeResponse);
+			console.log(`Add for user ${user.name}`);
 			const addResponse = await addToPlaylist(user);
-			console.log(`User ${user.id} Added response:`, addResponse);
-			console.log(`Date for user ${user.id}`);
+			console.log(`User ${user.name} Added response:`, addResponse);
+			console.log(`Date for user ${user.name}`);
 			await User.update(
 				{ last_modified: Date.now() },
 				{ where: { id: user.id } }
 			);
 			response.message.push(
-				`User ${user.id} Daily playlists has been updated`
+				`User ${user.name} Daily playlists has been updated`
 			);
 		} else {
 			console.log(
-				`User ${user.id} not yet able for daily updates`,
+				`User ${user.name} not yet able for daily updates`,
 				new Date(user.last_modified).toString(),
 				new Date(Date.now()).toString()
 			);
 		}
-		response.message.push(`User ${user.id} has been updated`);
+		response.message.push(`User ${user.name} has been updated`);
 	}
 	const deleteResponse = await deleteOldRemoved();
 	console.log("deleted all", deleteResponse);
