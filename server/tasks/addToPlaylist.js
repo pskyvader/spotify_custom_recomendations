@@ -3,6 +3,9 @@ const { Playlist, Song, User } = require("../database");
 const { myRecommendedSongs } = require("../api/song");
 const { addSongPlaylist } = require("../api/playlist");
 
+const _MAX_SONGS_PER_PLAYLIST = 200;
+const _MIN_SONGS_PER_PLAYLIST = 50;
+
 const addToPlaylist = async (user) => {
 	const response = { error: false, message: [] };
 	const fakesession = {
@@ -19,14 +22,30 @@ const addToPlaylist = async (user) => {
 	});
 
 	for (const playlist of playlists) {
+		const playlistSongsList = await getPlaylistSongs(
+			fakesession,
+			playlist.id
+		);
+		if (playlistSongsList.error) {
+			return playlistSongsList;
+		}
 		const songlist = await myRecommendedSongs(fakesession, playlist.id);
 		if (songlist.error) {
 			return songlist;
 		}
 		response.message.push(`Max songs available: ${songlist.length}`);
+
+		let songsToAdd = 5 + Math.floor(Math.random() * 5);
+		if (playlistSongsList.length < _MIN_SONGS_PER_PLAYLIST) {
+			songsToAdd++;
+		}
+		if (playlistSongsList.length > _MX_SONGS_PER_PLAYLIST) {
+			songsToAdd--;
+		}
+
 		let i = 0;
 		for (const songInList of songlist) {
-			if (i >= 5) {
+			if (i >= songsToAdd) {
 				break;
 			}
 			const currentSong = await Song.findOne({

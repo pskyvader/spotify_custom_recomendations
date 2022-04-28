@@ -3,6 +3,9 @@ const { Playlist, Song } = require("../database");
 const { myRemoveRecommended, getPlaylistSongs } = require("../api/song");
 const { removeSongPlaylist } = require("../api/playlist");
 
+const _MAX_SONGS_PER_PLAYLIST = 200;
+const _MIN_SONGS_PER_PLAYLIST = 50;
+
 const removeFromPlaylist = async (user) => {
 	const response = { error: false, message: [] };
 	const fakesession = {
@@ -19,7 +22,14 @@ const removeFromPlaylist = async (user) => {
 	});
 
 	for (const playlist of playlists) {
-		await getPlaylistSongs(fakesession, playlist.id, true);
+		const playlistSongsList = await getPlaylistSongs(
+			fakesession,
+			playlist.id,
+			true
+		);
+		if (playlistSongsList.error) {
+			return playlistSongsList;
+		}
 		const songlist = await myRemoveRecommended(fakesession, playlist.id);
 		if (songlist.error) {
 			return songlist;
@@ -27,9 +37,17 @@ const removeFromPlaylist = async (user) => {
 		response.message.push(
 			`Max songs available for deletion: ${songlist.length}`
 		);
+		let songsToRemove = 5 + Math.floor(Math.random() * 5);
+		if (playlistSongsList.length < _MIN_SONGS_PER_PLAYLIST) {
+			songsToRemove--;
+		}
+		if (playlistSongsList.length > _MX_SONGS_PER_PLAYLIST) {
+			songsToRemove++;
+		}
+
 		let i = 0;
 		for (const songInList of songlist) {
-			if (i >= 5) {
+			if (i >= songsToRemove) {
 				break;
 			}
 			await removeSongPlaylist(
