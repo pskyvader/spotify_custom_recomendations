@@ -41,7 +41,7 @@ const removeFromPlaylist = async (user) => {
 		if (playlistSongsList.length < _MIN_SONGS_PER_PLAYLIST) {
 			songsToRemove--;
 		}
-		if (playlistSongsList.length > _MX_SONGS_PER_PLAYLIST) {
+		if (playlistSongsList.length > _MAX_SONGS_PER_PLAYLIST) {
 			songsToRemove++;
 		}
 
