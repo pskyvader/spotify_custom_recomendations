@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const { Playlist, Song, User } = require("../database");
-const { myRecommendedSongs } = require("../api/song");
+const { myRecommendedSongs, getPlaylistSongs } = require("../api/song");
 const { addSongPlaylist } = require("../api/playlist");
 
 const _MAX_SONGS_PER_PLAYLIST = 200;
