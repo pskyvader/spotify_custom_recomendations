@@ -37,10 +37,10 @@ const addToPlaylist = async (user) => {
 
 		let songsToAdd = 5 + Math.floor(Math.random() * 5);
 		if (playlistSongsList.length < _MIN_SONGS_PER_PLAYLIST) {
-			songsToAdd++;
+			songsToAdd += 2;
 		}
 		if (playlistSongsList.length > _MAX_SONGS_PER_PLAYLIST) {
-			songsToAdd--;
+			songsToAdd -= 2;
 		}
 
 		let i = 0;
