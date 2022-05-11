@@ -1,12 +1,18 @@
+const { Op } = require("sequelize");
+
 const { getPlaylistSongs } = require("./getPlaylistSongs");
 const { myTopSongs } = require("./myTopSongs");
 const { myApiRecommended } = require("./myApiRecommended");
 const { getUser } = require("../../model");
 const { myRecentSongs } = require("./myRecentSongs");
 const { subtractById } = require("../../utils");
+const { Song, UserSong } = require("../../database");
 
 const recommended = {};
 let lastGetResult = null;
+
+//week in ms
+const week = 604800000;
 
 const addSongRecommendedCache = (playlistId, song) => {
 	if (recommended[playlistId]) {
@@ -34,31 +40,57 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return recommended[playlistId];
 	}
 
+	// RecommendedSongs: get playlist songs added before 1 week ago, and played after 2 weeks ago
+
 	const currentPlaylist = await getPlaylistSongs(session, playlistId);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
 
-	const recentSongs = await myRecentSongs(access_token, currentUser.id);
-	if (recentSongs.error) {
-		return recentSongs;
-	}
-	const playlistFiltered = subtractById(currentPlaylist, recentSongs);
+	const RecentSongs = await UserSong.findAll({
+		where: {
+			UserId: currentUser.id,
+			song_last_played: {
+				[Op.gte]: Date.now() - 2 * week,
+			},
+			song_added: {
+				[Op.lte]: Date.now() - week,
+			},
+		},
+		include: {
+			model: Song,
+		},
+		raw: true,
+		nest: true,
+	}).catch((err) => {
+		return { error: err.message };
+	});
+	console.log(RecentSongs);
 
-	const topSongs = await myTopSongs(access_token);
-	if (topSongs.error) {
-		return topSongs;
+	const RecentSongsIds = RecentSongs.map((currentSong) => {
+		console.log(currentSong);
+		return currentSong.id;
+	});
+	let RecommendedSongs = currentPlaylist.filter((currentSong) => {
+		return RecentSongsIds.includes(currentSong.id);
+	});
+
+	if (RecommendedSongs.length === 0) {
+		console.log(`No recommended songs for playlist ${playlistId}`);
+		RecommendedSongs = await myTopSongs(access_token);
+		if (RecommendedSongs.error) {
+			return topSongs;
+		}
 	}
 
-	const recommendedTrack = await myApiRecommended(
+	const recommendedTracks = await myApiRecommended(
 		access_token,
-		playlistFiltered,
-		topSongs
+		RecommendedSongs
 	);
-	if (recommendedTrack.error) {
-		return recommendedTrack;
+	if (recommendedTracks.error) {
+		return recommendedTracks;
 	}
-	recommended[playlistId] = recommendedTrack;
+	recommended[playlistId] = recommendedTracks;
 	lastGetResult = Date.now();
 	return recommended[playlistId];
 };

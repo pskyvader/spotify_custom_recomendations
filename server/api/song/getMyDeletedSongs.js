@@ -37,6 +37,7 @@ const getMyDeletedSongs = async (session, playlistId) => {
 		},
 
 		where: { UserId: userId, removed: true },
+		order: [["song_removed", "DESC"]],
 		raw: true,
 		nest: true,
 	}).catch((err) => {

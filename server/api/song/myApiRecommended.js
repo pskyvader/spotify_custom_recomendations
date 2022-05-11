@@ -1,22 +1,19 @@
 const { request, genres } = require("../../utils");
 const { formatSongList } = require("../../model");
 
-const fillOptions = (playlist, topSongs, currentgenres) => {
+const fillOptions = (playlist, currentgenres) => {
 	const options = {
 		seed_artists: [],
 		seed_genres: [],
 		seed_tracks: [],
 		market: "from_token",
 	};
-	const songs = playlist.length > 0 ? playlist : topSongs;
 
-	if (songs.length > 0) {
+	if (playlist.length > 0) {
 		for (let index = 0; index < 5; index++) {
-			const idsong = Math.floor(Math.random() * songs.length);
-			const randomSong = songs[idsong];
+			const idsong = Math.floor(Math.random() * playlist.length);
+			const randomSong = playlist[idsong];
 			const randomNumber = Math.floor(Math.random() * 10);
-			const randomGenre =
-				currentgenres[Math.floor(Math.random() * currentgenres.length)];
 
 			//50%
 			if (randomNumber < 5) {
@@ -30,6 +27,7 @@ const fillOptions = (playlist, topSongs, currentgenres) => {
 			}
 
 			//20%
+			const randomGenre = currentgenres[Math.floor(Math.random() * currentgenres.length)];
 			options.seed_genres.push(randomGenre);
 		}
 	} else {
@@ -46,17 +44,15 @@ const fillOptions = (playlist, topSongs, currentgenres) => {
 const myApiRecommended = async (
 	access_token,
 	playlist,
-	topSongs,
-	currentgenres
+	currentgenres = genres
 ) => {
-	const options = fillOptions(playlist, topSongs, currentgenres || genres);
+	const options = fillOptions(playlist, currentgenres);
 
 	const url = "https://api.spotify.com/v1/recommendations";
 	let urlOptions = "?";
 	Object.entries(options).forEach((option) => {
 		urlOptions += option[0] + "=" + option[1] + "&";
 	});
-	// console.log(url + urlOptions);
 	const response = await request(access_token, url + urlOptions);
 	if (response.error) {
 		return response;
