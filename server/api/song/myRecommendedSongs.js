@@ -40,13 +40,18 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return recommended[playlistId];
 	}
 
-	// RecommendedSongs: get playlist songs added before 1 week ago, and played after 2 weeks ago
-
-	const currentPlaylist = await getPlaylistSongs(session, playlistId);
+	let currentPlaylist = await getPlaylistSongs(session, playlistId);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
 
+	// remove repeated ids from currentPlaylist array
+	currentPlaylist = currentPlaylist.filter(
+		(currentSong, index, self) =>
+			self.findIndex((song) => song.id === currentSong.id) === index
+	);
+
+	// RecommendedSongs: get playlist songs ids added before 1 week ago, and played after 2 weeks ago
 	const RecentSongs = await UserSong.findAll({
 		where: {
 			UserId: currentUser.id,
@@ -57,35 +62,46 @@ const myRecommendedSongs = async (session, playlistId) => {
 				[Op.lte]: Date.now() - week,
 			},
 		},
-		include: {
-			model: Song,
-		},
 		raw: true,
 		nest: true,
 	}).catch((err) => {
 		return { error: err.message };
 	});
-	console.log(RecentSongs);
+
+	const topSongs = await myTopSongs(access_token);
+	if (topSongs.error) {
+		return topSongs;
+	}
+	const topSongsIds = topSongs.map((song) => song.id);
 
 	const RecentSongsIds = RecentSongs.map((currentSong) => {
-		console.log(currentSong);
-		return currentSong.id;
-	});
-	let RecommendedSongs = currentPlaylist.filter((currentSong) => {
-		return RecentSongsIds.includes(currentSong.id);
+		return currentSong.SongId;
 	});
 
-	if (RecommendedSongs.length === 0) {
+	let recommendedSongs = currentPlaylist.filter((currentSong) => {
+		return (
+			RecentSongsIds.includes(currentSong.id) &&
+			topSongsIds.includes(currentSong.id)
+		);
+	});
+
+	if (recommendedSongs.length === 0) {
 		console.log(`No recommended songs for playlist ${playlistId}`);
-		RecommendedSongs = await myTopSongs(access_token);
-		if (RecommendedSongs.error) {
+		recommendedSongs = topSongs;
+		if (recommendedSongs.error) {
 			return topSongs;
 		}
 	}
 
+	console.log(
+		`Recommended songs for playlist ${playlistId}`,
+		recommendedSongs.length,
+		recommendedSongs
+	);
+
 	const recommendedTracks = await myApiRecommended(
 		access_token,
-		RecommendedSongs
+		recommendedSongs
 	);
 	if (recommendedTracks.error) {
 		return recommendedTracks;
