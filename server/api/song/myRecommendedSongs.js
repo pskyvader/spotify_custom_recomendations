@@ -93,11 +93,11 @@ const myRecommendedSongs = async (session, playlistId) => {
 		}
 	}
 
-	console.log(
-		`Recommended songs for playlist ${playlistId}`,
-		recommendedSongs.length,
-		recommendedSongs
-	);
+	// console.log(
+	// 	`Recommended songs for playlist ${playlistId}`,
+	// 	recommendedSongs.length,
+	// 	recommendedSongs
+	// );
 
 	const recommendedTracks = await myApiRecommended(
 		access_token,
