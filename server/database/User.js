@@ -26,12 +26,12 @@ const UserConfiguration = {
 		allowNull: false,
 	},
 	access_token: {
-		type: DataTypes.STRING,
+		type: DataTypes.STRING(500),
 		allowNull: false,
 		unique: true,
 	},
 	refresh_token: {
-		type: DataTypes.STRING,
+		type: DataTypes.STRING(500),
 		allowNull: false,
 		unique: true,
 	},
