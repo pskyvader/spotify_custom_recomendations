@@ -51,7 +51,7 @@ const myRecommendedSongs = async (session, playlistId) => {
 			self.findIndex((song) => song.id === currentSong.id) === index
 	);
 
-	// RecommendedSongs: get playlist songs ids added before 1 week ago, and played after 2 weeks ago
+	// Recent: get playlist songs ids added before 1 week ago, and played after 2 weeks ago
 	const RecentSongs = await UserSong.findAll({
 		where: {
 			UserId: currentUser.id,
@@ -68,25 +68,27 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return { error: err.message };
 	});
 
-	const topSongs = await myTopSongs(access_token);
-	if (topSongs.error) {
-		return topSongs;
-	}
-	const topSongsIds = topSongs.map((song) => song.id);
+	// const topSongsIds = topSongs.map((song) => song.id);
 
 	const RecentSongsIds = RecentSongs.map((currentSong) => {
 		return currentSong.SongId;
 	});
 
+	//Recommended songs: get playlist songs in recent playlist that are not in current playlist
 	let recommendedSongs = currentPlaylist.filter((currentSong) => {
-		return (
-			RecentSongsIds.includes(currentSong.id) &&
-			topSongsIds.includes(currentSong.id)
-		);
+		return RecentSongsIds.includes(currentSong.id);
+		// && topSongsIds.includes(currentSong.id)
 	});
 
 	if (recommendedSongs.length === 0) {
-		console.log(`No recommended songs for playlist ${playlistId}`);
+		console.log(
+			`No recommended songs for playlist ${playlistId}, getting top songs`
+		);
+
+		const topSongs = await myTopSongs(access_token);
+		if (topSongs.error) {
+			return topSongs;
+		}
 		recommendedSongs = topSongs;
 		if (recommendedSongs.error) {
 			return topSongs;
