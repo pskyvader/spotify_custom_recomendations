@@ -34,7 +34,7 @@ const addToPlaylist = async (user) => {
 			return songlist;
 		}
 		response.message.push(
-			`Max songs availableto add: ${songlist.length} of ${playlistSongsList.length}`
+			`Max songs available to add: ${songlist.length} of ${playlistSongsList.length}`
 		);
 
 		let songsToAdd = 5 + Math.floor(Math.random() * 5);
@@ -76,7 +76,12 @@ const addToPlaylist = async (user) => {
 				playlist.id
 			);
 			if (addSongResult.error) {
-				return addSongResult;
+				response.error = true;
+				response.message.push(
+					`Error adding song ${songInList.id} to playlist ${playlist.id}`
+				);
+				response.message.push(addSongResult);
+				// return addSongResult;
 			}
 			i++;
 			response.message.push(`Added song: ${songInList.name}`);

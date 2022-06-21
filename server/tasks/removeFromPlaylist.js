@@ -50,11 +50,18 @@ const removeFromPlaylist = async (user) => {
 			if (i >= songsToRemove) {
 				break;
 			}
-			// await removeSongPlaylist(
-			// 	fakesession,
-			// 	songInList.action,
-			// 	playlist.id
-			// );
+			const removeResponse = await removeSongPlaylist(
+				fakesession,
+				songInList.action,
+				playlist.id
+			);
+			if (removeResponse.error) {
+				response.error = true;
+				response.message.push(
+					`Error removing song ${songInList.id} from playlist ${playlist.id}`
+				);
+				response.message.push(removeResponse);
+			}
 			i++;
 			response.message.push(`Removed song: ${songInList.name}`);
 		}
