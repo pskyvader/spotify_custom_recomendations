@@ -34,7 +34,7 @@ const addToPlaylist = async (user) => {
 			return songlist;
 		}
 		response.message.push(
-			`Max songs available to add: ${songlist.length} of ${playlistSongsList.length}`
+			`Max songs available to add: ${songlist.length} to the ${playlistSongsList.length} already in playlist`
 		);
 
 		let songsToAdd = 5 + Math.floor(Math.random() * 5);
