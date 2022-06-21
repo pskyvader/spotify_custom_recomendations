@@ -80,7 +80,7 @@ const addToPlaylist = async (user) => {
 				response.message.push(
 					`Error adding song ${songInList.id} to playlist ${playlist.id}`
 				);
-				response.message.push(addSongResult);
+				response.message.push(JSON.stringify(addSongResult));
 				// return addSongResult;
 			}
 			i++;
