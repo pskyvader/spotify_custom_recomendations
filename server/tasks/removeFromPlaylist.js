@@ -13,11 +13,11 @@ const removeFromPlaylist = async (user) => {
 		access_token: user.access_token,
 		refresh_token: user.refresh_token,
 	};
-	const iduser = user.id;
+	const userId = user.id;
 
 	const playlists = await Playlist.findAll({
 		where: {
-			[Op.and]: [{ iduser: iduser }, { active: true }],
+			[Op.and]: [{ iduser: userId }, { active: true }],
 		},
 	});
 
@@ -35,7 +35,7 @@ const removeFromPlaylist = async (user) => {
 			return songlist;
 		}
 		response.message.push(
-			`Max songs available for deletion: ${songlist.length}`
+			`Max songs available for deletion: ${songlist.length} of ${playlistSongsList.length}`
 		);
 		let songsToRemove = 5 + Math.floor(Math.random() * 5);
 		if (playlistSongsList.length < _MIN_SONGS_PER_PLAYLIST) {

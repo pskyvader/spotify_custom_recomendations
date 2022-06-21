@@ -33,7 +33,9 @@ const addToPlaylist = async (user) => {
 		if (songlist.error) {
 			return songlist;
 		}
-		response.message.push(`Max songs available: ${songlist.length}`);
+		response.message.push(
+			`Max songs availableto add: ${songlist.length} of ${playlistSongsList.length}`
+		);
 
 		let songsToAdd = 5 + Math.floor(Math.random() * 5);
 		if (playlistSongsList.length < _MIN_SONGS_PER_PLAYLIST) {
