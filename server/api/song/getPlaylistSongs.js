@@ -36,6 +36,7 @@ const getPlaylistSongs = async (session, playlistId, syncSongs = false) => {
 		lastGetResult > Date.now() - 3600000 &&
 		!syncSongs
 	) {
+		console.log(`Using cache for playlist ${playlistId}`);
 		return playlists[playlistId];
 	}
 	const playlistActive = await playlistStatus(session, playlistId);

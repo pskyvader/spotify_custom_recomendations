@@ -26,6 +26,10 @@ const request = (
 				status: response.status,
 				message: responsetext,
 				url: response.url,
+				request: {
+					url: url,
+					requestOptions: requestOptions,
+				},
 			};
 			try {
 				finalresponse.detail = JSON.parse(responsetext);
