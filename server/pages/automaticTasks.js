@@ -13,12 +13,12 @@ const automaticTasks = async (req, res) => {
 		error: false,
 		message: [],
 	};
-	if (LastTask > Date.now() - 3600000) {
-		response.error = true;
-		response.message = "Not able to run task for next hour";
-		res.json(response);
-		return;
-	}
+	// if (LastTask > Date.now() - 3600000) {
+	// 	response.error = true;
+	// 	response.message = "Not able to run task for next hour";
+	// 	res.json(response);
+	// 	return;
+	// }
 	const { count, rows } = await User.findAndCountAll({
 		attributes: [
 			"id",
@@ -29,11 +29,11 @@ const automaticTasks = async (req, res) => {
 			"hash",
 			"last_modified",
 		],
-		 where: {
-			last_modified: {
-		 		[Op.lte]: Date.now() - 3600000,
-			},
-		 },
+		// where: {
+		// 	last_modified: {
+		// 		[Op.lte]: Date.now() - 3600000,
+		// 	},
+		// },
 	});
 	if (count === 0) {
 		response.message = "No users to update at this time";
@@ -50,7 +50,9 @@ const automaticTasks = async (req, res) => {
 				console.error(
 					`access token error for user ${user.name}, cannot continue`
 				);
-				response.message.push(`access token error for user ${user.name}`);
+				response.message.push(
+					`access token error for user ${user.name}`
+				);
 				continue;
 			}
 			console.log(`user ${user.name} Refresh token`); //, result);
@@ -79,8 +81,8 @@ const automaticTasks = async (req, res) => {
 			console.log(`User ${user.name} updated`);
 		}
 
-		if (user.last_modified < Date.now() - 86400000) {
-			console.log(`Remove for user ${user.name}`);
+		console.log(`Remove for user ${user.name}`);
+		// if (user.last_modified < Date.now() - 86400000) {
 			const removeResponse = await removeFromPlaylist(user);
 			console.log(`User ${user.name}`, removeResponse);
 			console.log(`Add for user ${user.name}`);
@@ -94,13 +96,13 @@ const automaticTasks = async (req, res) => {
 			response.message.push(
 				`User ${user.name} Daily playlists has been updated`
 			);
-		} else {
-			console.log(
-				`User ${user.name} not yet able for daily updates`,
-				new Date(user.last_modified).toString(),
-				new Date(Date.now()).toString()
-			);
-		}
+		// } else {
+		// 	console.log(
+		// 		`User ${user.name} not yet able for daily updates`,
+		// 		new Date(user.last_modified).toString(),
+		// 		new Date(Date.now()).toString()
+		// 	);
+		// }
 		response.message.push(`User ${user.name} has been updated`);
 	}
 	const deleteResponse = await deleteOldRemoved();
