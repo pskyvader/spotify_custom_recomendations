@@ -58,7 +58,7 @@ const removeFromPlaylist = async (user) => {
 			if (removeResponse.error) {
 				response.error = true;
 				response.message.push(
-					`Error removing song ${songInList.id} from playlist ${playlist.id}`
+					`Error removing song ${songInList.name} from playlist ${playlist.name}`
 				);
 				response.message.push(JSON.stringify(removeResponse));
 			}
