@@ -37,12 +37,13 @@ export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 	};
 };
 
+
 const SongList = ({ data, title = "title" }) => {
 	return (
 		<DataGrid
-			autoPageSize={true}
+			// autoPageSize={true}
 			// hideFooter
-			// pageSize={data.rows.length}
+			// pageSize={20}
 			disableSelectionOnClick
 			components={{
 				Toolbar: () => {

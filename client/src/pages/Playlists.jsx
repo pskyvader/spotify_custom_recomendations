@@ -17,13 +17,7 @@ import { Playlist } from "../API";
 
 const Root = styled("div")(({ theme }) => {
 	return {
-		maxHeight:
-			"calc(100vh - " +
-			theme.mixins.toolbar.minHeight +
-			"px - " +
-			theme.spacing(7) +
-			" )",
-
+		maxHeight:`calc(100vh - ${theme.mixins.toolbar.minHeight * 2}px -${theme.spacing(7)})`,
 		[theme.breakpoints.down("md")]: {
 			maxHeight: "none",
 		},
