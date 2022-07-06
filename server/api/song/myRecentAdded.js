@@ -16,7 +16,7 @@ const myRecentAdded = async (userId, playlistId) => {
 		where: {
 			UserId: userId,
 			song_added: {
-				[Op.gte]: Date.now() - week,
+				[Op.gte]: Date.now() - 2*week,
 			},
 		},
 		include: {
