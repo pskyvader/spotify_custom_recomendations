@@ -9,6 +9,9 @@ const { Op } = require("sequelize");
 const removerecommended = {};
 let lastGetResult = null;
 
+//week in ms
+const week = 604800000;
+
 const addSongRemoveRecommendedCache = (playlistId, song) => {
 	if (removerecommended[playlistId]) {
 		removerecommended[playlistId].unshift(song);
@@ -30,7 +33,7 @@ const myRemoveRecommended = async (session, playlistId) => {
 	if (currentUser.error) {
 		return currentUser;
 	}
-	const userId=currentUser.id;
+	const userId = currentUser.id;
 	// const access_token = session.access_token;
 	if (removerecommended[playlistId] && lastGetResult > Date.now() - 3600000) {
 		return removerecommended[playlistId];
