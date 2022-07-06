@@ -22,8 +22,7 @@ const myRecentSongs = async (access_token, userId) => {
 		where: {
 			UserId: userId,
 			song_last_played: {
-				// [Op.gte]: Date.now() - 2*week,
-				[Op.ne]: null,
+				[Op.gte]: Date.now() - 4*week,
 			},
 		},
 		order: [["song_last_played", "ASC"]],

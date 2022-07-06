@@ -10,24 +10,29 @@ const fillOptions = (playlist, currentgenres) => {
 	};
 
 	if (playlist.length > 0) {
+		const half_playlist = Math.floor((playlist.length - 1) / 2);
 		for (let index = 0; index < 5; index++) {
-			const idsong = Math.floor(Math.random() * playlist.length);
+			const idsong =
+				half_playlist + Math.floor(Math.random() * half_playlist);
 			const randomSong = playlist[idsong];
 			const randomNumber = Math.floor(Math.random() * 10);
 
-			//50%
-			if (randomNumber < 5) {
+			//60%
+			if (randomNumber < 6) {
 				options.seed_tracks.push(randomSong.id);
 				continue;
 			}
 			//30%
-			if (randomNumber < 8) {
+			if (randomNumber < 9) {
 				options.seed_artists.push(randomSong.idartist);
 				continue;
 			}
 
-			//20%
-			const randomGenre = currentgenres[Math.floor(Math.random() * currentgenres.length)];
+			//10%
+			const randomGenre =
+				currentgenres[
+					Math.floor(Math.random() * (currentgenres.length - 1))
+				];
 			options.seed_genres.push(randomGenre);
 		}
 	} else {
@@ -51,7 +56,7 @@ const myApiRecommended = async (
 	const url = "https://api.spotify.com/v1/recommendations";
 	let urlOptions = "?";
 	Object.entries(options).forEach((option) => {
-		urlOptions += option[0] + "=" + option[1] + "&";
+		urlOptions += `${option[0]}=${option[1]}&`;
 	});
 	const response = await request(access_token, url + urlOptions);
 	if (response.error) {

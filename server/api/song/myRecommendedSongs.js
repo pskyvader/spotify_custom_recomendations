@@ -51,15 +51,15 @@ const myRecommendedSongs = async (session, playlistId) => {
 			self.findIndex((song) => song.id === currentSong.id) === index
 	);
 
-	// Recent: get playlist songs ids added before 1 week ago, and played after 2 weeks ago
+	// Recent: get playlist songs ids added before 2 weeks ago, and played more recently than 4 weeks ago
 	const RecentSongs = await UserSong.findAll({
 		where: {
 			UserId: currentUser.id,
 			song_last_played: {
-				[Op.gte]: Date.now() - 2 * week,
+				[Op.gte]: Date.now() - 4 * week,
 			},
 			song_added: {
-				[Op.lte]: Date.now() - week,
+				[Op.lte]: Date.now() - 2*week,
 			},
 		},
 		raw: true,
@@ -74,7 +74,7 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return currentSong.SongId;
 	});
 
-	//Recommended songs: get playlist songs in recent playlist that are not in current playlist
+	//Recommended songs: get playlist songs in recent playlist that are in current playlist
 	let recommendedSongs = currentPlaylist.filter((currentSong) => {
 		return RecentSongsIds.includes(currentSong.id);
 		// && topSongsIds.includes(currentSong.id)

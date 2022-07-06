@@ -1,8 +1,10 @@
 const { getPlaylistSongs } = require("./getPlaylistSongs");
-const { myRecentAdded } = require("./myRecentAdded");
-const { myRecentSongs } = require("./myRecentSongs");
+// const { myRecentAdded } = require("./myRecentAdded");
+// const { myRecentSongs } = require("./myRecentSongs");
 const { getUser } = require("../../model");
-const { subtractById } = require("../../utils");
+// const { subtractById } = require("../../utils");
+const { Song, UserSong } = require("../../database");
+const { Op } = require("sequelize");
 
 const removerecommended = {};
 let lastGetResult = null;
@@ -28,7 +30,7 @@ const myRemoveRecommended = async (session, playlistId) => {
 	if (currentUser.error) {
 		return currentUser;
 	}
-	const access_token = session.access_token;
+	// const access_token = session.access_token;
 	if (removerecommended[playlistId] && lastGetResult > Date.now() - 3600000) {
 		return removerecommended[playlistId];
 	}
@@ -38,20 +40,84 @@ const myRemoveRecommended = async (session, playlistId) => {
 		return currentPlaylist;
 	}
 
-	const recentAdded = await myRecentAdded(currentUser.id, playlistId);
-	if (recentAdded.error) {
-		return recentAdded;
+	const currentPlaylistIds = currentPlaylist.map((song) => song.id);
+
+	const NeverPlayedSongs = await UserSong.findAll({
+		where: {
+			UserId: userId,
+			song_last_played: {
+				[Op.eq]: null,
+			},
+			song_added: {
+				[Op.lte]: Date.now() - 2 * week,
+			},
+		},
+		include: {
+			model: Song,
+		},
+		raw: true,
+		nest: true,
+	}).catch((err) => {
+		return { error: err.message };
+	});
+
+	const NeverPlayedPlaylist = NeverPlayedSongs.filter((song) =>
+		currentPlaylistIds.includes(song.id)
+	);
+
+	if (NeverPlayedPlaylist.length >= 20) {
+		removerecommended[playlistId] = NeverPlayedPlaylist.map(
+			(NeverPlayedSong) => formatSong(NeverPlayedSong.Song)
+		);
+		lastGetResult = Date.now();
+		return removerecommended[playlistId];
 	}
 
-	const recentSongs = await myRecentSongs(access_token, currentUser.id);
-	if (recentSongs.error) {
-		return recentSongs;
-	}
-	const newplaylist = subtractById(currentPlaylist, recentSongs);
-	removerecommended[playlistId] = subtractById(newplaylist, recentAdded);
+	const OldPlayedSongs = await UserSong.findAll({
+		where: {
+			UserId: userId,
+			song_last_played: {
+				[Op.lte]: Date.now() - 4 * week,
+			},
+			song_added: {
+				[Op.lte]: Date.now() - 2 * week,
+			},
+		},
+		order: [["song_last_played", "ASC"]],
+		include: {
+			model: Song,
+		},
+		limit: 20,
+		raw: true,
+		nest: true,
+	}).catch((err) => {
+		return { error: err.message };
+	});
 
+	const OldPlayedPlaylist = OldPlayedSongs.filter((song) =>
+		currentPlaylistIds.includes(song.id)
+	);
+
+	removerecommended[playlistId] = OldPlayedPlaylist.map((OldPlayedSong) =>
+		formatSong(OldPlayedSong.Song)
+	);
 	lastGetResult = Date.now();
 	return removerecommended[playlistId];
+
+	// const recentAdded = await myRecentAdded(currentUser.id, playlistId);
+	// if (recentAdded.error) {
+	// 	return recentAdded;
+	// }
+
+	// const recentSongs = await myRecentSongs(access_token, currentUser.id);
+	// if (recentSongs.error) {
+	// 	return recentSongs;
+	// }
+	// const newplaylist = subtractById(currentPlaylist, recentSongs);
+	// removerecommended[playlistId] = subtractById(newplaylist, recentAdded);
+
+	// lastGetResult = Date.now();
+	// return removerecommended[playlistId];
 };
 
 module.exports = {
