@@ -30,6 +30,7 @@ const myRemoveRecommended = async (session, playlistId) => {
 	if (currentUser.error) {
 		return currentUser;
 	}
+	const userId=currentUser.id;
 	// const access_token = session.access_token;
 	if (removerecommended[playlistId] && lastGetResult > Date.now() - 3600000) {
 		return removerecommended[playlistId];
