@@ -65,7 +65,12 @@ const myApiRecommended = async (
 
 	const filtered = response.tracks.filter((song) => {
 		const currentSong = song.track || song;
-		return currentSong.is_playable;
+
+		//song playable and not in playlist
+		return (
+			currentSong.is_playable &&
+			!playlist.find((playlistSong) => playlistSong.id === currentSong.id)
+		);
 	});
 	return formatSongList(filtered);
 };
