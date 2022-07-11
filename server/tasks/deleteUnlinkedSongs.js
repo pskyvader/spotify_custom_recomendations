@@ -1,4 +1,4 @@
-// const { Op } = require("sequelize");
+const { Op } = require("sequelize");
 const { User, UserSong, Playlist, Song } = require("../database");
 const {
 	getPlaylistSongs,
@@ -30,10 +30,25 @@ const deleteUnlinkedSongs = async () => {
 		}
 	}
 
-	console.log("allPlaylistSongs", allPlaylistSongs);
 	const allPlaylistSongsIds = allPlaylistSongs.map((song) => song.id);
 
 	const allSongs = await UserSong.findAll({
+		where: {
+			[Op.and]: [
+				{ removed: false },
+				{ song_added: { [Op.lt]: Date.now() - 4 * week } },
+				{
+					[Op.or]: [
+						{ song_last_played: null },
+						{
+							song_last_played: {
+								[Op.lt]: Date.now() - 6 * week,
+							},
+						},
+					],
+				},
+			],
+		},
 		include: {
 			model: Song,
 		},
@@ -42,12 +57,25 @@ const deleteUnlinkedSongs = async () => {
 	}).catch((err) => {
 		return { error: err.message };
 	});
-	console.log(allPlaylistSongsIds);
 	const NeverPlayednotPlaylist = allSongs.filter((song) => {
 		return !allPlaylistSongsIds.includes(song.SongId);
 	});
-	console.log(NeverPlayednotPlaylist.length);
-	return "a";
+
+	const destroyIds = NeverPlayednotPlaylist.map((song) => {
+		return { id: song.id };
+	});
+
+	// console.log(NeverPlayednotPlaylist.length, allSongs.length,where,NeverPlayednotPlaylist[0]);
+	return UserSong.destroy({
+		where: {
+			[Op.or]: destroyIds,
+		},
+		// raw: true,
+		// nest: true,
+	}).catch((err) => {
+		return { error: err.message };
+	});
+	// return "a";
 	// return NeverPlayednotPlaylist;
 	// console.log(NeverPlayednotPlaylist);
 };
