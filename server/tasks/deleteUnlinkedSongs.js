@@ -7,7 +7,7 @@ const {
 //week in ms
 const week = 604800000;
 const deleteUnlinkedSongs = async () => {
-	const allPlaylistSongs = [];
+	let allPlaylistSongs = [];
 	const users = await User.findAll();
 	for (const user of users) {
 		const fakesession = {
@@ -24,11 +24,13 @@ const deleteUnlinkedSongs = async () => {
 				fakesession,
 				playlist.id
 			);
-
-			allPlaylistSongs.push(playlistsongs);
+			if (!playlistsongs.error) {
+				allPlaylistSongs = [...allPlaylistSongs, ...playlistsongs];
+			}
 		}
 	}
 
+	console.log("allPlaylistSongs", allPlaylistSongs);
 	const allPlaylistSongsIds = allPlaylistSongs.map((song) => song.id);
 
 	const allSongs = await UserSong.findAll({
