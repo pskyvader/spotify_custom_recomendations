@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { User } = require("../database");
+const { User, Playlist } = require("../database");
 const { refreshCookie } = require("../api/user/refreshCookie");
 
 const { updateRecentSongs } = require("../tasks/updateRecentSongs");
@@ -10,6 +10,15 @@ const { deleteUnlinkedSongs } = require("../tasks/deleteUnlinkedSongs");
 
 let LastTask = null;
 const automaticTasks = async (req, res) => {
+	// Playlist.findAll({})
+	// 	.then((playlists) => {
+	// 		for (const playlist of playlists) {
+	// 			playlist.active = false;
+	// 			playlist.save();
+	// 		}
+	// 	})
+	// 	.catch((err) => {});
+
 	const response = {
 		error: false,
 		message: [],
@@ -30,11 +39,11 @@ const automaticTasks = async (req, res) => {
 			"hash",
 			"last_modified",
 		],
-		// where: {
-		// 	last_modified: {
-		// 		[Op.lte]: Date.now() - 3600000,
-		// 	},
-		// },
+		where: {
+			last_modified: {
+				[Op.lte]: Date.now() - 3600000,
+			},
+		},
 	});
 	if (count === 0) {
 		response.message = "No users to update at this time";
@@ -83,7 +92,7 @@ const automaticTasks = async (req, res) => {
 		}
 
 		console.log(`Remove for user ${user.name}`);
-		if (true || user.last_modified < Date.now() - 86400000) {
+		if (user.last_modified < Date.now() - 86400000) {
 			const removeResponse = await removeFromPlaylist(user);
 			console.log(`User ${user.name}`, removeResponse);
 			console.log(`Add for user ${user.name}`);
@@ -109,8 +118,8 @@ const automaticTasks = async (req, res) => {
 	const deleteResponse = await deleteOldRemoved();
 	console.log("deleted all", deleteResponse);
 
-	const deleteUnlinkedResponse = await deleteUnlinkedSongs();
-	console.log("deleted unlinked", deleteUnlinkedResponse);
+	// const deleteUnlinkedResponse = await deleteUnlinkedSongs();
+	// console.log("deleted unlinked", deleteUnlinkedResponse);
 
 	LastTask = Date.now();
 	res.json(response);

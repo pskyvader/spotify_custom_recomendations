@@ -13,7 +13,7 @@ const SongConfiguration = {
 		allowNull: false,
 	},
 	artist: {
-		type: DataTypes.STRING,
+		type: DataTypes.STRING(1200),
 		allowNull: false,
 	},
 	idartist: {

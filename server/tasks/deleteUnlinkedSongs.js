@@ -10,8 +10,9 @@ const deleteUnlinkedSongs = async () => {
 	console.log(Object.keys(playlists_cache));
 	const allPlaylistSongs = [];
 	for (const playlist of Object.keys(playlists_cache)) {
-		allPlaylistSongs.push(playlist);
+		allPlaylistSongs.push(playlists_cache[playlist]);
 	}
+	console.log(allPlaylistSongs);
 	const allPlaylistSongsIds = allPlaylistSongs.map((song) => song.id);
 
 	const allSongs = await UserSong.findAll({
