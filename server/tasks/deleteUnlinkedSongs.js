@@ -28,7 +28,8 @@ const deleteUnlinkedSongs = async (session) => {
 	const NeverPlayednotPlaylist = allSongs.filter(
 		(song) => !allPlaylistSongsIds.includes(song.id)
 	);
-	console.log(NeverPlayednotPlaylist);
+    return NeverPlayednotPlaylist;
+	// console.log(NeverPlayednotPlaylist);
 };
 
 module.exports = { deleteUnlinkedSongs };
