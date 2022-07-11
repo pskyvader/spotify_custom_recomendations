@@ -1,5 +1,5 @@
 // const { Op } = require("sequelize");
-const { UserSong, Playlist, Song } = require("../database");
+const { User, UserSong, Playlist, Song } = require("../database");
 const {
 	getPlaylistSongs,
 	playlists_cache,
@@ -7,12 +7,28 @@ const {
 //week in ms
 const week = 604800000;
 const deleteUnlinkedSongs = async () => {
-	console.log(Object.keys(playlists_cache));
 	const allPlaylistSongs = [];
-	for (const playlist of Object.keys(playlists_cache)) {
-		allPlaylistSongs.push(playlists_cache[playlist]);
+	const users = await User.findAll();
+	for (const user of users) {
+		const fakesession = {
+			hash: user.hash,
+			access_token: user.access_token,
+			refresh_token: user.refresh_token,
+		};
+		const userId = user.id;
+		const playlists = await Playlist.findAll({
+			where: { iduser: userId },
+		});
+		for (const playlist of playlists) {
+			const playlistsongs = await getPlaylistSongs(
+				fakesession,
+				playlist.id
+			);
+
+			allPlaylistSongs.push(playlistsongs);
+		}
 	}
-	console.log(allPlaylistSongs);
+
 	const allPlaylistSongsIds = allPlaylistSongs.map((song) => song.id);
 
 	const allSongs = await UserSong.findAll({

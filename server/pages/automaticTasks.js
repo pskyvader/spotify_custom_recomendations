@@ -10,15 +10,6 @@ const { deleteUnlinkedSongs } = require("../tasks/deleteUnlinkedSongs");
 
 let LastTask = null;
 const automaticTasks = async (req, res) => {
-	// Playlist.findAll({})
-	// 	.then((playlists) => {
-	// 		for (const playlist of playlists) {
-	// 			playlist.active = false;
-	// 			playlist.save();
-	// 		}
-	// 	})
-	// 	.catch((err) => {});
-
 	const response = {
 		error: false,
 		message: [],
@@ -118,8 +109,8 @@ const automaticTasks = async (req, res) => {
 	const deleteResponse = await deleteOldRemoved();
 	console.log("deleted all", deleteResponse);
 
-	// const deleteUnlinkedResponse = await deleteUnlinkedSongs();
-	// console.log("deleted unlinked", deleteUnlinkedResponse);
+	const deleteUnlinkedResponse = await deleteUnlinkedSongs();
+	console.log("deleted unlinked", deleteUnlinkedResponse);
 
 	LastTask = Date.now();
 	res.json(response);
