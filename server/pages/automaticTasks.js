@@ -6,6 +6,7 @@ const { updateRecentSongs } = require("../tasks/updateRecentSongs");
 const { removeFromPlaylist } = require("../tasks/removeFromPlaylist");
 const { deleteOldRemoved } = require("../tasks/deleteOldRemoved");
 const { addToPlaylist } = require("../tasks/addToPlaylist");
+const { deleteUnlinkedSongs } = require("../tasks/deleteUnlinkedSongs");
 
 let LastTask = null;
 const automaticTasks = async (req, res) => {
@@ -107,6 +108,16 @@ const automaticTasks = async (req, res) => {
 	}
 	const deleteResponse = await deleteOldRemoved();
 	console.log("deleted all", deleteResponse);
+
+	const fakesession = {
+		hash: UserList[0].hash,
+		access_token: UserList[0].access_token,
+		refresh_token: UserList[0].refresh_token,
+	};
+
+	
+	const deleteUnlinkedResponse = await deleteUnlinkedSongs(fakesession);
+	console.log("deleted unlinked", deleteUnlinkedResponse);
 
 	LastTask = Date.now();
 	res.json(response);
