@@ -1,17 +1,16 @@
-const { Op } = require("sequelize");
-const { UserSong } = require("../database");
-const { getPlaylistSongs } = require("../api/song/getPlaylistSongs");
+// const { Op } = require("sequelize");
+const { UserSong, Playlist, Song } = require("../database");
+const {
+	getPlaylistSongs,
+	playlists_cache,
+} = require("../api/song/getPlaylistSongs");
 //week in ms
 const week = 604800000;
-const deleteUnlinkedSongs = async (session) => {
-	const playlists = await Playlist.findAll();
+const deleteUnlinkedSongs = async () => {
+	console.log(Object.keys(playlists_cache));
 	const allPlaylistSongs = [];
-	for (const playlist of playlists) {
-		const currentPlaylist = await getPlaylistSongs(session, playlist.id);
-		if (currentPlaylist.error) {
-			continue;
-		}
-		allPlaylistSongs.push(currentPlaylist);
+	for (const playlist of Object.keys(playlists_cache)) {
+		allPlaylistSongs.push(playlist);
 	}
 	const allPlaylistSongsIds = allPlaylistSongs.map((song) => song.id);
 
@@ -24,11 +23,13 @@ const deleteUnlinkedSongs = async (session) => {
 	}).catch((err) => {
 		return { error: err.message };
 	});
-
-	const NeverPlayednotPlaylist = allSongs.filter(
-		(song) => !allPlaylistSongsIds.includes(song.id)
-	);
-    return NeverPlayednotPlaylist;
+	console.log(allPlaylistSongsIds);
+	const NeverPlayednotPlaylist = allSongs.filter((song) => {
+		return !allPlaylistSongsIds.includes(song.SongId);
+	});
+	console.log(NeverPlayednotPlaylist.length);
+	return "a";
+	// return NeverPlayednotPlaylist;
 	// console.log(NeverPlayednotPlaylist);
 };
 

@@ -7,21 +7,21 @@ const {
 } = require("../../model");
 const { Song } = require("../../database");
 
-const playlists = {};
+const playlists_cache = {};
 let lastGetResult = null;
 
 const addSongPlaylistCache = (playlistId, song) => {
-	if (playlists[playlistId]) {
-		playlists[playlistId].unshift(song);
+	if (playlists_cache[playlistId]) {
+		playlists_cache[playlistId].unshift(song);
 	}
 };
 const removeSongPlaylistCache = (playlistId, song) => {
-	if (playlists[playlistId]) {
-		const songindex = playlists[playlistId].findIndex(
+	if (playlists_cache[playlistId]) {
+		const songindex = playlists_cache[playlistId].findIndex(
 			(currentSong) => currentSong.id === song.id
 		);
 		if (songindex !== -1) {
-			playlists[playlistId].splice(songindex, 1);
+			playlists_cache[playlistId].splice(songindex, 1);
 		}
 	}
 };
@@ -32,12 +32,12 @@ const getPlaylistSongs = async (session, playlistId, syncSongs = false) => {
 		return currentUser;
 	}
 	if (
-		playlists[playlistId] &&
+		playlists_cache[playlistId] &&
 		lastGetResult > Date.now() - 3600000 &&
 		!syncSongs
 	) {
 		console.log(`Using cache for playlist ${playlistId}`);
-		return playlists[playlistId];
+		return playlists_cache[playlistId];
 	}
 	const playlistActive = await playlistStatus(session, playlistId);
 	if (!playlistActive.active) {
@@ -55,12 +55,12 @@ const getPlaylistSongs = async (session, playlistId, syncSongs = false) => {
 		items.push(...response.items);
 	}
 
-	playlists[playlistId] = formatSongList(items);
+	playlists_cache[playlistId] = formatSongList(items);
 
 	if (syncSongs) {
 		const allsongs = await Song.findAll({ attributes: ["id"] });
 		const allsongsIds = allsongs.map((song) => song.id);
-		const songsToAdd = playlists[playlistId].filter(
+		const songsToAdd = playlists_cache[playlistId].filter(
 			(song) => !allsongsIds.includes(song.id)
 		);
 		console.log("Songs to add to cache", songsToAdd.length);
@@ -79,11 +79,12 @@ const getPlaylistSongs = async (session, playlistId, syncSongs = false) => {
 	}
 
 	lastGetResult = Date.now();
-	return playlists[playlistId];
+	return playlists_cache[playlistId];
 };
 
 module.exports = {
 	getPlaylistSongs,
 	addSongPlaylistCache,
 	removeSongPlaylistCache,
+	playlists_cache
 };

@@ -30,11 +30,11 @@ const automaticTasks = async (req, res) => {
 			"hash",
 			"last_modified",
 		],
-		where: {
-			last_modified: {
-				[Op.lte]: Date.now() - 3600000,
-			},
-		},
+		// where: {
+		// 	last_modified: {
+		// 		[Op.lte]: Date.now() - 3600000,
+		// 	},
+		// },
 	});
 	if (count === 0) {
 		response.message = "No users to update at this time";
@@ -83,7 +83,7 @@ const automaticTasks = async (req, res) => {
 		}
 
 		console.log(`Remove for user ${user.name}`);
-		if (user.last_modified < Date.now() - 86400000) {
+		if (true || user.last_modified < Date.now() - 86400000) {
 			const removeResponse = await removeFromPlaylist(user);
 			console.log(`User ${user.name}`, removeResponse);
 			console.log(`Add for user ${user.name}`);
@@ -109,14 +109,7 @@ const automaticTasks = async (req, res) => {
 	const deleteResponse = await deleteOldRemoved();
 	console.log("deleted all", deleteResponse);
 
-	const fakesession = {
-		hash: UserList[0].hash,
-		access_token: UserList[0].access_token,
-		refresh_token: UserList[0].refresh_token,
-	};
-
-	
-	const deleteUnlinkedResponse = await deleteUnlinkedSongs(fakesession);
+	const deleteUnlinkedResponse = await deleteUnlinkedSongs();
 	console.log("deleted unlinked", deleteUnlinkedResponse);
 
 	LastTask = Date.now();
