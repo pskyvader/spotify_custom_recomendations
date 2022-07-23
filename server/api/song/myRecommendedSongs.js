@@ -13,6 +13,7 @@ let lastGetResult = null;
 
 //week in ms
 const week = 604800000;
+const hour = 3600000;
 
 const addSongRecommendedCache = (playlistId, song) => {
 	if (recommended[playlistId]) {
@@ -36,7 +37,7 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return currentUser;
 	}
 	const access_token = session.access_token;
-	if (recommended[playlistId] && lastGetResult > Date.now() - 3600000) {
+	if (recommended[playlistId] && lastGetResult > Date.now() - hour) {
 		return recommended[playlistId];
 	}
 
@@ -59,7 +60,7 @@ const myRecommendedSongs = async (session, playlistId) => {
 				[Op.gte]: Date.now() - 4 * week,
 			},
 			song_added: {
-				[Op.lte]: Date.now() - 2*week,
+				[Op.lte]: Date.now() - 2 * week,
 			},
 		},
 		raw: true,
@@ -68,38 +69,31 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return { error: err.message };
 	});
 
-	// const topSongsIds = topSongs.map((song) => song.id);
+	const topSongsIds = topSongs.map((song) => song.id);
+
+	const topSongs = await myTopSongs(access_token);
+	if (topSongs.error) {
+		return topSongs;
+	}
 
 	const RecentSongsIds = RecentSongs.map((currentSong) => {
 		return currentSong.SongId;
 	});
 
-	//Recommended songs: get playlist songs in recent playlist that are in current playlist
+	//Recommended songs: get playlist songs in recent playlist that are in current playlist, or in top songs
 	let recommendedSongs = currentPlaylist.filter((currentSong) => {
-		return RecentSongsIds.includes(currentSong.id);
-		// && topSongsIds.includes(currentSong.id)
+		return (
+			RecentSongsIds.includes(currentSong.id) ||
+			topSongsIds.includes(currentSong.id)
+		);
 	});
 
 	if (recommendedSongs.length === 0) {
 		console.log(
 			`No recommended songs for playlist ${playlistId}, getting top songs`
 		);
-
-		const topSongs = await myTopSongs(access_token);
-		if (topSongs.error) {
-			return topSongs;
-		}
 		recommendedSongs = topSongs;
-		if (recommendedSongs.error) {
-			return topSongs;
-		}
 	}
-
-	// console.log(
-	// 	`Recommended songs for playlist ${playlistId}`,
-	// 	recommendedSongs.length,
-	// 	recommendedSongs
-	// );
 
 	const recommendedTracks = await myApiRecommended(
 		access_token,

@@ -12,8 +12,7 @@ const fillOptions = (playlist, currentgenres) => {
 	if (playlist.length > 0) {
 		const half_playlist = Math.floor((playlist.length - 1) / 2);
 		for (let index = 0; index < 5; index++) {
-			const idsong =
-				half_playlist + Math.floor(Math.random() * half_playlist);
+			const idsong = half_playlist + Math.floor(Math.random() * half_playlist);
 			const randomSong = playlist[idsong];
 			const randomNumber = Math.floor(Math.random() * 10);
 
@@ -22,13 +21,13 @@ const fillOptions = (playlist, currentgenres) => {
 				options.seed_tracks.push(randomSong.id);
 				continue;
 			}
-			//30%
-			if (randomNumber < 9) {
+			//35%
+			if (randomNumber < 9.5) {
 				options.seed_artists.push(randomSong.idartist);
 				continue;
 			}
 
-			//10%
+			//5%
 			const randomGenre =
 				currentgenres[
 					Math.floor(Math.random() * (currentgenres.length - 1))

@@ -68,7 +68,7 @@ const myRemoveRecommended = async (session, playlistId) => {
 	const NeverPlayedPlaylist = NeverPlayedSongs.filter((song) =>
 		currentPlaylistIds.includes(song.id)
 	);
-	if (NeverPlayedPlaylist.length >= 20) {
+	if (NeverPlayedPlaylist.length >= 15) {
 		removerecommended[playlistId] = NeverPlayedPlaylist.map(
 			(NeverPlayedSong) => formatSong(NeverPlayedSong.Song)
 		);
