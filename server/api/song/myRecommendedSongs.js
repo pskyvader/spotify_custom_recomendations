@@ -69,12 +69,12 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return { error: err.message };
 	});
 
-	const topSongsIds = topSongs.map((song) => song.id);
-
 	const topSongs = await myTopSongs(access_token);
 	if (topSongs.error) {
 		return topSongs;
 	}
+
+	const topSongsIds = topSongs.map((song) => song.id);
 
 	const RecentSongsIds = RecentSongs.map((currentSong) => {
 		return currentSong.SongId;
