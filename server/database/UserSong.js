@@ -15,6 +15,10 @@ const UserSongConfiguration = {
 		type: DataTypes.DATE,
 		allowNull: true,
 	},
+	times_played: {
+		type: DataTypes.INTEGER,
+		defaultValue: 0,
+	},
 	song_removed: {
 		type: DataTypes.DATE,
 		allowNull: true,

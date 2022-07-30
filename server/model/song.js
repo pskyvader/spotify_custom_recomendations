@@ -46,7 +46,9 @@ const addUserToSong = async (currentSong, userId) => {
 	const exists = await currentSong.hasUser(userId);
 	if (!exists) {
 		await currentSong
-			.addUser(userId, { through: { song_added: Date.now() } })
+			.addUser(userId, {
+				through: { song_added: Date.now(), times_played: 1 },
+			})
 			.catch((err) => {
 				console.error(err.message);
 				return { error: err.message };

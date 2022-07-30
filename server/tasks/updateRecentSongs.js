@@ -49,7 +49,12 @@ const updateRecentSongs = async (access_token, userId) => {
 		});
 		await updatingSong
 			.addUser(userId, {
-				through: { song_last_played: newsong.played_at },
+				through: {
+					song_last_played: newsong.played_at,
+					times_played: updatingSong.Users[0].UserSong
+						? updatingSong.Users[0].UserSong.times_played + 1
+						: 1,
+				},
 			})
 			.catch((err) => {
 				console.error(
