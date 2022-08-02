@@ -102,7 +102,15 @@ const myRecommendedSongs = async (session, playlistId) => {
 	if (recommendedTracks.error) {
 		return recommendedTracks;
 	}
-	recommended[playlistId] = recommendedTracks;
+
+	//remove songs already in playlist
+	const recommendedTracksFiltered = recommendedTracks.filter(
+		(currentSong) => {
+			return !currentPlaylist.find((song) => song.id === currentSong.id);
+		}
+	);
+
+	recommended[playlistId] = recommendedTracksFiltered;
 	lastGetResult = Date.now();
 	return recommended[playlistId];
 };
