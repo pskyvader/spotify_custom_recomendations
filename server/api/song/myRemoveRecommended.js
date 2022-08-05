@@ -94,7 +94,7 @@ const myRemoveRecommended = async (session, playlistId) => {
 		include: {
 			model: Song,
 		},
-		limit: 20,
+		limit: 15,
 		raw: true,
 		nest: true,
 	}).catch((err) => {
