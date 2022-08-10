@@ -12,11 +12,9 @@ const fillOptions = (playlist, currentgenres) => {
 	if (playlist.length > 0) {
 		const half_playlist = Math.floor((playlist.length - 1) / 2);
 		for (let index = 0; index < 5; index++) {
-			const idsong =
-				half_playlist + Math.floor(Math.random() * half_playlist);
+			const idsong = Math.floor(Math.random() * half_playlist);
 			const randomSong = playlist[idsong];
 			const randomNumber = Math.floor(Math.random() * 10);
-			console.log(`random number: ${randomNumber}`);
 
 			//60%
 			if (randomNumber < 6) {

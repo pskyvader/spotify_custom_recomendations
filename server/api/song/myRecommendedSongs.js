@@ -60,6 +60,7 @@ const myRecommendedSongs = async (session, playlistId) => {
 				[Op.gte]: Date.now() - 1 * week,
 			},
 		},
+		sort: [["song_last_played", "DESC"]],
 		raw: true,
 		nest: true,
 	}).catch((err) => {
@@ -80,11 +81,11 @@ const myRecommendedSongs = async (session, playlistId) => {
 	//Recommended songs: get playlist songs in recent playlist that are in current playlist, or in top songs
 	let recommendedSongs = [
 		...currentPlaylist.filter((currentSong) => {
-			return RecentSongsIds.includes(currentSong.id);
-		}),
-		currentPlaylist.filter((currentSong) => {
 			return topSongsIds.includes(currentSong.id);
 		}),
+		...currentPlaylist.filter((currentSong) => {
+			return RecentSongsIds.includes(currentSong.id);
+		}).reverse(),
 	];
 
 	if (recommendedSongs.length === 0) {
