@@ -36,6 +36,9 @@ const myRemoveRecommended = async (session, playlistId) => {
 	const userId = currentUser.id;
 	// const access_token = session.access_token;
 	if (removerecommended[playlistId] && lastGetResult > Date.now() - 3600000) {
+		console.log(
+			`Using cache for remove recommended playlist ${playlistId}`
+		);
 		return removerecommended[playlistId];
 	}
 
@@ -105,9 +108,14 @@ const myRemoveRecommended = async (session, playlistId) => {
 		currentPlaylistIds.includes(song.Song.id)
 	);
 
-	removerecommended[playlistId] = OldPlayedPlaylist.map((OldPlayedSong) =>
-		formatSong(OldPlayedSong.Song)
-	);
+	removerecommended[playlistId] = [
+		...NeverPlayedPlaylist.map((NeverPlayedSong) =>
+			formatSong(NeverPlayedSong.Song)
+		),
+		...OldPlayedPlaylist.map((OldPlayedSong) =>
+			formatSong(OldPlayedSong.Song)
+		),
+	];
 	lastGetResult = Date.now();
 	return removerecommended[playlistId];
 };
