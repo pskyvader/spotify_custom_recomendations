@@ -47,10 +47,12 @@ const myRecommendedSongs = async (session, playlistId) => {
 	}
 
 	// remove repeated ids from currentPlaylist array
+	console.log(`Songs before remove repeated ids: ${currentPlaylist.length}`);
 	currentPlaylist = currentPlaylist.filter(
 		(currentSong, index, self) =>
 			self.findIndex((song) => song.id === currentSong.id) === index
 	);
+	console.log(`Songs after remove repeated ids: ${currentPlaylist.length}`);
 
 	// Recent: get playlist songs ids and played more recently than 1 week ago
 	const RecentSongs = await UserSong.findAll({
@@ -83,9 +85,11 @@ const myRecommendedSongs = async (session, playlistId) => {
 		...currentPlaylist.filter((currentSong) => {
 			return topSongsIds.includes(currentSong.id);
 		}),
-		...currentPlaylist.filter((currentSong) => {
-			return RecentSongsIds.includes(currentSong.id);
-		}).reverse(),
+		...currentPlaylist
+			.filter((currentSong) => {
+				return RecentSongsIds.includes(currentSong.id);
+			})
+			.reverse(),
 	];
 
 	if (recommendedSongs.length === 0) {
@@ -103,11 +107,25 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return recommendedTracks;
 	}
 
+	const removedSongs = await UserSong.findAll({
+		where: {
+			UserId: currentUser.id,
+			removed: true,
+		},
+		raw: true,
+		nest: true,
+	}).catch((err) => {
+		return { error: err.message };
+	});
+
 	//remove songs already in playlist
 	const recommendedTracksFiltered = recommendedTracks.filter(
 		(currentSong) => {
-			return !currentPlaylist.find(
-				(song) => song.id === currentSong.SongId
+			return (
+				!currentPlaylist.find(
+					(song) => song.id === currentSong.SongId
+				) &&
+				!removedSongs.find((song) => song.id === currentSong.SongId)
 			);
 		}
 	);
