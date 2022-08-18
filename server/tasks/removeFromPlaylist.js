@@ -6,7 +6,62 @@ const { removeSongPlaylist } = require("../api/playlist");
 const _MAX_SONGS_PER_PLAYLIST = 200;
 const _MIN_SONGS_PER_PLAYLIST = 50;
 
-const removeFromPlaylist = async (user) => {
+const removefromSinglePlaylist = async (
+	playlist,
+	fakesession,
+	songsToRemove
+) => {
+	const responseMessage = [];
+	const playlistSongsList = await getPlaylistSongs(
+		fakesession,
+		playlist.id,
+		true
+	);
+	if (playlistSongsList.error) {
+		return playlistSongsList;
+	}
+	const songlist = await myRemoveRecommended(fakesession, playlist.id);
+	if (songlist.error) {
+		return songlist;
+	}
+
+	if (playlistSongsList.length < _MIN_SONGS_PER_PLAYLIST) {
+		songsToRemove -= 2;
+	}
+	if (playlistSongsList.length > _MAX_SONGS_PER_PLAYLIST) {
+		songsToRemove += 2;
+	}
+
+	responseMessage.push(
+		`Max songs available for deletion: ${songlist.length} of ${playlistSongsList.length}, will attempt to remove ${songsToRemove}`
+	);
+
+	let i = 0;
+	for (const songInList of songlist) {
+		if (i >= songsToRemove) {
+			break;
+		}
+		const removeResponse = await removeSongPlaylist(
+			fakesession,
+			songInList.action,
+			playlist.id
+		);
+		if (removeResponse.error) {
+			response.error = true;
+			responseMessage.push(
+				`Error removing song ${songInList.name} from playlist ${playlist.name}`
+			);
+			responseMessage.push(JSON.stringify(removeResponse));
+			continue;
+		}
+
+		responseMessage.push(`Removed song: ${songInList.name}`);
+		i++;
+	}
+	return responseMessage;
+};
+
+const removeFromPlaylist = async (user, songsToRemove) => {
 	const response = { error: false, message: [] };
 	const fakesession = {
 		hash: user.hash,
@@ -22,50 +77,9 @@ const removeFromPlaylist = async (user) => {
 	});
 
 	for (const playlist of playlists) {
-		const playlistSongsList = await getPlaylistSongs(
-			fakesession,
-			playlist.id,
-			true
-		);
-		if (playlistSongsList.error) {
-			return playlistSongsList;
-		}
-		const songlist = await myRemoveRecommended(fakesession, playlist.id);
-		if (songlist.error) {
-			return songlist;
-		}
 		response.message.push(
-			`Max songs available for deletion: ${songlist.length} of ${playlistSongsList.length}`
+			await removefromSinglePlaylist(playlist, fakesession, songsToRemove)
 		);
-		let songsToRemove = 5 + Math.floor(Math.random() * 5);
-		if (playlistSongsList.length < _MIN_SONGS_PER_PLAYLIST) {
-			songsToRemove -= 2;
-		}
-		if (playlistSongsList.length > _MAX_SONGS_PER_PLAYLIST) {
-			songsToRemove += 2;
-		}
-
-		let i = 0;
-		for (const songInList of songlist) {
-			if (i >= songsToRemove) {
-				break;
-			}
-			const removeResponse = await removeSongPlaylist(
-				fakesession,
-				songInList.action,
-				playlist.id
-			);
-			if (removeResponse.error) {
-				response.error = true;
-				response.message.push(
-					`Error removing song ${songInList.name} from playlist ${playlist.name}`
-				);
-				response.message.push(JSON.stringify(removeResponse));
-			} else {
-				response.message.push(`Removed song: ${songInList.name}`);
-			}
-			i++;
-		}
 	}
 
 	return response;

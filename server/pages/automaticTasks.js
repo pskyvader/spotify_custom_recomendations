@@ -84,10 +84,11 @@ const automaticTasks = async (req, res) => {
 
 		console.log(`Remove for user ${user.name}`);
 		if (user.last_modified < Date.now() - 86400000) {
-			const removeResponse = await removeFromPlaylist(user);
+			const songsToModify = 5 + Math.floor(Math.random() * 5);
+			const removeResponse = await removeFromPlaylist(user,songsToModify);
 			console.log(`User ${user.name}`, removeResponse);
 			console.log(`Add for user ${user.name}`);
-			const addResponse = await addToPlaylist(user);
+			const addResponse = await addToPlaylist(user,songsToModify);
 			console.log(`User ${user.name} Added response:`, addResponse);
 			console.log(`Date for user ${user.name}`);
 			await User.update(

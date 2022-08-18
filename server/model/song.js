@@ -88,12 +88,15 @@ const getSong = async (access_token, songId, userId) => {
 		where: { id: songId },
 		defaults: data,
 	}).catch((err) => {
-		console.error("create error", err);
+		console.error("create song error", err);
 		return { error: err.message };
 	});
 	// console.log("created song", createdSong);
 
-	await addUserToSong(createdSong[0], userId);
+	await addUserToSong(createdSong[0], userId).catch((err) => {
+		console.error("create user for song error", err);
+		return { error: err.message };
+	});
 
 	return newsong;
 };

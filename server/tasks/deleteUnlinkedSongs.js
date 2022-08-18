@@ -64,6 +64,7 @@ const deleteUnlinkedSongs = async () => {
 	const destroyIds = NeverPlayednotPlaylist.map((song) => {
 		return { id: song.id };
 	});
+	console.log(`destroying unlinked songs: ${destroyIds}`);
 
 	// console.log(NeverPlayednotPlaylist.length, allSongs.length,where,NeverPlayednotPlaylist[0]);
 	return UserSong.destroy({
