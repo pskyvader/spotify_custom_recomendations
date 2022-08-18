@@ -72,10 +72,10 @@ const myRemoveRecommended = async (session, playlistId) => {
 	const NeverPlayedPlaylist = NeverPlayedSongs.filter((song) => {
 		return currentPlaylistIds.includes(song.Song.id);
 	});
+	removerecommended[playlistId] = NeverPlayedPlaylist.map((NeverPlayedSong) =>
+		formatSong(NeverPlayedSong.Song)
+	);
 	if (NeverPlayedPlaylist.length >= 15) {
-		removerecommended[playlistId] = NeverPlayedPlaylist.map(
-			(NeverPlayedSong) => formatSong(NeverPlayedSong.Song)
-		);
 		lastGetResult = Date.now();
 		return removerecommended[playlistId];
 	}
@@ -108,14 +108,12 @@ const myRemoveRecommended = async (session, playlistId) => {
 		currentPlaylistIds.includes(song.Song.id)
 	);
 
-	removerecommended[playlistId] = [
-		...NeverPlayedPlaylist.map((NeverPlayedSong) =>
-			formatSong(NeverPlayedSong.Song)
-		),
+	removerecommended[playlistId].push(
 		...OldPlayedPlaylist.map((OldPlayedSong) =>
 			formatSong(OldPlayedSong.Song)
-		),
-	];
+		)
+	);
+
 	lastGetResult = Date.now();
 	return removerecommended[playlistId];
 };
