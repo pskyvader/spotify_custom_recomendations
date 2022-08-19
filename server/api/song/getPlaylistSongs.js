@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { request } = require("../../utils");
 const {
 	getUser,
@@ -58,11 +59,17 @@ const getPlaylistSongs = async (session, playlistId, syncSongs = false) => {
 	playlists_cache[playlistId] = formatSongList(items);
 
 	if (syncSongs) {
-		const allsongs = await Song.findAll({ attributes: ["id"] });
+		const allsongs = await Song.findAll({
+			attributes: ["id", "duration"],
+		});
+
 		const allsongsIds = allsongs.map((song) => song.id);
 		const songsToAdd = playlists_cache[playlistId].filter(
 			(song) => !allsongsIds.includes(song.id)
 		);
+
+		const songsNotDuration = allsongs.filter((song) => song.duration === 0);
+		songsToAdd.push(...songsNotDuration);
 		console.log("Songs to add to cache", songsToAdd.length);
 
 		let i = 0;
@@ -86,5 +93,5 @@ module.exports = {
 	getPlaylistSongs,
 	addSongPlaylistCache,
 	removeSongPlaylistCache,
-	playlists_cache
+	playlists_cache,
 };

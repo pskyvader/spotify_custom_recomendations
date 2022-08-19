@@ -17,6 +17,7 @@ const formatSongAPI = (song) => {
 		idartist: idartist,
 		album: song.album.name,
 		action: song.uri,
+		duration: song.duration_ms,
 	};
 };
 const formatSongList = (songList) => {
@@ -39,6 +40,7 @@ const formatSong = (song) => {
 		idartist: song.idartist,
 		album: song.album,
 		action: song.action,
+		duration: song.duration,
 	};
 };
 
