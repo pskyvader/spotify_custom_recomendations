@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Playlist, Song } = require("../database");
+const { Playlist } = require("../database");
 const { myRemoveRecommended, getPlaylistSongs } = require("../api/song");
 const { removeSongPlaylist } = require("../api/playlist");
 

@@ -2,11 +2,14 @@ const { Op } = require("sequelize");
 const { User, Playlist } = require("../database");
 const { refreshCookie } = require("../api/user/refreshCookie");
 
-const { updateRecentSongs } = require("../tasks/updateRecentSongs");
-const { removeFromPlaylist } = require("../tasks/removeFromPlaylist");
-const { deleteOldRemoved } = require("../tasks/deleteOldRemoved");
-const { addToPlaylist } = require("../tasks/addToPlaylist");
-const { deleteUnlinkedSongs } = require("../tasks/deleteUnlinkedSongs");
+const {
+	updateRecentSongs,
+	removeFromPlaylist,
+	deleteOldRemoved,
+	addToPlaylist,
+	deleteUnlinkedSongs,
+	updateAverageTimes,
+} = require("../tasks");
 
 let LastTask = null;
 const automaticTasks = async (req, res) => {
@@ -85,10 +88,17 @@ const automaticTasks = async (req, res) => {
 		console.log(`Remove for user ${user.name}`);
 		if (user.last_modified < Date.now() - 86400000) {
 			const songsToModify = 5 + Math.floor(Math.random() * 5);
-			const removeResponse = await removeFromPlaylist(user,songsToModify);
+			const averageListeningTime = updateAverageTimes(user);
+			console.log(
+				`User ${user.name} listening daily time is ${averageListeningTime}`
+			);
+			const removeResponse = await removeFromPlaylist(
+				user,
+				songsToModify
+			);
 			console.log(`User ${user.name}`, removeResponse);
 			console.log(`Add for user ${user.name}`);
-			const addResponse = await addToPlaylist(user,songsToModify);
+			const addResponse = await addToPlaylist(user, songsToModify);
 			console.log(`User ${user.name} Added response:`, addResponse);
 			console.log(`Date for user ${user.name}`);
 			await User.update(
