@@ -6,7 +6,12 @@ const { addSongPlaylist } = require("../api/playlist");
 const _MAX_SONGS_PER_PLAYLIST = 200;
 const _MIN_SONGS_PER_PLAYLIST = 50;
 
-const addtoSinglePlaylist = async (playlist, fakesession, songsToAdd) => {
+const addtoSinglePlaylist = async (
+	playlist,
+	fakesession,
+	songsToAdd,
+	userId
+) => {
 	const responseMessage = [];
 	const playlistSongsList = await getPlaylistSongs(fakesession, playlist.id);
 	if (playlistSongsList.error) {
@@ -87,7 +92,7 @@ const addToPlaylist = async (user, songsToAdd) => {
 
 	for (const playlist of playlists) {
 		response.message.push(
-			await addtoSinglePlaylist(playlist, fakesession, songsToAdd)
+			await addtoSinglePlaylist(playlist, fakesession, songsToAdd, userId)
 		);
 	}
 

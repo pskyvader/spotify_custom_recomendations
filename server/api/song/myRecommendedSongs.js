@@ -118,7 +118,7 @@ const myRecommendedSongs = async (session, playlistId) => {
 		return { error: err.message };
 	});
 
-	//remove songs already in playlist
+	//remove songs already in playlist or recently removed
 	const recommendedTracksFiltered = recommendedTracks.filter(
 		(currentSong) => {
 			return (
