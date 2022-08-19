@@ -25,6 +25,10 @@ const SongConfiguration = {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
+	duration: {
+		type: DataTypes.INTEGER,
+		defaultValue: 0,
+	},
 	action: {
 		type: DataTypes.STRING,
 		allowNull: false,

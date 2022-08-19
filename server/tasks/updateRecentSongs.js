@@ -47,13 +47,21 @@ const updateRecentSongs = async (access_token, userId) => {
 		const updatingSong = await Song.findByPk(newsong.track.id, {
 			include: { model: User, where: { id: userId } },
 		});
+
+		const newDate = newsong.played_at;
+		let newTimesPlayed = 1;
+		if (updatingSong.Users[0].UserSong) {
+			newTimesPlayed = updatingSong.Users[0].UserSong.times_played;
+			if (updatingSong.Users[0].UserSong.song_last_played !== newDate) {
+				newTimesPlayed += 1;
+			}
+		}
+
 		await updatingSong
 			.addUser(userId, {
 				through: {
-					song_last_played: newsong.played_at,
-					times_played: updatingSong.Users[0].UserSong
-						? updatingSong.Users[0].UserSong.times_played + 1
-						: 1,
+					song_last_played: newDate,
+					times_played: newTimesPlayed,
 				},
 			})
 			.catch((err) => {
