@@ -47,12 +47,33 @@ const myRecommendedSongs = async (session, playlistId) => {
 	}
 
 	// remove repeated ids from currentPlaylist array
-	console.log(`Songs before remove repeated ids: ${currentPlaylist.length}`);
-	currentPlaylist = currentPlaylist.filter(
+	const repeatedSongs = currentPlaylist.filter(
 		(currentSong, index, self) =>
-			self.findIndex((song) => song.id === currentSong.id) === index
+			self.findIndex((song) => song.id === currentSong.id) !== index
 	);
-	console.log(`Songs after remove repeated ids: ${currentPlaylist.length}`);
+
+	if (repeatedSongs.length > 0) {
+		console.log(
+			`Songs before remove repeated ids: ${currentPlaylist.length}`
+		);
+		const repeatedSongsIds = repeatedSongs.map(
+			(currentSong) => currentSong.id
+		);
+
+		currentPlaylist = currentPlaylist.filter(
+			(currentSong) => !repeatedSongsIds.includes(currentSong.id)
+		);
+
+		console.log(
+			`Songs after remove repeated ids: ${currentPlaylist.length} || ${repeatedSongs.length}`
+		);
+
+		console.log(
+			`Repeated Songs:\n ${repeatedSongs
+				.map((song) => song.title)
+				.join("\n, ")}`
+		);
+	}
 
 	// Recent: get playlist songs ids and played more recently than 1 week ago
 	const RecentSongs = await UserSong.findAll({

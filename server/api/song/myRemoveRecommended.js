@@ -84,7 +84,7 @@ const myRemoveRecommended = async (session, playlistId) => {
 		where: {
 			UserId: userId,
 			song_last_played: {
-				[Op.lte]: Date.now() - 4 * week,
+				[Op.lte]: Date.now() - 3 * week,
 			},
 			song_added: {
 				[Op.lte]: Date.now() - 2 * week,
