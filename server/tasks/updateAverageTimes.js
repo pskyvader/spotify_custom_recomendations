@@ -5,10 +5,12 @@ const week = 604800000;
 
 const updateAverageTimes = async (user) => {
 	const response = { error: false, message: [] };
-	const date_format = fn("date_format", col("song_last_played"), "%Y-%m-%d");
+	const date_format = fn("to_char", col("song_last_played"), "YYYY/MM/DD");
 	const oldRecent = await UserSong.findAll({
 		attributes: [
-			[fn("count", col("user_songs.id")), "total"],
+			[fn("count", col("times_played")), "total"],
+			[fn("sum", col("Song.duration")), "total_duration"],
+			[fn("count", col("Song.id")), "total_songs"],
 			[date_format, "song_last_played"],
 		],
 		where: {
@@ -17,7 +19,7 @@ const updateAverageTimes = async (user) => {
 				[Op.gte]: Date.now() - 4 * week,
 			},
 		},
-		order: [[date_format, "DESC"]],
+		// order: [[date_format, "DESC"]],
 		group: [date_format],
 		include: {
 			model: Song,
