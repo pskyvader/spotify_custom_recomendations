@@ -29,7 +29,7 @@ const addtoSinglePlaylist = async (
 		songsToAdd -= 2;
 	}
 	responseMessage.push(
-		`Max songs available to add: ${songlist.length} to the ${playlistSongsList.length} already in playlist, will attempt to add ${songsToAdd}`
+		`Max songs available to add: ${songlist.length} to the ${playlistSongsList.length} already in playlist, will attempt to add a max of ${songsToAdd}`
 	);
 
 	let i = 0;

@@ -11,18 +11,19 @@ const {
 	updateAverageTimes,
 } = require("../tasks");
 
+const hour= 3600000;
 let LastTask = null;
 const automaticTasks = async (req, res) => {
 	const response = {
 		error: false,
 		message: [],
 	};
-	if (LastTask > Date.now() - 3600000) {
-		response.error = true;
-		response.message = "Not able to run task for next hour";
-		res.json(response);
-		return;
-	}
+	// if (LastTask > Date.now() - hour) {
+	// 	response.error = true;
+	// 	response.message = "Not able to run task for next hour";
+	// 	res.json(response);
+	// 	return;
+	// }
 	const { count, rows } = await User.findAndCountAll({
 		attributes: [
 			"id",
@@ -33,11 +34,11 @@ const automaticTasks = async (req, res) => {
 			"hash",
 			"last_modified",
 		],
-		where: {
-			last_modified: {
-				[Op.lte]: Date.now() - 3600000,
-			},
-		},
+		// where: {
+		// 	last_modified: {
+		// 		[Op.lte]: Date.now() - hour,
+		// 	},
+		// },
 	});
 	if (count === 0) {
 		response.message = "No users to update at this time";
@@ -85,7 +86,7 @@ const automaticTasks = async (req, res) => {
 			console.log(`User ${user.name} updated`);
 		}
 
-		if (user.last_modified < Date.now() - 86400000) {
+		// if (user.last_modified < Date.now() - 86400000) {
 			const songsToModify = 5 + Math.floor(Math.random() * 5);
 			const averageListeningTime = await updateAverageTimes(user);
 			console.log(
@@ -108,13 +109,13 @@ const automaticTasks = async (req, res) => {
 			response.message.push(
 				`User ${user.name} Daily playlists has been updated`
 			);
-		} else {
-			console.log(
-				`User ${user.name} not yet able for daily updates`,
-				new Date(user.last_modified).toString(),
-				new Date(Date.now()).toString()
-			);
-		}
+		// } else {
+		// 	console.log(
+		// 		`User ${user.name} not yet able for daily updates`,
+		// 		new Date(user.last_modified).toString(),
+		// 		new Date(Date.now()).toString()
+		// 	);
+		// }
 		response.message.push(`User ${user.name} has been updated`);
 	}
 	const deleteResponse = await deleteOldRemoved();

@@ -33,7 +33,7 @@ const removefromSinglePlaylist = async (
 	}
 
 	responseMessage.push(
-		`Max songs available for deletion: ${songlist.length} of ${playlistSongsList.length}, will attempt to remove ${songsToRemove}`
+		`Max songs available for deletion: ${songlist.length} of ${playlistSongsList.length}, will attempt to remove a max of ${songsToRemove}`
 	);
 
 	let i = 0;
