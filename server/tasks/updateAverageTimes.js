@@ -20,10 +20,12 @@ const updateAverageTimes = async (user) => {
 		},
 		// order: [["total_duration", "DESC"]],
 		group: [date_format],
-		// include: {
-		// 	model: Song,
-		// 	attributes: ["duration"],
-		// },
+		include: {
+			model: Song,
+			attributes: [
+				"duration"
+			],
+		},
 		raw: true,
 		nest: true,
 	}).catch((err) => {
