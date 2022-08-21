@@ -35,7 +35,7 @@ const myRecentSongs = async (access_token, userId) => {
 		return { error: err.message };
 	});
 	myRecentResult[access_token] = oldRecent.map((currentUserSong) => {
-		return formatSong(currentUserSong.Song), {};
+		return formatSong(currentUserSong.Song);
 	});
 	lastUpdated = Date.now();
 	return myRecentResult[access_token];
