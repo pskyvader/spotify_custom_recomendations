@@ -76,7 +76,7 @@ const getPlaylistSongs = async (session, playlistId, syncSongs = false) => {
 		for (const song of songsToAdd) {
 			if (i % 10 === 0) {
 				console.log(
-					`adding song ${song.id} (${i}/${songsToAdd.length}) to cache`
+					`adding song ${song.id} (${song.duration}) (${i}/${songsToAdd.length}) to cache`
 				);
 			}
 			await getSong(session.access_token, song.id, currentUser.id);
