@@ -10,7 +10,6 @@ const updateAverageTimes = async (user) => {
 		attributes: [
 			[fn("count", col("times_played")), "total"],
 			[fn("sum", col("Song.duration")), "total_duration"],
-			[fn("count", col("Song.id")), "total_songs"],
 			[date_format, "song_last_played"],
 		],
 		where: {
@@ -19,11 +18,12 @@ const updateAverageTimes = async (user) => {
 				[Op.gte]: Date.now() - 4 * week,
 			},
 		},
-		// order: [[date_format, "DESC"]],
+		// order: [["total_duration", "DESC"]],
 		group: [date_format],
-		include: {
-			model: Song,
-		},
+		// include: {
+		// 	model: Song,
+		// 	attributes: ["duration"],
+		// },
 		raw: true,
 		nest: true,
 	}).catch((err) => {

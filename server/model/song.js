@@ -68,7 +68,7 @@ const getSong = async (access_token, songId, userId) => {
 		},
 	});
 	if (currentSongUser !== null && currentSongUser.duration > 0) {
-		console.log("a");
+		// console.log("a");
 		return formatSong(currentSongUser);
 	}
 
@@ -77,11 +77,11 @@ const getSong = async (access_token, songId, userId) => {
 	});
 
 	if (currentSong !== null && currentSong.duration > 0) {
-		console.log("b");
+		// console.log("b");
 		await addUserToSong(currentSong, userId);
 		return formatSong(currentSong);
 	}
-	console.log("c");
+	// console.log("c");
 	let url = `https://api.spotify.com/v1/tracks/${songId}`;
 	const response = await request(access_token, url);
 	if (response.error) {
@@ -89,10 +89,11 @@ const getSong = async (access_token, songId, userId) => {
 	}
 	const newsong = formatSongAPI(response);
 	const data = newsong;
-	const createdSong = await Song.create({
-		where: { id: songId },
-		defaults: data,
-	}).catch((err) => {
+	await Song.destroy({ where: { id: songId } });
+	const createdSong = await Song.upsert(
+		data
+		// const createdSong = await Song.findOrCreate({ where: { id: songId }, defaults: data}
+	).catch((err) => {
 		console.error("create song error", err);
 		return { error: err.message };
 	});
