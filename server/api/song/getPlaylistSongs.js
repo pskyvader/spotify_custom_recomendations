@@ -68,9 +68,9 @@ const getPlaylistSongs = async (session, playlistId, syncSongs = false) => {
 			(song) => !allsongsIds.includes(song.id)
 		);
 
-		const songsNotDuration = allsongs.filter((song) => song.duration === 0);
-		songsToAdd.push(...songsNotDuration);
-		console.log("Songs to add to cache", songsToAdd.length);
+		// const songsNotDuration = allsongs.filter((song) => song.duration === 0);
+		// songsToAdd.push(...songsNotDuration);
+		// console.log("Songs to add to cache", songsToAdd.length);
 
 		let i = 0;
 		for (const song of songsToAdd) {

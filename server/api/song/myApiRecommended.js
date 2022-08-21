@@ -69,7 +69,6 @@ const myApiRecommended = async (
 
 	const filtered = response.tracks.filter((song) => {
 		const currentSong = song.track || song;
-
 		//song playable and not in playlist
 		return (
 			currentSong.is_playable &&
