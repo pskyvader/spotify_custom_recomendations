@@ -60,9 +60,12 @@ const myRecommendedSongs = async (session, playlistId) => {
 			(currentSong) => currentSong.id
 		);
 
-		currentPlaylist = currentPlaylist.filter(
-			(currentSong) => !repeatedSongsIds.includes(currentSong.id)
-		);
+		currentPlaylist = [
+			...currentPlaylist.filter(
+				(currentSong) => !repeatedSongsIds.includes(currentSong.id)
+			),
+			...repeatedSongsIds,
+		];
 
 		console.log(
 			`Songs after remove repeated ids: ${currentPlaylist.length} || ${repeatedSongs.length}`
@@ -70,7 +73,7 @@ const myRecommendedSongs = async (session, playlistId) => {
 
 		console.log(
 			`Repeated Songs:\n ${repeatedSongs
-				.map((song) => song.title)
+				.map((song) => song.name)
 				.join("\n, ")}`
 		);
 	}
