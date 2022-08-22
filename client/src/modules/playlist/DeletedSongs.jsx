@@ -4,7 +4,8 @@ import { Playlist } from "../../API";
 import SongList, { SongListColumns } from "../../components/SongList";
 import ButtonAddSong from "../../components/ButtonAddSong";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
-const PlayListSongs = ({ playlistId, hidden }) => {
+
+const DeletedSongs = ({ playlistId, hidden }) => {
 	const { playlistDeletedSongs, setPlaylistDeletedSongs } =
 		useContext(PlaylistContext);
 	useEffect(() => {
@@ -32,4 +33,4 @@ const PlayListSongs = ({ playlistId, hidden }) => {
 	}
 	return <CircularProgress />;
 };
-export default PlayListSongs;
+export default DeletedSongs;

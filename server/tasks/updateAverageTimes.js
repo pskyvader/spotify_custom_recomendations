@@ -8,8 +8,7 @@ const updateAverageTimes = async (user) => {
 	const date_format = fn("to_char", col("song_last_played"), "YYYY/MM/DD");
 	const oldRecent = await UserSong.findAll({
 		attributes: [
-			[fn("count", col("times_played")), "total"],
-			[fn("sum", col("Song.duration")), "total_duration"],
+			[col("Song.duration"), "duration"],
 			[date_format, "song_last_played"],
 		],
 		where: {
@@ -19,12 +18,10 @@ const updateAverageTimes = async (user) => {
 			},
 		},
 		// order: [["total_duration", "DESC"]],
-		group: [date_format],
+		// group: [date_format],
 		include: {
 			model: Song,
-			attributes: [
-				"duration"
-			],
+			attributes: ["duration"],
 		},
 		raw: true,
 		nest: true,
