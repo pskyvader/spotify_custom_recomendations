@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { User, Playlist } = require("../database");
+const { User } = require("../database");
 const { refreshCookie } = require("../api/user/refreshCookie");
 
 const {
@@ -11,17 +11,17 @@ const {
 	updateAverageTimes,
 } = require("../tasks");
 
-
-const hour= 3600000;
-const tenMinutes=600000;
+const hour = 3600000;
+const tenMinutes = 600000;
+const week = 86400000;
 
 let LastTask = null;
 
-const hourlyTasks = () => {
+const hourlyTasks = async () => {
 	return null;
 };
 
-const dailyTasks = () => {
+const dailyTasks = async () => {
 	console.log("--------------------------------");
 	console.log("Daily Tasks");
 	const deleteResponse = await deleteOldRemoved();
@@ -29,14 +29,11 @@ const dailyTasks = () => {
 
 	const deleteUnlinkedResponse = await deleteUnlinkedSongs();
 	console.log("deleted unlinked", deleteUnlinkedResponse);
-
-	
-	console.log("Daily Tasks Finished");
-	console.log("--------------------------------");
 };
 
-
-const getAvailableUsers = async()=>{
+const getAvailableUsers = async () => {
+	console.log("--------------------------------");
+	console.log("Getting Available Users");
 	const userList = await User.findAll({
 		attributes: [
 			"id",
@@ -54,31 +51,30 @@ const getAvailableUsers = async()=>{
 		},
 	});
 
-
-	const availabeUsersList=[]
+	const availabeUsersList = [];
 	for (const user of userList) {
+		console.log(`User ${user.name} (${user.id})`);
 		if (user.expiration < Date.now() + tenMinutes) {
 			const falseReq = { session: { access_token: user.access_token } };
 			const result = await refreshCookie(falseReq, user);
 			if (result.error) {
-				console.error(
-					`access token error for user ${user.name}, cannot continue`
-				);
-				response.message.push(
-					`access token error for user ${user.name}`
-				);
+				console.error(`access token error, cannot continue`);
 				continue;
 			}
-			console.log(`user ${user.name} Refresh token`); //, result);
+			console.log(`got Refresh token`);
 			user.access_token = result.access_token;
+			user.expiration = result.expiration;
 			availabeUsersList.push(user);
-		} 
-		console.log( `user ${ user.id } should be able to process requests, date: ${new Date( Date.now() + 600000 ).toString()}, expiration:${user.expiration}` ); 
+		}
+		console.log(
+			`User available, date: ${new Date(
+				Date.now() + tenMinutes
+			).toString()}, expiration:${user.expiration}`
+		);
 		availabeUsersList.push(user);
 	}
 	return availabeUsersList;
-}
-
+};
 
 const automaticTasks = async (req, res) => {
 	const response = {
@@ -91,36 +87,12 @@ const automaticTasks = async (req, res) => {
 		res.json(response);
 		return;
 	}
-	const UserList= await getAvailableUsers();
-	if(UserList.length===0){
+	const UserList = await getAvailableUsers();
+	if (UserList.length === 0) {
 		response.message = "No users to update at this time";
 	}
-	
-	for (const user of UserList) {
-		if (user.expiration < Date.now() + 600000) {
-			const falseReq = { session: { access_token: user.access_token } };
-			const result = await refreshCookie(falseReq, user);
-			if (result.error) {
-				console.error(
-					`access token error for user ${user.name}, cannot continue`
-				);
-				response.message.push(
-					`access token error for user ${user.name}`
-				);
-				continue;
-			}
-			console.log(`user ${user.name} Refresh token`); //, result);
-			user.access_token = result.access_token;
-		} else {
-			console.log(
-				`user ${
-					user.id
-				} should be able to process requests, date: ${new Date(
-					Date.now() + 600000
-				).toString()}, expiration:${user.expiration}`
-			);
-		}
 
+	for (const user of UserList) {
 		response.message.push(
 			`User ${user.name} last modified: ${user.last_modified}`
 		);
@@ -135,7 +107,7 @@ const automaticTasks = async (req, res) => {
 			console.log(`User ${user.name} updated`);
 		}
 
-		if (user.last_modified < Date.now() - 86400000) {
+		if (user.last_modified < Date.now() - week) {
 			const songsToModify = 5 + Math.floor(Math.random() * 5);
 			const averageListeningTime = updateAverageTimes(user);
 			console.log(
@@ -167,7 +139,6 @@ const automaticTasks = async (req, res) => {
 		}
 		response.message.push(`User ${user.name} has been updated`);
 	}
-
 
 	dailyTasks();
 	LastTask = Date.now();
