@@ -11,19 +11,33 @@ const {
 	updateAverageTimes,
 } = require("../tasks");
 
+
+const hour= 3600000;
+const tenMinutes=600000;
+
 let LastTask = null;
-const automaticTasks = async (req, res) => {
-	const response = {
-		error: false,
-		message: [],
-	};
-	if (LastTask > Date.now() - 3600000) {
-		response.error = true;
-		response.message = "Not able to run task for next hour";
-		res.json(response);
-		return;
-	}
-	const { count, rows } = await User.findAndCountAll({
+
+const hourlyTasks = () => {
+	return null;
+};
+
+const dailyTasks = () => {
+	console.log("--------------------------------");
+	console.log("Daily Tasks");
+	const deleteResponse = await deleteOldRemoved();
+	console.log("deleted all", deleteResponse);
+
+	const deleteUnlinkedResponse = await deleteUnlinkedSongs();
+	console.log("deleted unlinked", deleteUnlinkedResponse);
+
+	
+	console.log("Daily Tasks Finished");
+	console.log("--------------------------------");
+};
+
+
+const getAvailableUsers = async()=>{
+	const userList = await User.findAll({
 		attributes: [
 			"id",
 			"name",
@@ -35,17 +49,53 @@ const automaticTasks = async (req, res) => {
 		],
 		where: {
 			last_modified: {
-				[Op.lte]: Date.now() - 3600000,
+				[Op.lte]: Date.now() - hour,
 			},
 		},
 	});
-	if (count === 0) {
-		response.message = "No users to update at this time";
+
+
+	const availabeUsersList=[]
+	for (const user of userList) {
+		if (user.expiration < Date.now() + tenMinutes) {
+			const falseReq = { session: { access_token: user.access_token } };
+			const result = await refreshCookie(falseReq, user);
+			if (result.error) {
+				console.error(
+					`access token error for user ${user.name}, cannot continue`
+				);
+				response.message.push(
+					`access token error for user ${user.name}`
+				);
+				continue;
+			}
+			console.log(`user ${user.name} Refresh token`); //, result);
+			user.access_token = result.access_token;
+			availabeUsersList.push(user);
+		} 
+		console.log( `user ${ user.id } should be able to process requests, date: ${new Date( Date.now() + 600000 ).toString()}, expiration:${user.expiration}` ); 
+		availabeUsersList.push(user);
+	}
+	return availabeUsersList;
+}
+
+
+const automaticTasks = async (req, res) => {
+	const response = {
+		error: false,
+		message: [],
+	};
+	if (LastTask > Date.now() - hour) {
+		response.error = true;
+		response.message = "Not able to run task for next hour";
 		res.json(response);
 		return;
 	}
-	const UserList = rows;
-
+	const UserList= await getAvailableUsers();
+	if(UserList.length===0){
+		response.message = "No users to update at this time";
+	}
+	
 	for (const user of UserList) {
 		if (user.expiration < Date.now() + 600000) {
 			const falseReq = { session: { access_token: user.access_token } };
@@ -117,12 +167,9 @@ const automaticTasks = async (req, res) => {
 		}
 		response.message.push(`User ${user.name} has been updated`);
 	}
-	const deleteResponse = await deleteOldRemoved();
-	console.log("deleted all", deleteResponse);
 
-	const deleteUnlinkedResponse = await deleteUnlinkedSongs();
-	console.log("deleted unlinked", deleteUnlinkedResponse);
 
+	dailyTasks();
 	LastTask = Date.now();
 	res.json(response);
 };

@@ -4,7 +4,6 @@ const { UserSong, Song } = require("../database");
 const week = 604800000;
 
 const updateAverageTimes = async (user) => {
-	const response = { error: false, message: [] };
 	const date_format = fn("to_char", col("song_last_played"), "YYYY/MM/DD");
 	const oldRecent = await UserSong.findAll({
 		attributes: [
@@ -29,9 +28,22 @@ const updateAverageTimes = async (user) => {
 		return { error: err.message };
 	});
 
-	console.log(oldRecent);
+	const stats = oldRecent.reduce((previous, current) => {
+		const newstat = previous;
+		if (!newstat[current.song_last_played]) {
+			newstat[current.song_last_played] = { times: 0, duration: 0 };
+		}
+		newstat[current.song_last_played].times += 1;
+		newstat[current.song_last_played].duration += current.duration;
+	});
 
-	return response;
+	stats.forEach((stat) => {
+		stat.duration = new Date(stat.duration).toLocaleString();
+	});
+
+	console.log(stats);
+
+	return stats;
 };
 
 module.exports = { updateAverageTimes };
