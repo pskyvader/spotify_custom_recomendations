@@ -13,19 +13,68 @@ const {
 
 const hour = 3600000;
 const tenMinutes = 600000;
-const week = 86400000;
-
+const day = 86400000;
 let LastTask = null;
 
-const hourlyTasks = async () => {
-	return null;
+const hourlyTasks = async (userList) => {
+	console.log("--------------------------------");
+	console.log("Hourly Tasks");
+	for (const user of userList) {
+		console.log("-----");
+		console.log(`User ${user.name}`);
+		console.log(`Last modified: ${user.last_modified}`);
+		console.log(`Updating recent songs...`);
+		const updateResult = await updateRecentSongs(
+			user.access_token,
+			user.id
+		);
+		if (updateResult.error) {
+			console.log("Update error", updateResult);
+		} else {
+			console.log(`Updated`);
+		}
+	}
 };
 
-const dailyTasks = async () => {
+const dailyTasks = async (userList) => {
 	console.log("--------------------------------");
 	console.log("Daily Tasks");
+
+	for (const user of userList) {
+		console.log("-----");
+		console.log(`User ${user.name}`);
+		if (user.dailyAvailable) {
+			const songsToModify = 5 + Math.floor(Math.random() * 5);
+			const averageListeningTime = await updateAverageTimes(user);
+			console.log(`Listening daily time is ${averageListeningTime}`);
+			console.log(`Remove Songs`);
+			const removeResponse = await removeFromPlaylist(
+				user,
+				songsToModify
+			);
+			console.log(removeResponse);
+			console.log(`Add Songs`);
+			const addResponse = await addToPlaylist(user, songsToModify);
+			console.log(addResponse);
+			await User.update(
+				{ last_modified: Date.now() },
+				{ where: { id: user.id } }
+			);
+			response.message.push(`Playlists Updated`);
+			continue;
+		}
+		console.log(
+			`Not yet available, remaining ${
+				new Date(user.last_modified).getTime() -
+				new Date(Date.now()).getTime()
+			}`
+		);
+	}
+	console.log("--------------------------------");
+
 	const deleteResponse = await deleteOldRemoved();
 	console.log("deleted all", deleteResponse);
+	console.log("--------------------------------");
 
 	const deleteUnlinkedResponse = await deleteUnlinkedSongs();
 	console.log("deleted unlinked", deleteUnlinkedResponse);
@@ -51,8 +100,9 @@ const getAvailableUsers = async () => {
 		},
 	});
 
-	const availabeUsersList = [];
+	const availableUsersList = [];
 	for (const user of userList) {
+		console.log("-----");
 		console.log(`User ${user.name} (${user.id})`);
 		if (user.expiration < Date.now() + tenMinutes) {
 			const falseReq = { session: { access_token: user.access_token } };
@@ -64,16 +114,17 @@ const getAvailableUsers = async () => {
 			console.log(`got Refresh token`);
 			user.access_token = result.access_token;
 			user.expiration = result.expiration;
-			availabeUsersList.push(user);
+			availableUsersList.push(user);
 		}
 		console.log(
 			`User available, date: ${new Date(
 				Date.now() + tenMinutes
 			).toString()}, expiration:${user.expiration}`
 		);
-		availabeUsersList.push(user);
+		user.dailyAvailable = user.last_modified < Date.now() - day;
+		availableUsersList.push(user);
 	}
-	return availabeUsersList;
+	return availableUsersList;
 };
 
 const automaticTasks = async (req, res) => {
@@ -87,60 +138,13 @@ const automaticTasks = async (req, res) => {
 		res.json(response);
 		return;
 	}
-	const UserList = await getAvailableUsers();
-	if (UserList.length === 0) {
+	const userList = await getAvailableUsers();
+	if (userList.length === 0) {
 		response.message = "No users to update at this time";
 	}
 
-	for (const user of UserList) {
-		response.message.push(
-			`User ${user.name} last modified: ${user.last_modified}`
-		);
-		console.log(`Updating recents for user ${user.name}`);
-		const updateResult = await updateRecentSongs(
-			user.access_token,
-			user.id
-		);
-		if (updateResult.error) {
-			console.log(updateResult, user.expiration);
-		} else {
-			console.log(`User ${user.name} updated`);
-		}
-
-		if (user.last_modified < Date.now() - week) {
-			const songsToModify = 5 + Math.floor(Math.random() * 5);
-			const averageListeningTime = updateAverageTimes(user);
-			console.log(
-				`User ${user.name} listening daily time is ${averageListeningTime}`
-			);
-			console.log(`Remove for user ${user.name}`);
-			const removeResponse = await removeFromPlaylist(
-				user,
-				songsToModify
-			);
-			console.log(`User ${user.name}`, removeResponse);
-			console.log(`Add for user ${user.name}`);
-			const addResponse = await addToPlaylist(user, songsToModify);
-			console.log(`User ${user.name} Added response:`, addResponse);
-			console.log(`Date for user ${user.name}`);
-			await User.update(
-				{ last_modified: Date.now() },
-				{ where: { id: user.id } }
-			);
-			response.message.push(
-				`User ${user.name} Daily playlists has been updated`
-			);
-		} else {
-			console.log(
-				`User ${user.name} not yet able for daily updates`,
-				new Date(user.last_modified).toString(),
-				new Date(Date.now()).toString()
-			);
-		}
-		response.message.push(`User ${user.name} has been updated`);
-	}
-
-	dailyTasks();
+	await hourlyTasks(userList);
+	await dailyTasks();
 	LastTask = Date.now();
 	res.json(response);
 };

@@ -29,13 +29,13 @@ const updateAverageTimes = async (user) => {
 	});
 
 	const stats = oldRecent.reduce((previous, current) => {
-		const newstat = previous;
-		if (!newstat[current.song_last_played]) {
-			newstat[current.song_last_played] = { times: 0, duration: 0 };
+		if (!previous[current.song_last_played]) {
+			previous[current.song_last_played] = { times: 0, duration: 0 };
 		}
-		newstat[current.song_last_played].times += 1;
-		newstat[current.song_last_played].duration += current.duration;
-	});
+		previous[current.song_last_played].times += 1;
+		previous[current.song_last_played].duration += current.duration;
+		return previous;
+	}, {});
 
 	stats.forEach((stat) => {
 		stat.duration = new Date(stat.duration).toLocaleString();
