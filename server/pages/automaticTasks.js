@@ -116,18 +116,14 @@ const getAvailableUsers = async () => {
 			user.expiration = result.expiration;
 			availableUsersList.push(user);
 		}
-		console.log(
-			`User available, date: ${new Date(
-				Date.now() + tenMinutes
-			).toString()}, expiration:${user.expiration}`
-		);
+		console.log(`User available, expiration:${user.expiration}`);
 		user.dailyAvailable = user.last_modified < Date.now() - day;
 		availableUsersList.push(user);
 	}
 	return availableUsersList;
 };
 
-const automaticTasks = async (req, res) => {
+const automaticTasks = async (_req, res) => {
 	const response = {
 		error: false,
 		message: [],
@@ -139,12 +135,13 @@ const automaticTasks = async (req, res) => {
 		return;
 	}
 	const userList = await getAvailableUsers();
+	console.log(`${$userList.length} users available`);
 	if (userList.length === 0) {
 		response.message = "No users to update at this time";
 	}
 
 	await hourlyTasks(userList);
-	await dailyTasks();
+	await dailyTasks(userList);
 	LastTask = Date.now();
 	res.json(response);
 };
