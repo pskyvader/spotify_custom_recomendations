@@ -5,7 +5,7 @@ const CheckLogin = async (session) => {
 		typeof session.hash === "string" &&
 		Date.now() < new Date(session.expiration) 
 	) {
-		const currentUser = await getUser(session);
+		const currentUser = await getUser(session,true);
 		if (currentUser.error) {
 			currentUser.loggedin = false;
 			return currentUser;

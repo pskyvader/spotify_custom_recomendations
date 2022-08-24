@@ -3,7 +3,7 @@ const { User } = require("../database");
 const { Op } = require("sequelize");
 
 const UserlistCache = {};
-const getUser = async (session) => {
+const getUser = async (session, force = false) => {
 	if (!session.hash) {
 		// console.log("No session Hash", session);
 		return { error: "Not logged in" };
@@ -22,7 +22,7 @@ const getUser = async (session) => {
 		},
 	});
 
-	if (thisUser !== null) {
+	if (thisUser !== null && force === false) {
 		UserlistCache[thisUser.hash] = {
 			id: thisUser.id,
 			name: thisUser.name,
