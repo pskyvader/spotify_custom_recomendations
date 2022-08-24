@@ -38,7 +38,7 @@ const updateAverageTimes = async (user) => {
 	}, {});
 
 	stats.forEach((stat) => {
-		stat.duration = new Date(stat.duration).toLocaleString();
+		stat.duration = new Date(stat.duration).toTimeString().split(" ")[0];
 	});
 
 	console.log(stats);
