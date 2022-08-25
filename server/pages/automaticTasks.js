@@ -59,10 +59,11 @@ const dailyTasks = async (userList) => {
 			const addResponse = await addToPlaylist(user, songsToModify);
 			console.log(addResponse);
 
-			const addMissingResponse = await addMissingSongs(user);
-			console.log("Add Missing Songs: ", addMissingResponse);
 			const removeMissingResponse = await removeMissingSongs(user);
 			console.log("Remove Missing Songs: ", removeMissingResponse);
+
+			const addMissingResponse = await addMissingSongs(user);
+			console.log("Add Missing Songs: ", addMissingResponse);
 
 			await User.update(
 				{ last_modified: Date.now() },
