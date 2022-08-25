@@ -9,6 +9,8 @@ const {
 	addToPlaylist,
 	deleteUnlinkedSongs,
 	updateAverageTimes,
+	addMissingSongs,
+	removeMissingSongs,
 } = require("../tasks");
 
 const hour = 3600000;
@@ -56,6 +58,12 @@ const dailyTasks = async (userList) => {
 			console.log(`Add Songs`);
 			const addResponse = await addToPlaylist(user, songsToModify);
 			console.log(addResponse);
+
+			const addMissingResponse = await addMissingSongs(user);
+			console.log("Add Missing Songs: ", addMissingResponse);
+			const removeMissingResponse = await removeMissingSongs(user);
+			console.log("Remove Missing Songs: ", removeMissingResponse);
+
 			await User.update(
 				{ last_modified: Date.now() },
 				{ where: { id: user.id } }
@@ -135,7 +143,7 @@ const automaticTasks = async (_req, res) => {
 		return;
 	}
 	const userList = await getAvailableUsers();
-	console.log(`${$userList.length} users available`);
+	console.log(`${userList.length} users available`);
 	if (userList.length === 0) {
 		response.message = "No users to update at this time";
 	}

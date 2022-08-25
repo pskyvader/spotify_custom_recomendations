@@ -36,13 +36,13 @@ const deleteUnlinkedSongs = async () => {
 		where: {
 			[Op.and]: [
 				{ removed: false },
-				{ song_added: { [Op.lt]: Date.now() - 4 * week } },
+				{ song_added: { [Op.lt]: Date.now() - 1 * week } },
 				{
 					[Op.or]: [
 						{ song_last_played: null },
 						{
 							song_last_played: {
-								[Op.lt]: Date.now() - 6 * week,
+								[Op.lt]: Date.now() - 2 * week,
 							},
 						},
 					],

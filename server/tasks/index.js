@@ -4,6 +4,8 @@ const { deleteUnlinkedSongs } = require("./deleteUnlinkedSongs");
 const { removeFromPlaylist } = require("./removeFromPlaylist");
 const { updateAverageTimes } = require("./updateAverageTimes");
 const { updateRecentSongs } = require("./updateRecentSongs");
+const { addMissingSongs } = require("./addMissingSongs");
+const { removeMissingSongs } = require("./removeMissingSongs");
 
 module.exports = {
 	addToPlaylist,
@@ -12,4 +14,6 @@ module.exports = {
 	removeFromPlaylist,
 	updateAverageTimes,
 	updateRecentSongs,
+	addMissingSongs,
+	removeMissingSongs,
 };
