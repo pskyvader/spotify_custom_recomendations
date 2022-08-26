@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const { Playlist, UserSong, Song } = require("../database");
 const { removeSongPlaylist } = require("../api/playlist");
+const { myRecommendedSongs, getPlaylistSongs } = require("../api/song");
 
 const removeMissingSongs = async (user) => {
 	console.log("--------------------------------");
@@ -39,17 +40,20 @@ const removeMissingSongs = async (user) => {
 		const playlistSongsListIds = playlistSongsList.map((song) => song.id);
 
 		allUserSongs = allUserSongs.filter((usersong) => {
-			return playlistSongsListIds.includes(usersong.SongId);
+			return !playlistSongsListIds.includes(usersong.SongId);
 		});
 	}
 	console.log(`Found ${allUserSongs.length} missing songs, removing`);
 
-	for (const song of allUserSongs) {
+	for (const usersong of allUserSongs) {
 		//await?
-		song.update({
-			song_removed: Date.now(),
-			removed: true,
-		}).catch((err) => console.error("Removing missing song", err));
+		UserSong.update(
+			{
+				song_removed: Date.now(),
+				removed: true,
+			},
+			{ where: { id: usersong.id } }
+		).catch((err) => console.error("Removing missing song", err));
 	}
 	response.message = `Removed ${allUserSongs.length} missing songs`;
 

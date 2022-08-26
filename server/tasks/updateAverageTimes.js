@@ -28,20 +28,27 @@ const updateAverageTimes = async (user) => {
 		return { error: err.message };
 	});
 
-	let stats = oldRecent.reduce((previous, current) => {
-		if (!previous[current.song_last_played]) {
-			previous[current.song_last_played] = { times: 0, duration: 0 };
+	const stats = {};
+	oldRecent.forEach((usersong) => {
+		if (!stats[usersong.song_last_played]) {
+			stats[usersong.song_last_played] = { times: 0, duration: 0 };
 		}
-		previous[current.song_last_played].times += 1;
-		previous[current.song_last_played].duration += current.duration;
-		return previous;
-	}, {});
+		stats[usersong.song_last_played].times += 1;
+		stats[usersong.song_last_played].duration += usersong.duration;
+	});
 
-	stats = stats.map((stat) => {
-		stat.duration = new Date(stat.duration).toTimeString().split(" ")[0];
+	Object.keys(stats).forEach((date) => {
+		console.log(
+			stats[date].duration,
+			new Date(stats[date].duration).toTimeString()
+		);
+		stats[date].duration = new Date(stats[date].duration)
+			.toTimeString()
+			.split(" ")[0];
 	});
 
 	console.log(stats);
+	//[average time,average number of songs]
 
 	return stats;
 };
