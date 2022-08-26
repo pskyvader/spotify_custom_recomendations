@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const { User } = require("../database");
 const { refreshCookie } = require("../api/user/refreshCookie");
+const { convertTime } = require("../utils");
 
 const {
 	updateRecentSongs,
@@ -75,10 +76,10 @@ const dailyTasks = async (userList) => {
 			continue;
 		}
 		console.log(
-			`Not yet available, remaining ${
-				new Date(user.last_modified).getTime() -
-				new Date(Date.now()).getTime()
-			}`
+			`Not yet available, remaining ${convertTime(
+				new Date(Date.now()).getTime() -
+					new Date(user.last_modified).getTime()
+			)}`
 		);
 	}
 	console.log("--------------------------------");
@@ -125,7 +126,6 @@ const getAvailableUsers = async () => {
 			console.log(`got Refresh token`);
 			user.access_token = result.access_token;
 			user.expiration = result.expiration;
-			availableUsersList.push(user);
 		}
 		console.log(`User available, expiration:${user.expiration}`);
 		user.dailyAvailable = user.last_modified < Date.now() - day;
