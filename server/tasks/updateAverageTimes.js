@@ -38,13 +38,15 @@ const updateAverageTimes = async (user) => {
 	});
 
 	Object.keys(stats).forEach((date) => {
-		console.log(
-			stats[date].duration,
-			new Date(stats[date].duration).toTimeString()
-		);
-		stats[date].duration = new Date(stats[date].duration)
-			.toTimeString()
-			.split(" ")[0];
+		const a = stats[date].duration;
+		stats[date].duration =
+			Math.floor(a / (1000 * 60 * 60)) +
+			":" +
+			(Math.floor(a / (1000 * 60)) % 60) +
+			":" +
+			(Math.floor(a / 1000) % 60) +
+			"." +
+			Math.floor(a % 1000);
 	});
 
 	console.log(stats);
