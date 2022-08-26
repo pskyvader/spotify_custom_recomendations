@@ -69,7 +69,7 @@ const dailyTasks = async (userList) => {
 				{ last_modified: Date.now() },
 				{ where: { id: user.id } }
 			);
-			response.message.push(`Playlists Updated`);
+			console.log(`Playlists Updated`);
 			continue;
 		}
 		console.log(
@@ -104,7 +104,7 @@ const getAvailableUsers = async () => {
 		],
 		where: {
 			last_modified: {
-				[Op.lte]: Date.now()// - hour,
+				[Op.lte]: Date.now(), // - hour,
 			},
 		},
 	});
@@ -126,7 +126,7 @@ const getAvailableUsers = async () => {
 			availableUsersList.push(user);
 		}
 		console.log(`User available, expiration:${user.expiration}`);
-		user.dailyAvailable = true//user.last_modified < Date.now() - day;
+		user.dailyAvailable = true; //user.last_modified < Date.now() - day;
 		availableUsersList.push(user);
 	}
 	return availableUsersList;

@@ -103,4 +103,4 @@ const getSong = async (access_token, songId, userId) => {
 	return newsong;
 };
 
-module.exports = { getSong, formatSong, formatSongList, songIdFromURI };
+module.exports = { getSong, formatSong, formatSongList, songIdFromURI,addUserToSong };

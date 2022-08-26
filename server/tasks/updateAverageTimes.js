@@ -1,5 +1,6 @@
 const { fn, col, Op } = require("sequelize");
 const { UserSong, Song } = require("../database");
+const { convertTime } = require("../utils");
 
 const week = 604800000;
 
@@ -37,22 +38,21 @@ const updateAverageTimes = async (user) => {
 		stats[usersong.song_last_played].duration += usersong.duration;
 	});
 
+	const response = {};
 	Object.keys(stats).forEach((date) => {
-		const a = stats[date].duration;
-		stats[date].duration =
-			Math.floor(a / (1000 * 60 * 60)) +
-			":" +
-			(Math.floor(a / (1000 * 60)) % 60) +
-			":" +
-			(Math.floor(a / 1000) % 60) +
-			"." +
-			Math.floor(a % 1000);
+		stats[date].duration_text = convertTime(stats[date].duration);
+		response.dates += 1;
+		response.total_times += stats[date].times;
+		response.total_duration += stats[date].duration;
 	});
 
 	console.log(stats);
 	//[average time,average number of songs]
 
-	return stats;
+	response.average =
+		response.dates > 0 ? response.total_times / response.dates : 0;
+
+	return response;
 };
 
 module.exports = { updateAverageTimes };

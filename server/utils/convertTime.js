@@ -7,3 +7,5 @@ const convertTime = (ms) => {
 	const milliseconds = padTo2Digits(Math.floor(ms % 1000));
 	return `${hours}:${minutes}:${seconds}:${milliseconds}`;
 };
+
+module.exports = { convertTime };
