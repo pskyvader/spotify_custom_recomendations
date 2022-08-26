@@ -28,7 +28,7 @@ const updateAverageTimes = async (user) => {
 		return { error: err.message };
 	});
 
-	const stats = oldRecent.reduce((previous, current) => {
+	let stats = oldRecent.reduce((previous, current) => {
 		if (!previous[current.song_last_played]) {
 			previous[current.song_last_played] = { times: 0, duration: 0 };
 		}
@@ -37,7 +37,7 @@ const updateAverageTimes = async (user) => {
 		return previous;
 	}, {});
 
-	stats.forEach((stat) => {
+	stats = stats.map((stat) => {
 		stat.duration = new Date(stat.duration).toTimeString().split(" ")[0];
 	});
 
