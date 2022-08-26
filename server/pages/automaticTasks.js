@@ -48,7 +48,9 @@ const dailyTasks = async (userList) => {
 		if (user.dailyAvailable) {
 			const songsToModify = 5 + Math.floor(Math.random() * 5);
 			const averageListeningTime = await updateAverageTimes(user);
-			console.log(`Listening daily time is ${averageListeningTime}`);
+			console.log(
+				`Listening daily time is ${averageListeningTime.average}`
+			);
 			console.log(`Remove Songs`);
 			const removeResponse = await removeFromPlaylist(
 				user,
@@ -104,7 +106,7 @@ const getAvailableUsers = async () => {
 		],
 		where: {
 			last_modified: {
-				[Op.lte]: Date.now(), // - hour,
+				[Op.lte]: Date.now() - hour,
 			},
 		},
 	});
@@ -126,7 +128,7 @@ const getAvailableUsers = async () => {
 			availableUsersList.push(user);
 		}
 		console.log(`User available, expiration:${user.expiration}`);
-		user.dailyAvailable = true; //user.last_modified < Date.now() - day;
+		user.dailyAvailable = user.last_modified < Date.now() - day;
 		availableUsersList.push(user);
 	}
 	return availableUsersList;
@@ -147,9 +149,11 @@ const automaticTasks = async (_req, res) => {
 	console.log(`${userList.length} users available`);
 	if (userList.length === 0) {
 		response.message = "No users to update at this time";
+	} else {
+		response.message = `Updating ${userList.length} users`;
 	}
 
-	// await hourlyTasks(userList);
+	await hourlyTasks(userList);
 	await dailyTasks(userList);
 	LastTask = Date.now();
 	res.json(response);

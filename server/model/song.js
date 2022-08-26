@@ -45,17 +45,22 @@ const formatSong = (song) => {
 };
 
 const addUserToSong = async (currentSong, userId) => {
-	const exists = await currentSong.hasUser(userId);
-	if (!exists) {
-		await currentSong
-			.addUser(userId, {
-				through: { song_added: Date.now(), times_played: 1 },
-			})
-			.catch((err) => {
-				console.error(err.message);
-				return { error: err.message };
-			});
-	}
+	// const exists = await currentSong.hasUser(userId);
+	// if (!exists) {
+	await currentSong
+		.addUser(userId, {
+			through: {
+				song_added: Date.now(),
+				times_played: 1,
+				removed: false,
+				song_removed: null,
+			},
+		})
+		.catch((err) => {
+			console.error(err.message);
+			return { error: err.message };
+		});
+	// }
 	return { error: false };
 };
 
@@ -103,4 +108,10 @@ const getSong = async (access_token, songId, userId) => {
 	return newsong;
 };
 
-module.exports = { getSong, formatSong, formatSongList, songIdFromURI,addUserToSong };
+module.exports = {
+	getSong,
+	formatSong,
+	formatSongList,
+	songIdFromURI,
+	addUserToSong,
+};

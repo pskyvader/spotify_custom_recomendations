@@ -22,6 +22,7 @@ const removeMissingSongs = async (user) => {
 	let allUserSongs = await UserSong.findAll({
 		where: {
 			UserId: userId,
+			removed: false,
 		},
 		include: {
 			model: Song,

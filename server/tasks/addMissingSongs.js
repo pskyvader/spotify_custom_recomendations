@@ -41,7 +41,7 @@ const addMissingSongs = async (user) => {
 			playlist.id
 		);
 		const songsToAdd = playlistSongsList.filter((usersong) => {
-			return !allUserSongsIds.includes(usersong.SongId);
+			return !allUserSongsIds.includes(usersong.id);
 		});
 
 		console.log(`Found ${songsToAdd.length} missing songs, Adding`);
