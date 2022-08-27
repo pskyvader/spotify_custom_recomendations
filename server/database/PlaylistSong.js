@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const UserSongConfiguration = {
+const PlaylistSongConfiguration = {
 	id: {
 		type: DataTypes.BIGINT,
 		autoIncrement: true,
@@ -29,4 +29,4 @@ const UserSongConfiguration = {
 		defaultValue: false,
 	},
 };
-module.exports = { UserSongConfiguration };
+module.exports = { PlaylistSongConfiguration };

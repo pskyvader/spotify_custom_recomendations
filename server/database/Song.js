@@ -8,6 +8,10 @@ const SongConfiguration = {
 		primaryKey: true,
 		unique: true,
 	},
+	originalid: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	},
 	name: {
 		type: DataTypes.STRING,
 		allowNull: false,
@@ -28,10 +32,6 @@ const SongConfiguration = {
 	duration: {
 		type: DataTypes.INTEGER,
 		defaultValue: 0,
-	},
-	action: {
-		type: DataTypes.STRING,
-		allowNull: false,
 	},
 };
 module.exports = { SongConfiguration };

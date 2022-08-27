@@ -38,7 +38,7 @@ const updateAverageTimes = async (user) => {
 		stats[usersong.song_last_played].duration += usersong.duration;
 	});
 
-	const response = {};
+	const response = { dates: 0, total_times: 0, total_duration: 0 };
 	Object.keys(stats).forEach((date) => {
 		stats[date].duration_text = convertTime(stats[date].duration);
 		response.dates += 1;

@@ -8,11 +8,6 @@ const PlaylistConfiguration = {
 		primaryKey: true,
 		unique: true,
 	},
-	iduser: {
-		type: DataTypes.BIGINT,
-		// autoIncrement: true,
-		allowNull: false,
-	},
 	name: {
 		type: DataTypes.STRING,
 		allowNull: false,
