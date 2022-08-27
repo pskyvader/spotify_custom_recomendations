@@ -23,16 +23,7 @@ const getUser = async (session, force = false) => {
 	});
 
 	if (thisUser !== null && force === false) {
-		UserlistCache[thisUser.hash] = {
-			id: thisUser.id,
-			name: thisUser.name,
-			url: thisUser.url,
-			image: thisUser.image,
-			access_token: thisUser.access_token,
-			refresh_token: thisUser.refresh_token,
-			expiration: thisUser.expiration,
-			hash: thisUser.hash,
-		};
+		UserlistCache[thisUser.hash] = thisUser;
 		return UserlistCache[thisUser.hash];
 	}
 
@@ -46,15 +37,11 @@ const getUser = async (session, force = false) => {
 		return response;
 	}
 
-	const thisUserById = await User.findOne({
-		where: {
-			id: response.id,
-		},
-	});
+	const thisUserById = await User.findByPk(response.id);
 	if (thisUserById !== null) {
 		session.hash = thisUserById.hash;
 	}
-	UserlistCache[session.hash] = {
+	const updatedata = {
 		id: response.id,
 		name: response.display_name,
 		url: response.external_urls.spotify,
@@ -65,10 +52,13 @@ const getUser = async (session, force = false) => {
 		hash: session.hash,
 	};
 
-	User.upsert(UserlistCache[session.hash]).catch((err) => {
+	const [currentUser] = await User.upsert(updatedata).catch((err) => {
 		console.log("user Upsert", err);
 		return { error: err.message };
 	});
+	// const thisUserById = await User.findByPk(response.id);
+	UserlistCache[session.hash] = currentUser;
+
 	return UserlistCache[session.hash];
 };
 
