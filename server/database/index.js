@@ -28,7 +28,6 @@ User.init(UserConfiguration, {
 	// modelName: "User", // We need to choose the model name
 });
 
-
 class Playlist extends Model {}
 Playlist.init(PlaylistConfiguration, {
 	// Other model options go here
@@ -38,14 +37,12 @@ Playlist.init(PlaylistConfiguration, {
 User.hasMany(Playlist);
 Playlist.belongsTo(User);
 
-
 class PlaylistSong extends Model {}
-PlaylistSong.init(UserSongConfiguration, {
+PlaylistSong.init(PlaylistSongConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
 	// modelName: "PlaylistSong", // We need to choose the model name
 });
-
 
 class Song extends Model {}
 Song.init(SongConfiguration, {
@@ -74,4 +71,4 @@ const connection = async () => {
 	}
 };
 
-module.exports = { connection, User, Song, Playlist, UserSong: PlaylistSong };
+module.exports = { connection, User, Song, Playlist, PlaylistSong };

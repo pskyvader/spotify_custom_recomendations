@@ -1,71 +1,62 @@
-const { Op } = require("sequelize");
-
-const { Playlist } = require("../database");
+const { Playlist, PlaylistSong } = require("../database");
 const { request } = require("../utils");
-const { getUser } = require("./user");
 
-const togglePlaylist = async (session, idplaylist, active = false) => {
-	const access_token = session.access_token;
-	const currentUser = await getUser(session);
-	if (currentUser.error) {
-		return currentUser;
-	}
-	const iduser = currentUser.id;
-
-	const currentPlaylist = await getPlaylist(access_token, idplaylist, iduser);
-	if (currentPlaylist.error) {
-		return currentPlaylist;
-	}
-	currentPlaylist.active = active;
-	await Playlist.update(currentPlaylist, {
-		where: { [Op.and]: [{ iduser: iduser }, { id: idplaylist }] },
+const createPlaylist = async (user, { idplaylist, name, active }) => {
+	const [newplaylist] = await Playlist.upsert({
+		id: idplaylist,
+		name: name,
+		active: active,
+		user: user,
 	}).catch((err) => {
 		console.error(err);
 		return { error: err.message };
 	});
-	return currentPlaylist;
+	return newplaylist;
 };
-
-const playlistStatus = async (session, idplaylist) => {
-	const currentUser = await getUser(session);
-	const access_token = session.access_token;
-	if (currentUser.error) {
-		return currentUser;
-	}
-	const iduser = currentUser.id;
-	const currentPlaylist = await getPlaylist(access_token, idplaylist, iduser);
-	if (currentPlaylist.error) {
-		return currentPlaylist;
-	}
-	return { active: currentPlaylist.active };
-};
-
-const getPlaylist = async (access_token, idplaylist, iduser) => {
-	const currentPlaylist = await Playlist.findOne({
-		where: { [Op.and]: [{ iduser: iduser }, { id: idplaylist }] },
-		raw: true,
-	});
+const getPlaylist = async (user, idplaylist) => {
+	const currentPlaylist = await Playlist.findByPk(idplaylist, {
+		where: { UserId: user.id },
+	}); //, { raw: true, }
 	if (currentPlaylist !== null) {
 		return currentPlaylist;
 	}
 
 	let url = `https://api.spotify.com/v1/playlists/${idplaylist}`;
-	const response = await request(access_token, url);
+	const response = await request(user.access_token, url);
 	if (response.error) {
 		return response;
 	}
 	const data = {
 		id: idplaylist,
-		iduser: iduser,
 		name: response.name,
 		active: false,
 	};
-
-	await Playlist.upsert(data).catch((err) => {
-		console.error(err);
-		return { error: err.message };
-	});
-	return data;
+	return createPlaylist(user, data);
 };
 
-module.exports = { getPlaylist, togglePlaylist, playlistStatus };
+const updatePlaylist = async (user, idplaylist, { active, name }) => {
+	const currentPlaylist = await getPlaylist(idplaylist, user);
+	if (currentPlaylist.error) {
+		return currentPlaylist;
+	}
+	currentPlaylist.active = active;
+	currentPlaylist.name = name;
+	await currentPlaylist.save();
+	return currentPlaylist;
+};
+
+const deletePlaylist = async (user, idplaylist) => {
+	const currentPlaylist = await Playlist.findByPk(idplaylist, {
+		where: { UserId: user.id },
+	});
+	if (currentPlaylist === null) {
+		return true;
+	}
+	PlaylistSong.destroy({
+		where: { PlaylistId: idplaylist },
+	});
+
+	return currentPlaylist.destroy();
+};
+
+module.exports = { getPlaylist, updatePlaylist, deletePlaylist };

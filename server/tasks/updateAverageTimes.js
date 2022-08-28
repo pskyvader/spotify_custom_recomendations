@@ -34,7 +34,7 @@ const updateAverageTimes = async (user) => {
 		if (!stats[usersong.song_last_played]) {
 			stats[usersong.song_last_played] = { times: 0, duration: 0 };
 		}
-		stats[usersong.song_last_played].times += 1;
+		stats[usersong.song_last_played].times += usersong.times_played;
 		stats[usersong.song_last_played].duration += usersong.duration;
 	});
 
