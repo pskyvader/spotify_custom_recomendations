@@ -2,35 +2,7 @@ const { request } = require("../utils");
 const { User } = require("../database");
 const { Op } = require("sequelize");
 
-const UserlistCache = {};
-
-
-
-
-const getUser = async (session, force = false) => {
-	if (!session.hash) {
-		// console.log("No session Hash", session);
-		return { error: "Not logged in" };
-	}
-	if (UserlistCache[session.hash]) {
-		return UserlistCache[session.hash];
-	}
-
-	const thisUser = await User.findOne({
-		where: {
-			[Op.or]: [
-				{ hash: session.hash },
-				{ access_token: session.access_token },
-				{ refresh_token: session.refresh_token },
-			],
-		},
-	});
-
-	if (thisUser !== null && force === false) {
-		UserlistCache[thisUser.hash] = thisUser;
-		return UserlistCache[thisUser.hash];
-	}
-
+const createUser = async (session) => {
 	const response = await request(
 		session.access_token,
 		"https://api.spotify.com/v1/me"
@@ -57,13 +29,48 @@ const getUser = async (session, force = false) => {
 	};
 
 	const [currentUser] = await User.upsert(updatedata).catch((err) => {
-		console.log("user Upsert", err);
 		return { error: err.message };
 	});
-	// const thisUserById = await User.findByPk(response.id);
-	UserlistCache[session.hash] = currentUser;
+	return currentUser;
+};
 
-	return UserlistCache[session.hash];
+const getUser = async (session) => {
+	if (!session.hash) {
+		return { error: "Not logged in" };
+	}
+	const thisUser = await User.findOne({
+		where: {
+			[Op.or]: [
+				{ hash: session.hash },
+				{ access_token: session.access_token },
+				{ refresh_token: session.refresh_token },
+			],
+		},
+	});
+
+	if (thisUser !== null) {
+		return thisUser;
+	}
+	return createUser(session);
+};
+
+const updateUser = async (session) => {
+	const currentUser = getUser(session);
+	if (response.error) {
+		return response;
+	}
+	const updateData = {
+		access_token: session.access_token,
+		refresh_token: session.refresh_token,
+		expiration: session.expiration,
+		hash: session.hash,
+	};
+
+	return null;
+};
+
+const deleteUser = async (session) => {
+	return null;
 };
 
 module.exports = { getUser };
