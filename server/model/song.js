@@ -1,4 +1,4 @@
-const { Song } = require("../database");
+const { Song, PlaylistSong } = require("../database");
 const { request, formatSongAPI } = require("../utils");
 
 const createSong = async (access_token, songId) => {
@@ -44,8 +44,28 @@ const updateSong = async (
 	return currentSong;
 };
 
-const deleteSong = async () => {
-	return null;
+const deleteSong = async (idsong) => {
+	const currentSong = await Song.findByPk(idsong);
+	if (currentSong === null) {
+		return true;
+	}
+	const playlistSongsDestroyed = await PlaylistSong.destroy({
+		where: { SongId: idsong },
+	}).catch((err) => ({
+		error: err.message,
+	}));
+	if (playlistSongsDestroyed.error) {
+		return playlistSongsDestroyed;
+	}
+
+	const songDestroyed = await currentPlaylist
+		.destroy()
+		.catch((err) => ({ error: err.message }));
+
+	if (songDestroyed.error) {
+		return songDestroyed;
+	}
+	return true;
 };
 
 module.exports = { getSong, updateSong, deleteSong };
