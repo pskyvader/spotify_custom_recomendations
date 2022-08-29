@@ -8,7 +8,7 @@ const SongConfiguration = {
 		primaryKey: true,
 		unique: true,
 	},
-	originalid: {
+	uniqueid: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},

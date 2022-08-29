@@ -7,11 +7,11 @@ const formatSongAPI = (song) => {
 
 	return {
 		id: song.id,
+		uniqueid: song.uri,
 		name: song.name,
 		artist: art.join(", "),
 		idartist: idartist,
 		album: song.album.name,
-		action: song.uri,
 		duration: song.duration_ms,
 	};
 };
@@ -30,14 +30,13 @@ const songIdFromURI = (songuri) => {
 const formatSong = (song) => {
 	return {
 		id: song.id,
+		uniqueid: song.uniqueid,
 		name: song.name,
 		artist: song.artist,
 		idartist: song.idartist,
 		album: song.album,
-		action: song.action,
 		duration: song.duration,
 	};
 };
 
-
-module.exports = { formatSongAPIList };
+module.exports = { formatSongAPI, formatSongAPIList };

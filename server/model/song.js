@@ -1,117 +1,51 @@
-const { Op } = require("sequelize");
+const { Song } = require("../database");
+const { request, formatSongAPI } = require("../utils");
 
-const { Song, User } = require("../database");
-const { request } = require("../utils");
-
-const formatSongAPI = (song) => {
-	const art = song.artists.reduce((previous, artist) => {
-		previous.push(artist.name);
-		return previous;
-	}, []);
-	const idartist = song.artists[0].id;
-
-	return {
-		id: song.id,
-		name: song.name,
-		artist: art.join(", "),
-		idartist: idartist,
-		album: song.album.name,
-		action: song.uri,
-		duration: song.duration_ms,
-	};
-};
-const formatSongList = (songList) => {
-	return songList.map((song) => {
-		const currentSong = song.track || song;
-		return formatSongAPI(currentSong);
-	});
-};
-
-const songIdFromURI = (songuri) => {
-	const split = songuri.split(":");
-	return split.pop();
-};
-
-const formatSong = (song) => {
-	return {
-		id: song.id,
-		name: song.name,
-		artist: song.artist,
-		idartist: song.idartist,
-		album: song.album,
-		action: song.action,
-		duration: song.duration,
-	};
-};
-
-const addUserToSong = async (currentSong, userId) => {
-	// const exists = await currentSong.hasUser(userId);
-	// if (!exists) {
-	await currentSong
-		.addUser(userId, {
-			through: {
-				song_added: Date.now(),
-				times_played: 1,
-				removed: false,
-				song_removed: null,
-			},
-		})
-		.catch((err) => {
-			console.error(err.message);
-			return { error: err.message };
-		});
-	// }
-	return { error: false };
-};
-
-const getSong = async (access_token, songId, userId) => {
-	const currentSongUser = await Song.findOne({
-		where: { id: songId },
-		include: {
-			model: User,
-			where: { id: userId },
-		},
-	});
-	if (currentSongUser !== null) {
-		return formatSong(currentSongUser);
-	}
-
-	const currentSong = await Song.findOne({
-		where: { id: songId },
-	});
-
-	if (currentSong !== null) {
-		await addUserToSong(currentSong, userId);
-		return formatSong(currentSong);
-	}
+const createSong = async (access_token, songId) => {
 	let url = `https://api.spotify.com/v1/tracks/${songId}`;
 	const response = await request(access_token, url);
 	if (response.error) {
 		return response;
 	}
-	const newsong = formatSongAPI(response);
-	const data = newsong;
-	await Song.destroy({ where: { id: songId } });
-	const createdSong = await Song.upsert(
-		data
-		// const createdSong = await Song.findOrCreate({ where: { id: songId }, defaults: data}
-	).catch((err) => {
+	const data = formatSongAPI(response);
+	const [newSong] = await Song.upsert(data).catch((err) => {
 		console.error("create song error", err);
 		return { error: err.message };
 	});
 
-	await addUserToSong(createdSong[0], userId).catch((err) => {
-		console.error("create user for song error", err);
-		return { error: err.message };
-	});
-
-	return newsong;
+	return newSong;
 };
 
-module.exports = {
-	getSong,
-	formatSong,
-	formatSongList,
-	songIdFromURI,
-	addUserToSong,
+const getSong = async (access_token, songId) => {
+	const currentSong = await Song.findByPk(songId);
+	if (currentSong !== null) {
+		return currentSong;
+	}
+	return createSong(access_token, songId);
 };
+
+const updateSong = async (
+	access_token,
+	idsong,
+	data = { name: null, artist: null, duration }
+) => {
+	const currentSong = await getSong(access_token, idsong);
+	if (currentSong.error) {
+		return currentSong;
+	}
+
+	currentSong.set(data);
+	const songSaved = await currentSong
+		.save()
+		.catch((err) => ({ error: err.message }));
+	if (songSaved.error) {
+		return songSaved;
+	}
+	return currentSong;
+};
+
+const deleteSong = async () => {
+	return null;
+};
+
+module.exports = { getSong, updateSong, deleteSong };

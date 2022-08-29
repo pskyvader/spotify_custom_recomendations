@@ -1,38 +1,84 @@
-const { Op } = require("sequelize");
-
 const { PlaylistSong, Playlist, Song } = require("../database");
-const { request } = require("../utils");
+const createPlaylistSong = async (idplaylist, idsong) => {
+	const currentPlaylist = await Playlist.findByPk(idplaylist).catch((err) => {
+		console.error(err.message);
+		return { error: err.message };
+	});
+	if (currentPlaylist.error) {
+		return currentPlaylist;
+	}
 
-const createPlaylistSong = async (playlist, song) => {
-	return PlaylistSong.create({
-		PlaylistSong_added: Date.now(),
+	const currentSong = await Song.findByPk(idsong).catch((err) => {
+		console.error(err.message);
+		return { error: err.message };
+	});
+	if (currentSong.error) {
+		return currentSong;
+	}
+
+	const [newplaylistsong] = await PlaylistSong.upsert({
+		song_added: Date.now(),
 		times_played: 1,
 		removed: false,
 		PlaylistSong_removed: null,
-		playlist: playlist,
-		song: song,
+		playlist: currentPlaylist,
+		song: currentSong,
 	}).catch((err) => {
 		console.error(err.message);
 		return { error: err.message };
 	});
+	return newplaylistsong;
 };
 
-const getPlaylistSong = async (playlist, song) => {
+const getPlaylistSong = async (idplaylist, idsong) => {
 	const currentPlaylistSong = await PlaylistSong.findOne({
-		where: { PlaylistId: playlist.id, SongId: song.id },
+		where: { PlaylistId: idplaylist, SongId: idsong },
 	});
 	if (currentPlaylistSong !== null) {
 		return currentPlaylistSong;
 	}
-	return createPlaylistSong(playlist, song);
+	return createPlaylistSong(idplaylist, idsong);
 };
 
-const updatePlaylistSong = async () => {
-	return null;
+const updatePlaylistSong = async (
+	idplaylist,
+	idsong,
+	data = {
+		song_added: null,
+		times_played: null,
+		removed: null,
+		PlaylistSong_removed: null,
+	}
+) => {
+	const currentPlaylistSong = await getPlaylistSong(idplaylist, idsong);
+	if (currentPlaylistSong.error) {
+		return currentPlaylistSong;
+	}
+	currentPlaylistSong.set(data);
+	const playlistSongSaved = await currentPlaylistSong
+		.save()
+		.catch((err) => ({ error: err.message }));
+	if (playlistSongSaved.error) {
+		return playlistSongSaved;
+	}
+	return currentPlaylistSong;
 };
 
-const deletePlaylistSong = async () => {
-	return null;
+const deletePlaylistSong = async (idplaylist, idsong) => {
+	const currentPlaylistSong = await PlaylistSong.findOne({
+		where: { PlaylistId: idplaylist, SongId: idsong },
+	});
+	if (currentPlaylistSong === null) {
+		return true;
+	}
+	const playlistSongDestroyed = await currentPlaylistSong
+		.destroy()
+		.catch((err) => ({ error: err.message }));
+
+	if (playlistSongDestroyed.error) {
+		return playlistSongDestroyed;
+	}
+	return true;
 };
 
 module.exports = { getPlaylistSong, updatePlaylistSong, deletePlaylistSong };

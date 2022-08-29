@@ -43,7 +43,7 @@ const removefromSinglePlaylist = async (
 		}
 		const removeResponse = await removeSongPlaylist(
 			fakesession,
-			songInList.action,
+			songInList.uniqueid,
 			playlist.id
 		);
 		if (removeResponse.error) {

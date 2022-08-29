@@ -58,7 +58,7 @@ const addtoSinglePlaylist = async (
 
 		const addSongResult = await addSongPlaylist(
 			fakesession,
-			songInList.action,
+			songInList.uniqueid,
 			playlist.id
 		);
 		if (addSongResult.error) {

@@ -3,6 +3,7 @@ const { request } = require("./request");
 const { genres } = require("./genres");
 const { subtractById } = require("./subtractById");
 const { convertTime } = require("./convertTime");
+const { formatSongAPI, formatSongAPIList } = require("./formatSong");
 
 module.exports = {
 	generateRandomString,
@@ -10,4 +11,6 @@ module.exports = {
 	genres,
 	subtractById,
 	convertTime,
+	formatSongAPI,
+	formatSongAPIList,
 };
