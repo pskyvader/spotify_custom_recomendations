@@ -13,7 +13,12 @@ const createUser = async (session) => {
 		return response;
 	}
 
-	const thisUserById = await User.findByPk(response.id);
+	const thisUserById = await User.findByPk(response.id).catch((err) => {
+		return { error: err.message };
+	});
+	if (thisUserById.error) {
+		return thisUserById;
+	}
 	if (thisUserById !== null) {
 		session.hash = thisUserById.hash;
 	}
@@ -56,8 +61,8 @@ const getUser = async (session) => {
 
 const updateUser = async (session) => {
 	const currentUser = getUser(session);
-	if (response.error) {
-		return response;
+	if (currentUser.error) {
+		return currentUser;
 	}
 	const updateData = {
 		access_token: session.access_token,
@@ -65,12 +70,30 @@ const updateUser = async (session) => {
 		expiration: session.expiration,
 		hash: session.hash,
 	};
-
-	return null;
+	currentUser.set(updateData);
+	const userSaved = await currentUser
+		.save()
+		.catch((err) => ({ error: err.message }));
+	if (userSaved.error) {
+		return userSaved;
+	}
+	return currentUser;
 };
 
 const deleteUser = async (session) => {
-	return null;
+	const currentUser = getUser(session);
+	if (currentUser.error) {
+		return currentUser;
+	}
+
+	const userDestroyed = await currentUser
+		.destroy()
+		.catch((err) => ({ error: err.message }));
+
+	if (userDestroyed.error) {
+		return userDestroyed;
+	}
+	return true;
 };
 
-module.exports = { getUser };
+module.exports = { getUser, updateUser, deleteUser };

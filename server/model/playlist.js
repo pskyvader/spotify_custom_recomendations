@@ -67,7 +67,7 @@ const deletePlaylist = async (user, idplaylist) => {
 		.catch((err) => ({ error: err.message }));
 
 	if (playlistDestroyed.error) {
-		return songsDestroyed;
+		return playlistDestroyed;
 	}
 	return true;
 };
