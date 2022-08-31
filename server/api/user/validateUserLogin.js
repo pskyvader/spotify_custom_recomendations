@@ -16,7 +16,7 @@ const validateUserLogin = async (loginData) => {
 		const refreshData = await refreshCookie(currentUser);
 	}
 
-	return null;
+	return currentUser;
 };
 
 module.exports = { validateUserLogin };
