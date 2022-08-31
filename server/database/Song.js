@@ -16,6 +16,10 @@ const SongConfiguration = {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
+	image: {
+		type: DataTypes.STRING(1200),
+		allowNull: false,
+	},
 	artist: {
 		type: DataTypes.STRING(1200),
 		allowNull: false,
@@ -32,6 +36,11 @@ const SongConfiguration = {
 	duration: {
 		type: DataTypes.INTEGER,
 		defaultValue: 0,
+	},
+	last_time_used: {
+		type: DataTypes.DATE,
+		allowNull: false,
+		defaultValue: Date.now(),
 	},
 };
 module.exports = { SongConfiguration };

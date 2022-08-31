@@ -12,6 +12,10 @@ const PlaylistConfiguration = {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
+	image: {
+		type: DataTypes.STRING(1200),
+		allowNull: false,
+	},
 	active: {
 		type: DataTypes.BOOLEAN,
 		allowNull: false,

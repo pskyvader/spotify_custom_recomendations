@@ -10,6 +10,7 @@ const PlaylistSongConfiguration = {
 	song_added: {
 		type: DataTypes.DATE,
 		allowNull: false,
+		defaultValue: Date.now(),
 	},
 	song_last_played: {
 		type: DataTypes.DATE,

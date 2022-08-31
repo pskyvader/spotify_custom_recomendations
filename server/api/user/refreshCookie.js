@@ -1,4 +1,3 @@
-
 const { User } = require("../../database");
 const { credentials } = require("../../credentials");
 const { request } = require("../../utils");
@@ -25,7 +24,7 @@ const refreshCookie = async (req, currentUser) => {
 	const refresh_token = currentUser.refresh_token;
 
 	const response = await request(
-		req.session.access_token,
+		currentUser.access_token,
 		"https://accounts.spotify.com/api/token",
 		"POST",
 		null,
@@ -33,25 +32,25 @@ const refreshCookie = async (req, currentUser) => {
 	);
 
 	if (!response.error) {
-		const meProfileResult = {
+		return {
 			access_token: response.access_token,
 			refresh_token: refresh_token,
 			expiration: Date.now() + response.expires_in * 1000,
 		};
-		req.session.loggedin = true;
-		req.session.access_token = meProfileResult.access_token;
-		req.session.refresh_token = meProfileResult.refresh_token;
-		req.session.expiration = meProfileResult.expiration;
+		// req.session.loggedin = true;
+		// req.session.access_token = meProfileResult.access_token;
+		// req.session.refresh_token = meProfileResult.refresh_token;
+		// req.session.expiration = meProfileResult.expiration;
 
-		User.update(meProfileResult, {
-			where: {
-				id: currentUser.id,
-			},
-		});
-		meProfileResult.loggedin = true;
-		return meProfileResult;
+		// User.update(meProfileResult, {
+		// 	where: {
+		// 		id: currentUser.id,
+		// 	},
+		// });
+		// meProfileResult.loggedin = true;
+		// return meProfileResult;
 	}
-	return { error: response.error };
+	return { error: true, message: response.error };
 };
 
 module.exports = { refreshCookie };

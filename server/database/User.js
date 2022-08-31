@@ -39,10 +39,20 @@ const UserConfiguration = {
 		type: DataTypes.DATE,
 		allowNull: false,
 	},
-	last_modified: {
+	last_modified_hourly: {
+		type: DataTypes.DATE,
+		allowNull: false,
+		defaultValue: Date.now() - 1000 * 60 * 60,
+	},
+	last_modified_daily: {
 		type: DataTypes.DATE,
 		allowNull: false,
 		defaultValue: Date.now() - 1000 * 60 * 60 * 24,
+	},
+	last_modified_weekly: {
+		type: DataTypes.DATE,
+		allowNull: false,
+		defaultValue: Date.now() - 1000 * 60 * 60 * 24 * 7,
 	},
 };
 
