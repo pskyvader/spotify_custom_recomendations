@@ -11,7 +11,17 @@ const syncronizePlaylist = (user, playlist) => {
 	const syncronizeSongList = songList.map((currentSong) => {
 		return getPlaylistSong(playlist.id, currentSong.id);
 	});
-	return Promise.all(syncronizeSongs).then(Promise.all(syncronizeSongList));
+	return Promise.all(syncronizeSongs)
+		.then(
+			() => {
+				Promise.all(syncronizeSongList);
+			},
+			{ error: true, message: "Syncronize songs error" }
+		)
+		.finally({
+			error: false,
+			message: "Syncronize completed",
+		});
 };
 
 module.exports = { syncronizePlaylist };
