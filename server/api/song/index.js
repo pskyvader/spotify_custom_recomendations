@@ -1,17 +1,25 @@
-const { myApiRecommended } = require("./myApiRecommended");
-const { getMyRecentSongs } = require("./getMyRecentSongs");
-const { myRecommendedSongs } = require("./myRecommendedSongs");
-const { myRemoveRecommended } = require("./myRemoveRecommended");
+const { getRecommendedSongsFromAPI } = require("./getRecommendedSongsFromAPI");
+const { getRecentlyPlayedSongs } = require("./getRecentlyPlayedSongs");
+const { getRecommendedSongs } = require("./getRecommendedSongs");
+const {
+	getRecommendedSongsToRemove,
+} = require("./getRecommendedSongsToRemove");
 const { getPlaylistSongs } = require("./getPlaylistSongs");
-const { myTopSongs } = require("./myTopSongs");
-const { getMyDeletedSongs } = require("./getMyDeletedSongs");
+const { getTopSongs } = require("./getTopSongs");
+const { getDeletedSongs } = require("./getDeletedSongs");
+const { syncronizePlaylist } = require("./syncronizePlaylist");
+const { getRecentlyAddedSongs } = require("./getRecentlyAddedSongs");
+const { getRepeatedSongs } = require("./getRepeatedSongs");
 
 module.exports = {
-	myApiRecommended,
-	getMyRecentSongs,
-	myRecommendedSongs,
-	myRemoveRecommended,
+	getRecommendedSongsFromAPI,
+	getRecentlyPlayedSongs,
+	getRecommendedSongs,
+	getRecommendedSongsToRemove,
 	getPlaylistSongs,
-	myTopSongs,
-	getMyDeletedSongs,
+	getTopSongs,
+	getDeletedSongs,
+	syncronizePlaylist,
+	getRecentlyAddedSongs,
+	getRepeatedSongs,
 };

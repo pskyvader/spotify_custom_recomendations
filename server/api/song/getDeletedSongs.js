@@ -1,4 +1,4 @@
-const getMyDeletedSongs = async (playlist) => {
+const getDeletedSongs = async (playlist) => {
 	return playlist
 		.getSongs({
 			where: {
@@ -13,4 +13,4 @@ const getMyDeletedSongs = async (playlist) => {
 		});
 };
 
-module.exports = { getMyDeletedSongs };
+module.exports = { getDeletedSongs };

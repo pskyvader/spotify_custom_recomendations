@@ -1,7 +1,7 @@
 const { request, genres } = require("../../utils");
 const { formatSongList } = require("../../model");
 
-const fillOptions = (playlist, currentgenres) => {
+const fillOptions = (songlist, currentgenres) => {
 	const options = {
 		seed_artists: [],
 		seed_genres: [],
@@ -9,11 +9,11 @@ const fillOptions = (playlist, currentgenres) => {
 		market: "from_token",
 	};
 
-	if (playlist.length > 0) {
-		const half_playlist = Math.floor((playlist.length - 1) / 2);
+	if (songlist.length > 0) {
+		const half_songlist = Math.floor((songlist.length - 1) / 2);
 		for (let index = 0; index < 5; index++) {
-			const idsong = Math.floor(Math.random() * half_playlist);
-			const randomSong = playlist[idsong];
+			const idsong = Math.floor(Math.random() * half_songlist);
+			const randomSong = songlist[idsong];
 			const randomNumber = Math.floor(Math.random() * 100);
 
 			if (randomNumber < 60) {
@@ -37,22 +37,20 @@ const fillOptions = (playlist, currentgenres) => {
 			options.seed_genres.push(randomGenre);
 		}
 	} else {
-		for (let index = 0; index < 5; index++) {
-			options.seed_genres.push(
-				currentgenres[Math.floor(Math.random() * currentgenres.length)]
-			);
-		}
+		options.seed_genres.push(
+			currentgenres[Math.floor(Math.random() * currentgenres.length)]
+		);
 	}
 
 	return options;
 };
 
-const myApiRecommended = async (
+const getRecommendedSongsFromAPI = async (
 	access_token,
-	playlist,
+	songList,
 	currentgenres = genres
 ) => {
-	const options = fillOptions(playlist, currentgenres);
+	const options = fillOptions(songList, currentgenres);
 
 	const url = "https://api.spotify.com/v1/recommendations";
 	let urlOptions = "?";
@@ -66,13 +64,10 @@ const myApiRecommended = async (
 
 	const filtered = response.tracks.filter((song) => {
 		const currentSong = song.track || song;
-		//song playable and not in playlist
-		return (
-			currentSong.is_playable &&
-			!playlist.find((playlistSong) => playlistSong.id === currentSong.id)
-		);
+		//song playable and not in songlist
+		return currentSong.is_playable;
 	});
 	return formatSongList(filtered);
 };
 
-module.exports = { myApiRecommended };
+module.exports = { getRecommendedSongsFromAPI };

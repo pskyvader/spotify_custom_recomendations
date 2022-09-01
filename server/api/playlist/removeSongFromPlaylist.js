@@ -1,7 +1,7 @@
 const { request } = require("../../utils");
 const { updatePlaylistSong } = require("../../model");
 
-const removeSongPlaylist = async (user, song, playlist) => {
+const removeSongFromPlaylist = async (user, song, playlist) => {
 	const url =
 		"https://api.spotify.com/v1/playlists/" + playlist.id + "/tracks";
 
@@ -36,4 +36,4 @@ const removeSongPlaylist = async (user, song, playlist) => {
 	};
 };
 
-module.exports = { removeSongPlaylist };
+module.exports = { removeSongFromPlaylist };

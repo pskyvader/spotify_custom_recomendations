@@ -1,5 +1,5 @@
 const { request, formatSongAPIList } = require("../../utils");
-const getPlaylistSongs = async (user, playlist) => {
+const getPlaylistSongsFromAPI = async (user, playlist) => {
 	if (!playlist.active) {
 		return { error: true, message: "Playlist not active" };
 	}
@@ -17,4 +17,4 @@ const getPlaylistSongs = async (user, playlist) => {
 	return formatSongAPIList(items);
 };
 
-module.exports = { getPlaylistSongs };
+module.exports = { getPlaylistSongsFromAPI };

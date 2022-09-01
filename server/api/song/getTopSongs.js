@@ -1,14 +1,12 @@
 const { request, formatSongAPIList } = require("../../utils");
-const getPlaylistSongs = async (user, playlist) => {
-	if (!playlist.active) {
-		return { error: true, message: "Playlist not active" };
-	}
 
-	let url = `https://api.spotify.com/v1/playlists/${playlist.id}/tracks`;
+const getTopSongs = async (user) => {
+	let url = "https://api.spotify.com/v1/me/top/tracks?limit=50"; //&time_range=long_term
 	let items = [];
 	while (url) {
 		const response = await request(user.access_token, url);
 		if (response.error) {
+			console.log(response);
 			return response;
 		}
 		url = response.next;
@@ -17,4 +15,4 @@ const getPlaylistSongs = async (user, playlist) => {
 	return formatSongAPIList(items);
 };
 
-module.exports = { getPlaylistSongs };
+module.exports = { getTopSongs };
