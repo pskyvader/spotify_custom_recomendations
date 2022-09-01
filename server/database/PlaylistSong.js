@@ -12,7 +12,7 @@ const PlaylistSongConfiguration = {
 		allowNull: false,
 		defaultValue: Date.now(),
 	},
-	song_last_played: {
+	last_played: {
 		type: DataTypes.DATE,
 		allowNull: true,
 	},
@@ -20,7 +20,7 @@ const PlaylistSongConfiguration = {
 		type: DataTypes.INTEGER,
 		defaultValue: 0,
 	},
-	song_removed: {
+	removed_date: {
 		type: DataTypes.DATE,
 		allowNull: true,
 	},

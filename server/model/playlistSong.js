@@ -18,9 +18,9 @@ const createPlaylistSong = async (idplaylist, idsong) => {
 
 	const [newplaylistsong] = await PlaylistSong.upsert({
 		song_added: Date.now(),
-		times_played: 1,
+		times_played: 0,
 		removed: false,
-		PlaylistSong_removed: null,
+		removed_date: null,
 		playlist: currentPlaylist,
 		song: currentSong,
 	}).catch((err) => {
@@ -47,7 +47,7 @@ const updatePlaylistSong = async (
 		song_added: null,
 		times_played: null,
 		removed: null,
-		PlaylistSong_removed: null,
+		removed_date: null,
 	}
 ) => {
 	const currentPlaylistSong = await getPlaylistSong(idplaylist, idsong);
