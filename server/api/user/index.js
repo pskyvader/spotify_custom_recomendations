@@ -5,7 +5,8 @@ const { pushToken } = require("./pushToken");
 const { logOut } = require("./logOut");
 
 module.exports = {
-	authorizeUser,validateUserLogin,
+	authorizeUser,
+	validateUserLogin,
 	loginCookie,
 	pushToken,
 	logOut,

@@ -1,4 +1,3 @@
-const { User } = require("../../database");
 const { credentials } = require("../../credentials");
 const { request } = require("../../utils");
 
@@ -20,7 +19,7 @@ const requestOptions = (refresh_token) => {
 	};
 };
 
-const refreshCookie = async (req, currentUser) => {
+const refreshCookie = async (_req, currentUser) => {
 	const refresh_token = currentUser.refresh_token;
 
 	const response = await request(
@@ -50,7 +49,7 @@ const refreshCookie = async (req, currentUser) => {
 		// meProfileResult.loggedin = true;
 		// return meProfileResult;
 	}
-	return { error: true, message: response.error };
+	return response;
 };
 
 module.exports = { refreshCookie };

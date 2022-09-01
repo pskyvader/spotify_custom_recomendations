@@ -95,8 +95,12 @@ app.get("/api/loggedin", async function (req, res) {
 });
 
 app.get("/api/logincookie", async (req, res) => {
-	const result = await loginCookie(req);
-	res.json(result);
+	let response = await loginCookie(req);
+	if (response.error) {
+		response.loggedin = false;
+	}
+	response = { loggedin: true, hash: response.hash };
+	res.json(response);
 });
 
 app.get("/api/me", async (req, res) => {
