@@ -1,4 +1,4 @@
-const { getUser } = require("../../model");
+const { getUser, updateUser } = require("../../model");
 const { refreshCookie } = require("./refreshCookie");
 
 const validateUserLogin = async (loginData) => {
@@ -14,8 +14,11 @@ const validateUserLogin = async (loginData) => {
 
 	if (Date.now() > new Date(currentUser.expiration)) {
 		const refreshData = await refreshCookie(currentUser);
+		if (refreshData.error) {
+			return refreshData;
+		}
+		return updateUser(refreshData);
 	}
-
 	return currentUser;
 };
 

@@ -1,12 +1,11 @@
 const { authorizeUser } = require("./authorizeUser");
-const { CheckLogin } = require("./CheckLogin");
+const { validateUserLogin } = require("./validateUserLogin");
 const { loginCookie } = require("./loginCookie");
 const { pushToken } = require("./pushToken");
 const { logOut } = require("./logOut");
 
 module.exports = {
-	authorizeUser,
-	CheckLogin,
+	authorizeUser,validateUserLogin,
 	loginCookie,
 	pushToken,
 	logOut,

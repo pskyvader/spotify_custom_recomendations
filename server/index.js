@@ -9,7 +9,7 @@ const { login, callback, automaticTasks } = require("./pages");
 
 const {
 	authorizeUser,
-	CheckLogin,
+	validateUserLogin,
 	loginCookie,
 	pushToken,
 	logOut,
@@ -86,8 +86,12 @@ app.get("/api/pushtoken", function (req, res) {
 });
 
 app.get("/api/loggedin", async function (req, res) {
-	const result = await CheckLogin(req.session);
-	res.json(result);
+	let response = await validateUserLogin(req.session);
+	if (response.error) {
+		response.loggedin = false;
+	}
+	response = { loggedin: true, hash: response.hash };
+	res.json(response);
 });
 
 app.get("/api/logincookie", async (req, res) => {
