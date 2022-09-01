@@ -32,7 +32,7 @@ const createPlaylistSong = async (idplaylist, idsong) => {
 
 const getPlaylistSong = async (idplaylist, idsong) => {
 	const currentPlaylistSong = await PlaylistSong.findOne({
-		where: { PlaylistId: idplaylist, SongId: idsong },
+		where: { PlaylistId: idplaylist, SongId: idsong, removed: false },
 	});
 	if (currentPlaylistSong !== null) {
 		return currentPlaylistSong;
@@ -50,7 +50,12 @@ const updatePlaylistSong = async (
 		removed_date: null,
 	}
 ) => {
-	const currentPlaylistSong = await getPlaylistSong(idplaylist, idsong);
+	const currentPlaylistSong = await PlaylistSong.findOne({
+		where: { PlaylistId: idplaylist, SongId: idsong },
+	}).catch((err) => {
+		console.error(err.message);
+		return { error: err.message };
+	});
 	if (currentPlaylistSong.error) {
 		return currentPlaylistSong;
 	}

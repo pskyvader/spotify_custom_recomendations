@@ -7,7 +7,6 @@ const formatSongAPI = (song) => {
 
 	return {
 		id: song.id,
-		uniqueid: song.uri,
 		name: song.name,
 		image: song.images[0].url,
 		artist: art.join(", "),

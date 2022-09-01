@@ -29,11 +29,10 @@ const getPlaylist = async (user, idplaylist) => {
 };
 
 const updatePlaylist = async (
-	user,
 	idplaylist,
 	data = { name: null, active: null }
 ) => {
-	const currentPlaylist = await getPlaylist(idplaylist, user);
+	const currentPlaylist = await Playlist.findByPk(idplaylist); //, { raw: true, }
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
