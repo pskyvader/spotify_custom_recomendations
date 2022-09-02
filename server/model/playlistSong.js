@@ -1,28 +1,12 @@
-const { PlaylistSong, Playlist, Song } = require("../database");
-const createPlaylistSong = async (idplaylist, idsong) => {
-	const currentPlaylist = await Playlist.findByPk(idplaylist).catch((err) => {
-		console.error(err.message);
-		return { error: err.message };
-	});
-	if (currentPlaylist.error) {
-		return currentPlaylist;
-	}
-
-	const currentSong = await Song.findByPk(idsong).catch((err) => {
-		console.error(err.message);
-		return { error: err.message };
-	});
-	if (currentSong.error) {
-		return currentSong;
-	}
-
+const { PlaylistSong } = require("../database");
+const createPlaylistSong = async (playlist, song) => {
 	const [newplaylistsong] = await PlaylistSong.upsert({
 		song_added: Date.now(),
 		times_played: 0,
 		removed: false,
 		removed_date: null,
-		playlist: currentPlaylist,
-		song: currentSong,
+		playlist: playlist,
+		song: song,
 	}).catch((err) => {
 		console.error(err.message);
 		return { error: err.message };
@@ -30,14 +14,14 @@ const createPlaylistSong = async (idplaylist, idsong) => {
 	return newplaylistsong;
 };
 
-const getPlaylistSong = async (idplaylist, idsong) => {
+const getPlaylistSong = async (playlist, song) => {
 	const currentPlaylistSong = await PlaylistSong.findOne({
-		where: { PlaylistId: idplaylist, SongId: idsong, removed: false },
+		where: { PlaylistId: playlist.id, SongId: song.id, removed: false },
 	});
 	if (currentPlaylistSong !== null) {
 		return currentPlaylistSong;
 	}
-	return createPlaylistSong(idplaylist, idsong);
+	return createPlaylistSong(playlist, song);
 };
 
 const updatePlaylistSong = async (

@@ -8,8 +8,9 @@ const syncronizePlaylist = (user, playlist) => {
 		return getSong(user.access_token, currentSong.id, currentSong);
 	});
 
+
 	const syncronizeSongList = songList.map((currentSong) => {
-		return getPlaylistSong(playlist.id, currentSong.id);
+		return getPlaylistSong(playlist, currentSong);
 	});
 	return Promise.all(syncronizeSongs)
 		.then(

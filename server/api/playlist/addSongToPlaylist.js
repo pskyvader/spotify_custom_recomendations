@@ -16,7 +16,7 @@ const addSongToPlaylist = async (user, song, playlist) => {
 	if (response.error) {
 		return response;
 	}
-	const addedSong = await getPlaylistSong(playlist.id, song.id);
+	const addedSong = await getPlaylistSong(playlist, song);
 	if (addedSong.error) {
 		return addedSong;
 	}
