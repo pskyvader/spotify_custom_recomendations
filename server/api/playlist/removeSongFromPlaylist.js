@@ -22,11 +22,7 @@ const removeSongFromPlaylist = async (user, song, playlist) => {
 		removed: true,
 		removed_date: Date.now(),
 	};
-	const deletedSong = await updatePlaylistSong(
-		playlist.id,
-		song.id,
-		deleteData
-	);
+	const deletedSong = await updatePlaylistSong(playlist, song, deleteData);
 	if (deletedSong.error) {
 		return deletedSong;
 	}
