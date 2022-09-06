@@ -1,4 +1,4 @@
-const dailyTasks = async (userList) => {
+const getDailyTasks = async (userList) => {
 	const songsToModify = 5 + Math.floor(Math.random() * 5);
 	const taskList = userList.map((user) => {
 		const averageListeningTime = updateAverageTimes(user);
@@ -29,4 +29,4 @@ const dailyTasks = async (userList) => {
 	);
 	return taskList;
 };
-module.exports = { dailyTasks };
+module.exports = { getDailyTasks };

@@ -1,6 +1,6 @@
 const { updateRecentSongs } = require(".");
 
-const hourlyTasks = async (userList) => {
+const getHourlyTasks = async (userList) => {
 	return userList.map((user) => {
 		return updateRecentSongs(user.access_token, user.id)
 			.then((updateResult) => {
@@ -17,4 +17,4 @@ const hourlyTasks = async (userList) => {
 	});
 };
 
-module.exports = { hourlyTasks };
+module.exports = { getHourlyTasks };

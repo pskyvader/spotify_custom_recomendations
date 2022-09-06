@@ -6,31 +6,8 @@ const { updateAverageTimes } = require("./updateAverageTimes");
 const { updateRecentSongs } = require("./updateRecentSongs");
 const { addMissingSongs } = require("./addMissingSongs");
 const { removeMissingSongs } = require("./removeMissingSongs");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const { getHourlyTasks } = require("./getHourlyTasks");
+const { getDailyTasks } = require("./getDailyTasks");
 
 module.exports = {
 	addToPlaylist,
@@ -41,4 +18,6 @@ module.exports = {
 	updateRecentSongs,
 	addMissingSongs,
 	removeMissingSongs,
+	getHourlyTasks,
+	getDailyTasks,
 };

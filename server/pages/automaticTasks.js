@@ -1,46 +1,19 @@
-const { Op } = require("sequelize");
 const { User } = require("../database");
 const { refreshCookie } = require("../api/user/refreshCookie");
-const { convertTime } = require("../utils");
 
-const {
-	updateRecentSongs,
-	removeFromPlaylist,
-	deleteOldRemoved,
-	addToPlaylist,
-	deleteUnlinkedSongs,
-	updateAverageTimes,
-	addMissingSongs,
-	removeMissingSongs,
-} = require("../tasks");
+const { getHourlyTasks, getDailyTasks } = require("../tasks");
 
 const hour = 3600000;
 const tenMinutes = 600000;
 const day = 86400000;
 let LastTask = null;
 
-
 const getAvailableUsers = async () => {
 	console.log("--------------------------------");
 	console.log("Getting Available Users");
-	const userList = await User.findAll({
-		attributes: [
-			"id",
-			"name",
-			"access_token",
-			"refresh_token",
-			"expiration",
-			"hash",
-			"last_modified",
-		],
-		where: {
-			last_modified: {
-				[Op.lte]: Date.now() - hour,
-			},
-		},
-	});
+	const userList = await User.findAll();
+	const availableUsersList = { hourly: [], daily: [] };
 
-	const availableUsersList = [];
 	for (const user of userList) {
 		console.log("-----");
 		console.log(`User ${user.name} (${user.id})`);
@@ -56,8 +29,12 @@ const getAvailableUsers = async () => {
 			user.expiration = result.expiration;
 		}
 		console.log(`User available, expiration:${user.expiration}`);
-		user.dailyAvailable = user.last_modified < Date.now() - day;
-		availableUsersList.push(user);
+		if (user.last_modified_hourly < Date.now() - hour) {
+			availableUsersList.hourly.push(user);
+		}
+		if (user.last_modified_daily < Date.now() - day) {
+			availableUsersList.daily.push(user);
+		}
 	}
 	return availableUsersList;
 };
@@ -74,15 +51,19 @@ const automaticTasks = async (_req, res) => {
 		return;
 	}
 	const userList = await getAvailableUsers();
-	console.log(`${userList.length} users available`);
-	if (userList.length === 0) {
-		response.message = "No users to update at this time";
-	} else {
-		response.message = `Updating ${userList.length} users`;
-	}
 
-	await hourlyTasks(userList);
-	await dailyTasks(userList);
+	const hourlyTaskList = getHourlyTasks(userList.hourly);
+	const dailyTaskList = getDailyTasks(userList.daily);
+
+	console.log("Hourly Tasks...");
+	await Promise.all(hourlyTaskList).then(() => {
+		console.log("Hourly Tasks Done");
+	});
+	console.log("Daily Tasks...");
+	await Promise.all(dailyTaskList).then(() => {
+		console.log("Daily Tasks Done");
+	});
+
 	LastTask = Date.now();
 	res.json(response);
 };

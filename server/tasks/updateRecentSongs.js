@@ -1,40 +1,20 @@
-const { Op } = require("sequelize");
-const { Song, User } = require("../database");
-const { request } = require("../utils");
-const { getSong } = require("../model");
-
+const {
+	getRecentlyPlayedSongsFromAPI,
+	getRecentlyPlayedSongs,
+} = require("../api/song/");
 // variable week= 1 week in ms
 const week = 604800000;
 
-const lastUpdate = {};
-
-const updateRecentSongs = async (access_token, userId) => {
-	// check if last update is less than 10 minutes ago
-	if (lastUpdate[userId] && lastUpdate[userId] > Date.now() - 600000) {
-		return {
-			error: false,
-			message: "Songs updated less than 10 minutes ago",
-		};
-	}
-
-	const after = Date.now() - week;
-	let url =
-		"https://api.spotify.com/v1/me/player/recently-played?limit=50&after" +
-		after;
-	let items = [];
-
-	while (url) {
-		const response = await request(access_token, url);
-		if (response.error) {
-			return response;
-		}
-		url = response.next;
-		items.push(...response.items);
-	}
-
-	const allsongs = await Song.findAll({ attributes: ["id"] });
-	const allsongsIds = allsongs.map((song) => song.id);
-	const songsToAdd = items.filter((song) => !allsongsIds.includes(song.id));
+const updateRecentSongs = async (user) => {
+	const recentSongsAPI = await getRecentlyPlayedSongsFromAPI(user);
+	const recentUserSongs = await getRecentlyPlayedSongs(user);
+	// const allsongsIds = recentUserSongs.map((usersong) => usersong.song.id);
+	const songsToAdd = recentSongsAPI.filter((song) => {
+		const found = recentUserSongs.find((usersong) => {
+			return usersong.song.id === song.id;
+		});
+		return found === undefined || found.played_date !== song.played_date;
+	});
 
 	for (const song of songsToAdd) {
 		const songData = await getSong(access_token, song.track.id, userId);

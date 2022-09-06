@@ -11,6 +11,9 @@ const { syncronizePlaylist } = require("./syncronizePlaylist");
 const { getRecentlyAddedSongs } = require("./getRecentlyAddedSongs");
 const { getRepeatedSongs } = require("./getRepeatedSongs");
 const { getPlaylistSongsFromAPI } = require("./getPlaylistSongsFromAPI");
+const {
+	getRecentlyPlayedSongsFromAPI,
+} = require("./getRecentlyPlayedSongsFromAPI");
 
 module.exports = {
 	getRecommendedSongsFromAPI,
@@ -24,4 +27,5 @@ module.exports = {
 	getRecentlyAddedSongs,
 	getRepeatedSongs,
 	getPlaylistSongsFromAPI,
+	getRecentlyPlayedSongsFromAPI,
 };

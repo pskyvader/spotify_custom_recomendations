@@ -1,5 +1,4 @@
-const { request, genres } = require("../../utils");
-const { formatSongList } = require("../../model");
+const { request, genres,formatSongAPIList } = require("../../utils");
 
 const fillOptions = (songlist, currentgenres) => {
 	const options = {
@@ -67,7 +66,7 @@ const getRecommendedSongsFromAPI = async (
 		//song playable and not in songlist
 		return currentSong.is_playable;
 	});
-	return formatSongList(filtered);
+	return formatSongAPIList(filtered);
 };
 
 module.exports = { getRecommendedSongsFromAPI };
