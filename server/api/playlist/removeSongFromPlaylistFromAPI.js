@@ -1,12 +1,12 @@
 const { request } = require("../../utils");
 const { updatePlaylistSong } = require("../../model");
 
-const removeSongFromPlaylist = async (user, song, playlist) => {
+const removeSongFromPlaylistFromAPI = async (user, song, playlist) => {
 	const url =
 		"https://api.spotify.com/v1/playlists/" + playlist.id + "/tracks";
 
 	const songs = {
-		tracks: [{ uri: song.uniqueid }],
+		tracks: [{ uri: song.id }],
 	};
 
 	const response = await request(
@@ -32,4 +32,4 @@ const removeSongFromPlaylist = async (user, song, playlist) => {
 	};
 };
 
-module.exports = { removeSongFromPlaylist };
+module.exports = { removeSongFromPlaylistFromAPI };

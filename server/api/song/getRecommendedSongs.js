@@ -16,7 +16,7 @@ const getRecommendedSongs = async (user, playlist) => {
 
 	// Recent: get playlist songs ids and played more recently than 1 week ago
 	const RecentSongs = await getRecentlyPlayedSongs(
-		playlist,
+		user,
 		Date.now() - 1 * week
 	);
 	if (RecentSongs.error) {

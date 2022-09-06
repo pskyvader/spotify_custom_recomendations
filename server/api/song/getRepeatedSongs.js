@@ -1,4 +1,4 @@
-const getRepeatedSongs = (playlist) => {
+const getRepeatedSongs = async (playlist) => {
 	const songList = await playlist.getSongs();
 	// remove repeated ids from currentPlaylist array
 	return songList.filter(

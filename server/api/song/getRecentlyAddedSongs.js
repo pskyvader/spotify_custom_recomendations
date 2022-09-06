@@ -7,11 +7,11 @@ const getRecentlyAddedSongs = async (playlist) => {
 	return playlist
 		.getSongs({
 			where: {
-				song_added: {
+				add_date: {
 					[Op.gte]: Date.now() - 2 * week,
 				},
 			},
-			order: [["song_added", "ASC"]],
+			order: [["add_date", "ASC"]],
 			// raw: true,
 			// nest: true,
 		})

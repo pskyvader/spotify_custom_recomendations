@@ -1,6 +1,6 @@
 const { request, formatSongAPIList } = require("../../utils");
 
-const getTopSongs = async (user) => {
+const getTopSongsFromAPI = async (user) => {
 	let url = "https://api.spotify.com/v1/me/top/tracks?limit=50"; //&time_range=long_term
 	let items = [];
 	while (url) {
@@ -15,4 +15,4 @@ const getTopSongs = async (user) => {
 	return formatSongAPIList(items);
 };
 
-module.exports = { getTopSongs };
+module.exports = { getTopSongsFromAPI };

@@ -2,8 +2,8 @@ const { credentials } = require("../credentials");
 const { request, generateRandomString } = require("../utils");
 
 const callback = async (req, res) => {
-	var code = req.query.code || null;
-	var state = req.query.state || null;
+	const code = req.query.code || null;
+	const state = req.query.state || null;
 
 	if (state === null) {
 		res.redirect("/#" + new URLSearchParams({ error: "state_mismatch" }));

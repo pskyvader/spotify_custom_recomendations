@@ -1,17 +1,17 @@
 const { Op } = require("sequelize");
-const getRecentlyPlayedSongs = async (playlist, date = null) => {
-	const last_played =
+const getRecentlyPlayedSongs = async (user, date = null) => {
+	const played_date =
 		data === null
 			? {
 					[Op.ne]: null,
 			  }
 			: { [Op.gte]: date };
-	return playlist
+	return user
 		.getSongs({
 			where: {
-				last_played: last_played,
+				played_date: played_date,
 			},
-			order: [["last_played", "DESC"]],
+			order: [["played_date", "DESC"]],
 			// raw: true,
 			// nest: true,
 		})

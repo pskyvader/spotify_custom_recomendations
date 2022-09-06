@@ -1,7 +1,7 @@
 const { request } = require("../../utils");
 const { getPlaylist } = require("../../model");
 
-const getPlaylists = async (user) => {
+const getPlaylistsFromAPI = async (user) => {
 	let url = "https://api.spotify.com/v1/me/playlists?limit=50";
 	let playlists = [];
 	while (url) {
@@ -24,4 +24,4 @@ const getPlaylists = async (user) => {
 	return Promise.all(playlistsId);
 };
 
-module.exports = { getPlaylists };
+module.exports = { getPlaylistsFromAPI };
