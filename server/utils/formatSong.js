@@ -22,21 +22,21 @@ const formatSongAPIList = (songList) => {
 	});
 };
 
-const songIdFromURI = (songuri) => {
-	const split = songuri.split(":");
-	return split.pop();
-};
+// const songIdFromURI = (songuri) => {
+// 	const split = songuri.split(":");
+// 	return split.pop();
+// };
 
-const formatSong = (song) => {
-	return {
-		id: song.id,
-		uniqueid: song.uniqueid,
-		name: song.name,
-		artist: song.artist,
-		idartist: song.idartist,
-		album: song.album,
-		duration: song.duration,
-	};
-};
+// const formatSong = (song) => {
+// 	return {
+// 		id: song.id,
+// 		uniqueid: song.uniqueid,
+// 		name: song.name,
+// 		artist: song.artist,
+// 		idartist: song.idartist,
+// 		album: song.album,
+// 		duration: song.duration,
+// 	};
+// };
 
 module.exports = { formatSongAPI, formatSongAPIList };
