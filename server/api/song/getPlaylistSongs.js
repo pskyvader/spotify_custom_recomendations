@@ -2,9 +2,9 @@ const getPlaylistSongs = async (playlist) => {
 	return playlist
 		.getSongs({
 			where: {
-				removed: false,
+				active: true,
 			},
-			order: [["song_added", "ASC"]],
+			order: [["add_date", "ASC"]],
 			// raw: true,
 			// nest: true,
 		})

@@ -1,30 +1,15 @@
 const { DataTypes } = require("sequelize");
 const PlaylistSongConfiguration = {
-	id: {
-		type: DataTypes.BIGINT,
-		autoIncrement: true,
-		allowNull: false,
-		primaryKey: true,
-		unique: true,
-	},
-	song_added: {
+	add_date: {
 		type: DataTypes.DATE,
 		allowNull: false,
 		defaultValue: Date.now(),
-	},
-	last_played: {
-		type: DataTypes.DATE,
-		allowNull: true,
-	},
-	times_played: {
-		type: DataTypes.INTEGER,
-		defaultValue: 0,
 	},
 	removed_date: {
 		type: DataTypes.DATE,
 		allowNull: true,
 	},
-	removed: {
+	active: {
 		type: DataTypes.BOOLEAN,
 		allowNull: false,
 		defaultValue: false,

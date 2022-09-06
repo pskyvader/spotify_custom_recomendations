@@ -1,10 +1,9 @@
 const { PlaylistSong } = require("../database");
 const createPlaylistSong = async (playlist, song) => {
 	const [newplaylistsong] = await PlaylistSong.upsert({
-		song_added: Date.now(),
-		times_played: 0,
-		removed: false,
+		add_date: Date.now(),
 		removed_date: null,
+		active: true,
 		playlist: playlist,
 		song: song,
 	}).catch((err) => {
@@ -16,7 +15,7 @@ const createPlaylistSong = async (playlist, song) => {
 
 const getPlaylistSong = async (playlist, song) => {
 	const currentPlaylistSong = await PlaylistSong.findOne({
-		where: { PlaylistId: playlist.id, SongId: song.id, removed: false },
+		where: { PlaylistId: playlist.id, SongId: song.id, active: true },
 	});
 	if (currentPlaylistSong !== null) {
 		return currentPlaylistSong;
@@ -28,9 +27,8 @@ const updatePlaylistSong = async (
 	idplaylist,
 	idsong,
 	data = {
-		song_added: null,
-		times_played: null,
-		removed: null,
+		add_date: null,
+		active: null,
 		removed_date: null,
 	}
 ) => {

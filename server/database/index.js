@@ -2,6 +2,7 @@ const { Sequelize, Model } = require("sequelize");
 const { UserConfiguration } = require("./User");
 const { SongConfiguration } = require("./Song");
 const { PlaylistSongConfiguration } = require("./PlaylistSong");
+const { UserSongHistoryConfiguration } = require("./UserSongHistory");
 const { PlaylistConfiguration } = require("./Playlist");
 
 // const sequelize = new Sequelize(process.env.DATABASE_URL+'?ssl=true' || "sqlite::memory:"); // Example for sqlite
@@ -37,18 +38,18 @@ Playlist.init(PlaylistConfiguration, {
 User.hasMany(Playlist);
 Playlist.belongsTo(User);
 
-class PlaylistSong extends Model {}
-PlaylistSong.init(PlaylistSongConfiguration, {
-	// Other model options go here
-	sequelize, // We need to pass the connection instance
-	// modelName: "PlaylistSong", // We need to choose the model name
-});
-
 class Song extends Model {}
 Song.init(SongConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
 	// modelName: "Song", // We need to choose the model name
+});
+
+class PlaylistSong extends Model {}
+PlaylistSong.init(PlaylistSongConfiguration, {
+	// Other model options go here
+	sequelize, // We need to pass the connection instance
+	// modelName: "PlaylistSong", // We need to choose the model name
 });
 
 Playlist.belongsToMany(Song, { through: PlaylistSong });
@@ -58,6 +59,25 @@ Playlist.hasMany(PlaylistSong);
 PlaylistSong.belongsTo(Playlist);
 Song.hasMany(PlaylistSong);
 PlaylistSong.belongsTo(Song);
+
+class UserSongHistory extends Model {}
+UserSongHistory.init(UserSongHistoryConfiguration, {
+	// Other model options go here
+	sequelize, // We need to pass the connection instance
+	// modelName: "UserSongHistory", // We need to choose the model name
+});
+
+User.belongsToMany(Song, {
+	through: { model: UserSongHistory, unique: false },
+});
+Song.belongsToMany(User, {
+	through: { model: UserSongHistory, unique: false },
+});
+
+User.hasMany(UserSongHistory);
+UserSongHistory.belongsTo(User);
+Song.hasMany(UserSongHistory);
+UserSongHistory.belongsTo(Song);
 
 const connection = async () => {
 	try {
@@ -71,4 +91,11 @@ const connection = async () => {
 	}
 };
 
-module.exports = { connection, User, Song, Playlist, PlaylistSong };
+module.exports = {
+	connection,
+	User,
+	Song,
+	Playlist,
+	PlaylistSong,
+	UserSongHistory,
+};

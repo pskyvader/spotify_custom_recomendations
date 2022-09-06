@@ -2,7 +2,7 @@ const getDeletedSongs = async (playlist) => {
 	return playlist
 		.getSongs({
 			where: {
-				removed: true,
+				active: false,
 			},
 			order: [["removed_date", "DESC"]],
 			// raw: true,
