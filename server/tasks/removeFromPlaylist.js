@@ -1,26 +1,19 @@
-const { Op } = require("sequelize");
-const { Playlist } = require("../database");
-const { myRemoveRecommended, getPlaylistSongs } = require("../api/song");
+const {
+	getRecommendedSongsToRemove,
+	getPlaylistSongs,
+} = require("../api/song");
 const { removeSongPlaylist } = require("../api/playlist");
 
 const _MAX_SONGS_PER_PLAYLIST = 200;
 const _MIN_SONGS_PER_PLAYLIST = 50;
 
-const removefromSinglePlaylist = async (
-	playlist,
-	fakesession,
-	songsToRemove
-) => {
+const removefromSinglePlaylist = async (user, playlist, songsToRemove) => {
 	const responseMessage = [];
-	const playlistSongsList = await getPlaylistSongs(
-		fakesession,
-		playlist.id,
-		true
-	);
+	const playlistSongsList = await getPlaylistSongs(playlist);
 	if (playlistSongsList.error) {
 		return playlistSongsList;
 	}
-	const songlist = await myRemoveRecommended(fakesession, playlist.id);
+	const songlist = await getRecommendedSongsToRemove(user, playlist);
 	if (songlist.error) {
 		return songlist;
 	}
@@ -68,17 +61,10 @@ const removeFromPlaylist = async (user, songsToRemove) => {
 		access_token: user.access_token,
 		refresh_token: user.refresh_token,
 	};
-	const userId = user.id;
-
-	const playlists = await Playlist.findAll({
-		where: {
-			[Op.and]: [{ iduser: userId }, { active: true }],
-		},
-	});
-
+	const playlists = await user.getPlaylists({ where: { active: true } });
 	for (const playlist of playlists) {
 		response.message.push(
-			await removefromSinglePlaylist(playlist, fakesession, songsToRemove)
+			await removefromSinglePlaylist(user, playlist, songsToRemove)
 		);
 	}
 

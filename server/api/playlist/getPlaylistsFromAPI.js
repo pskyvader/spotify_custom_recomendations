@@ -19,7 +19,7 @@ const getPlaylistsFromAPI = async (user) => {
 	);
 
 	const playlistsId = filtered.map((currentPlaylist) => {
-		return getPlaylist(currentPlaylist.id);
+		return getPlaylist(user,currentPlaylist.id);
 	});
 	return Promise.all(playlistsId);
 };

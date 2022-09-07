@@ -1,3 +1,5 @@
+const { updateAverageTimes } = require(".");
+
 const getDailyTasks = async (userList) => {
 	const songsToModify = 5 + Math.floor(Math.random() * 5);
 	const taskList = userList.map((user) => {
