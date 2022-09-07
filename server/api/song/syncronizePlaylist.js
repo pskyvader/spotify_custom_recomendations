@@ -53,4 +53,13 @@ const syncronizePlaylist = async (user, playlist) => {
 		});
 };
 
-module.exports = { syncronizePlaylist };
+const syncronizeMultiplePlaylists = async (user) => {
+	const response = { error: false, message: [] };
+	const playlists = await user.getPlaylists({ where: { active: true } });
+	for (const playlist of playlists) {
+		response.message.push(await syncronizePlaylist(user, playlist));
+	}
+	return response;
+};
+
+module.exports = { syncronizePlaylist, syncronizeMultiplePlaylists };

@@ -7,7 +7,10 @@ const {
 const { getPlaylistSongs } = require("./getPlaylistSongs");
 const { getTopSongsFromAPI } = require("./getTopSongsFromAPI");
 const { getDeletedSongs } = require("./getDeletedSongs");
-const { syncronizePlaylist } = require("./syncronizePlaylist");
+const {
+	syncronizePlaylist,
+	syncronizeMultiplePlaylists,
+} = require("./syncronizePlaylist");
 const { getRecentlyAddedSongs } = require("./getRecentlyAddedSongs");
 const { getRepeatedSongs } = require("./getRepeatedSongs");
 const { getPlaylistSongsFromAPI } = require("./getPlaylistSongsFromAPI");
@@ -24,6 +27,7 @@ module.exports = {
 	getTopSongsFromAPI,
 	getDeletedSongs,
 	syncronizePlaylist,
+	syncronizeMultiplePlaylists,
 	getRecentlyAddedSongs,
 	getRepeatedSongs,
 	getPlaylistSongsFromAPI,

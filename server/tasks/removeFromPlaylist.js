@@ -2,12 +2,12 @@ const {
 	getRecommendedSongsToRemove,
 	getPlaylistSongs,
 } = require("../api/song");
-const { removeSongPlaylist } = require("../api/playlist");
+const { removeSongFromPlaylistFromAPI } = require("../api/playlist");
 
 const _MAX_SONGS_PER_PLAYLIST = 200;
 const _MIN_SONGS_PER_PLAYLIST = 50;
 
-const removefromSinglePlaylist = async (user, playlist, songsToRemove) => {
+const removeFromSinglePlaylist = async (user, playlist, songsToRemove) => {
 	const responseMessage = [];
 	const playlistSongsList = await getPlaylistSongs(playlist);
 	if (playlistSongsList.error) {
@@ -34,20 +34,18 @@ const removefromSinglePlaylist = async (user, playlist, songsToRemove) => {
 		if (i >= songsToRemove) {
 			break;
 		}
-		const removeResponse = await removeSongPlaylist(
-			fakesession,
-			songInList.uniqueid,
-			playlist.id
+		const removeResponse = await removeSongFromPlaylistFromAPI(
+			user,
+			songInList,
+			playlist
 		);
 		if (removeResponse.error) {
-			response.error = true;
 			responseMessage.push(
 				`Error removing song ${songInList.name} from playlist ${playlist.name}`
 			);
 			responseMessage.push(JSON.stringify(removeResponse));
 			continue;
 		}
-
 		responseMessage.push(`Removed song: ${songInList.name}`);
 		i++;
 	}
@@ -56,18 +54,12 @@ const removefromSinglePlaylist = async (user, playlist, songsToRemove) => {
 
 const removeFromPlaylist = async (user, songsToRemove) => {
 	const response = { error: false, message: [] };
-	const fakesession = {
-		hash: user.hash,
-		access_token: user.access_token,
-		refresh_token: user.refresh_token,
-	};
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	for (const playlist of playlists) {
 		response.message.push(
-			await removefromSinglePlaylist(user, playlist, songsToRemove)
+			await removeFromSinglePlaylist(user, playlist, songsToRemove)
 		);
 	}
-
 	return response;
 };
 

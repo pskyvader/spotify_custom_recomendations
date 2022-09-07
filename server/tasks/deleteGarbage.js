@@ -2,7 +2,7 @@ const { Op } = require("sequelize");
 const { UserSong } = require("../database");
 //week in ms
 const week = 604800000;
-const deleteOldRemoved = async () => {
+const deleteGarbage = async () => {
 	return UserSong.destroy({
 		where: {
 			[Op.and]: [
@@ -17,4 +17,4 @@ const deleteOldRemoved = async () => {
 	});
 };
 
-module.exports = { deleteOldRemoved };
+module.exports = { deleteGarbage };
