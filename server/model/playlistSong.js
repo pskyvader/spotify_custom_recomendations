@@ -10,6 +10,9 @@ const createPlaylistSong = async (playlist, song) => {
 		console.error(err.message);
 		return { error: err.message };
 	});
+
+	song.set({ last_time_used: Date.now() });
+	song.save();
 	return newplaylistsong;
 };
 
@@ -48,19 +51,16 @@ const updatePlaylistSong = async (
 	if (playlistSongSaved.error) {
 		return playlistSongSaved;
 	}
+	currentPlaylistSong.Song.set({ last_time_used: Date.now() });
+	currentPlaylistSong.Song.save();
+
 	return currentPlaylistSong;
 };
 
 const deletePlaylistSong = async (idplaylist, idsong) => {
-	const currentPlaylistSong = await PlaylistSong.findOne({
+	const playlistSongDestroyed = await PlaylistSong.destroy({
 		where: { PlaylistId: idplaylist, SongId: idsong },
-	});
-	if (currentPlaylistSong === null) {
-		return true;
-	}
-	const playlistSongDestroyed = await currentPlaylistSong
-		.destroy()
-		.catch((err) => ({ error: err.message }));
+	}).catch((err) => ({ error: err.message }));
 
 	if (playlistSongDestroyed.error) {
 		return playlistSongDestroyed;

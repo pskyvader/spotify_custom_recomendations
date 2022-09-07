@@ -35,6 +35,7 @@ const updateSong = async (
 	if (currentSong.error) {
 		return currentSong;
 	}
+	data.last_time_used = Date.now();
 
 	currentSong.set(data);
 	const songSaved = await currentSong
@@ -51,16 +52,15 @@ const deleteSong = async (idsong) => {
 	if (currentSong === null) {
 		return true;
 	}
-	const playlistSongsDestroyed = await PlaylistSong.destroy({
-		where: { SongId: idsong },
-	}).catch((err) => ({
-		error: err.message,
-	}));
-	if (playlistSongsDestroyed.error) {
-		return playlistSongsDestroyed;
+
+	const foundplaylist = await currentSong.hasPlaylists();
+	const foundusers = await currentSong.hasUsers();
+	console.log("foundplaylist: " + foundplaylist, "foundusers: " + foundusers);
+	if (foundplaylist !== null || foundusers !== null) {
+		return { error: true, message: "Song Still exists" };
 	}
 
-	const songDestroyed = await currentPlaylist
+	const songDestroyed = await currentSong
 		.destroy()
 		.catch((err) => ({ error: err.message }));
 

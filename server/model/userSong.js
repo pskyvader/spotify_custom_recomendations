@@ -9,6 +9,10 @@ const createUserSong = async (user, song, played_date) => {
 		console.error(err.message);
 		return { error: err.message };
 	});
+
+	song.set({ last_time_used: Date.now() });
+	song.save();
+
 	return newUserSong;
 };
 

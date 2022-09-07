@@ -1,5 +1,5 @@
 const { request } = require("../utils");
-const { User } = require("../database");
+const { User, UserSongHistory } = require("../database");
 const { Op } = require("sequelize");
 
 const createUser = async (session) => {
@@ -84,6 +84,15 @@ const deleteUser = async (session) => {
 	const currentUser = getUser(session);
 	if (currentUser.error) {
 		return currentUser;
+	}
+
+	const songsDestroyed = await UserSongHistory.destroy({
+		where: { UserId: currentUser.id },
+	}).catch((err) => ({
+		error: err.message,
+	}));
+	if (songsDestroyed.error) {
+		return songsDestroyed;
 	}
 
 	const userDestroyed = await currentUser

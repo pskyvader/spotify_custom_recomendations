@@ -3,7 +3,7 @@ const {
 	getDeletedSongs,
 	getRecommendedSongsFromAPI,
 	getRecentlyPlayedSongs,
-	getTopSongs,
+	getTopSongsFromAPI,
 } = require(".");
 //week in ms
 const week = 604800000;
@@ -26,7 +26,7 @@ const getRecommendedSongs = async (user, playlist) => {
 		return currentSong.SongId;
 	});
 
-	const topSongs = await getTopSongs(user);
+	const topSongs = await getTopSongsFromAPI(user);
 	if (topSongs.error) {
 		return topSongs;
 	}
