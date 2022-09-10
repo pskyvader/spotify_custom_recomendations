@@ -18,10 +18,10 @@ const getPlaylistsFromAPI = async (user) => {
 		(currentPlaylist) => user.id === currentPlaylist.owner.id
 	);
 
-	const playlistsId = filtered.map((currentPlaylist) => {
+	const playlistsPromises = filtered.map((currentPlaylist) => {
 		return getPlaylist(user,currentPlaylist.id);
 	});
-	return Promise.all(playlistsId);
+	return Promise.all(playlistsPromises);
 };
 
 module.exports = { getPlaylistsFromAPI };
