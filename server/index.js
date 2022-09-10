@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const NodeCache = require("node-cache");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const pgSession = require("connect-pg-simple")(session);
@@ -14,7 +15,7 @@ const {
 	pushToken,
 	logOut,
 } = require("./api/user");
-const {} = require("./api/playlist");
+const { getPlaylistsFromAPI } = require("./api/playlist");
 
 const { getPlaylistSongs } = require("./api/song");
 
@@ -84,6 +85,8 @@ app.get("/pushtoken", function (req, res) {
 });
 
 let user = null;
+const cache = new NodeCache();
+const tenMinutes = 600;
 
 app.use("/api/*", async (req, res, next) => {
 	let response = await validateUserLogin(req.session);
@@ -95,7 +98,7 @@ app.use("/api/*", async (req, res, next) => {
 	next();
 });
 
-app.get("/api/loggedin", async function (req, res) {
+app.get("/api/loggedin", async function (_req, res) {
 	const response = { loggedin: false, hash: null };
 	if (user !== null) {
 		response.loggedin = true;
@@ -104,13 +107,16 @@ app.get("/api/loggedin", async function (req, res) {
 	res.json(response);
 });
 
-app.get("/api/me", async (req, res) => {
-	const result = await getUser(req.session);
-	res.json(result);
+app.get("/api/me", async (_req, res) => {
+	res.json(user);
 });
 
-app.get("/api/me/playlists", async (req, res) => {
-	const result = await getMyPlaylists(req.session);
+app.get("/api/me/playlists", async (_req, res) => {
+	let result = cache.get(`playlists-${user.hash}`);
+	if (!result) {
+		result = await getPlaylistsFromAPI(user);
+		cache.set(`playlists-${user.hash}`, result, tenMinutes);
+	}
 	res.json(result);
 });
 

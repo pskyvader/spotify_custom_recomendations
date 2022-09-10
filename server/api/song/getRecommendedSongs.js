@@ -9,7 +9,7 @@ const {
 const week = 604800000;
 
 const getRecommendedSongs = async (user, playlist) => {
-	let currentPlaylist = await getPlaylistSongs(user, playlist);
+	let currentPlaylist = await getPlaylistSongs(playlist);
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
