@@ -17,9 +17,9 @@ const {
 } = require("./api/user");
 const { getPlaylistsFromAPI } = require("./api/playlist");
 
-const { getPlaylistSongs } = require("./api/song");
+const { getPlaylistSongsFromAPI } = require("./api/song");
 
-const { getUser } = require("./model");
+const { getPlaylist } = require("./model");
 
 connection();
 
@@ -112,23 +112,28 @@ app.get("/api/me", async (_req, res) => {
 });
 
 app.get("/api/me/playlists", async (_req, res) => {
-	let result = cache.get(`playlists-${user.hash}`);
+	let result = cache.get(`playlists-${user.id}`);
 	if (!result) {
 		result = await getPlaylistsFromAPI(user);
-		cache.set(`playlists-${user.hash}`, result, tenMinutes);
+		cache.set(`playlists-${user.id}`, result, tenMinutes);
 	}
 	res.json(result);
 });
 
-// app.get("/api/playlists/get/:playlistId", async (req, res) => {
-// 	const result = await getPlaylistSongs(req.session, req.params.playlistId);
-// 	res.json(result);
-// });
+app.get("/api/playlists/get/:playlistId", async (req, res) => {
+	let result = cache.get(`get-playlist-songs-${req.params.playlistId}`);
+	if (!result) {
+		const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+		result = await getPlaylistSongsFromAPI(user, currentPlaylist);
+		cache.set(`get-playlist-songs-${req.params.playlistId}`, result, tenMinutes);
+	}
+	res.json(result);
+});
 
-// app.get("/api/playlist/:playlistId/status", async (req, res) => {
-// 	const result = await playlistStatus(req.session, req.params.playlistId);
-// 	res.json(result);
-// });
+app.get("/api/playlist/:playlistId/status", async (req, res) => {
+	const result = await getPlaylist(user, req.params.playlistId);
+	res.json(result);
+});
 
 // app.get("/api/playlist/:playlistId/activate", async (req, res) => {
 // 	const result = await togglePlaylist(
