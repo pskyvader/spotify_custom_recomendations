@@ -1,4 +1,6 @@
-const { getPlaylistSongsFromAPI, getPlaylistSongs } = require(".");
+const { getPlaylistSongsFromAPI } = require("./getPlaylistSongsFromAPI");
+const { getPlaylistSongs } = require("./getPlaylistSongs");
+
 const {
 	getPlaylistSong,
 	updatePlaylistSong,

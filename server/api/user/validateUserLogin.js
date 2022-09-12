@@ -7,7 +7,7 @@ const validateUserLogin = async (loginData) => {
 		response.message = "No user data found";
 		return response;
 	}
-	const currentUser = await getUser(session);
+	const currentUser = await getUser(loginData);
 	if (currentUser.error) {
 		return currentUser;
 	}

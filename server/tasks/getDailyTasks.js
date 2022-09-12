@@ -1,12 +1,11 @@
-const {
-	updateAverageTimes,
-	removeFromPlaylist,
-	addToPlaylist,
-	deleteGarbage,
-} = require(".");
+const { updateAverageTimes } = require("./updateAverageTimes");
+const { removeFromPlaylist } = require("./removeFromPlaylist");
+const { addToPlaylist } = require("./addToPlaylist");
+const { deleteGarbage } = require("./deleteGarbage");
+
 const { syncronizeMultiplePlaylists } = require("../api/song");
 
-const getDailyTasks = async (userList) => {
+const getDailyTasks = (userList) => {
 	const songsToModify = 5 + Math.floor(Math.random() * 5);
 	const taskList = userList.map((user) => {
 		const averageListeningTime = updateAverageTimes(user);

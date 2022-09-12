@@ -1,10 +1,10 @@
-const {
-	getPlaylistSongs,
-	getDeletedSongs,
-	getRecommendedSongsFromAPI,
-	getRecentlyPlayedSongs,
-	getTopSongsFromAPI,
-} = require(".");
+
+const {getPlaylistSongs}=require("./getPlaylistSongs")
+const {getDeletedSongs}=require("./getDeletedSongs")
+const {getRecommendedSongsFromAPI}=require("./getRecommendedSongsFromAPI")
+const {getRecentlyPlayedSongs}=require("./getRecentlyPlayedSongs")
+const {getTopSongsFromAPI}=require("./getTopSongsFromAPI")
+
 //week in ms
 const week = 604800000;
 

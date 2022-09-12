@@ -11,7 +11,12 @@ let LastTask = null;
 const getAvailableUsers = async () => {
 	console.log("--------------------------------");
 	console.log("Getting Available Users");
-	const userList = await User.findAll();
+	const userList = await User.findAll().catch((err) => ({
+		error: err.message,
+	}));
+	if (userList.error) {
+		return userList;
+	}
 	const availableUsersList = { hourly: [], daily: [] };
 
 	for (const user of userList) {
@@ -51,6 +56,7 @@ const automaticTasks = async (_req, res) => {
 		return;
 	}
 	const userList = await getAvailableUsers();
+	console.log("error", userList);
 
 	const hourlyTaskList = getHourlyTasks(userList.hourly);
 	const dailyTaskList = getDailyTasks(userList.daily);

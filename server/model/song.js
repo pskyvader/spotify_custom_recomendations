@@ -1,4 +1,4 @@
-const { Song, PlaylistSong } = require("../database");
+const { Song } = require("../database");
 const { request, formatSongAPI } = require("../utils");
 
 const createSong = async (access_token, songId, data = null) => {

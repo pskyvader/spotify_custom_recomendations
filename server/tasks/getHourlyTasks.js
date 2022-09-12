@@ -1,6 +1,6 @@
-const { updateRecentSongs } = require(".");
+const { updateRecentSongs } = require("./updateRecentSongs");
 
-const getHourlyTasks = async (userList) => {
+const getHourlyTasks = (userList) => {
 	return userList.map((user) => {
 		return updateRecentSongs(user.access_token, user.id)
 			.then((updateResult) => {

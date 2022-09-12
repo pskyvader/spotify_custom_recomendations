@@ -1,5 +1,5 @@
 const { fn, col, Op } = require("sequelize");
-const { convertTime } = require("../utils");
+// const { convertTime } = require("../utils");
 
 const week = 604800000;
 const updateAverageTimes = async (user) => {

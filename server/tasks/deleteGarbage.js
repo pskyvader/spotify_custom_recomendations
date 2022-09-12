@@ -1,5 +1,11 @@
 const { Op } = require("sequelize");
-const { PlaylistSong, UserSongHistory, Song } = require("../database");
+const {
+	PlaylistSong,
+	UserSongHistory,
+	Song,
+	User,
+	Playlist,
+} = require("../database");
 //week in ms
 const week = 604800000;
 const deleteGarbage = async () => {
