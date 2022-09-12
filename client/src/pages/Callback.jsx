@@ -1,10 +1,10 @@
-import {useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import GetRequest from "../API/Request";
 
 export default function Callback(props) {
 	const [redirect, SetRedirect] = useState(null);
-	const url = "/api/authorize" + useLocation().search;
+	const url = "/authorizeuser" + useLocation().search;
 	useLayoutEffect(() => {
 		GetRequest(url).then((data) => {
 			if (data.error) {
@@ -19,7 +19,7 @@ export default function Callback(props) {
 			).then((response) => {
 				if (!response.error) {
 					GetRequest(
-						"/api/pushtoken?" + new URLSearchParams(response)
+						"/pushtoken?" + new URLSearchParams(response)
 					).then((tokenresponse) => {
 						if (!tokenresponse.loggedin) {
 							SetRedirect("/#error=push_token_error");

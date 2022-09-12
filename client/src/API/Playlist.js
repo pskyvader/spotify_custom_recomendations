@@ -22,12 +22,12 @@ export const LastPlayed = async () => {
 
 export const DeleteSong = async (playlistid, songuri) => {
 	const url = "/api/actions/remove/" + playlistid + "/" + songuri;
-	return GetRequest(url);
+	return GetRequest(url,"POST");
 };
 
 export const AddSong = async (playlistid, songuri) => {
 	const url = "/api/actions/add/" + playlistid + "/" + songuri;
-	return GetRequest(url);
+	return GetRequest(url,"POST");
 };
 
 export const ActivatePlaylist = async (playlistid) => {

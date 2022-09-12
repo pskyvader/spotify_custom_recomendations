@@ -15,11 +15,22 @@ const {
 	pushToken,
 	logOut,
 } = require("./api/user");
-const { getPlaylistsFromAPI } = require("./api/playlist");
+const {
+	getPlaylistsFromAPI,
+	addSongToPlaylist,
+	removeSongFromPlaylistFromAPI,
+} = require("./api/playlist");
 
-const { getPlaylistSongsFromAPI } = require("./api/song");
+const {
+	getPlaylistSongs,
+	getRecommendedSongs,
+	getRecommendedSongsToRemove,
+	getRecentlyPlayedSongs,
+	getDeletedSongs,
+	syncronizePlaylist,
+} = require("./api/song");
 
-const { getPlaylist, updatePlaylist } = require("./model");
+const { getPlaylist, updatePlaylist, getSong } = require("./model");
 
 connection();
 
@@ -115,7 +126,9 @@ app.get("/api/me/playlists", async (_req, res) => {
 	let result = cache.get(`playlists-${user.id}`);
 	if (!result) {
 		result = await getPlaylistsFromAPI(user);
-		cache.set(`playlists-${user.id}`, result, tenMinutes);
+		if (!result.error) {
+			cache.set(`playlists-${user.id}`, result, tenMinutes);
+		}
 	}
 	res.json(result);
 });
@@ -124,12 +137,27 @@ app.get("/api/playlists/get/:playlistId", async (req, res) => {
 	let result = cache.get(`get-playlist-songs-${req.params.playlistId}`);
 	if (!result) {
 		const currentPlaylist = await getPlaylist(user, req.params.playlistId);
-		result = await getPlaylistSongsFromAPI(user, currentPlaylist);
-		cache.set(
-			`get-playlist-songs-${req.params.playlistId}`,
-			result,
-			tenMinutes
-		);
+		let synced = cache.has(`sync-playlist-songs-${req.params.playlistId}`);
+		if (!synced) {
+			synced = await syncronizePlaylist(user, currentPlaylist);
+			if (synced.error) {
+				res.json(synced);
+				return;
+			}
+			cache.set(
+				`sync-playlist-songs-${req.params.playlistId}`,
+				"true",
+				tenMinutes * 6
+			);
+		}
+		result = await getPlaylistSongs(currentPlaylist);
+		if (!result.error) {
+			cache.set(
+				`get-playlist-songs-${req.params.playlistId}`,
+				result,
+				tenMinutes
+			);
+		}
 	}
 	res.json(result);
 });
@@ -153,44 +181,100 @@ app.get("/api/playlist/:playlistId/deactivate", async (req, res) => {
 	res.json(result);
 });
 
-// app.get("/api/playlists/recommended/:playlistId", async (req, res) => {
-// 	const result = await myRecommendedSongs(req.session, req.params.playlistId);
-// 	res.json(result);
-// });
+app.get("/api/playlists/recommended/:playlistId", async (req, res) => {
+	let result = cache.get(`get-playlist-recommended-${req.params.playlistId}`);
+	if (!result) {
+		const playlist = await getPlaylist(user, req.params.playlistId);
+		result = await getRecommendedSongs(user, playlist);
+		if (!result.error) {
+			cache.set(
+				`get-playlist-recommended-${req.params.playlistId}`,
+				result,
+				tenMinutes
+			);
+		}
+	}
 
-// app.get("/api/playlists/deleterecommended/:playlistId", async (req, res) => {
-// 	const result = await myRemoveRecommended(
-// 		req.session,
-// 		req.params.playlistId
-// 	);
-// 	res.json(result);
-// });
-// app.get("/api/playlists/lastplayed", async (req, res) => {
-// 	const result = await getMyRecentSongs(req.session);
-// 	res.json(result);
-// });
+	res.json(result);
+});
 
-// app.get("/api/playlists/deletedsongs/:playlistId", async (req, res) => {
-// 	const result = await getMyDeletedSongs(req.session, req.params.playlistId);
-// 	res.json(result);
-// });
+app.get("/api/playlists/deleterecommended/:playlistId", async (req, res) => {
+	let result = cache.get(
+		`get-playlist-deleterecommended-${req.params.playlistId}`
+	);
+	if (!result) {
+		const playlist = await getPlaylist(user, req.params.playlistId);
+		result = await getRecommendedSongsToRemove(user, playlist);
+		if (!result.error) {
+			cache.set(
+				`get-playlist-deleterecommended-${req.params.playlistId}`,
+				result,
+				tenMinutes
+			);
+		}
+	}
 
-// app.get("/api/actions/add/:playlistid/:songuri", async (req, res) => {
-// 	const result = await addSongPlaylist(
-// 		req.session,
-// 		req.params.songuri,
-// 		req.params.playlistid
-// 	);
-// 	res.json(result);
-// });
-// app.get("/api/actions/remove/:playlistid/:songuri", async (req, res) => {
-// 	const result = await removeSongPlaylist(
-// 		req.session,
-// 		req.params.songuri,
-// 		req.params.playlistid
-// 	);
-// 	res.json(result);
-// });
+	res.json(result);
+});
+
+app.get("/api/playlists/lastplayed", async (_req, res) => {
+	let result = cache.get(`get-lastplayed-${user.id}`);
+	if (!result) {
+		result = await getRecentlyPlayedSongs(user);
+		if (!result.error) {
+			cache.set(`get-lastplayed-${user.id}`, result, tenMinutes);
+		}
+	}
+	res.json(result);
+});
+
+app.get("/api/playlists/deletedsongs/:playlistId", async (req, res) => {
+	let result = cache.get(`get-playlist-deleted-${req.params.playlistId}`);
+	if (!result) {
+		const playlist = await getPlaylist(user, req.params.playlistId);
+		result = await getDeletedSongs(playlist);
+		if (!result.error) {
+			cache.set(
+				`get-playlist-deleted-${req.params.playlistId}`,
+				result,
+				tenMinutes
+			);
+		}
+	}
+	res.json(result);
+});
+
+app.post("/api/actions/add/:playlistId/:songId", async (req, res) => {
+	const playlist = await getPlaylist(user, req.params.playlistId);
+	const song = await getSong(user.access_token, req.params.songId);
+	if (song.error) {
+		res.json(song);
+		return;
+	}
+	const result = await addSongToPlaylist(user, song, playlist);
+	if (!result.error) {
+		cache.del(`get-playlist-songs-${req.params.playlistId}`);
+		cache.del(`get-playlist-recommended-${req.params.playlistId}`);
+		cache.del(`get-playlist-deleted-${req.params.playlistId}`);
+	}
+	res.json(result);
+});
+
+app.post("/api/actions/remove/:playlistId/:songId", async (req, res) => {
+	const playlist = await getPlaylist(user, req.params.playlistId);
+	const song = await getSong(user.access_token, req.params.songId);
+	if (song.error) {
+		res.json(song);
+		return;
+	}
+	const result = await removeSongFromPlaylistFromAPI(user, song, playlist);
+	if (!result.error) {
+		cache.del(`get-playlist-songs-${req.params.playlistId}`);
+		cache.del(`get-playlist-deleterecommended-${req.params.playlistId}`);
+		cache.del(`get-playlist-deleted-${req.params.playlistId}`);
+	}
+	res.json(result);
+});
 
 app.get("/api/*", (req, res) => {
 	res.json({

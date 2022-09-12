@@ -6,11 +6,11 @@ export const LoggedIn = () => {
 };
 
 export const LogOut = () => {
-	const url = "/api/logout";
+	const url = "/logout";
 	return GetRequest(url);
 };
 export const LoginCookies = () => {
-	const url = "/api/logincookie/";
+	const url = "/logincookie/";
 	return GetRequest(url);
 };
 
