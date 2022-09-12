@@ -16,10 +16,10 @@ const createUser = async (session) => {
 	const thisUserById = await User.findByPk(response.id).catch((err) => {
 		return { error: err.message };
 	});
-	if (thisUserById.error) {
-		return thisUserById;
-	}
 	if (thisUserById !== null) {
+		if (thisUserById.error) {
+			return thisUserById;
+		}
 		session.hash = thisUserById.hash;
 	}
 	const updatedata = {
