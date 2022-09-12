@@ -20,7 +20,7 @@ const sequelize = new Sequelize("database", "", "", {
 	// Data is stored in the file `database.sqlite` in the folder `db`.
 	// Note that if you leave your app public, this database file will be copied if
 	// someone forks your app. So don't use it to store sensitive information.
-	storage: path.resolve(__dirname, "..", "databasetext.sqlite"),
+	storage: path.resolve(__dirname, "..", "databasetest.sqlite"),
 });
 
 // const sequelize = new Sequelize(process.env.DATABASE_URL, {
