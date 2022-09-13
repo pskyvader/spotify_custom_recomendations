@@ -1,4 +1,5 @@
 const formatSongAPI = (song) => {
+	console.log(song)
 	const art = song.artists.reduce((previous, artist) => {
 		previous.push(artist.name);
 		return previous;

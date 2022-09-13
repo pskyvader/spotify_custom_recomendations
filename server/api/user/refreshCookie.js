@@ -19,7 +19,7 @@ const requestOptions = (refresh_token) => {
 	};
 };
 
-const refreshCookie = async (_req, currentUser) => {
+const refreshCookie = async (currentUser) => {
 	const refresh_token = currentUser.refresh_token;
 
 	const response = await request(

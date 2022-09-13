@@ -47,8 +47,16 @@ const getUser = async (session) => {
 		where: {
 			[Op.or]: [
 				{ hash: session.hash },
-				{ access_token: session.access_token },
-				{ refresh_token: session.refresh_token },
+				{
+					access_token: session.access_token
+						? session.access_token
+						: "invalid",
+				},
+				{
+					refresh_token: session.refresh_token
+						? session.refresh_token
+						: "invalid",
+				},
 			],
 		},
 	});
@@ -60,7 +68,7 @@ const getUser = async (session) => {
 };
 
 const updateUser = async (session) => {
-	const currentUser = getUser(session);
+	const currentUser = await getUser(session);
 	if (currentUser.error) {
 		return currentUser;
 	}
@@ -81,7 +89,7 @@ const updateUser = async (session) => {
 };
 
 const deleteUser = async (session) => {
-	const currentUser = getUser(session);
+	const currentUser = await getUser(session);
 	if (currentUser.error) {
 		return currentUser;
 	}

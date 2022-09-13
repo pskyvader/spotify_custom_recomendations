@@ -23,8 +23,7 @@ const getAvailableUsers = async () => {
 		console.log("-----");
 		console.log(`User ${user.name} (${user.id})`);
 		if (user.expiration < Date.now() + tenMinutes) {
-			const falseReq = { session: { access_token: user.access_token } };
-			const result = await refreshCookie(falseReq, user);
+			const result = await refreshCookie(user);
 			if (result.error) {
 				console.error(`access token error, cannot continue`);
 				continue;

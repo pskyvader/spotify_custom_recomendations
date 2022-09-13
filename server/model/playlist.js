@@ -25,6 +25,7 @@ const getPlaylist = async (user, idplaylist) => {
 	if (currentPlaylist !== null) {
 		return currentPlaylist;
 	}
+
 	return createPlaylist(user, idplaylist, false);
 };
 

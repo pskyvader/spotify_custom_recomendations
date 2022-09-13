@@ -15,11 +15,11 @@ const getPlaylistsFromAPI = async (user) => {
 	}
 
 	const filtered = playlists.filter(
-		(currentPlaylist) => user.id === currentPlaylist.owner.id
+		(currentPlaylist) => user.id === parseInt(currentPlaylist.owner.id)
 	);
 
 	const playlistsPromises = filtered.map((currentPlaylist) => {
-		return getPlaylist(user,currentPlaylist.id);
+		return getPlaylist(user, currentPlaylist.id);
 	});
 	return Promise.all(playlistsPromises);
 };

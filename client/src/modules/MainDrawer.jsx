@@ -18,33 +18,30 @@ const DrawerItems = () => {
 	const { profile } = useContext(ProfileContext);
 	let history = useHistory();
 	const { playlistid } = useParams();
+	console.log(playlists);
 
 	if (!profile) return "Profile Error";
 	if (!playlists) return "Playlists Error";
 	if (!profile || !playlists) return null;
 
-	return playlists
-		.filter((currentPlaylist) => currentPlaylist.active)
-		.map((currentPlaylist) => {
-			return (
-				<ListItemButton
-					disabled={!currentPlaylist.active}
-					key={currentPlaylist.id}
-					selected={playlistid === currentPlaylist.id}
-					onClick={() =>
-						history.push("/playlist/" + currentPlaylist.id)
-					}
-				>
-					<ListItemIcon>
-						<Avatar
-							alt={currentPlaylist.name}
-							src={currentPlaylist.image}
-						/>
-					</ListItemIcon>
-					<ListItemText primary={currentPlaylist.name} />
-				</ListItemButton>
-			);
-		});
+	return playlists.map((currentPlaylist) => {
+		return (
+			<ListItemButton
+				// disabled={!currentPlaylist.active}
+				key={currentPlaylist.id}
+				selected={playlistid === currentPlaylist.id}
+				onClick={() => history.push("/playlist/" + currentPlaylist.id)}
+			>
+				<ListItemIcon>
+					<Avatar
+						alt={currentPlaylist.name}
+						src={currentPlaylist.image}
+					/>
+				</ListItemIcon>
+				<ListItemText primary={currentPlaylist.name} />
+			</ListItemButton>
+		);
+	});
 };
 
 const DrawerList = (props) => (
