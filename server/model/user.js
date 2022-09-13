@@ -59,6 +59,9 @@ const getUser = async (session) => {
 				},
 			],
 		},
+	}).catch((err) => {
+		console.error(err);
+		return { error: true, message: err.message };
 	});
 
 	if (thisUser !== null) {

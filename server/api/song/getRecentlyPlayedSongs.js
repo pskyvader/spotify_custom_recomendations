@@ -1,11 +1,11 @@
 const { Op } = require("sequelize");
-const { PlaylistSong } = require("../../database");
+const { UserSongHistory } = require("../../database");
 const getRecentlyPlayedSongs = async (user, date = 0) => {
 	return user
 		.getSongs({
 			include: [
 				{
-					model: PlaylistSong,
+					model: UserSongHistory,
 					where: {
 						played_date: { [Op.gte]: date },
 					},

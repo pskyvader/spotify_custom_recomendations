@@ -100,7 +100,7 @@ const connection = async () => {
 		console.log("Connection has been established successfully.");
 		// sequelize.sync({ force: true});
 		// sequelize.sync({ alter: true });
-		// sequelize.sync();
+		sequelize.sync().then(() => console.log("Successfully Synced"));
 	} catch (error) {
 		console.error("Unable to connect to the database:", error);
 	}

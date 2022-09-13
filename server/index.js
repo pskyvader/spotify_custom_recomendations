@@ -138,11 +138,12 @@ app.get("/api/me/playlists", async (_req, res) => {
 app.get("/api/playlists/get/:playlistId", async (req, res) => {
 	let result = cache.get(`get-playlist-songs-${req.params.playlistId}`);
 	if (!result) {
-		const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+		let currentPlaylist = await getPlaylist(user, req.params.playlistId);
 		let synced = cache.has(`sync-playlist-songs-${req.params.playlistId}`);
 		if (!synced) {
 			synced = await syncronizePlaylist(user, currentPlaylist);
 			if (synced.error) {
+				console.error("sync error", synced);
 				res.json(synced);
 				return;
 			}
@@ -151,6 +152,7 @@ app.get("/api/playlists/get/:playlistId", async (req, res) => {
 				"true",
 				tenMinutes * 6
 			);
+			currentPlaylist = await getPlaylist(user, req.params.playlistId);
 		}
 		result = await getPlaylistSongs(currentPlaylist);
 		if (!result.error) {
@@ -190,7 +192,7 @@ app.get("/api/playlists/recommended/:playlistId", async (req, res) => {
 		const playlist = await getPlaylist(user, req.params.playlistId);
 		result = await getRecommendedSongs(user, playlist);
 		if (!result.error) {
-			result = result.map((song) => song.toJSON());
+			// result = result.map((song) => song.toJSON());
 			cache.set(
 				`get-playlist-recommended-${req.params.playlistId}`,
 				result,

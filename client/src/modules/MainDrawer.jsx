@@ -18,7 +18,6 @@ const DrawerItems = () => {
 	const { profile } = useContext(ProfileContext);
 	let history = useHistory();
 	const { playlistid } = useParams();
-	console.log(playlists);
 
 	if (!profile) return "Profile Error";
 	if (!playlists) return "Playlists Error";

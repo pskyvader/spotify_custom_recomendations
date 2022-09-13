@@ -4,8 +4,8 @@ const createPlaylistSong = async (playlist, song) => {
 		add_date: Date.now(),
 		removed_date: null,
 		active: true,
-		playlistId: playlist.id,
-		songId: song.id,
+		PlaylistId: playlist.id,
+		SongId: song.id,
 	}).catch((err) => {
 		console.error(err.message);
 		return { error: err.message };

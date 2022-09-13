@@ -41,14 +41,19 @@ const syncronizePlaylist = async (user, playlist) => {
 		);
 	});
 	return Promise.all(syncronizeSongsPromise)
-		.then(Promise.all(syncronizeRemoveSongListPromise), {
-			error: true,
-			message: "Syncronize Remove songs error",
-		})
-		.then(Promise.all(syncronizeAddSongListPromise), {
-			error: true,
-			message: "Syncronize Add songs error",
-		})
+		.then(
+			Promise.all(syncronizeRemoveSongListPromise).then(
+				Promise.all(syncronizeAddSongListPromise),
+				{
+					error: true,
+					message: "Syncronize Add songs error",
+				}
+			),
+			{
+				error: true,
+				message: "Syncronize Remove songs error",
+			}
+		)
 		.finally({
 			error: false,
 			message: "Syncronize completed",
