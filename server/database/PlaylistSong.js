@@ -1,5 +1,12 @@
 const { DataTypes } = require("sequelize");
 const PlaylistSongConfiguration = {
+	id: {
+		type: DataTypes.BIGINT,
+		autoIncrement: true,
+		allowNull: false,
+		primaryKey: true,
+		unique: true,
+	},
 	add_date: {
 		type: DataTypes.DATE,
 		allowNull: false,
