@@ -34,21 +34,21 @@ const syncronizePlaylist = async (user, playlist) => {
 	);
 
 	const syncronizeAddSongListPromise = songListUpdated.map((currentSong) => {
-		return getPlaylistSong(playlist, currentSong);
+		return getSong(user.access_token, currentSong.id, currentSong).then(
+			(newsong) => {
+				return getPlaylistSong(playlist, newsong);
+			}
+		);
 	});
 	return Promise.all(syncronizeSongsPromise)
-		.then(
-			() => {
-				return Promise.all(syncronizeRemoveSongListPromise);
-			},
-			{ error: true, message: "Syncronize Remove songs error" }
-		)
-		.then(
-			() => {
-				return Promise.all(syncronizeAddSongListPromise);
-			},
-			{ error: true, message: "Syncronize Add songs error" }
-		)
+		.then(Promise.all(syncronizeRemoveSongListPromise), {
+			error: true,
+			message: "Syncronize Remove songs error",
+		})
+		.then(Promise.all(syncronizeAddSongListPromise), {
+			error: true,
+			message: "Syncronize Add songs error",
+		})
 		.finally({
 			error: false,
 			message: "Syncronize completed",

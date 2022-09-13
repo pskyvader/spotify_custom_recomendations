@@ -36,18 +36,6 @@ const refreshCookie = async (currentUser) => {
 			refresh_token: refresh_token,
 			expiration: Date.now() + response.expires_in * 1000,
 		};
-		// req.session.loggedin = true;
-		// req.session.access_token = meProfileResult.access_token;
-		// req.session.refresh_token = meProfileResult.refresh_token;
-		// req.session.expiration = meProfileResult.expiration;
-
-		// User.update(meProfileResult, {
-		// 	where: {
-		// 		id: currentUser.id,
-		// 	},
-		// });
-		// meProfileResult.loggedin = true;
-		// return meProfileResult;
 	}
 	return response;
 };

@@ -1,10 +1,17 @@
+const { PlaylistSong } = require("../../database");
 const getDeletedSongs = async (playlist) => {
 	return playlist
 		.getSongs({
-			where: {
-				active: false,
-			},
-			order: [["removed_date", "DESC"]],
+			include: [
+				{
+					model: PlaylistSong,
+					where: {
+						active: false,
+					},
+					order: [["removed_date", "DESC"]],
+				},
+			],
+
 			// raw: true,
 			// nest: true,
 		})

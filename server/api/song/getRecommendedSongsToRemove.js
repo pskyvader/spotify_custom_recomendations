@@ -1,41 +1,57 @@
 const { Op } = require("sequelize");
+const { UserSongHistory, PlaylistSong } = require("../../database");
 
 //week in ms
 const week = 604800000;
 
 const getRecommendedSongsToRemove = async (user, playlist) => {
-	const NeverPlayedSongs = await user.getSongs({
-		where: {
-			played_date: null,
-		},
-	});
-	const OldPlayedSongs = await user.getSongs({
-		where: {
-			played_date: {
-				[Op.lte]: Date.now() - 3 * week,
-			},
-		},
-		order: [["played_date", "ASC"]],
-	});
-	neverPlayedSongs.push(...OldPlayedSongs);
-
-	const OldAddedSongs = await playlist
-		.getSongs({
-			where: {
-				add_date: {
-					[Op.lte]: Date.now() - 1 * week,
+	const neverPlayedSongs = await user.getSongs({
+		include: [
+			{
+				model: UserSongHistory,
+				where: {
+					played_date: null,
 				},
 			},
+		],
+	});
+	const oldPlayedSongs = await user.getSongs({
+		include: [
+			{
+				model: UserSongHistory,
+				where: {
+					played_date: {
+						[Op.lte]: Date.now() - 3 * week,
+					},
+				},
+				order: [["played_date", "ASC"]],
+			},
+		],
+	});
+	neverPlayedSongs.push(...oldPlayedSongs);
+
+	const oldAddedSongs = await playlist
+		.getSongs({
+			include: [
+				{
+					model: PlaylistSong,
+					where: {
+						add_date: {
+							[Op.lte]: Date.now() - 1 * week,
+						},
+					},
+				},
+			],
 			// raw: true,
 			// nest: true,
 		})
 		.catch((err) => {
 			return { error: err.message };
 		})
-		.then(oldsongs.map((song) => song.id));
+		.then((oldsongs) => oldsongs.map((song) => song.id));
 
-	const recommendedForRemove = NeverPlayedSongs.filter((song) =>
-		OldAddedSongs.includes(song.Song.id)
+	const recommendedForRemove = neverPlayedSongs.filter((song) =>
+		oldAddedSongs.includes(song.Song.id)
 	);
 
 	return recommendedForRemove.slice(0, 15);
