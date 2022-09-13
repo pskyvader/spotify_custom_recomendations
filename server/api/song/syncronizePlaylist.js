@@ -39,13 +39,13 @@ const syncronizePlaylist = async (user, playlist) => {
 	return Promise.all(syncronizeSongsPromise)
 		.then(
 			() => {
-				Promise.all(syncronizeRemoveSongListPromise);
+				return Promise.all(syncronizeRemoveSongListPromise);
 			},
 			{ error: true, message: "Syncronize Remove songs error" }
 		)
 		.then(
 			() => {
-				Promise.all(syncronizeAddSongListPromise);
+				return Promise.all(syncronizeAddSongListPromise);
 			},
 			{ error: true, message: "Syncronize Add songs error" }
 		)

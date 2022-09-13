@@ -1,5 +1,4 @@
 const formatSongAPI = (song) => {
-	console.log(song)
 	const art = song.artists.reduce((previous, artist) => {
 		previous.push(artist.name);
 		return previous;
@@ -9,11 +8,12 @@ const formatSongAPI = (song) => {
 	return {
 		id: song.id,
 		name: song.name,
-		image: song.images[0].url,
+		image: song.album.images[0].url,
 		artist: art.join(", "),
 		idartist: idartist,
 		album: song.album.name,
 		duration: song.duration_ms,
+		preview: song.preview_url,
 	};
 };
 const formatSongAPIList = (songList) => {
@@ -22,22 +22,4 @@ const formatSongAPIList = (songList) => {
 		return formatSongAPI(currentSong);
 	});
 };
-
-// const songIdFromURI = (songuri) => {
-// 	const split = songuri.split(":");
-// 	return split.pop();
-// };
-
-// const formatSong = (song) => {
-// 	return {
-// 		id: song.id,
-// 		uniqueid: song.uniqueid,
-// 		name: song.name,
-// 		artist: song.artist,
-// 		idartist: song.idartist,
-// 		album: song.album,
-// 		duration: song.duration,
-// 	};
-// };
-
 module.exports = { formatSongAPI, formatSongAPIList };
