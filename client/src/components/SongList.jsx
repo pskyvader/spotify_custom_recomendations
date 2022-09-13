@@ -23,7 +23,7 @@ export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 		{ field: "artist", headerName: "Artist", minWidth: 200, flex: 1 },
 		{ field: "album", headerName: "Album", minWidth: 200, flex: 1 },
 		{
-			field: "action",
+			field: "id",
 			headerName: "",
 			minWidth: 120,
 			flex: 1,

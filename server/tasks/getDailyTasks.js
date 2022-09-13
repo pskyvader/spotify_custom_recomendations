@@ -11,12 +11,17 @@ const getDailyTasks = (userList) => {
 		const averageListeningTime = updateAverageTimes(user);
 		const SyncSongsResponse = syncronizeMultiplePlaylists(user);
 		const removeResponse = removeFromPlaylist(user, songsToModify);
-		const addResponse = addToPlaylist(user, songsToModify);
+		// const addResponse = addToPlaylist(user, songsToModify);
 
 		return averageListeningTime
 			.then(SyncSongsResponse)
-			.then(removeResponse)
-			.then(addResponse)
+			.then(
+				removeResponse.then(
+					(result) =>
+						addToPlaylist(user, songsToModify, result.removedTotal) // removedTotal: avoid adding too many songs to the playlist if it's already over the limit
+				)
+			)
+
 			.then(() => {
 				user.set({ last_modified_daily: Date.now() });
 				user.save();

@@ -4,7 +4,7 @@ const { getPlaylistSong } = require("../../model");
 const addSongToPlaylist = async (user, song, playlist) => {
 	const url =
 		"https://api.spotify.com/v1/playlists/" + playlist.id + "/tracks";
-	const songs = { uris: [song.id], position: 0 };
+	const songs = { uris: [`spotify:track:${song.id}`], position: 0 };
 
 	const response = await request(
 		user.access_token,

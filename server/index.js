@@ -23,6 +23,7 @@ const {
 
 const {
 	getPlaylistSongs,
+	getPlaylistSongsFromAPI,
 	getRecommendedSongs,
 	getRecommendedSongsToRemove,
 	getRecentlyPlayedSongs,
@@ -154,9 +155,10 @@ app.get("/api/playlists/get/:playlistId", async (req, res) => {
 			);
 			currentPlaylist = await getPlaylist(user, req.params.playlistId);
 		}
-		result = await getPlaylistSongs(currentPlaylist);
+		result = await getPlaylistSongsFromAPI(user, currentPlaylist);
+		// result = await getPlaylistSongs(currentPlaylist);
 		if (!result.error) {
-			result = result.map((song) => song.toJSON());
+			// result = result.map((song) => song.toJSON());
 			cache.set(
 				`get-playlist-songs-${req.params.playlistId}`,
 				result,
@@ -262,9 +264,47 @@ app.post("/api/actions/add/:playlistId/:songId", async (req, res) => {
 	}
 	const result = await addSongToPlaylist(user, song, playlist);
 	if (!result.error) {
-		cache.del(`get-playlist-songs-${req.params.playlistId}`);
-		cache.del(`get-playlist-recommended-${req.params.playlistId}`);
-		cache.del(`get-playlist-deleted-${req.params.playlistId}`);
+		const cacheplaylist = cache.get(
+			`get-playlist-songs-${req.params.playlistId}`
+		);
+		if (cacheplaylist) {
+			cacheplaylist.unshift(song.toJSON());
+			cache.set(
+				`get-playlist-songs-${req.params.playlistId}`,
+				cacheplaylist,
+				tenMinutes
+			);
+			// cache.del(`get-playlist-songs-${req.params.playlistId}`);
+		}
+		const cacherecommended = cache.get(
+			`get-playlist-recommended-${req.params.playlistId}`
+		);
+		if (cacherecommended) {
+			const newcacherecommended = cacherecommended.filter((cachesong) => {
+				return cachesong.id !== song.id;
+			});
+			cache.set(
+				`get-playlist-recommended-${req.params.playlistId}`,
+				newcacherecommended,
+				tenMinutes
+			);
+			// cache.del(`get-playlist-recommended-${req.params.playlistId}`);
+		}
+		const cacheredeleted = cache.get(
+			`get-playlist-redeleted-${req.params.playlistId}`
+		);
+		if (cacheredeleted) {
+			const newcacheredeleted = cacheredeleted.filter((cachesong) => {
+				return cachesong.id !== song.id;
+			});
+			cache.set(
+				`get-playlist-deleted-${req.params.playlistId}`,
+				newcacheredeleted,
+				tenMinutes
+			);
+
+			// cache.del(`get-playlist-deleted-${req.params.playlistId}`);
+		}
 	}
 	res.json(result);
 });

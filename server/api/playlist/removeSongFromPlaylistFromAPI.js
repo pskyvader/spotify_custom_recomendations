@@ -6,7 +6,7 @@ const removeSongFromPlaylistFromAPI = async (user, song, playlist) => {
 		"https://api.spotify.com/v1/playlists/" + playlist.id + "/tracks";
 
 	const songs = {
-		tracks: [{ uri: song.id }],
+		tracks: [{ uri: `spotify:track:${song.id}` }],
 	};
 
 	const response = await request(

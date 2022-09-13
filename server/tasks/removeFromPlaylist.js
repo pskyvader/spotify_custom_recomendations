@@ -8,7 +8,7 @@ const _MAX_SONGS_PER_PLAYLIST = 200;
 const _MIN_SONGS_PER_PLAYLIST = 50;
 
 const removeFromSinglePlaylist = async (user, playlist, songsToRemove) => {
-	const responseMessage = [];
+	const response = { error: false, message: [], removedTotal: 0 };
 	const playlistSongsList = await getPlaylistSongs(playlist);
 	if (playlistSongsList.error) {
 		return playlistSongsList;
@@ -25,7 +25,7 @@ const removeFromSinglePlaylist = async (user, playlist, songsToRemove) => {
 		songsToRemove += 2;
 	}
 
-	responseMessage.push(
+	response.message.push(
 		`Max songs available for deletion: ${songlist.length} of ${playlistSongsList.length}, will attempt to remove a max of ${songsToRemove}`
 	);
 
@@ -40,25 +40,30 @@ const removeFromSinglePlaylist = async (user, playlist, songsToRemove) => {
 			playlist
 		);
 		if (removeResponse.error) {
-			responseMessage.push(
+			response.message.push(
 				`Error removing song ${songInList.name} from playlist ${playlist.name}`
 			);
-			responseMessage.push(JSON.stringify(removeResponse));
+			response.message.push(JSON.stringify(removeResponse));
 			continue;
 		}
-		responseMessage.push(`Removed song: ${songInList.name}`);
+		response.message.push(`Removed song: ${songInList.name}`);
+		response.removedTotal += 1;
 		i++;
 	}
-	return responseMessage;
+	return response.message;
 };
 
 const removeFromPlaylist = async (user, songsToRemove) => {
-	const response = { error: false, message: [] };
+	const response = { error: false, message: [], removedTotal: {} };
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	for (const playlist of playlists) {
-		response.message.push(
-			await removeFromSinglePlaylist(user, playlist, songsToRemove)
+		const singleResponse = await removeFromSinglePlaylist(
+			user,
+			playlist,
+			songsToRemove
 		);
+		response.message.push(...singleResponse.message);
+		response.removedTotal[playlist.id] = singleResponse.removedTotal;
 	}
 	return response;
 };

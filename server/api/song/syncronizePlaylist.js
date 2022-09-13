@@ -11,10 +11,14 @@ const syncronizePlaylist = async (user, playlist) => {
 	const currentSongList = await getPlaylistSongs(playlist);
 	const songListUpdated = await getPlaylistSongsFromAPI(user, playlist);
 
-	//DB song, not playlist-song
+	//it's not playlist-song, only "Song" in database
 	const syncronizeSongsPromise = songListUpdated.map((currentSong) => {
 		return getSong(user.access_token, currentSong.id, currentSong);
 	});
+
+	const currentSongListIds = currentSongList.map(
+		(currentSong) => currentSong.id
+	);
 
 	const songListUpdatedIds = songListUpdated.map(
 		(currentSong) => currentSong.id
@@ -34,6 +38,9 @@ const syncronizePlaylist = async (user, playlist) => {
 	);
 
 	const syncronizeAddSongListPromise = songListUpdated.map((currentSong) => {
+		if (currentSongListIds.includes(currentSong.id)) {
+			return null;
+		}
 		return getSong(user.access_token, currentSong.id, currentSong).then(
 			(newsong) => {
 				return getPlaylistSong(playlist, newsong);
