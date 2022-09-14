@@ -3,12 +3,10 @@ import { Playlist } from "../API";
 import { useContext } from "react";
 import { PlaylistContext } from "../context/PlaylistContextProvider";
 
-const ButtonRemoveSong = ({ PlaylistId, uri, id }) => {
+const ButtonRemoveSong = ({ PlaylistId, uri }) => {
 	const {
 		playlistTracks,
 		setPlaylistTracks,
-		playlistRecommendedTracks,
-		setPlaylistRecommendedTracks,
 		playlistDeleteTracks,
 		setPlaylistDeleteTracks,
 		playlistDeletedSongs,
@@ -22,17 +20,40 @@ const ButtonRemoveSong = ({ PlaylistId, uri, id }) => {
 						console.log(response);
 						return;
 					}
-					delete playlistTracks[PlaylistId];
-					setPlaylistTracks({ ...playlistTracks });
-					delete playlistRecommendedTracks[PlaylistId];
-					setPlaylistRecommendedTracks({
-						...playlistRecommendedTracks,
+
+					const playlistFiltered = playlistTracks[PlaylistId].filter(
+						(song) => {
+							return response.song.id !== song.id;
+						}
+					);
+					if (
+						playlistTracks[PlaylistId].length !==
+						playlistFiltered.length
+					) {
+						playlistTracks[PlaylistId] = playlistFiltered;
+						setPlaylistTracks({ ...playlistTracks });
+					}
+
+					const deleterecommendedfiltered = playlistDeleteTracks[
+						PlaylistId
+					].filter((song) => {
+						return response.song.id !== song.id;
 					});
-					delete playlistDeleteTracks[PlaylistId];
-					setPlaylistDeleteTracks({
-						...playlistDeleteTracks,
-					});
-					delete playlistDeletedSongs[PlaylistId];
+					if (
+						playlistDeleteTracks[PlaylistId].length !==
+						deleterecommendedfiltered.length
+					) {
+						playlistDeleteTracks[PlaylistId] =
+							deleterecommendedfiltered;
+						setPlaylistDeleteTracks({
+							...playlistDeleteTracks,
+						});
+					}
+
+					playlistDeletedSongs[PlaylistId] = [
+						response.song,
+						...playlistDeletedSongs[PlaylistId],
+					];
 					setPlaylistDeletedSongs({
 						...playlistDeletedSongs,
 					});

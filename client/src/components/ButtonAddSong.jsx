@@ -9,8 +9,6 @@ const ButtonAddSong = ({ PlaylistId, uri }) => {
 		setPlaylistTracks,
 		playlistRecommendedTracks,
 		setPlaylistRecommendedTracks,
-		playlistDeleteTracks,
-		setPlaylistDeleteTracks,
 		playlistDeletedSongs,
 		setPlaylistDeletedSongs,
 	} = useContext(PlaylistContext);
@@ -23,20 +21,42 @@ const ButtonAddSong = ({ PlaylistId, uri }) => {
 						console.log(response);
 						return;
 					}
-					delete playlistTracks[PlaylistId];
+					playlistTracks[PlaylistId] = [
+						response.song,
+						...playlistTracks[PlaylistId],
+					];
 					setPlaylistTracks({ ...playlistTracks });
-					delete playlistRecommendedTracks[PlaylistId];
-					setPlaylistRecommendedTracks({
-						...playlistRecommendedTracks,
+
+					const recommendedfiltered = playlistRecommendedTracks[
+						PlaylistId
+					].filter((song) => {
+						return response.song.id !== song.id;
 					});
-					delete playlistDeleteTracks[PlaylistId];
-					setPlaylistDeleteTracks({
-						...playlistDeleteTracks,
+					if (
+						playlistRecommendedTracks[PlaylistId].length !==
+						recommendedfiltered.length
+					) {
+						playlistRecommendedTracks[PlaylistId] =
+							recommendedfiltered;
+						setPlaylistRecommendedTracks({
+							...playlistRecommendedTracks,
+						});
+					}
+
+					const deletedfiltered = playlistDeletedSongs[
+						PlaylistId
+					].filter((song) => {
+						return response.song.id !== song.id;
 					});
-					delete playlistDeletedSongs[PlaylistId];
-					setPlaylistDeletedSongs({
-						...playlistDeletedSongs,
-					});
+					if (
+						playlistDeletedSongs[PlaylistId].length !==
+						deletedfiltered.length
+					) {
+						playlistDeletedSongs[PlaylistId] = deletedfiltered;
+						setPlaylistDeletedSongs({
+							...playlistDeletedSongs,
+						});
+					}
 				});
 			}}
 		>

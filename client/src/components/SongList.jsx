@@ -5,15 +5,8 @@ export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 	const renderCell =
 		PlaylistId !== null && ActionButton !== null
 			? (cellData) => {
-					const id = cellData.id;
 					const uri = cellData.formattedValue;
-					return (
-						<ActionButton
-							PlaylistId={PlaylistId}
-							uri={uri}
-							id={id}
-						/>
-					);
+					return <ActionButton PlaylistId={PlaylistId} uri={uri} />;
 			  }
 			: null;
 
@@ -37,14 +30,13 @@ export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 	};
 };
 
-
 const SongList = ({ data, title = "title" }) => {
 	return (
 		<DataGrid
 			// autoPageSize={true}
 			// hideFooter
 			pageSize={100}
-			rowsPerPageOptions={[10,25,50,100,200,1000]}
+			rowsPerPageOptions={[10, 25, 50, 100, 200, 1000]}
 			disableSelectionOnClick
 			components={{
 				Toolbar: () => {
