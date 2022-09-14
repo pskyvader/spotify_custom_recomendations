@@ -12,6 +12,14 @@ const updateRecentSongs = async (user) => {
 		const found = recentUserSongs.find((usersong) => {
 			return usersong.id === song.id;
 		});
+		if (found !== undefined) {
+			console.log(
+				found.UserSongHistory.played_date,
+				found.played_date,
+				song.played_date
+			);
+		}
+
 		return found === undefined || found.played_date !== song.played_date;
 	});
 
