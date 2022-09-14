@@ -18,6 +18,7 @@ const ButtonAddSong = ({ PlaylistId, uri }) => {
 		<Button
 			onClick={() => {
 				Playlist.AddSong(PlaylistId, uri).then((response) => {
+					console.log(response, playlistTracks[PlaylistId]);
 					if (response.error) {
 						console.log(response);
 						return;

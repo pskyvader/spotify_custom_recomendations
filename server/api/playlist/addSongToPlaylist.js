@@ -23,6 +23,7 @@ const addSongToPlaylist = async (user, song, playlist) => {
 	return {
 		message: "success",
 		snapshot_id: response.snapshot_id,
+		song: song.toJSON(),
 	};
 };
 

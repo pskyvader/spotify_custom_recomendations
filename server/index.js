@@ -142,23 +142,20 @@ app.get("/api/playlists/get/:playlistId", async (req, res) => {
 		let currentPlaylist = await getPlaylist(user, req.params.playlistId);
 		let synced = cache.has(`sync-playlist-songs-${req.params.playlistId}`);
 		if (!synced) {
-			synced = await syncronizePlaylist(user, currentPlaylist);
-			if (synced.error) {
-				console.error("sync error", synced);
-				res.json(synced);
-				return;
-			}
-			cache.set(
-				`sync-playlist-songs-${req.params.playlistId}`,
-				"true",
-				tenMinutes * 6
-			);
-			currentPlaylist = await getPlaylist(user, req.params.playlistId);
+			syncronizePlaylist(user, currentPlaylist).then((syncedSongs) => {
+				if (syncedSongs.error) {
+					console.error("sync error", syncedSongs);
+					return;
+				}
+				cache.set(
+					`sync-playlist-songs-${req.params.playlistId}`,
+					"true",
+					tenMinutes * 6
+				);
+			});
 		}
 		result = await getPlaylistSongsFromAPI(user, currentPlaylist);
-		// result = await getPlaylistSongs(currentPlaylist);
 		if (!result.error) {
-			// result = result.map((song) => song.toJSON());
 			cache.set(
 				`get-playlist-songs-${req.params.playlistId}`,
 				result,
@@ -274,7 +271,6 @@ app.post("/api/actions/add/:playlistId/:songId", async (req, res) => {
 				cacheplaylist,
 				tenMinutes
 			);
-			// cache.del(`get-playlist-songs-${req.params.playlistId}`);
 		}
 		const cacherecommended = cache.get(
 			`get-playlist-recommended-${req.params.playlistId}`
@@ -288,10 +284,9 @@ app.post("/api/actions/add/:playlistId/:songId", async (req, res) => {
 				newcacherecommended,
 				tenMinutes
 			);
-			// cache.del(`get-playlist-recommended-${req.params.playlistId}`);
 		}
 		const cacheredeleted = cache.get(
-			`get-playlist-redeleted-${req.params.playlistId}`
+			`get-playlist-deleted-${req.params.playlistId}`
 		);
 		if (cacheredeleted) {
 			const newcacheredeleted = cacheredeleted.filter((cachesong) => {
@@ -302,8 +297,6 @@ app.post("/api/actions/add/:playlistId/:songId", async (req, res) => {
 				newcacheredeleted,
 				tenMinutes
 			);
-
-			// cache.del(`get-playlist-deleted-${req.params.playlistId}`);
 		}
 	}
 	res.json(result);
@@ -318,9 +311,53 @@ app.post("/api/actions/remove/:playlistId/:songId", async (req, res) => {
 	}
 	const result = await removeSongFromPlaylistFromAPI(user, song, playlist);
 	if (!result.error) {
-		cache.del(`get-playlist-songs-${req.params.playlistId}`);
-		cache.del(`get-playlist-deleterecommended-${req.params.playlistId}`);
-		cache.del(`get-playlist-deleted-${req.params.playlistId}`);
+		const cacheplaylist = cache.get(
+			`get-playlist-songs-${req.params.playlistId}`
+		);
+		if (cacheplaylist) {
+			const newcacheplaylist = cacheplaylist.filter((cachesong) => {
+				return cachesong.id !== song.id;
+			});
+			cache.set(
+				`get-playlist-songs-${req.params.playlistId}`,
+				newcacheplaylist,
+				tenMinutes
+			);
+			// cache.del(`get-playlist-songs-${req.params.playlistId}`);
+		}
+		const cachedeleterecommended = cache.get(
+			`get-playlist-deleterecommended-${req.params.playlistId}`
+		);
+		if (cachedeleterecommended) {
+			const newcachedeleterecommended = cachedeleterecommended.filter(
+				(cachesong) => {
+					return cachesong.id !== song.id;
+				}
+			);
+			cache.set(
+				`get-playlist-deleterecommended-${req.params.playlistId}`,
+				newcachedeleterecommended,
+				tenMinutes
+			);
+			// cache.del(`get-playlist-deleterecommended-${req.params.playlistId}`);
+		}
+
+		const cachedeleted = cache.get(
+			`get-playlist-deleted-${req.params.playlistId}`
+		);
+
+		if (cachedeleted) {
+			// cachedeleted.unshift(song.toJSON());
+			// const newcachedeleted = cachedeleted.filter((cachesong) => {
+			// 	return cachesong.id !== song.id;
+			// });
+			// cache.set(
+			// 	`get-playlist-deleted-${req.params.deletedId}`,
+			// 	newcachedeleted,
+			// 	tenMinutes
+			// );
+			cache.del(`get-playlist-deleted-${req.params.playlistId}`);
+		}
 	}
 	res.json(result);
 });

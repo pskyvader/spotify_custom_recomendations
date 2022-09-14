@@ -19,16 +19,21 @@ const removeSongFromPlaylistFromAPI = async (user, song, playlist) => {
 		return response;
 	}
 	const deleteData = {
-		removed: true,
+		active: false,
 		removed_date: Date.now(),
 	};
-	const deletedSong = await updatePlaylistSong(playlist, song, deleteData);
+	const deletedSong = await updatePlaylistSong(
+		playlist.id,
+		song.id,
+		deleteData
+	);
 	if (deletedSong.error) {
 		return deletedSong;
 	}
 	return {
 		message: "success",
 		snapshot_id: response.snapshot_id,
+		song: song.toJSON(),
 	};
 };
 

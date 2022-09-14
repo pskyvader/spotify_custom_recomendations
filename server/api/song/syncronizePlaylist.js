@@ -33,7 +33,7 @@ const syncronizePlaylist = async (user, playlist) => {
 				active: false,
 				removed_date: Date.now(),
 			};
-			return updatePlaylistSong(playlist, currentSong, deleteData);
+			return updatePlaylistSong(playlist.id, currentSong.id, deleteData);
 		}
 	);
 

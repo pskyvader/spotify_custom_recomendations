@@ -1,4 +1,4 @@
-const { PlaylistSong } = require("../database");
+const { PlaylistSong, Song } = require("../database");
 const createPlaylistSong = async (playlist, song) => {
 	const [newplaylistsong] = await PlaylistSong.upsert({
 		add_date: Date.now(),
@@ -37,10 +37,15 @@ const updatePlaylistSong = async (
 ) => {
 	const currentPlaylistSong = await PlaylistSong.findOne({
 		where: { PlaylistId: idplaylist, SongId: idsong },
+		include: [Song],
 	}).catch((err) => {
-		console.error(err.message);
-		return { error: err.message };
+		console.error("find playlist song error ", err);
+		return { error: true, message: err.message };
 	});
+
+	if (currentPlaylistSong === null) {
+		return { error: true, message: "Song in playlists not found" };
+	}
 	if (currentPlaylistSong.error) {
 		return currentPlaylistSong;
 	}
@@ -51,6 +56,7 @@ const updatePlaylistSong = async (
 	if (playlistSongSaved.error) {
 		return playlistSongSaved;
 	}
+
 	currentPlaylistSong.Song.set({ last_time_used: Date.now() });
 	currentPlaylistSong.Song.save();
 
