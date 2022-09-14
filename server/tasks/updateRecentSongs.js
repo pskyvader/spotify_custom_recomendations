@@ -1,26 +1,21 @@
-const {
-	getRecentlyPlayedSongsFromAPI,
-	getRecentlyPlayedSongs,
-} = require("../api/song/");
+const { getRecentlyPlayedSongsFromAPI } = require("../api/song/");
 
 const { createUserSong, getSong } = require("../model");
 
 const updateRecentSongs = async (user) => {
 	const recentSongsAPI = await getRecentlyPlayedSongsFromAPI(user);
-	const recentUserSongs = await getRecentlyPlayedSongs(user);
+	const userSongHistory = await user.getUserSongHistories({
+		order: [["played_date", "DESC"]],
+	});
 	const songsToAdd = recentSongsAPI.filter((song) => {
-		const found = recentUserSongs.find((usersong) => {
-			return usersong.id === song.id;
-		});
-		if (found !== undefined) {
-			console.log(
-				found.UserSongHistory.played_date,
-				found.played_date,
-				song.played_date
+		song.played_date = new Date(song.played_date).getTime();
+		const found = userSongHistory.find((history) => {
+			return (
+				history.SongId === song.id &&
+				history.played_date.getTime() === song.played_date
 			);
-		}
-
-		return found === undefined || found.played_date !== song.played_date;
+		});
+		return found === undefined;
 	});
 
 	const addTasks = songsToAdd.map((songtoadd) => {
