@@ -1,14 +1,18 @@
 const { UserSongHistory } = require("../database");
 
 const createUserSong = async (user, song, played_date) => {
-	const [newUserSong] = await UserSongHistory.create({
+	const userCreateData = {
 		played_date: played_date,
-		user: user,
-		song: song,
-	}).catch((err) => {
-		console.error(err.message);
-		return { error: err.message };
-	});
+		UserId: user.id,
+		SongId: song.id,
+	};
+
+	const newUserSong = await UserSongHistory.create(userCreateData).catch(
+		(err) => {
+			console.error("create user song error ", err);
+			return { error: err.message };
+		}
+	);
 
 	song.set({ last_time_used: Date.now() });
 	song.save();
@@ -18,7 +22,7 @@ const createUserSong = async (user, song, played_date) => {
 
 const getUserSong = async (user, song) => {
 	const currentUserSong = await UserSongHistory.findAll({
-		where: { userId: user.id, SongId: song.id },
+		where: { UserId: user.id, SongId: song.id },
 	});
 	return currentUserSong;
 };

@@ -33,12 +33,12 @@ const getAvailableUsers = async () => {
 			user.expiration = result.expiration;
 		}
 		console.log(`User available, expiration:${user.expiration}`);
-		if (user.last_modified_hourly < Date.now() - hour) {
+		// if (user.last_modified_hourly < Date.now() - hour) {
 			availableUsersList.hourly.push(user);
-		}
-		if (user.last_modified_daily < Date.now() - day) {
+		// }
+		// if (user.last_modified_daily < Date.now() - day) {
 			availableUsersList.daily.push(user);
-		}
+		// }
 	}
 	return availableUsersList;
 };
@@ -55,7 +55,6 @@ const automaticTasks = async (_req, res) => {
 		return;
 	}
 	const userList = await getAvailableUsers();
-	console.log("error", userList);
 
 	const hourlyTaskList = getHourlyTasks(userList.hourly);
 	const dailyTaskList = getDailyTasks(userList.daily);

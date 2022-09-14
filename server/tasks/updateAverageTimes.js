@@ -1,13 +1,15 @@
 const { fn, col, Op } = require("sequelize");
+const { Song } = require("../database");
 // const { convertTime } = require("../utils");
 
 const week = 604800000;
 const updateAverageTimes = async (user) => {
-	const date_format = fn("to_char", col("played_date"), "YYYY/MM/DD");
+	// const date_format = fn("to_char", col("played_date"), "YYYY/MM/DD");
+	const date_format = fn("date", "YYYY/MM/DD", col("played_date"));
 	const userSongs = await user
-		.getSongs({
+		.getUserSongHistories({
 			attributes: [
-				[fn("count", col("id")), "total"],
+				[fn("count", col("UserSongHistory.id")), "total"],
 				[fn("sum", col("Song.duration")), "duration"],
 				[date_format, "played_date"],
 			],
@@ -18,6 +20,7 @@ const updateAverageTimes = async (user) => {
 			},
 			order: [[date_format, "DESC"]],
 			group: [date_format],
+			include: [Song],
 
 			// raw: true,
 			// nest: true,
@@ -25,6 +28,8 @@ const updateAverageTimes = async (user) => {
 		.catch((err) => {
 			return { error: err.message };
 		});
+
+	console.log(userSongs);
 
 	// const stats = {};
 	// oldRecent.forEach((usersong) => {
@@ -48,7 +53,7 @@ const updateAverageTimes = async (user) => {
 	// 	response.total_duration += stats[date].duration;
 	// });
 
-	console.log(stats);
+	console.log(response);
 	//[average time,average number of songs]
 
 	response.average =

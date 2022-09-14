@@ -2,7 +2,7 @@ const { updateRecentSongs } = require("./updateRecentSongs");
 
 const getHourlyTasks = (userList) => {
 	return userList.map((user) => {
-		return updateRecentSongs(user.access_token, user.id)
+		return updateRecentSongs(user)
 			.then((updateResult) => {
 				if (updateResult.error) {
 					console.log("Update error", updateResult);

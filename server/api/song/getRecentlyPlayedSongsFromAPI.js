@@ -1,4 +1,5 @@
 const { request, formatSongAPI } = require("../../utils");
+const week = 604800000;
 
 const getRecentlyPlayedSongsFromAPI = async (user) => {
 	const after = Date.now() - week;
@@ -18,7 +19,7 @@ const getRecentlyPlayedSongsFromAPI = async (user) => {
 
 	return items.map((song) => {
 		const formatted = formatSongAPI(song.track);
-		formatted.played_date = song.track.played_at;
+		formatted.played_date = song.played_at;
 		return formatted;
 	});
 };

@@ -1,4 +1,4 @@
-const { request, genres,formatSongAPIList } = require("../../utils");
+const { request, genres, formatSongAPIList } = require("../../utils");
 
 const fillOptions = (songlist, currentgenres) => {
 	const options = {
@@ -17,14 +17,14 @@ const fillOptions = (songlist, currentgenres) => {
 
 			if (randomNumber < 60) {
 				options.seed_tracks.push(randomSong.id);
-				console.log(`Seed track ${randomSong.id} ${randomSong.name}`);
+				// console.log(`Seed track ${randomSong.id} ${randomSong.name}`);
 				continue;
 			}
 			if (randomNumber < 90) {
 				options.seed_artists.push(randomSong.idartist);
-				console.log(
-					`Seed artist ${randomSong.idartist} ${randomSong.artist}`
-				);
+				// console.log(
+				// 	`Seed artist ${randomSong.idartist} ${randomSong.artist}`
+				// );
 				continue;
 			}
 
@@ -32,7 +32,7 @@ const fillOptions = (songlist, currentgenres) => {
 				currentgenres[
 					Math.floor(Math.random() * (currentgenres.length - 1))
 				];
-			console.log(`Seed genre ${randomGenre}`);
+			// console.log(`Seed genre ${randomGenre}`);
 			options.seed_genres.push(randomGenre);
 		}
 	} else {

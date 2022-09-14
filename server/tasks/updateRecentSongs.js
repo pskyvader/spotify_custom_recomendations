@@ -10,7 +10,7 @@ const updateRecentSongs = async (user) => {
 	const recentUserSongs = await getRecentlyPlayedSongs(user);
 	const songsToAdd = recentSongsAPI.filter((song) => {
 		const found = recentUserSongs.find((usersong) => {
-			return usersong.song.id === song.id;
+			return usersong.id === song.id;
 		});
 		return found === undefined || found.played_date !== song.played_date;
 	});

@@ -91,6 +91,7 @@ Song.belongsToMany(User, {
 
 User.hasMany(UserSongHistory);
 UserSongHistory.belongsTo(User);
+
 Song.hasMany(UserSongHistory);
 UserSongHistory.belongsTo(Song);
 

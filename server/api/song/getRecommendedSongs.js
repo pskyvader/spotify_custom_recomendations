@@ -23,7 +23,7 @@ const getRecommendedSongs = async (user, playlist) => {
 		return RecentSongs;
 	}
 	const RecentSongsIds = RecentSongs.map((currentSong) => {
-		return currentSong.SongId;
+		return currentSong.id;
 	});
 
 	const topSongs = await getTopSongsFromAPI(user);
