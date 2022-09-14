@@ -5,7 +5,7 @@ const { Song } = require("../database");
 const week = 604800000;
 const updateAverageTimes = async (user) => {
 	// const date_format = fn("to_char", col("played_date"), "YYYY/MM/DD");
-	const date_format = fn("date", "YYYY/MM/DD", col("played_date"));
+	const date_format = fn("date_format", col("played_date"), '%Y-%m-%d');
 	const userSongs = await user
 		.getUserSongHistories({
 			attributes: [
@@ -19,7 +19,7 @@ const updateAverageTimes = async (user) => {
 				},
 			},
 			order: [[date_format, "DESC"]],
-			group: [date_format],
+			// group: [date_format],
 			include: [Song],
 
 			// raw: true,
