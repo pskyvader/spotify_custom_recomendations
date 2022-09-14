@@ -70,7 +70,7 @@ const Playlists = () => {
 		if (!playlistActive[playlistid].active) {
 			return (
 				<div>
-					Playlist inactive
+				Playlist {playlistActive[playlistid].name} Inactive
 					<Switch
 						checked={playlistActive[playlistid].active}
 						onChange={handleChange}
@@ -81,7 +81,7 @@ const Playlists = () => {
 		}
 		return (
 			<Container maxWidth={false}>
-				Playlist Active
+				Playlist {playlistActive[playlistid].name} Active
 				<Switch
 					checked={playlistActive[playlistid].active}
 					onChange={handleChange}

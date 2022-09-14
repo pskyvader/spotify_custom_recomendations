@@ -21,7 +21,7 @@ const InitialText = ({ LoggedIn, setDrawer }) => {
 		if (LoggedIn) {
 			setTimeout(() => {
 				setDrawer(true);
-			}, 2000);
+			}, 1000);
 		}
 	}, [LoggedIn, setDrawer]);
 

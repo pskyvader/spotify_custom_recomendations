@@ -1,9 +1,10 @@
 import { Button } from "@mui/material";
 import { Playlist } from "../API";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { PlaylistContext } from "../context/PlaylistContextProvider";
 
 const ButtonRemoveSong = ({ PlaylistId, uri }) => {
+	const [disabled, setDisabled] = useState(false);
 	const {
 		playlistTracks,
 		setPlaylistTracks,
@@ -14,8 +15,11 @@ const ButtonRemoveSong = ({ PlaylistId, uri }) => {
 	} = useContext(PlaylistContext);
 	return (
 		<Button
+			disabled={disabled}
 			onClick={() => {
+				setDisabled(true);
 				Playlist.DeleteSong(PlaylistId, uri).then((response) => {
+					setDisabled(false);
 					if (response.error) {
 						console.log(response);
 						return;

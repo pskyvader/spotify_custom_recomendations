@@ -1,9 +1,10 @@
 import { Button } from "@mui/material";
 import { Playlist } from "../API";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { PlaylistContext } from "../context/PlaylistContextProvider";
 
 const ButtonAddSong = ({ PlaylistId, uri }) => {
+	const [disabled, setDisabled] = useState(false);
 	const {
 		playlistTracks,
 		setPlaylistTracks,
@@ -14,9 +15,11 @@ const ButtonAddSong = ({ PlaylistId, uri }) => {
 	} = useContext(PlaylistContext);
 	return (
 		<Button
+			disabled={disabled}
 			onClick={() => {
+				setDisabled(true);
 				Playlist.AddSong(PlaylistId, uri).then((response) => {
-					console.log(response, playlistTracks[PlaylistId]);
+					setDisabled(false);
 					if (response.error) {
 						console.log(response);
 						return;
@@ -36,8 +39,11 @@ const ButtonAddSong = ({ PlaylistId, uri }) => {
 						playlistRecommendedTracks[PlaylistId].length !==
 						recommendedfiltered.length
 					) {
-						playlistRecommendedTracks[PlaylistId] =
-							recommendedfiltered;
+						playlistRecommendedTracks[PlaylistId] = recommendedfiltered;
+
+						if(playlistRecommendedTracks[PlaylistId]<5){
+							delete playlistRecommendedTracks[PlaylistId];
+						}
 						setPlaylistRecommendedTracks({
 							...playlistRecommendedTracks,
 						});

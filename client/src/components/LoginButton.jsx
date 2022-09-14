@@ -6,6 +6,7 @@ export const Logout = (removeCookie, setLoggedIn) => {
 	removeCookie("keep_logged");
 	removeCookie("access_token");
 	removeCookie("refresh_token");
+	removeCookie("hash");
 	Me.LogOut();
 	setLoggedIn(false);
 };

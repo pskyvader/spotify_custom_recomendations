@@ -187,7 +187,7 @@ app.get("/api/playlist/:playlistId/deactivate", async (req, res) => {
 
 app.get("/api/playlists/recommended/:playlistId", async (req, res) => {
 	let result = cache.get(`get-playlist-recommended-${req.params.playlistId}`);
-	if (!result) {
+	if (!result || result.length < 5) {
 		const playlist = await getPlaylist(user, req.params.playlistId);
 		result = await getRecommendedSongs(user, playlist);
 		if (!result.error) {

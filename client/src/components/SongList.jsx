@@ -36,7 +36,7 @@ const SongList = ({ data, title = "title" }) => {
 			// autoPageSize={true}
 			// hideFooter
 			pageSize={100}
-			rowsPerPageOptions={[10, 25, 50, 100, 200, 1000]}
+			rowsPerPageOptions={[10, 25, 50, 100]}
 			disableSelectionOnClick
 			components={{
 				Toolbar: () => {
