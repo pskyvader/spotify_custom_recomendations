@@ -2,8 +2,10 @@ const { fn, col, Op } = require("sequelize");
 
 const week = 604800000;
 const updateAverageTimes = async (user) => {
-	const date_format = fn("to_char", col("played_date"), "YYYY/MM/DD");
-	// const date_format = fn("strftime", "%Y-%m-%d", col("played_date"));
+	let date_format = fn("to_char", col("played_date"), "YYYY/MM/DD");
+	if (process.env.PRODUCTION === "test") {
+		date_format = fn("strftime", "%Y-%m-%d", col("played_date"));
+	}
 	const userSongs = await user
 		.getUserSongHistories({
 			attributes: [
