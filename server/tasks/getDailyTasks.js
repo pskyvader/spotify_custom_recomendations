@@ -27,7 +27,6 @@ const getDailyTasks = (userList) => {
 					}); // removedTotal: avoid adding too many songs to the playlist if it's already over the limit
 				})
 			)
-
 			.then(() => {
 				user.set({ last_modified_daily: Date.now() });
 				user.save();
