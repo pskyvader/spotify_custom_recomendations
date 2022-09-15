@@ -15,8 +15,7 @@ const getPlaylistsFromAPI = async (user) => {
 	}
 
 	const filtered = playlists.filter((currentPlaylist) => {
-		console.log(currentPlaylist, currentPlaylist.owner,user.id);
-		return user.id === parseInt(currentPlaylist.owner.id);
+		return parseInt(user.id) === parseInt(currentPlaylist.owner.id);
 	});
 
 	const playlistsPromises = filtered.map((currentPlaylist) => {
