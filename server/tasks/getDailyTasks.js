@@ -16,10 +16,16 @@ const getDailyTasks = (userList) => {
 		return averageListeningTime
 			.then(SyncSongsResponse)
 			.then(
-				removeResponse.then(
-					(result) =>
-						addToPlaylist(user, songsToModify, result.removedTotal) // removedTotal: avoid adding too many songs to the playlist if it's already over the limit
-				)
+				removeResponse.then((removeResult) => {
+					console.log(removeResult.message);
+					addToPlaylist(
+						user,
+						songsToModify,
+						removeResult.removedTotal
+					).then((addResult) => {
+						console.log(addResult.message);
+					}); // removedTotal: avoid adding too many songs to the playlist if it's already over the limit
+				})
 			)
 
 			.then(() => {

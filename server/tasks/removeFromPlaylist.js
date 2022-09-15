@@ -50,7 +50,7 @@ const removeFromSinglePlaylist = async (user, playlist, songsToRemove) => {
 		response.removedTotal += 1;
 		i++;
 	}
-	return response.message;
+	return response;
 };
 
 const removeFromPlaylist = async (user, songsToRemove) => {

@@ -7,7 +7,7 @@ const getPlaylistsFromAPI = async (user) => {
 	while (url) {
 		const response = await request(user.access_token, url);
 		if (response.error) {
-			console.log(response);
+			console.log("Get playlist from API error", response);
 			return response;
 		}
 		url = response.next;

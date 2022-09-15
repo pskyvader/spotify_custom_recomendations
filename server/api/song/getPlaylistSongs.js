@@ -15,6 +15,7 @@ const getPlaylistSongs = async (playlist) => {
 			],
 		})
 		.catch((err) => {
+			console.error("getPlaylistSongs error", err);
 			return { error: err.message };
 		});
 };

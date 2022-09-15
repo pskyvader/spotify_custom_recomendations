@@ -7,7 +7,7 @@ const createPlaylistSong = async (playlist, song) => {
 		PlaylistId: playlist.id,
 		SongId: song.id,
 	}).catch((err) => {
-		console.error(err.message);
+		console.error("create playlist song error", err);
 		return { error: err.message };
 	});
 
