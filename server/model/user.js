@@ -86,7 +86,6 @@ const updateUser = async (session) => {
 	const userSaved = await currentUser
 		.save()
 		.catch((err) => ({ error: err.message }));
-	console.log(userSaved);
 	if (userSaved.error) {
 		return userSaved;
 	}

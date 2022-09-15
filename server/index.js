@@ -127,6 +127,7 @@ app.get("/api/me/playlists", async (_req, res) => {
 	let result = cache.get(`playlists-${user.id}`);
 	if (!result) {
 		result = await getPlaylistsFromAPI(user);
+		console.log("get playlists", result);
 		if (!result.error) {
 			result = result.map((playlist) => playlist.toJSON());
 			cache.set(`playlists-${user.id}`, result, tenMinutes);
