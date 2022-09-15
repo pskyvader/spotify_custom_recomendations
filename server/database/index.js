@@ -6,36 +6,36 @@ const { UserSongHistoryConfiguration } = require("./UserSongHistory");
 const { PlaylistConfiguration } = require("./Playlist");
 const path = require("path");
 
-// const sequelize = new Sequelize(process.env.DATABASE_URL+'?ssl=true' || "sqlite::memory:"); // Example for sqlite
-// const sequelize = new Sequelize("sqlite::memory:"); // Example for sqlite
-const sequelize = new Sequelize("database", "", "", {
-	host: "0.0.0.0",
-	dialect: "sqlite",
-	logging: false,
-	pool: {
-		max: 5,
-		min: 0,
-		idle: 10000,
+let sequelize = new Sequelize(process.env.DATABASE_URL, {
+	// dialect: 'postgres',
+	// protocol: 'postgres',
+	dialectOptions: {
+		ssl: {
+			// require: true,
+			rejectUnauthorized: false,
+		},
 	},
-	// Data is stored in the file `database.sqlite` in the folder `db`.
-	// Note that if you leave your app public, this database file will be copied if
-	// someone forks your app. So don't use it to store sensitive information.
-	storage: path.resolve(__dirname, "..", "databasetest.sqlite"),
+	// logging: (...msg) => console.log(msg),
+	// logging: console.log,
+	logging: false,
 });
 
-// const sequelize = new Sequelize(process.env.DATABASE_URL, {
-// 	// dialect: 'postgres',
-// 	// protocol: 'postgres',
-// 	dialectOptions: {
-// 		ssl: {
-// 			// require: true,
-// 			rejectUnauthorized: false,
-// 		},
-// 	},
-// 	// logging: (...msg) => console.log(msg),
-// 	// logging: console.log,
-// 	logging: false,
-// });
+if (process.env.PRODUCTION === "test") {
+	sequelize = new Sequelize("database", "", "", {
+		host: "0.0.0.0",
+		dialect: "sqlite",
+		logging: false,
+		pool: {
+			max: 5,
+			min: 0,
+			idle: 10000,
+		},
+		// Data is stored in the file `database.sqlite` in the folder `db`.
+		// Note that if you leave your app public, this database file will be copied if
+		// someone forks your app. So don't use it to store sensitive information.
+		storage: path.resolve(__dirname, "..", "databasetest.sqlite"),
+	});
+}
 
 class User extends Model {}
 User.init(UserConfiguration, {
@@ -97,11 +97,17 @@ UserSongHistory.belongsTo(Song);
 
 const connection = async () => {
 	try {
-		await sequelize.authenticate();
-		console.log("Connection has been established successfully.");
-		// sequelize.sync({ force: true});
-		// sequelize.sync({ alter: true });
-		sequelize.sync().then(() => console.log("Successfully Synced"));
+		sequelize
+			.authenticate()
+			.then(() => {
+				console.log("Connection has been established successfully.");
+				sequelize
+					.sync({ alter: false, force: false })
+					.then(() => console.log("Successfully Synced"));
+			})
+			.catch((error) => {
+				console.error("Unable to connect to the database:", error);
+			});
 	} catch (error) {
 		console.error("Unable to connect to the database:", error);
 	}
