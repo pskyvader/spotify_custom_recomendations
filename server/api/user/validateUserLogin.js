@@ -9,15 +9,24 @@ const validateUserLogin = async (loginData) => {
 	}
 	const currentUser = await getUser(loginData);
 	if (currentUser.error) {
-		return currentUser;
+		if (currentUser.status !== 401) {
+			return currentUser;
+		}
+		currentUser.access_token = loginData.access_token;
+		currentUser.refresh_token = loginData.refresh_token;
+		currentUser.hash = loginData.hash;
 	}
 
-	if (Date.now() > new Date(currentUser.expiration)) {
+	if (
+		currentUser.status === 401 ||
+		Date.now() > new Date(currentUser.expiration)
+	) {
 		const refreshData = await refreshCookie(currentUser);
 		if (refreshData.error) {
 			return refreshData;
 		}
-		return updateUser(refreshData);
+		const newUser = await updateUser(refreshData);
+		return newUser;
 	}
 	return currentUser;
 };

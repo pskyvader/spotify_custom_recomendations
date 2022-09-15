@@ -35,6 +35,7 @@ const refreshCookie = async (currentUser) => {
 			access_token: response.access_token,
 			refresh_token: refresh_token,
 			expiration: Date.now() + response.expires_in * 1000,
+			hash: currentUser.hash,
 		};
 	}
 	return response;

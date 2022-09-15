@@ -9,7 +9,7 @@ const createUser = async (session) => {
 	);
 
 	if (response.error) {
-		console.log(response);
+		console.log("create user error", response);
 		return response;
 	}
 
@@ -60,7 +60,7 @@ const getUser = async (session) => {
 			],
 		},
 	}).catch((err) => {
-		console.error(err);
+		console.error("get user error ", err);
 		return { error: true, message: err.message };
 	});
 
@@ -73,6 +73,7 @@ const getUser = async (session) => {
 const updateUser = async (session) => {
 	const currentUser = await getUser(session);
 	if (currentUser.error) {
+		console.error("error getting user", currentUser);
 		return currentUser;
 	}
 	const updateData = {
@@ -85,6 +86,7 @@ const updateUser = async (session) => {
 	const userSaved = await currentUser
 		.save()
 		.catch((err) => ({ error: err.message }));
+	console.log(userSaved);
 	if (userSaved.error) {
 		return userSaved;
 	}

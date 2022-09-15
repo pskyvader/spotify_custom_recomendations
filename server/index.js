@@ -103,7 +103,6 @@ const tenMinutes = 600;
 
 app.use("/api/*", async (req, res, next) => {
 	let response = await validateUserLogin(req.session);
-	console.log("api response",response);
 	if (response.error) {
 		res.json(response);
 		return;
@@ -138,7 +137,6 @@ app.get("/api/me/playlists", async (_req, res) => {
 });
 
 app.get("/api/playlists/get/:playlistId", async (req, res) => {
-	console.log("get playlist " + req.params.playlistId)
 	let result = cache.get(`get-playlist-songs-${req.params.playlistId}`);
 	if (!result) {
 		let currentPlaylist = await getPlaylist(user, req.params.playlistId);
