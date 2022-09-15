@@ -22,7 +22,6 @@ const {
 } = require("./api/playlist");
 
 const {
-	getPlaylistSongs,
 	getPlaylistSongsFromAPI,
 	getRecommendedSongs,
 	getRecommendedSongsToRemove,
