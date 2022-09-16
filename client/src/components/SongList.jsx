@@ -1,5 +1,8 @@
 import { Toolbar, Typography } from "@mui/material";
 import { GridOverlay, DataGrid } from "@mui/x-data-grid";
+import Avatar from "@mui/material/Avatar";
+import Stack from "@mui/material/Stack";
+import ListItemText from "@mui/material/ListItemText";
 
 export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 	const renderCell =
@@ -11,17 +14,33 @@ export const SongListColumns = (rows, PlaylistId, ActionButton) => {
 			: null;
 
 	const columns = [
-		// { field: "id", headerName: "#", minWidth: 40, flex: 0.1 },
-		{ field: "name", headerName: "Title", minWidth: 200, flex: 1 },
-		{ field: "artist", headerName: "Artist", minWidth: 200, flex: 1 },
-		{ field: "album", headerName: "Album", minWidth: 200, flex: 1 },
 		{
-			field: "id",
-			headerName: "",
-			minWidth: 120,
+			field: "name",
+			headerName: "Title",
+			minWidth: 200,
 			flex: 1,
-			renderCell: renderCell,
+			renderCell: (cellData) => {
+				return (
+					<Stack direction="row" spacing={2}>
+						<Avatar src={cellData.row.image} />
+						<ListItemText
+							primary={cellData.row.name}
+							secondary={cellData.row.artist}
+						/>
+					</Stack>
+				);
+			},
 		},
+		{ field: "album", headerName: "Album", minWidth: 200, flex: 1 },
+		ActionButton
+			? {
+					field: "id",
+					headerName: "",
+					minWidth: 120,
+					flex: 1,
+					renderCell: renderCell,
+			  }
+			: null,
 	];
 
 	return {
@@ -42,7 +61,7 @@ const SongList = ({ data, title = "title" }) => {
 			components={{
 				Toolbar: () => {
 					return (
-						<Toolbar variant="dense">
+						<Toolbar variant="comfortable">
 							<Typography
 								variant="h6"
 								component="div"
