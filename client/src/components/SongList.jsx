@@ -35,6 +35,7 @@ const SongList = ({ data, title = "title" }) => {
 		<DataGrid
 			// autoPageSize={true}
 			// hideFooter
+			density="comfortable"
 			pageSize={100}
 			rowsPerPageOptions={[10, 25, 50, 100]}
 			disableSelectionOnClick

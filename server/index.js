@@ -227,7 +227,11 @@ app.get("/api/playlists/lastplayed", async (_req, res) => {
 	if (!result) {
 		result = await getRecentlyPlayedSongs(user);
 		if (!result.error) {
-			result = result.map((song) => song.toJSON());
+			result = result.map((recentSong) => {
+				const songResult = recentSong.Song.toJSON();
+				songResult.played_date = recentSong.played_date;
+				return songResult;
+			});
 			cache.set(`get-lastplayed-${user.id}`, result, tenMinutes);
 		}
 	}

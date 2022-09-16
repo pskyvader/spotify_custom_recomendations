@@ -4,9 +4,7 @@ const { createUserSong, getSong } = require("../model");
 
 const updateRecentSongs = async (user) => {
 	const recentSongsAPI = await getRecentlyPlayedSongsFromAPI(user);
-	const userSongHistory = await user.getUserSongHistories({
-		order: [["played_date", "DESC"]],
-	});
+	const userSongHistory = await user.getUserSongHistories();
 	const songsToAdd = recentSongsAPI.filter((song) => {
 		song.played_date = new Date(song.played_date).getTime();
 		const found = userSongHistory.find((history) => {
