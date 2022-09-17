@@ -2,10 +2,16 @@ const { updateAverageTimes } = require("./updateAverageTimes");
 const { removeFromPlaylist } = require("./removeFromPlaylist");
 const { addToPlaylist } = require("./addToPlaylist");
 const { deleteGarbage } = require("./deleteGarbage");
+const { removeRepeatedSongs } = require("./removeRepeatedSongs");
 
 const getDailyTasks = (userList) => {
 	const songsToModify = 5 + Math.floor(Math.random() * 5);
 	const taskList = userList.map((user) => {
+		const removeRepeated = removeRepeatedSongs(user).then(
+			(removeRepeatedResult) => {
+				console.log(removeRepeatedResult.message);
+			}
+		);
 		const averageListeningTime = updateAverageTimes(user).then(
 			(averageListeningTime) => {
 				console.log("Average time for user:", averageListeningTime);
@@ -19,7 +25,8 @@ const getDailyTasks = (userList) => {
 		);
 		// const addResponse = addToPlaylist(user, songsToModify);
 
-		return averageListeningTime
+		return removeRepeated
+			.then(averageListeningTime)
 			.then(removeResponse)
 			.then((removedTotal) => {
 				return addToPlaylist(
