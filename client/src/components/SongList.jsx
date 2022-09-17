@@ -38,7 +38,7 @@ export const SongListColumns = (
 
 	if (PlaylistId !== null && ActionButton !== null) {
 		columns.push({
-			field: "id",
+			field: "uri",
 			headerName: "",
 			minWidth: 120,
 			flex: 1,

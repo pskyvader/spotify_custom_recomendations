@@ -26,7 +26,10 @@ const RecommendedDeleteSongs = ({ playlistId,hidden }) => {
 	}
 	if (playlistDeleteTracks[playlistId]) {
 		const data = SongListColumns(
-			playlistDeleteTracks[playlistId],
+			playlistDeleteTracks[playlistId].map((song) => {
+				song.uri = song.id;
+				return song;
+			}),
 			playlistId,
 			ButtonRemoveSong
 		);

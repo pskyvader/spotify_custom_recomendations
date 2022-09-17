@@ -21,7 +21,10 @@ const LastPlayedSongs = ({ hidden }) => {
 		return null;
 	}
 	if (lastPlayedTracks) {
-		const data = SongListColumns(lastPlayedTracks);
+		const data = SongListColumns(lastPlayedTracks.map((song) => {
+			song.uri = song.id;
+			return song;
+		}));
 		data.columns.push({
 			field: "played_date",
 			headerName: "Last Played",
