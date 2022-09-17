@@ -23,7 +23,7 @@ const PlayListSongs = ({ playlistId, hidden }) => {
 	}
 	if (playlistTracks[playlistId]) {
 		const data = SongListColumns(
-			playlistTracks[playlistId].map,
+			playlistTracks[playlistId],
 			playlistId,
 			ButtonRemoveSong
 		);
