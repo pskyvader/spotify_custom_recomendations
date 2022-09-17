@@ -38,10 +38,7 @@ const RecommendedSongs = ({ playlistId, hidden }) => {
 	}
 	if (playlistRecommendedTracks[playlistId]) {
 		const data = SongListColumns(
-			playlistRecommendedTracks[playlistId].map((song) => {
-				song.uri = song.id;
-				return song;
-			}),
+			playlistRecommendedTracks[playlistId],
 			playlistId,
 			ButtonAddSong
 		);

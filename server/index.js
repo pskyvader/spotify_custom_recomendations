@@ -139,20 +139,6 @@ app.get("/api/playlists/get/:playlistId", async (req, res) => {
 	let result = cache.get(`get-playlist-songs-${req.params.playlistId}`);
 	if (!result) {
 		let currentPlaylist = await getPlaylist(user, req.params.playlistId);
-		let synced = cache.has(`sync-playlist-songs-${req.params.playlistId}`);
-		if (!synced) {
-			syncronizePlaylist(user, currentPlaylist).then((syncedSongs) => {
-				if (syncedSongs.error) {
-					console.error("sync error", syncedSongs);
-					return;
-				}
-				cache.set(
-					`sync-playlist-songs-${req.params.playlistId}`,
-					"true",
-					tenMinutes * 6
-				);
-			});
-		}
 		result = await getPlaylistSongsFromAPI(user, currentPlaylist);
 		if (!result.error) {
 			cache.set(
@@ -161,6 +147,15 @@ app.get("/api/playlists/get/:playlistId", async (req, res) => {
 				tenMinutes
 			);
 		}
+	}
+	res.json(result);
+});
+
+app.get("/api/playlist/:playlistId/sync", async (req, res) => {
+	const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+	const result = await syncronizePlaylist(user, currentPlaylist);
+	if (result.error) {
+		console.error("sync error", result);
 	}
 	res.json(result);
 });
@@ -174,6 +169,17 @@ app.get("/api/playlist/:playlistId/activate", async (req, res) => {
 	const result = await updatePlaylist(req.params.playlistId, {
 		active: true,
 	});
+	if (!result.error) {
+		await getPlaylist(user, req.params.playlistId).then(
+			(currentPlaylist) => {
+				syncronizePlaylist(user, currentPlaylist).then((syncResult) => {
+					if (syncResult.error) {
+						console.error("sync error", syncResult);
+					}
+				});
+			}
+		);
+	}
 	res.json(result);
 });
 
@@ -358,16 +364,13 @@ app.post("/api/actions/remove/:playlistId/:songId", async (req, res) => {
 		);
 
 		if (cachedeleted) {
-			// cachedeleted.unshift(song.toJSON());
-			// const newcachedeleted = cachedeleted.filter((cachesong) => {
-			// 	return cachesong.id !== song.id;
-			// });
-			// cache.set(
-			// 	`get-playlist-deleted-${req.params.deletedId}`,
-			// 	newcachedeleted,
-			// 	tenMinutes
-			// );
-			cache.del(`get-playlist-deleted-${req.params.playlistId}`);
+			cachedeleted.unshift(song.toJSON());
+			cache.set(
+				`get-playlist-deleted-${req.params.deletedId}`,
+				cachedeleted,
+				tenMinutes
+			);
+			// cache.del(`get-playlist-deleted-${req.params.playlistId}`);
 		}
 	}
 	res.json(result);

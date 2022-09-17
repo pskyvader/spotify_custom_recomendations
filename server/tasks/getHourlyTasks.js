@@ -1,4 +1,5 @@
 const { updateRecentSongs } = require("./updateRecentSongs");
+const { syncronizeMultiplePlaylists } = require("../api/song");
 
 const getHourlyTasks = (userList) => {
 	return userList.map((user) => {
@@ -10,10 +11,14 @@ const getHourlyTasks = (userList) => {
 					console.log(`Updated`);
 				}
 			})
+			.then(syncronizeMultiplePlaylists(user))
 			.then(() => {
 				user.set({ last_modified_hourly: Date.now() });
 				user.save().then(() => {
-					console.log("last hourly updated for user saved", user.name);
+					console.log(
+						"last hourly updated for user saved",
+						user.name
+					);
 				});
 			});
 	});

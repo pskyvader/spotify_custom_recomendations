@@ -25,10 +25,7 @@ const DeletedSongs = ({ playlistId, hidden }) => {
 	}
 	if (playlistDeletedSongs[playlistId]) {
 		const data = SongListColumns(
-			playlistDeletedSongs[playlistId].map((song) => {
-				song.uri = song.id;
-				return song;
-			}),
+			playlistDeletedSongs[playlistId],
 			playlistId,
 			ButtonAddSong
 		);
