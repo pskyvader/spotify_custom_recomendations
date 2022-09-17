@@ -14,7 +14,10 @@ const getDailyTasks = (userList) => {
 		// const addResponse = addToPlaylist(user, songsToModify);
 
 		return averageListeningTime
-			.then(SyncSongsResponse)
+			.then((averageListeningTime) => {
+				console.log("Average time for user:", averageListeningTime);
+				return SyncSongsResponse();
+			})
 			.then(
 				removeResponse.then((removeResult) => {
 					console.log(removeResult.message);
@@ -29,7 +32,9 @@ const getDailyTasks = (userList) => {
 			)
 			.then(() => {
 				user.set({ last_modified_daily: Date.now() });
-				user.save();
+				user.save().then(() => {
+					console.log("last daily updated for user saved", user.name);
+				});
 			});
 	});
 	taskList.push(deleteGarbage());

@@ -13,7 +13,7 @@ const getHourlyTasks = (userList) => {
 			.then(() => {
 				user.set({ last_modified_hourly: Date.now() });
 				user.save().then(() => {
-					console.log("last updated for user saved", user.name);
+					console.log("last hourly updated for user saved", user.name);
 				});
 			});
 	});
