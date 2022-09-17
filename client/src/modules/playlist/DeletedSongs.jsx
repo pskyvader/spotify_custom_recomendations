@@ -29,6 +29,17 @@ const DeletedSongs = ({ playlistId, hidden }) => {
 			playlistId,
 			ButtonAddSong
 		);
+		const button = data.columns.pop();
+		data.columns.push({
+			field: "removed_date",
+			headerName: "Removed",
+			minWidth: 200,
+			flex: 1,
+			renderCell: (cellData) =>
+				new Date(cellData.formattedValue).toLocaleString(),
+		});
+		data.columns.push(button);
+
 		return <SongList data={data} title="Deleted songs from playlist" />;
 	}
 	return <CircularProgress />;

@@ -4,44 +4,47 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import ListItemText from "@mui/material/ListItemText";
 
-export const SongListColumns = (rows, PlaylistId, ActionButton) => {
-	const renderCell =
-		PlaylistId !== null && ActionButton !== null
-			? (cellData) => {
-					const uri = cellData.formattedValue;
-					return <ActionButton PlaylistId={PlaylistId} uri={uri} />;
-			  }
-			: null;
+const renderTitle = (cellData) => {
+	return (
+		<Stack direction="row" spacing={2}>
+			<Avatar src={cellData.row.image} />
+			<ListItemText
+				primary={cellData.row.name}
+				secondary={cellData.row.artist}
+			/>
+		</Stack>
+	);
+};
 
+export const SongListColumns = (
+	rows,
+	PlaylistId = null,
+	ActionButton = null
+) => {
+	const renderActionButton = (cellData) => {
+		const uri = cellData.formattedValue;
+		return <ActionButton PlaylistId={PlaylistId} uri={uri} />;
+	};
 	const columns = [
 		{
 			field: "name",
 			headerName: "Title",
 			minWidth: 200,
 			flex: 1,
-			renderCell: (cellData) => {
-				return (
-					<Stack direction="row" spacing={2}>
-						<Avatar src={cellData.row.image} />
-						<ListItemText
-							primary={cellData.row.name}
-							secondary={cellData.row.artist}
-						/>
-					</Stack>
-				);
-			},
+			renderCell: renderTitle,
 		},
 		{ field: "album", headerName: "Album", minWidth: 200, flex: 1 },
-		ActionButton
-			? {
-					field: "id",
-					headerName: "",
-					minWidth: 120,
-					flex: 1,
-					renderCell: renderCell,
-			  }
-			: null,
 	];
+
+	if (PlaylistId !== null && ActionButton !== null) {
+		columns.push({
+			field: "id",
+			headerName: "",
+			minWidth: 120,
+			flex: 1,
+			renderCell: renderActionButton,
+		});
+	}
 
 	return {
 		rows,

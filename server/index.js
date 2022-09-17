@@ -244,7 +244,13 @@ app.get("/api/playlists/deletedsongs/:playlistId", async (req, res) => {
 		const playlist = await getPlaylist(user, req.params.playlistId);
 		result = await getDeletedSongs(playlist);
 		if (!result.error) {
-			result = result.map((song) => song.toJSON());
+			result = result.map((deletedSong) => {
+				const songResult = deletedSong.toJSON();
+				songResult.removed_date = deletedSong.PlaylistSong.removed_date;
+				delete songResult.PlaylistSong;
+				delete songResult.PlaylistSongs;
+				return songResult;
+			});
 			cache.set(
 				`get-playlist-deleted-${req.params.playlistId}`,
 				result,
