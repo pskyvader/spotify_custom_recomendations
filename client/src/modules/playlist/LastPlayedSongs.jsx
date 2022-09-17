@@ -28,7 +28,6 @@ const LastPlayedSongs = ({ hidden }) => {
 			minWidth: 200,
 			flex: 1,
 			renderCell: (cellData) => {
-				console.log(cellData.formattedValue, cellData);
 				return new Date(cellData.formattedValue).toLocaleString();
 			},
 		});
