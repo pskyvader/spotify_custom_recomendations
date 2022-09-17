@@ -11,17 +11,21 @@ const getDailyTasks = (userList) => {
 				console.log("Average time for user:", averageListeningTime);
 			}
 		);
-		const removeResponse = removeFromPlaylist(user, songsToModify);
+		const removeResponse = removeFromPlaylist(user, songsToModify).then(
+			(removeResult) => {
+				console.log(removeResult.message);
+				return removeResult.removedTotal;
+			}
+		);
 		// const addResponse = addToPlaylist(user, songsToModify);
 
 		return averageListeningTime
 			.then(removeResponse)
-			.then((removeResult) => {
-				console.log(removeResult.message);
+			.then((removedTotal) => {
 				return addToPlaylist(
 					user,
 					songsToModify,
-					removeResult.removedTotal // removedTotal: avoid adding too many songs to the playlist if it's already over the limit
+					removedTotal // removedTotal []: avoid adding too many songs to the playlist if it's already over the limit
 				);
 			})
 			.then((addResult) => {
