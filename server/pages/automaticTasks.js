@@ -63,18 +63,23 @@ const automaticTasks = async (_req, res) => {
 		console.log("Hourly Tasks...");
 		await Promise.all(hourlyTaskList)
 			.then((responses) => {
-				console.log("Hourly Tasks Done", responses.message.join("\n"));
-				return response.push(...responses.message);
+				const totalresponses = [];
+				for (const r in responses) {
+					totalresponses.push(...responses[r].message);
+				}
+				console.log("Hourly Tasks Done", totalresponses);
+				response.message.push(...totalresponses);
 			})
 			.then(() => {
 				if (dailyTaskList.length > 0) {
 					console.log("Daily Tasks...");
 					return Promise.all(dailyTaskList).then((responses) => {
-						console.log(
-							"Daily Tasks Done",
-							responses.message.join("\n")
-						);
-						return response.push(...responses.message);
+						const totalresponses = [];
+						for (const r in responses) {
+							totalresponses.push(...responses[r]);
+						}
+						console.log("Daily Tasks Done", totalresponses);
+						response.message.push(...totalresponses);
 					});
 				}
 			});

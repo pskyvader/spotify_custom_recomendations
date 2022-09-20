@@ -48,22 +48,25 @@ const syncronizePlaylist = async (user, playlist) => {
 		);
 	});
 	return Promise.all(syncronizeSongsPromise)
-		.then(
-			Promise.all(syncronizeRemoveSongListPromise).then(
-				Promise.all(syncronizeAddSongListPromise),
-				{
-					error: true,
-					message: "Syncronize Add songs error",
+		.then((resultSyncronized) => {
+			return ["Syncronize completed successfully. "];
+		})
+		.then((result) => {
+			console.log(result);
+			return Promise.all(syncronizeRemoveSongListPromise).then(
+				(resultsyncRemove) => {
+					result.push("Syncronize Remove completed successfully. ");
+					return result;
 				}
-			),
-			{
-				error: true,
-				message: "Syncronize Remove songs error",
-			}
-		)
-		.finally({
-			error: false,
-			message: "Syncronize completed",
+			);
+		})
+		.then((result) => {
+			return Promise.all(syncronizeAddSongListPromise).then(
+				(resultsyncAdd) => {
+					result.push("Syncronize Add completed successfully. ");
+					return result;
+				}
+			);
 		});
 };
 
@@ -71,7 +74,8 @@ const syncronizeMultiplePlaylists = async (user) => {
 	const response = { error: false, message: [] };
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	for (const playlist of playlists) {
-		response.message.push(await syncronizePlaylist(user, playlist));
+		response.message.push(`Playlist ${playlist.name}`);
+		response.message.push(...(await syncronizePlaylist(user, playlist)));
 	}
 	return response;
 };

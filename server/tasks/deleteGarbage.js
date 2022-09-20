@@ -48,10 +48,10 @@ const deleteGarbage = async () => {
 	});
 	return Promise.all(removeSongTasks).then(
 		(success) => {
-			console.log(success.length + " removed garbage songs");
+			return [success.length + " removed garbage songs"];
 		},
 		(error) => {
-			console.log(error + "remove garbage songs error");
+			return [error + "remove garbage songs error"];
 		}
 	);
 };
