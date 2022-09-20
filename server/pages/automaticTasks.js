@@ -61,13 +61,20 @@ const automaticTasks = async (_req, res) => {
 
 	if (hourlyTaskList.length > 0) {
 		console.log("Hourly Tasks...");
-		await Promise.all(hourlyTaskList).then(
-			console.log("Hourly Tasks Done")
-		);
-	}
-	if (dailyTaskList.length > 0) {
-		console.log("Daily Tasks...");
-		await Promise.all(dailyTaskList).then(console.log("Daily Tasks Done"));
+		await Promise.all(hourlyTaskList)
+			.then((responses) => {
+				console.log(responses);
+				console.log("Hourly Tasks Done");
+			})
+			.then(() => {
+				if (dailyTaskList.length > 0) {
+					console.log("Daily Tasks...");
+					return Promise.all(dailyTaskList).then((responses) => {
+						console.log(responses);
+						console.log("Daily Tasks Done");
+					});
+				}
+			});
 	}
 
 	LastTask = Date.now();

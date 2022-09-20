@@ -74,7 +74,6 @@ const addToPlaylist = async (user, songsToAdd, removedTotal = {}) => {
 	const response = { error: false, message: [] };
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	for (const playlist of playlists) {
-		console.log(`Adding to playlist ${playlist.name} (${playlist.id}).`,removedTotal,removedTotal[playlist.id])
 		const singleResponse = await addToSinglePlaylist(
 			user,
 			playlist,

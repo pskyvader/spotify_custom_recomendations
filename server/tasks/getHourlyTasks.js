@@ -12,7 +12,7 @@ const getHourlyTasks = (userList) => {
 				}
 			})
 			.then(syncronizeMultiplePlaylists(user))
-			.then(() => {
+			.then((response) => {
 				user.set({ last_modified_hourly: Date.now() });
 				user.save().then(() => {
 					console.log(
@@ -20,6 +20,7 @@ const getHourlyTasks = (userList) => {
 						user.name
 					);
 				});
+				return response;
 			});
 	});
 };

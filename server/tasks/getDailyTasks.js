@@ -9,7 +9,7 @@ const getDailyTasks = (userList) => {
 	const taskList = userList.map((user) => {
 		const removeRepeated = removeRepeatedSongs(user).then(
 			(removeRepeatedResult) => {
-				console.log("Remove Repeated:", removeRepeatedResult.message);
+				console.log("Remove Repeated:", removeRepeatedResult);
 			}
 		);
 		const averageListeningTime = updateAverageTimes(user).then(
@@ -26,7 +26,7 @@ const getDailyTasks = (userList) => {
 		// const addResponse = addToPlaylist(user, songsToModify);
 
 		return removeRepeated
-			.then(()=>averageListeningTime)
+			.then(() => averageListeningTime)
 			.then(() => removeResponse)
 			.then((removedTotal) => {
 				return addToPlaylist(
@@ -36,13 +36,11 @@ const getDailyTasks = (userList) => {
 				);
 			})
 			.then((addResult) => {
-				console.log(addResult.message);
-			})
-			.then(() => {
 				user.set({ last_modified_daily: Date.now() });
 				user.save().then(() => {
 					console.log("last daily updated for user saved", user.name);
 				});
+				return addResult.message;
 			});
 	});
 	taskList.push(deleteGarbage());

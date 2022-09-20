@@ -7,6 +7,8 @@ const { updatePlaylistSong } = require("../model");
 
 const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 	const repeatedList = await getRepeatedSongs(playlist);
+	console.log("Removing repeated", repeatedList);
+
 	const repeatedTasks = repeatedList.map((repeatedSong) => {
 		let addDate = null;
 		const playlistSong = repeatedSong
@@ -42,8 +44,9 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 				);
 			});
 	});
+
 	return Promise.all(repeatedTasks).then((result) => {
-		return { message: result };
+		return { message: result, removedTotal: result.length };
 	});
 };
 
