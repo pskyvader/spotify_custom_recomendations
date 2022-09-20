@@ -38,7 +38,7 @@ const addToSinglePlaylist = async (
 	}
 
 	responseMessage.push(
-		`Max songs available to add: ${songlist.length} to the ${playlistSongsList.length} already in playlist, will attempt to add a max of ${songsToAdd}`
+		`Max songs available to add: ${songlist.length} to the ${playlistSongsList.length} already in playlist, will attempt to add a max of ${songsToAdd}. Previously removed: ${previouslyRemoved}`
 	);
 
 	let i = 0;
@@ -74,6 +74,7 @@ const addToPlaylist = async (user, songsToAdd, removedTotal = {}) => {
 	const response = { error: false, message: [] };
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	for (const playlist of playlists) {
+		console.log(`Adding to playlist ${playlist.name} (${playlist.id}).`,removedTotal,removedTotal[playlist.id])
 		const singleResponse = await addToSinglePlaylist(
 			user,
 			playlist,

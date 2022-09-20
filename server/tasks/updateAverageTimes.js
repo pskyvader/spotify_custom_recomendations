@@ -28,7 +28,7 @@ const updateAverageTimes = async (user) => {
 	for (const date of userSongs) {
 		// console.log(date.getDataValue("total"), date.getDataValue("played"));
 		response.dates += 1;
-		response.total_times += date.getDataValue("total");
+		response.total_times += parseInt(date.getDataValue("total"));
 	}
 	// console.log(response);
 
