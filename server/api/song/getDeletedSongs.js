@@ -1,7 +1,7 @@
 const { Song } = require("../../database");
 const getDeletedSongs = async (playlist) => {
 	return playlist
-		.getPlaylistSong({
+		.getPlaylistSongs({
 			where: {
 				active: false,
 			},
