@@ -6,8 +6,7 @@ const {
 const { updatePlaylistSong } = require("../model");
 
 const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
-	const repeatedList = await getRepeatedSongs(playlist);
-	console.log("Removing repeated", repeatedList);
+	const repeatedList = await getRepeatedSongs(user, playlist);
 
 	const repeatedTasks = repeatedList.map((repeatedSong) => {
 		let addDate = null;
@@ -22,7 +21,7 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 		const addSong = addSongToPlaylist(user, repeatedSong, playlist);
 
 		return playlistSong
-			.then(removeSong)
+			.then(() => removeSong)
 			.then((resultRemove) => {
 				if (resultRemove.error) {
 					return resultRemove;
@@ -37,6 +36,7 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 					active: true,
 					add_date: addDate,
 				};
+				console.log("add data", addData);
 				return updatePlaylistSong(
 					playlist.id,
 					repeatedSong.id,

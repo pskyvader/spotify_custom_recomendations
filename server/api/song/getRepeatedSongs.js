@@ -1,17 +1,27 @@
-const getRepeatedSongs = async (playlist) => {
-	const songList = await playlist.getSongs();
+const { getPlaylistSongsFromAPI } = require("./getPlaylistSongsFromAPI");
+const { getSong } = require("../../model");
+const getRepeatedSongs = async (user, playlist) => {
+	const songList = await getPlaylistSongsFromAPI(user, playlist);
 	// remove repeated ids from currentPlaylist array
 	const filtered = songList.filter((currentSong, index, self) => {
 		const found = self.findIndex((song) => {
 			return song.id === currentSong.id;
 		});
-		console.log(
-			`Found ${found},index ${index}, id ${currentSong.id}`
-		);
 		return found !== index;
 	});
+
+	const formattedFiltered = await filtered.map(async (song) => {
+		const formattedSong = await getSong(user.access_token, song.id, song);
+		return formattedSong;
+	});
+	console.log(formattedFiltered);
+
 	const unique = [
-		...new Map(filtered.map((song) => [song.id, song])).values(),
+		...new Map(
+			formattedFiltered.map((song) => {
+				return [song.id, song];
+			})
+		).values(),
 	];
 	return unique;
 };
