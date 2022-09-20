@@ -9,10 +9,7 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 	const repeatedList = await getRepeatedSongs(user, playlist);
 
 	const repeatedTasks = repeatedList.map((repeatedSong) => {
-		let addDate = null;
-		const playlistSong = repeatedSong
-			.getPlaylistSongs()
-			.then((result) => (addDate = result.add_date));
+		const playlistSong = repeatedSong.getPlaylistSongs();
 		const removeSong = removeSongFromPlaylistFromAPI(
 			user,
 			repeatedSong,
@@ -21,12 +18,14 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 		const addSong = addSongToPlaylist(user, repeatedSong, playlist);
 
 		return playlistSong
-			.then(() => removeSong)
+			.then((resultPlaylistSong) => {
+				return { ...removeSong, add_date: resultPlaylistSong.add_date };
+			})
 			.then((resultRemove) => {
 				if (resultRemove.error) {
 					return resultRemove;
 				}
-				return addSong;
+				return { ...addSong, add_date: resultRemove.add_date };
 			})
 			.then((resultAdd) => {
 				if (resultAdd.error) {
@@ -34,9 +33,9 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 				}
 				const addData = {
 					active: true,
-					add_date: addDate,
+					add_date: resultAdd.add_date,
 				};
-				console.log("add data", addData);
+				console.log("add data", addData, playlist.id, repeatedSong.id);
 				return updatePlaylistSong(
 					playlist.id,
 					repeatedSong.id,

@@ -8,19 +8,19 @@ const getHourlyTasks = (userList) => {
 				if (updateResult.error) {
 					console.log("Update error", updateResult);
 				} else {
-					console.log(`Recent Songs Updated`, updateResult);
+					console.log(`Recent Songs Updated`, updateResult.message);
 				}
 				return syncronizeMultiplePlaylists(user);
 			})
 			.then((response) => {
 				user.set({ last_modified_hourly: Date.now() });
-				user.save().then(() => {
+				return user.save().then(() => {
 					console.log(
 						"last hourly updated for user saved",
 						user.name
 					);
+					return response;
 				});
-				return response;
 			});
 	});
 };

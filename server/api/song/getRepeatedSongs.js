@@ -10,11 +10,12 @@ const getRepeatedSongs = async (user, playlist) => {
 		return found !== index;
 	});
 
-	const formattedFiltered = await filtered.map(async (song) => {
-		const formattedSong = await getSong(user.access_token, song.id, song);
-		return formattedSong;
-	});
-	console.log(formattedFiltered);
+	const formattedFiltered = await Promise.all(
+		filtered.map((song) => {
+			const formattedSong = getSong(user.access_token, song.id, song);
+			return formattedSong;
+		})
+	);
 
 	const unique = [
 		...new Map(
