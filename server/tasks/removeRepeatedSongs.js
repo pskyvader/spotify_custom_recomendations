@@ -18,14 +18,20 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 		const addSong = addSongToPlaylist(user, repeatedSong, playlist);
 
 		return playlistSong
-			.then((resultPlaylistSong) => {
-				return { ...removeSong, add_date: resultPlaylistSong.add_date };
+			.then((resultPlaylistSongs) => {
+				return removeSong.then((result) => {
+					result.add_date = resultPlaylistSongs[0].add_date;
+					return result;
+				});
 			})
 			.then((resultRemove) => {
 				if (resultRemove.error) {
 					return resultRemove;
 				}
-				return { ...addSong, add_date: resultRemove.add_date };
+				return addSong.then((result) => {
+					result.add_date = resultRemove.add_date;
+					return result;
+				});
 			})
 			.then((resultAdd) => {
 				if (resultAdd.error) {
@@ -35,12 +41,17 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 					active: true,
 					add_date: resultAdd.add_date,
 				};
-				console.log("add data", addData, playlist.id, repeatedSong.id);
 				return updatePlaylistSong(
 					playlist.id,
 					repeatedSong.id,
 					addData
 				);
+			})
+			.then((finalresult) => {
+				if (finalresult.error) {
+					return finalresult;
+				}
+				return `Removed repeated song ${repeatedSong.name}`;
 			});
 	});
 
