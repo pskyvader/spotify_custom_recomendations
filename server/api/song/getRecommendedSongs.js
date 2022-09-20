@@ -1,9 +1,8 @@
-
-const {getPlaylistSongs}=require("./getPlaylistSongs")
-const {getDeletedSongs}=require("./getDeletedSongs")
-const {getRecommendedSongsFromAPI}=require("./getRecommendedSongsFromAPI")
-const {getRecentlyPlayedSongs}=require("./getRecentlyPlayedSongs")
-const {getTopSongsFromAPI}=require("./getTopSongsFromAPI")
+const { getPlaylistSongs } = require("./getPlaylistSongs");
+const { getDeletedSongs } = require("./getDeletedSongs");
+const { getRecommendedSongsFromAPI } = require("./getRecommendedSongsFromAPI");
+const { getRecentlyPlayedSongs } = require("./getRecentlyPlayedSongs");
+const { getTopSongsFromAPI } = require("./getTopSongsFromAPI");
 
 //week in ms
 const week = 604800000;
@@ -62,7 +61,7 @@ const getRecommendedSongs = async (user, playlist) => {
 	//remove songs recently removed and songs already in playlist
 	return recommendedTracks.filter((currentSong) => {
 		return (
-			!removedSongs.find((song) => song.id === currentSong.id) &&
+			!removedSongs.find((song) => song.Song.id === currentSong.id) &&
 			!currentPlaylist.find((song) => song.id === currentSong.id)
 		);
 	});
