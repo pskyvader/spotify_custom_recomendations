@@ -32,13 +32,13 @@ const getAvailableUsers = async () => {
 			user.access_token = result.access_token;
 			user.expiration = result.expiration;
 		}
-		console.log(`User available, expiration:${user.expiration}`);
-		// if (user.last_modified_hourly < Date.now() - hour) {
-		availableUsersList.hourly.push(user);
-		// }
-		// if (user.last_modified_daily < Date.now() - day) {
-		availableUsersList.daily.push(user);
-		// }
+		console.log(`Expiration: ${user.expiration}`);
+		if (user.last_modified_hourly < Date.now() - hour) {
+			availableUsersList.hourly.push(user);
+		}
+		if (user.last_modified_daily < Date.now() - day) {
+			availableUsersList.daily.push(user);
+		}
 	}
 	return availableUsersList;
 };
@@ -60,7 +60,7 @@ const automaticTasks = async (_req, res) => {
 	const dailyTaskList = getDailyTasks(userList.daily);
 
 	if (hourlyTaskList.length > 0) {
-		console.log("Hourly Tasks...");
+		console.log(`Hourly task for ${hourlyTaskList.length} users`);
 		await Promise.all(hourlyTaskList)
 			.then((responses) => {
 				const totalresponses = [];
@@ -72,7 +72,7 @@ const automaticTasks = async (_req, res) => {
 			})
 			.then(() => {
 				if (dailyTaskList.length > 0) {
-					console.log("Daily Tasks...");
+					console.log(`Daily task for ${dailyTaskList.length} users`);
 					return Promise.all(dailyTaskList).then((responses) => {
 						const totalresponses = [];
 						for (const r in responses) {
