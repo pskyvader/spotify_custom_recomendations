@@ -57,7 +57,13 @@ const getRecommendedSongsToRemove = async (user, playlist) => {
 		if (song.UserSongHistories.length === 0) {
 			return true;
 		}
-		console.log("recommendedForRemove", song.UserSongHistories);
+		console.log(
+			"recommendedForRemove",
+			song.UserSongHistories.map((history) => ({
+				id: history.id,
+				date: history.played_date,
+			}))
+		);
 		return song.UserSongHistories[0].played_date < Date.now() - 2 * week;
 	});
 
