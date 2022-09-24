@@ -32,10 +32,13 @@ const getRecommendedSongsToRemove = async (user, playlist) => {
 
 	const oldAddedSongs = await playlist
 		.getSongs({
+			where: {
+				active: true,
+			},
 			include: [
 				{
 					model: UserSongHistory,
-					order: [["played_date", "DESC"]],
+					// order: [["played_date", "DESC"]],
 				},
 				{
 					model: PlaylistSong,
@@ -46,6 +49,7 @@ const getRecommendedSongsToRemove = async (user, playlist) => {
 					},
 				},
 			],
+			order: [[Division, "played_date", "DESC"]],
 			// raw: true,
 			// nest: true,
 		})
@@ -55,6 +59,7 @@ const getRecommendedSongsToRemove = async (user, playlist) => {
 
 	const recommendedForRemove = oldAddedSongs.filter((song) => {
 		if (song.UserSongHistories.length === 0) {
+			console.log("empty song history", song.name);
 			return true;
 		}
 		console.log(
