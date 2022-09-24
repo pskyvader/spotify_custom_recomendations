@@ -49,7 +49,7 @@ const getRecommendedSongsToRemove = async (user, playlist) => {
 					},
 				},
 			],
-			order: [[Division, "played_date", "DESC"]],
+			order: [[UserSongHistory, "played_date", "DESC"]],
 			// raw: true,
 			// nest: true,
 		})
