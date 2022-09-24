@@ -15,9 +15,10 @@ const getRecentlyAddedSongs = async (playlist) => {
 							[Op.gte]: Date.now() - 2 * week,
 						},
 					},
-					order: [["add_date", "ASC"]],
+					// order: [["add_date", "ASC"]],
 				},
 			],
+			order: [[PlaylistSong, "add_date", "ASC"]],
 
 			// raw: true,
 			// nest: true,

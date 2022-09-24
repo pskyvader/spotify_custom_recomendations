@@ -10,9 +10,10 @@ const getPlaylistSongs = async (playlist) => {
 					where: {
 						active: true,
 					},
-					order: [["add_date", "ASC"]],
+					// order: [["add_date", "ASC"]],
 				},
 			],
+			order: [[PlaylistSong, "add_date", "ASC"]],
 		})
 		.catch((err) => {
 			console.error("getPlaylistSongs error", err);
