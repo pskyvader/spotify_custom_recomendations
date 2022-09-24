@@ -41,7 +41,7 @@ const deleteGarbage = async () => {
 	});
 
 	const removeSongTasks = songList.map((song) => {
-		if (song.User.length === 0 && song.Playlist.length === 0) {
+		if (song.Users.length === 0 && song.Playlists.length === 0) {
 			return song.destroy().catch((err) => ({ error: err.message }));
 		}
 		return null;
