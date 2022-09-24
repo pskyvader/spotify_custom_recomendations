@@ -13,7 +13,7 @@ const removeFromSinglePlaylist = async (user, playlist, songsToRemove) => {
 	if (playlistSongsList.error) {
 		return playlistSongsList;
 	}
-	const songlist = await getRecommendedSongsToRemove(user, playlist);
+	const songlist = await getRecommendedSongsToRemove(playlist);
 	if (songlist.error) {
 		return songlist;
 	}

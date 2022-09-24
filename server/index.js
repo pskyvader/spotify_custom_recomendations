@@ -214,7 +214,7 @@ app.get("/api/playlists/deleterecommended/:playlistId", async (req, res) => {
 	);
 	if (!result) {
 		const playlist = await getPlaylist(user, req.params.playlistId);
-		result = await getRecommendedSongsToRemove(user, playlist);
+		result = await getRecommendedSongsToRemove(playlist);
 		if (!result.error) {
 			result = result.map((song) => song.toJSON());
 			cache.set(

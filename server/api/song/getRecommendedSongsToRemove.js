@@ -4,45 +4,15 @@ const { UserSongHistory, PlaylistSong } = require("../../database");
 //week in ms
 const week = 604800000;
 
-const getRecommendedSongsToRemove = async (user, playlist) => {
-	// const neverPlayedSongs = await user.getSongs({
-	// 	include: [
-	// 		{
-	// 			model: UserSongHistory,
-	// 			where: {
-	// 				played_date: null,
-	// 			},
-	// 		},
-	// 	],
-	// });
-	// const oldPlayedSongs = await user.getSongs({
-	// 	include: [
-	// 		{
-	// 			model: UserSongHistory,
-	// 			where: {
-	// 				played_date: {
-	// 					[Op.lte]: Date.now() - 3 * week,
-	// 				},
-	// 			},
-	// 			order: [["played_date", "ASC"]],
-	// 		},
-	// 	],
-	// });
-	// neverPlayedSongs.push(...oldPlayedSongs);
-
+const getRecommendedSongsToRemove = async (playlist) => {
 	const oldAddedSongs = await playlist
 		.getSongs({
-			where: {
-				active: true,
-			},
 			include: [
-				{
-					model: UserSongHistory,
-					// order: [["played_date", "DESC"]],
-				},
+				UserSongHistory,
 				{
 					model: PlaylistSong,
 					where: {
+						active: true,
 						add_date: {
 							[Op.lte]: Date.now() - 1 * week,
 						},
@@ -50,13 +20,10 @@ const getRecommendedSongsToRemove = async (user, playlist) => {
 				},
 			],
 			order: [[UserSongHistory, "played_date", "DESC"]],
-			// raw: true,
-			// nest: true,
 		})
 		.catch((err) => {
 			return { error: err.message };
 		});
-
 	const recommendedForRemove = oldAddedSongs.filter((song) => {
 		if (song.UserSongHistories.length === 0) {
 			console.log("empty song history", song.name);
@@ -73,6 +40,8 @@ const getRecommendedSongsToRemove = async (user, playlist) => {
 		);
 		return song.UserSongHistories[0].played_date < Date.now() - 2 * week;
 	});
+
+	console.log(recommendedForRemove.length);
 
 	return recommendedForRemove.slice(0, 15);
 };
