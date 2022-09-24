@@ -34,16 +34,16 @@ const getRecommendedSongsToRemove = async (user, playlist) => {
 		.getSongs({
 			include: [
 				{
+					model: UserSongHistory,
+					order: [["played_date", "DESC"]],
+				},
+				{
 					model: PlaylistSong,
 					where: {
 						add_date: {
 							[Op.lte]: Date.now() - 1 * week,
 						},
 					},
-				},
-				{
-					model: UserSongHistory,
-					order: [["played_date", "DESC"]],
 				},
 			],
 			// raw: true,
@@ -59,9 +59,11 @@ const getRecommendedSongsToRemove = async (user, playlist) => {
 		}
 		console.log(
 			"recommendedForRemove",
+			song.UserSongHistories[0].played_date < Date.now() - 2 * week,
+			song.UserSongHistories[0].id,
 			song.UserSongHistories.map((history) => ({
 				id: history.id,
-				date: history.played_date,
+				played_date: history.played_date,
 			}))
 		);
 		return song.UserSongHistories[0].played_date < Date.now() - 2 * week;
