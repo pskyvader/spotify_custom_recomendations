@@ -51,8 +51,7 @@ const getRecommendedSongsToRemove = async (user, playlist) => {
 		})
 		.catch((err) => {
 			return { error: err.message };
-		})
-		.then((oldsongs) => oldsongs.map((song) => song.id));
+		});
 
 	const recommendedForRemove = oldAddedSongs.filter((song) => {
 		console.log("recommendedForRemove", song);
