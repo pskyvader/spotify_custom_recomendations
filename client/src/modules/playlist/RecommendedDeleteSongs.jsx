@@ -4,10 +4,11 @@ import { Playlist } from "../../API";
 import SongList, { SongListColumns } from "../../components/SongList";
 import ButtonRemoveSong from "../../components/ButtonRemoveSong";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
-const RecommendedDeleteSongs = ({ playlistId,hidden }) => {
-	const { playlistDeleteTracks, setPlaylistDeleteTracks,playlistTracks } = useContext(PlaylistContext);
+const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
+	const { playlistDeleteTracks, setPlaylistDeleteTracks, playlistTracks } =
+		useContext(PlaylistContext);
 	useEffect(() => {
-		if(!playlistTracks[playlistId]){
+		if (!playlistTracks[playlistId]) {
 			return;
 		}
 		if (!playlistDeleteTracks[playlistId]) {
@@ -17,11 +18,16 @@ const RecommendedDeleteSongs = ({ playlistId,hidden }) => {
 				setPlaylistDeleteTracks({ ...playlistDeleteTracks });
 			});
 		}
-	}, [playlistId, playlistDeleteTracks, setPlaylistDeleteTracks,playlistTracks]);
+	}, [
+		playlistId,
+		playlistDeleteTracks,
+		setPlaylistDeleteTracks,
+		playlistTracks,
+	]);
 	if (playlistId === null) {
 		return null;
 	}
-	if(hidden) {
+	if (hidden) {
 		return null;
 	}
 	if (playlistDeleteTracks[playlistId]) {
@@ -30,6 +36,18 @@ const RecommendedDeleteSongs = ({ playlistId,hidden }) => {
 			playlistId,
 			ButtonRemoveSong
 		);
+		const button = data.columns.pop();
+		data.columns.push({
+			field: "played_date",
+			headerName: "Played",
+			minWidth: 200,
+			flex: 1,
+			renderCell: (cellData) =>
+				cellData.formattedValue !== null
+					? new Date(cellData.formattedValue).toLocaleString()
+					: "",
+		});
+		data.columns.push(button);
 		return <SongList data={data} title="Recommended for delete" />;
 	}
 	return <CircularProgress />;
