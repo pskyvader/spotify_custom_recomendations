@@ -36,8 +36,7 @@ const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
 			playlistId,
 			ButtonRemoveSong
 		);
-		const button = data.columns.pop();
-		data.columns.push({
+		data.columns.splice(2, 0, {
 			field: "played_date",
 			headerName: "Played",
 			minWidth: 200,
@@ -46,8 +45,7 @@ const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
 				cellData.formattedValue !== null
 					? new Date(cellData.formattedValue).toLocaleString()
 					: "",
-		});
-		data.columns.push(button);
+		})
 		return <SongList data={data} title="Recommended for delete" />;
 	}
 	return <CircularProgress />;
