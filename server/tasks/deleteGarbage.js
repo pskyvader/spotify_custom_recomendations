@@ -45,7 +45,8 @@ const deleteGarbage = async () => {
 			return song.destroy().catch((err) => ({ error: err.message }));
 		}
 		return null;
-	});
+	}); //.filter((song) => song!==null);
+	console.log(songList, removeSongTasks);
 	return Promise.all(removeSongTasks).then(
 		(success) => {
 			return [success.length + " removed garbage songs"];
