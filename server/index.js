@@ -302,6 +302,9 @@ app.post("/api/actions/add/:playlistId/:songId", async (req, res) => {
 				newcacherecommended,
 				tenMinutes
 			);
+			if (newcacherecommended.length === 0) {
+				cache.del(`get-playlist-recommended-${req.params.playlistId}`);
+			}
 		}
 		const cacheredeleted = cache.get(
 			`get-playlist-deleted-${req.params.playlistId}`
@@ -341,7 +344,9 @@ app.post("/api/actions/remove/:playlistId/:songId", async (req, res) => {
 				newcacheplaylist,
 				tenMinutes
 			);
-			// cache.del(`get-playlist-songs-${req.params.playlistId}`);
+			if (newcacheplaylist.length === 0) {
+				cache.del(`get-playlist-songs-${req.params.playlistId}`);
+			}
 		}
 		const cachedeleterecommended = cache.get(
 			`get-playlist-deleterecommended-${req.params.playlistId}`
@@ -357,7 +362,11 @@ app.post("/api/actions/remove/:playlistId/:songId", async (req, res) => {
 				newcachedeleterecommended,
 				tenMinutes
 			);
-			// cache.del(`get-playlist-deleterecommended-${req.params.playlistId}`);
+			if (newcachedeleterecommended.length === 0) {
+				cache.del(
+					`get-playlist-deleterecommended-${req.params.playlistId}`
+				);
+			}
 		}
 
 		const cachedeleted = cache.get(
