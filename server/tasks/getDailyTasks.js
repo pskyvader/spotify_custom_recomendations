@@ -43,7 +43,9 @@ const getDailyTasks = (userList) => {
 				});
 			});
 	});
-	taskList.push(deleteGarbage());
+	if (userList.length > 0) {
+		taskList.push(deleteGarbage());
+	}
 	return taskList;
 };
 module.exports = { getDailyTasks };
