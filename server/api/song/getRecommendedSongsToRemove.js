@@ -41,7 +41,7 @@ const getRecommendedSongsToRemove = async (playlist) => {
 		return song.UserSongHistories[0].played_date < Date.now() - 2 * week;
 	});
 
-	console.log(recommendedForRemove.length);
+	console.log("Recommended to remove: " + recommendedForRemove.length);
 
 	return recommendedForRemove.slice(0, 15);
 };
