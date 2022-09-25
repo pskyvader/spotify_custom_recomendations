@@ -29,32 +29,10 @@ const getRecommendedSongsToRemove = async (playlist) => {
 		});
 	const recommendedForRemove = oldAddedSongs.filter((song) => {
 		if (song.UserSongHistories.length === 0) {
-			// console.log("empty song history", song.name);
 			return true;
 		}
-		// console.log(
-		// 	"recommendedForRemove",
-		// 	song.UserSongHistories[0].played_date < Date.now() - 2 * week,
-		// 	song.UserSongHistories[0].id,
-		// 	song.UserSongHistories.map((history) => ({
-		// 		id: history.id,
-		// 		played_date: history.played_date,
-		// 	}))
-		// );
 		return song.UserSongHistories[0].played_date < Date.now() - 2 * week;
 	});
-
-	console.log(
-		"Recommended to remove: " +
-			recommendedForRemove.map((song) => {
-				return `${song.name}: ${
-					song.UserSongHistories.length > 0
-						? song.UserSongHistories[0].played_date
-						: null
-				}, ${song.PlaylistSongs.add_date}.	-	`;
-			})
-	);
-	console.log("Recommended to remove: " + recommendedForRemove.length);
 
 	return recommendedForRemove.slice(0, 15);
 };
