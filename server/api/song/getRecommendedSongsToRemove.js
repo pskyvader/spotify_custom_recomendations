@@ -19,7 +19,10 @@ const getRecommendedSongsToRemove = async (playlist) => {
 					},
 				},
 			],
-			order: [[UserSongHistory, "played_date", "DESC"]],
+			order: [
+				[UserSongHistory, "played_date", "DESC"],
+				[UserSongHistory, "add_date", "ASC"],
+			],
 		})
 		.catch((err) => {
 			return { error: err.message };
