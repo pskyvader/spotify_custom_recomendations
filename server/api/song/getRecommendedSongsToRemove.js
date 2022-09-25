@@ -21,7 +21,7 @@ const getRecommendedSongsToRemove = async (playlist) => {
 			],
 			order: [
 				[UserSongHistory, "played_date", "DESC"],
-				[UserSongHistory, "add_date", "ASC"],
+				[PlaylistSong, "add_date", "ASC"],
 			],
 		})
 		.catch((err) => {
@@ -44,6 +44,16 @@ const getRecommendedSongsToRemove = async (playlist) => {
 		return song.UserSongHistories[0].played_date < Date.now() - 2 * week;
 	});
 
+	console.log(
+		"Recommended to remove: " +
+			recommendedForRemove.map((song) => {
+				return `${song.name}: ${
+					song.UserSongHistories.length > 0
+						? song.UserSongHistories[0].played_date
+						: null
+				}, ${song.PlaylistSongs.add_date}.	-	`;
+			})
+	);
 	console.log("Recommended to remove: " + recommendedForRemove.length);
 
 	return recommendedForRemove.slice(0, 15);
