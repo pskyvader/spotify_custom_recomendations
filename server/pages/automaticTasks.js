@@ -44,7 +44,7 @@ const getAvailableUsers = async () => {
 };
 
 const automaticTasks = async (_req, res) => {
-	const response = {
+	let response = {
 		error: false,
 		message: [],
 	};
@@ -60,26 +60,30 @@ const automaticTasks = async (_req, res) => {
 	const dailyTaskList = getDailyTasks(userList.daily);
 
 	if (hourlyTaskList.length > 0) {
-		console.log(`Hourly task for ${hourlyTaskList.length} users`);
-		await Promise.all(hourlyTaskList)
+		response.message.push(`Hourly task for ${hourlyTaskList.length} users`);
+		response = await Promise.all(hourlyTaskList)
 			.then((responses) => {
 				const totalresponses = [];
 				for (const r in responses) {
 					totalresponses.push(...responses[r].message);
 				}
-				console.log("Hourly Tasks Done", totalresponses);
+				response.message.push("Hourly Tasks Done");
 				response.message.push(...totalresponses);
+				return response;
 			})
-			.then(() => {
+			.then((response) => {
 				if (dailyTaskList.length > 0) {
-					console.log(`Daily task for ${dailyTaskList.length} users`);
+					response.message.push(
+						`Daily task for ${dailyTaskList.length} users`
+					);
 					return Promise.all(dailyTaskList).then((responses) => {
 						const totalresponses = [];
 						for (const r in responses) {
 							totalresponses.push(...responses[r]);
 						}
-						console.log("Daily Tasks Done", totalresponses);
+						response.message.push("Daily Tasks Done");
 						response.message.push(...totalresponses);
+						return response;
 					});
 				}
 			});
