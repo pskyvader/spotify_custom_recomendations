@@ -73,6 +73,9 @@ const automaticTasks = async (_req, res) => {
 			})
 			.then((response) => {
 				if (dailyTaskList.length > 0) {
+					console.log(
+						`Daily task for ${dailyTaskList} - ${userList.daily}`
+					);
 					response.message.push(
 						`Daily task for ${dailyTaskList.length} users`
 					);
