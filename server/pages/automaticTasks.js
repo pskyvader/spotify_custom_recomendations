@@ -67,8 +67,8 @@ const automaticTasks = async (_req, res) => {
 				for (const r in responses) {
 					totalresponses.push(...responses[r].message);
 				}
-				response.message.push("Hourly Tasks Done");
 				response.message.push(...totalresponses);
+				response.message.push("Hourly Tasks Done");
 				return response;
 			})
 			.then((response) => {
@@ -81,8 +81,8 @@ const automaticTasks = async (_req, res) => {
 						for (const r in responses) {
 							totalresponses.push(...responses[r]);
 						}
-						response.message.push("Daily Tasks Done");
 						response.message.push(...totalresponses);
+						response.message.push("Daily Tasks Done");
 						return response;
 					});
 				}

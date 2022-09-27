@@ -40,19 +40,18 @@ const deleteGarbage = async () => {
 		include: [User, Playlist],
 	});
 
-	const removeSongTasks = songList.map((song) => {
-		if (song.Users.length === 0 && song.Playlists.length === 0) {
-			return song.destroy().catch((err) => ({ error: err.message }));
-		}
-		return null;
-	}); //.filter((song) => song!==null);
-	console.log(songList, removeSongTasks);
+	const removeSongTasks = songList
+		.filter(
+			(song) => song.Users.length === 0 && song.Playlists.length === 0
+		)
+		.map((song) => song.destroy().catch((err) => ({ error: err.message })));
+
 	return Promise.all(removeSongTasks).then(
 		(success) => {
 			return [success.length + " removed garbage songs"];
 		},
 		(error) => {
-			return [error + "remove garbage songs error"];
+			return ["remove garbage songs error", error];
 		}
 	);
 };
