@@ -82,9 +82,9 @@ const automaticTasks = async () => {
 							previousResponse.push(...responses[r].message);
 						}
 						previousResponse.message.push("Daily Tasks Done");
-						return previousResponse;
 					});
 				}
+				return previousResponse;
 			});
 		response.message.push(...promiseResponse);
 	}

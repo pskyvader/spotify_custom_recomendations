@@ -64,7 +64,7 @@ const removeRepeatedSongs = async (user) => {
 	const response = {
 		error: false,
 		message: ["Remove Repeated: "],
-		removedTotal: {},
+		removedTotalRepeated: {},
 	};
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	for (const playlist of playlists) {
