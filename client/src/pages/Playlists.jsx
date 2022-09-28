@@ -17,13 +17,13 @@ import { Playlist } from "../API";
 import Player from "../components/Player";
 
 const Root = styled("div")(({ theme }) => {
-	console.log(theme);
 	return {
 		maxHeight: `calc(100vh - ${
 			theme.mixins.toolbar.minHeight * 2
-		}px - ${theme.spacing(7)})`,
+		}px - ${theme.spacing(7)})`,// - ${theme.spacing(10)}
 		[theme.breakpoints.down("md")]: {
 			maxHeight: "none",
+			// marginBottom: theme.spacing(12),
 		},
 		minHeight: 400,
 		// height: "100vh",
@@ -33,7 +33,8 @@ const Root = styled("div")(({ theme }) => {
 const Playlists = () => {
 	const { playlistid } = useParams() || null;
 	const { LoggedIn } = useContext(SessionContext);
-	const { playlistActive, setPlaylistActive } = useContext(PlaylistContext);
+	const { playlistActive, setPlaylistActive, playlistTracks } =
+		useContext(PlaylistContext);
 	const [tabNumber, setTabNumber] = useState(0);
 
 	useEffect(() => {
@@ -131,7 +132,13 @@ const Playlists = () => {
 						hidden={tabNumber !== 4}
 					/>
 				</Root>
-				<Player></Player>
+				<Player
+					song={
+						playlistTracks[playlistid]
+							? playlistTracks[playlistid][0]
+							: null
+					}
+				></Player>
 			</Container>
 		);
 	}

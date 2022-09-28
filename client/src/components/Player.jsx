@@ -9,30 +9,53 @@ import Typography from "@mui/material/Typography";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
-import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Grid from "@mui/material/Grid";
+import LinearProgress from "@mui/material/LinearProgress";
 
-export default function Player(song) {
+export default function Player({ song }) {
 	const theme = useTheme();
+	if (song === null) return null;
 
 	return (
-		<Paper
-			sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
-			elevation={3}
+		// <Paper
+		// 	sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+		// 	elevation={3}
+		// >
+		<Grid
+			display="flex"
+			justifyContent="center"
+			alignItems="center"
+			sx={{
+				position: "fixed",
+				bottom: 0,
+				left: 0,
+				right: 0,
+				background: "transparent",
+			}}
 		>
-			<Card sx={{ display: "flex" }}>
-				<Box sx={{ display: "flex", flexDirection: "column" }}>
-					<CardContent sx={{ flex: "1 0 auto" }}>
-						<Typography component="div" variant="h5">
-							{song.title}
-						</Typography>
-						<Typography
-							variant="subtitle1"
-							color="text.secondary"
-							component="div"
-						>
-							{song.artist}
-						</Typography>
-					</CardContent>
+			<Stack>
+				<Card xs={12} sx={{ display: "flex" }}>
+					<CardMedia
+						component="img"
+						sx={{ width: 100 }}
+						image={song.image}
+						alt={song.album}
+					/>
+					<Box sx={{ display: "flex" }}>
+						<CardContent sx={{ flex: "1 0 auto" }}>
+							<Typography component="div" variant="h5">
+								{song.name}
+							</Typography>
+							<Typography
+								variant="subtitle1"
+								color="text.secondary"
+								component="div"
+							>
+								{song.artist}
+							</Typography>
+						</CardContent>
+					</Box>
 					<Box
 						sx={{
 							display: "flex",
@@ -59,14 +82,10 @@ export default function Player(song) {
 							)}
 						</IconButton>
 					</Box>
-				</Box>
-				<CardMedia
-					component="img"
-					sx={{ width: 151 }}
-					image={song.image}
-					alt={song.album}
-				/>
-			</Card>
-		</Paper>
+				</Card>
+				<LinearProgress variant="determinate" value={50} />
+			</Stack>
+		</Grid>
+		// </Paper>
 	);
 }
