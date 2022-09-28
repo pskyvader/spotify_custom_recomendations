@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useContext } from "react";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -13,9 +13,13 @@ import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 import LinearProgress from "@mui/material/LinearProgress";
 
-export default function Player({ song }) {
+import { PlayerContext } from "../context/PlayerContextProvider";
+
+export default function Player() {
 	const theme = useTheme();
-	if (song === null) return null;
+	const { playing } = useContext(PlayerContext);
+	if (playing === null) return null;
+	const song = playing;
 
 	return (
 		// <Paper
