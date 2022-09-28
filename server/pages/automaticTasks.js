@@ -40,10 +40,11 @@ const getAvailableUsers = async () => {
 			availableUsersList.daily.push(user);
 		}
 	}
+	console.log("--------------------------------");
 	return availableUsersList;
 };
 
-const automaticTasks = async (_req, res) => {
+const automaticTasks = async () => {
 	let response = {
 		error: false,
 		message: [],
@@ -51,45 +52,41 @@ const automaticTasks = async (_req, res) => {
 	if (LastTask > Date.now() - hour) {
 		response.error = true;
 		response.message = "Not able to run task for next hour";
-		res.json(response);
-		return;
+		return response;
 	}
 	const userList = await getAvailableUsers();
-
 	const hourlyTaskList = getHourlyTasks(userList.hourly);
 	const dailyTaskList = getDailyTasks(userList.daily);
 
 	if (hourlyTaskList.length > 0) {
 		response.message.push(`Hourly task for ${hourlyTaskList.length} users`);
-		response = await Promise.all(hourlyTaskList)
-			.then((responses) => {
-				const totalresponses = [];
-				for (const r in responses) {
-					totalresponses.push(...responses[r].message);
+		const promiseResponse = await Promise.all(hourlyTaskList)
+			.then((hourlyResponses) => {
+				const totalresponses = { message: [] };
+				for (const r in hourlyResponses) {
+					totalresponses.message.push(...hourlyResponses[r].message);
 				}
-				response.message.push(...totalresponses);
-				response.message.push("Hourly Tasks Done");
-				return response;
+				totalresponses.message.push("Hourly Tasks Done");
+				totalresponses.message.push("--------------------");
+				return totalresponses;
 			})
-			.then((response) => {
+			.then((previousResponse) => {
 				if (dailyTaskList.length > 0) {
-					console.log(
-						`Daily task for ${dailyTaskList} - ${userList.daily}`
-					);
-					response.message.push(
-						`Daily task for ${dailyTaskList.length} users`
+					previousResponse.message.push(
+						`Daily task for ${userList.daily.length} users`
 					);
 					return Promise.all(dailyTaskList).then((responses) => {
 						const totalresponses = [];
 						for (const r in responses) {
 							totalresponses.push(...responses[r]);
 						}
-						response.message.push(...totalresponses);
-						response.message.push("Daily Tasks Done");
-						return response;
+						previousResponse.message.push(...totalresponses);
+						previousResponse.message.push("Daily Tasks Done");
+						return previousResponse;
 					});
 				}
 			});
+		response.message.push(...promiseResponse);
 	}
 
 	LastTask = Date.now();

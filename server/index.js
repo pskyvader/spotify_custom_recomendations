@@ -84,7 +84,7 @@ app.get("/callback", function (req, res) {
 	callback(req, res);
 });
 app.get("/tasks", function (req, res) {
-	automaticTasks(req, res).then((response) => {
+	automaticTasks().then((response) => {
 		console.log("Task response", response);
 		res.json(response);
 	});
