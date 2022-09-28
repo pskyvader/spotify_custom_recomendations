@@ -82,7 +82,7 @@ const SongList = ({ data, title = "title" }) => {
 			{...data}
 			columnBuffer={2}
 			columnThreshold={2}
-			// autoHeight={true}
+			autoHeight={true}
 			// disableExtendRowFullWidth
 		/>
 	);

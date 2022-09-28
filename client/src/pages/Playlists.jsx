@@ -14,15 +14,19 @@ import RecommendedDeleteSongs from "../modules/playlist/RecommendedDeleteSongs";
 import LastPlayedSongs from "../modules/playlist/LastPlayedSongs";
 import DeletedSongs from "../modules/playlist/DeletedSongs";
 import { Playlist } from "../API";
+import Player from "../components/Player";
 
 const Root = styled("div")(({ theme }) => {
+	console.log(theme);
 	return {
-		maxHeight:`calc(100vh - ${theme.mixins.toolbar.minHeight * 2}px - ${theme.spacing(7)})`,
+		maxHeight: `calc(100vh - ${
+			theme.mixins.toolbar.minHeight * 2
+		}px - ${theme.spacing(7)})`,
 		[theme.breakpoints.down("md")]: {
 			maxHeight: "none",
 		},
 		minHeight: 400,
-		height: "100vh",
+		// height: "100vh",
 		overflow: "auto",
 	};
 });
@@ -70,7 +74,7 @@ const Playlists = () => {
 		if (!playlistActive[playlistid].active) {
 			return (
 				<div>
-				Playlist {playlistActive[playlistid].name} Inactive
+					Playlist {playlistActive[playlistid].name} Inactive
 					<Switch
 						checked={playlistActive[playlistid].active}
 						onChange={handleChange}
@@ -127,6 +131,7 @@ const Playlists = () => {
 						hidden={tabNumber !== 4}
 					/>
 				</Root>
+				<Player></Player>
 			</Container>
 		);
 	}

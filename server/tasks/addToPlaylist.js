@@ -70,8 +70,13 @@ const addToSinglePlaylist = async (
 	return responseMessage;
 };
 
-const addToPlaylist = async (user, songsToAdd, removedTotal = {}) => {
-	const response = { error: false, message: [] };
+const addToPlaylist = async (
+	user,
+	songsToAdd,
+	removedTotal = {},
+	response = { error: false, message: [] }
+) => {
+	response.message.push("Added :");
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	for (const playlist of playlists) {
 		const singleResponse = await addToSinglePlaylist(
@@ -82,6 +87,11 @@ const addToPlaylist = async (user, songsToAdd, removedTotal = {}) => {
 				? removedTotal[playlist.id]
 				: songsToAdd
 		);
+		if (singleResponse.error) {
+			response.error = true;
+			response.message.push(singleResponse.message);
+			return response;
+		}
 		response.message.push(...singleResponse);
 	}
 	return response;

@@ -16,7 +16,7 @@ const deleteGarbage = async () => {
 				[Op.lte]: Date.now() - 2 * week,
 			},
 		},
-	}).catch((err) => ({ error: err.message }));
+	}).catch((err) => ({ error: true, message: err.message }));
 	if (destroyedPlaylistSong.error) {
 		return destroyedPlaylistSong;
 	}
@@ -26,7 +26,7 @@ const deleteGarbage = async () => {
 				[Op.lte]: Date.now() - 6 * week,
 			},
 		},
-	}).catch((err) => ({ error: err.message }));
+	}).catch((err) => ({ error: true, message: err.message }));
 	if (destroyedUserSong.error) {
 		return destroyedUserSong;
 	}
@@ -52,10 +52,16 @@ const deleteGarbage = async () => {
 
 	return Promise.all(removeSongTasks).then(
 		(success) => {
-			return { message: [success.length + " removed garbage songs"] };
+			return {
+				error: false,
+				message: [success.length + " removed garbage songs"],
+			};
 		},
 		(error) => {
-			return { message: ["remove garbage songs error", error] };
+			return {
+				error: true,
+				message: ["remove garbage songs error", ...error],
+			};
 		}
 	);
 };

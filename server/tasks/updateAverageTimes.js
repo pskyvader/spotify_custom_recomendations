@@ -1,7 +1,10 @@
 const { fn, col, Op } = require("sequelize");
 
 const week = 604800000;
-const updateAverageTimes = async (user) => {
+const updateAverageTimes = async (
+	user,
+	response = { error: false, message: [] }
+) => {
 	let date_format = fn("to_char", col("played_date"), "YYYY/MM/DD");
 	if (process.env.PRODUCTION === "test") {
 		date_format = fn("strftime", "%Y-%m-%d", col("played_date"));
@@ -24,7 +27,16 @@ const updateAverageTimes = async (user) => {
 			return { error: true, message: err.message };
 		});
 
-	const response = { dates: 0, total_times: 0, error: false, message: "" };
+	if (userSongs.error) {
+		return {
+			error: true,
+			message: response.message.concat(userSongs.message),
+		};
+	}
+
+	response.message.push("Average time for user:");
+	response.dates = 0;
+	response.total_times = 0;
 	for (const date of userSongs) {
 		// console.log(date.getDataValue("total"), date.getDataValue("played"));
 		response.dates += 1;
@@ -35,7 +47,7 @@ const updateAverageTimes = async (user) => {
 	response.average =
 		response.dates > 0 ? response.total_times / response.dates : 0;
 
-	response.message = response.average;
+	response.message.push(response.average);
 
 	return response;
 };

@@ -53,8 +53,13 @@ const removeFromSinglePlaylist = async (user, playlist, songsToRemove) => {
 	return response;
 };
 
-const removeFromPlaylist = async (user, songsToRemove) => {
-	const response = { error: false, message: [], removedTotal: {} };
+const removeFromPlaylist = async (
+	user,
+	songsToRemove,
+	response = { error: false, message: [] }
+) => {
+	response.removedTotal = {};
+	response.message.push("Removed :");
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	for (const playlist of playlists) {
 		const singleResponse = await removeFromSinglePlaylist(
