@@ -21,10 +21,10 @@ const updateAverageTimes = async (user) => {
 			group: [date_format],
 		})
 		.catch((err) => {
-			return { error: err.message };
+			return { error: true, message: err.message };
 		});
 
-	const response = { dates: 0, total_times: 0 };
+	const response = { dates: 0, total_times: 0, error: false, message: "" };
 	for (const date of userSongs) {
 		// console.log(date.getDataValue("total"), date.getDataValue("played"));
 		response.dates += 1;
@@ -34,6 +34,8 @@ const updateAverageTimes = async (user) => {
 
 	response.average =
 		response.dates > 0 ? response.total_times / response.dates : 0;
+
+	response.message = response.average;
 
 	return response;
 };

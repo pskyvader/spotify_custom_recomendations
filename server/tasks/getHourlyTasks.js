@@ -6,8 +6,10 @@ const getHourlyTasks = (userList) => {
 		return updateRecentSongs(user)
 			.then((updateResult) => {
 				return syncronizeMultiplePlaylists(user).then((syncResult) => {
-					updateResult.message.push(...syncResult.message);
-					return updateResult;
+					return {
+						error: updateResult.error || syncResult.error,
+						message: [updateResult.message, ...syncResult.message],
+					};
 				});
 			})
 			.then((response) => {

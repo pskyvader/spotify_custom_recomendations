@@ -44,14 +44,18 @@ const deleteGarbage = async () => {
 		.filter(
 			(song) => song.Users.length === 0 && song.Playlists.length === 0
 		)
-		.map((song) => song.destroy().catch((err) => ({ error: err.message })));
+		.map((song) =>
+			song
+				.destroy()
+				.catch((err) => ({ error: true, message: err.message }))
+		);
 
 	return Promise.all(removeSongTasks).then(
 		(success) => {
-			return [success.length + " removed garbage songs"];
+			return { message: [success.length + " removed garbage songs"] };
 		},
 		(error) => {
-			return ["remove garbage songs error", error];
+			return { message: ["remove garbage songs error", error] };
 		}
 	);
 };

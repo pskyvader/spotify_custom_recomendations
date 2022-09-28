@@ -76,11 +76,11 @@ const automaticTasks = async () => {
 						`Daily task for ${userList.daily.length} users`
 					);
 					return Promise.all(dailyTaskList).then((responses) => {
-						const totalresponses = [];
 						for (const r in responses) {
-							totalresponses.push(...responses[r]);
+							previousResponse.error =
+								previousResponse.error || responses[r].error;
+							previousResponse.push(...responses[r].message);
 						}
-						previousResponse.message.push(...totalresponses);
 						previousResponse.message.push("Daily Tasks Done");
 						return previousResponse;
 					});

@@ -18,7 +18,7 @@ const updateRecentSongs = async (user) => {
 
 	const addTasks = songsToAdd.map((songtoadd) => {
 		return getSong(user.access_token, songtoadd.id).then((song) => {
-			createUserSong(user, song, songtoadd.played_date);
+			return createUserSong(user, song, songtoadd.played_date);
 		});
 	});
 	return Promise.all(addTasks).then(() => {

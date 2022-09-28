@@ -10,7 +10,7 @@ const createUserSong = async (user, song, played_date) => {
 	const newUserSong = await UserSongHistory.create(userCreateData).catch(
 		(err) => {
 			console.error("create user song error ", err);
-			return { error: err.message };
+			return { error: true, message: err.message };
 		}
 	);
 
