@@ -21,31 +21,22 @@ export default function Player() {
 	const { song } = useContext(PlayerContext);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [progress, setProgress] = useState(0);
-	let audioElement = document.getElementById("player");
+	const [audioElement, setAudioElement] = useState(new Audio());
 
+	console.log(song);
 	if (song === null) {
-		if (audioElement !== null) {
-			audioElement.pause();
-		}
 		return null;
 	}
-	if (audioElement === null) {
-		audioElement = document.createElement("audio", { id: "player" });
-	}
-	audioElement.src = song.preview;
-	audioElement.load();
-
 	let updateTimer;
+	audioElement.src = song.preview;
 
-	const playpauseTrack = () => {
-		if (!isPlaying) playTrack();
-		else pauseTrack();
+	const getProgress = () => {
+		setProgress(audioElement.currentTime * (100 / audioElement.duration));
 	};
-
 	const playTrack = () => {
 		audioElement.play();
-		updateTimer = setInterval(getProgress, 1000);
-		getProgress();
+		// updateTimer = setInterval(getProgress, 1000);
+		// getProgress();
 		setIsPlaying(true);
 	};
 
@@ -54,10 +45,12 @@ export default function Player() {
 		audioElement.pause();
 		setIsPlaying(false);
 	};
-
-	const getProgress = () => {
-		setProgress(audioElement.currentTime * (100 / audioElement.duration));
+	const playpauseTrack = () => {
+		if (!isPlaying) playTrack();
+		else pauseTrack();
 	};
+
+	audioElement.addEventListener("canplaythrough", playTrack);
 
 	return (
 		// <Paper

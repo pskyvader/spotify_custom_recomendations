@@ -3,11 +3,20 @@ import { GridOverlay, DataGrid } from "@mui/x-data-grid";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import ListItemText from "@mui/material/ListItemText";
+import FolderIcon from "@mui/icons-material/Folder";
 
-const renderTitle = (cellData) => {
+const renderTitle = (cellData, setCurrentSong = null) => {
+	const playSong = () => {
+		if (setCurrentSong !== null) {
+			setCurrentSong(cellData.row);
+		}
+	};
+
 	return (
 		<Stack direction="row" spacing={2}>
-			<Avatar src={cellData.row.image} />
+			<Avatar src={cellData.row.image} onClick={playSong}>
+				<FolderIcon />
+			</Avatar>
 			<ListItemText
 				primary={cellData.row.name}
 				secondary={cellData.row.artist}
@@ -19,7 +28,8 @@ const renderTitle = (cellData) => {
 export const SongListColumns = (
 	rows,
 	PlaylistId = null,
-	ActionButton = null
+	ActionButton = null,
+	setCurrentSong = null
 ) => {
 	const renderActionButton = (cellData) => {
 		const uri = cellData.formattedValue;
@@ -31,7 +41,7 @@ export const SongListColumns = (
 			headerName: "Title",
 			minWidth: 200,
 			flex: 1,
-			renderCell: renderTitle,
+			renderCell: (cellData) => renderTitle(cellData, setCurrentSong),
 		},
 		{ field: "album", headerName: "Album", minWidth: 200, flex: 1 },
 	];

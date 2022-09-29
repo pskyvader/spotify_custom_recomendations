@@ -4,8 +4,10 @@ import { Playlist } from "../../API";
 import SongList, { SongListColumns } from "../../components/SongList";
 import ButtonRemoveSong from "../../components/ButtonRemoveSong";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
+import { PlayerContext } from "../../context/PlayerContextProvider";
 const PlayListSongs = ({ playlistId, hidden }) => {
 	const { playlistTracks, setPlaylistTracks } = useContext(PlaylistContext);
+	const { setCurrentSong } = useContext(PlayerContext);
 	useEffect(() => {
 		if (!playlistTracks[playlistId]) {
 			Playlist.Playlist(playlistId).then((response) => {
@@ -25,7 +27,8 @@ const PlayListSongs = ({ playlistId, hidden }) => {
 		const data = SongListColumns(
 			playlistTracks[playlistId],
 			playlistId,
-			ButtonRemoveSong
+			ButtonRemoveSong,
+			setCurrentSong
 		);
 		return <SongList data={data} title="Playlist songs" />;
 	}
