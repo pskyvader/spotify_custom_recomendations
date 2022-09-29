@@ -3,8 +3,8 @@ import { createContext, useState } from "react";
 export const PlayerContext = createContext({});
 
 const PlayerContextProvider = (props) => {
-	const [playing, setPlaying] = useState(null);
-	const provider = { playing, setPlaying };
+	const [song, setCurrentSong] = useState(null);
+	const provider = { song, setCurrentSong };
 
 	return (
 		<PlayerContext.Provider value={provider}>

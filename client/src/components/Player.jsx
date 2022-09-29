@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
@@ -17,9 +18,46 @@ import { PlayerContext } from "../context/PlayerContextProvider";
 
 export default function Player() {
 	const theme = useTheme();
-	const { playing } = useContext(PlayerContext);
-	if (playing === null) return null;
-	const song = playing;
+	const { song } = useContext(PlayerContext);
+	const [isPlaying, setIsPlaying] = useState(false);
+	const [progress, setProgress] = useState(0);
+	let audioElement = document.getElementById("player");
+
+	if (song === null) {
+		if (audioElement !== null) {
+			audioElement.pause();
+		}
+		return null;
+	}
+	if (audioElement === null) {
+		audioElement = document.createElement("audio", { id: "player" });
+	}
+	audioElement.src = song.preview;
+	audioElement.load();
+
+	let updateTimer;
+
+	const playpauseTrack = () => {
+		if (!isPlaying) playTrack();
+		else pauseTrack();
+	};
+
+	const playTrack = () => {
+		audioElement.play();
+		updateTimer = setInterval(getProgress, 1000);
+		getProgress();
+		setIsPlaying(true);
+	};
+
+	const pauseTrack = () => {
+		clearInterval(updateTimer);
+		audioElement.pause();
+		setIsPlaying(false);
+	};
+
+	const getProgress = () => {
+		setProgress(audioElement.currentTime * (100 / audioElement.duration));
+	};
 
 	return (
 		// <Paper
@@ -75,8 +113,15 @@ export default function Player() {
 								<SkipPreviousIcon />
 							)}
 						</IconButton>
-						<IconButton aria-label="play/pause">
-							<PlayArrowIcon sx={{ height: 38, width: 38 }} />
+						<IconButton
+							aria-label="play/pause"
+							onClick={playpauseTrack}
+						>
+							{isPlaying ? (
+								<PauseIcon sx={{ height: 38, width: 38 }} />
+							) : (
+								<PlayArrowIcon sx={{ height: 38, width: 38 }} />
+							)}
 						</IconButton>
 						<IconButton aria-label="next">
 							{theme.direction === "rtl" ? (
@@ -87,7 +132,7 @@ export default function Player() {
 						</IconButton>
 					</Box>
 				</Card>
-				<LinearProgress variant="determinate" value={50} />
+				<LinearProgress variant="determinate" value={progress} />
 			</Stack>
 		</Grid>
 		// </Paper>
