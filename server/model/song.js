@@ -13,7 +13,7 @@ const createSong = async (access_token, songId, data = null) => {
 
 	const [newSong] = await Song.upsert(data).catch((err) => {
 		console.error("create song error", err);
-		return { error: err.message };
+		return { error: true, message: err.message };
 	});
 
 	return newSong;

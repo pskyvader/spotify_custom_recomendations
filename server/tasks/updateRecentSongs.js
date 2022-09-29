@@ -18,6 +18,9 @@ const updateRecentSongs = async (user) => {
 
 	const addTasks = songsToAdd.map((songtoadd) => {
 		return getSong(user.access_token, songtoadd.id).then((song) => {
+			if (song.error) {
+				return song;
+			}
 			return createUserSong(user, song, songtoadd.played_date);
 		});
 	});

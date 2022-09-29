@@ -237,6 +237,9 @@ app.get("/api/playlists/lastplayed", async (_req, res) => {
 		result = await getRecentlyPlayedSongs(user);
 		if (!result.error) {
 			result = result.map((recentSong) => {
+				if (recentSong.Song === null) {
+					console.log(recentSong);
+				}
 				const songResult = recentSong.Song.toJSON();
 				songResult.played_date = recentSong.played_date;
 				songResult.id = recentSong.id;

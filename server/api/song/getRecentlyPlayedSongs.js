@@ -13,7 +13,7 @@ const getRecentlyPlayedSongs = async (user, date = 0) => {
 			// nest: true,
 		})
 		.catch((err) => {
-			return { error: err.message };
+			return { error: true, message: err.message };
 		});
 };
 
