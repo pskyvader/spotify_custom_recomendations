@@ -88,7 +88,8 @@ const automaticTasks = async () => {
 				}
 				return previousResponse;
 			});
-		response.message.push(...promiseResponse);
+
+		response.message.push(...promiseResponse.message);
 	}
 
 	LastTask = Date.now();
