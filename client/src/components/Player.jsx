@@ -16,44 +16,34 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 import { PlayerContext } from "../context/PlayerContextProvider";
 
-const ProgressBar = ({ audioElement, isPlaying }) => {
+const ProgressBar = ({ audioElement }) => {
 	const [progress, setProgress] = useState(0);
 
 	const getProgress = () => {
-		setProgress(audioElement.currentTime * (100 / audioElement.duration));
+		const p = audioElement.currentTime * (100 / audioElement.duration);
+		console.log(p);
+		setProgress(p);
 	};
-	useEffect(() => {
-		setTimeout(() => {
-			if (isPlaying) {
-				getProgress();
-			}
-		}, 1000);
-	});
+	// useEffect(() => {
+	setInterval(() => {
+		if (!audioElement.paused) {
+			getProgress();
+		}
+	}, 500);
+	// });
 
 	return <LinearProgress variant="determinate" value={progress} />;
 };
 
-const Player = () => {
-	const theme = useTheme();
-	const { song } = useContext(PlayerContext);
+const PlayButton = ({ audioElement }) => {
 	const [isPlaying, setIsPlaying] = useState(false);
-	const [audioElement] = useState(new Audio());
-
 	useEffect(() => {
-		if (song === null) {
-			audioElement.src = null;
-			return;
-		}
-		audioElement.src = song.preview;
 		audioElement.addEventListener("canplaythrough", () => {
 			audioElement.play();
 			setIsPlaying(true);
 		});
-	}, [audioElement, song]);
+	});
 
-	if (song === null) {
-		return null;
-	}
 	const playTrack = () => {
 		audioElement.play();
 		setIsPlaying(true);
@@ -67,6 +57,34 @@ const Player = () => {
 		if (!isPlaying) playTrack();
 		else pauseTrack();
 	};
+
+	return (
+		<IconButton aria-label="play/pause" onClick={playpauseTrack}>
+			{isPlaying ? (
+				<PauseIcon sx={{ height: 38, width: 38 }} />
+			) : (
+				<PlayArrowIcon sx={{ height: 38, width: 38 }} />
+			)}
+		</IconButton>
+	);
+};
+
+const Player = () => {
+	const theme = useTheme();
+	const { song } = useContext(PlayerContext);
+	const [audioElement] = useState(new Audio());
+
+	useEffect(() => {
+		if (song === null) {
+			audioElement.src = null;
+			return;
+		}
+		audioElement.src = song.preview;
+	}, [audioElement, song]);
+
+	if (song === null) {
+		return null;
+	}
 
 	return (
 		// <Paper
@@ -122,16 +140,7 @@ const Player = () => {
 								<SkipPreviousIcon />
 							)}
 						</IconButton>
-						<IconButton
-							aria-label="play/pause"
-							onClick={playpauseTrack}
-						>
-							{isPlaying ? (
-								<PauseIcon sx={{ height: 38, width: 38 }} />
-							) : (
-								<PlayArrowIcon sx={{ height: 38, width: 38 }} />
-							)}
-						</IconButton>
+						<PlayButton audioElement={audioElement} />
 						<IconButton aria-label="next">
 							{theme.direction === "rtl" ? (
 								<SkipPreviousIcon />
@@ -143,7 +152,7 @@ const Player = () => {
 				</Card>
 				<ProgressBar
 					audioElement={audioElement}
-					isPlaying={isPlaying}
+					// isPlaying={isPlaying}
 				/>
 			</Stack>
 		</Grid>
