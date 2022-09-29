@@ -79,7 +79,9 @@ const automaticTasks = async () => {
 						for (const r in responses) {
 							previousResponse.error =
 								previousResponse.error || responses[r].error;
-							previousResponse.push(...responses[r].message);
+							previousResponse.message.push(
+								...responses[r].message
+							);
 						}
 						previousResponse.message.push("Daily Tasks Done");
 					});
