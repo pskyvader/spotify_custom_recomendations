@@ -49,7 +49,12 @@ const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
 					? new Date(cellData.formattedValue).toLocaleString()
 					: "",
 		});
-		return <SongList data={data} title="Recommended for delete" />;
+		return (
+			<SongList
+				data={data}
+				title="Recommended for delete"
+			/>
+		);
 	}
 	return <CircularProgress />;
 };

@@ -31,6 +31,9 @@ const ProgressBar = ({ audioElement }) => {
 			}
 		};
 		const progressInterval = setInterval(getProgress, 500);
+		return () => {
+			clearInterval(progressInterval);
+		};
 	}, [audioElement, progress]);
 
 	return <LinearProgress variant="determinate" value={progress} />;
@@ -58,6 +61,9 @@ const PlayButton = ({ audioElement }) => {
 		if (!isPlaying) playTrack();
 		else pauseTrack();
 	};
+	if (!audioElement.src) {
+		return "No Preview Available";
+	}
 
 	return (
 		<IconButton aria-label="play/pause" onClick={playpauseTrack}>
@@ -75,17 +81,19 @@ const Player = () => {
 	const { song } = useContext(PlayerContext);
 	const [audioElement] = useState(new Audio());
 
-	useEffect(() => {
-		if (song === null) {
-			audioElement.src = null;
-			return;
-		}
-		audioElement.src = song.preview;
-	}, [audioElement, song]);
+	// useEffect(() => {
+	// 	if (song === null) {
+	// 		audioElement.src = null;
+	// 		return;
+	// 	}
+	// 	audioElement.src = song.preview;
+	// }, [audioElement, song]);
 
 	if (song === null) {
+		audioElement.src = null;
 		return null;
 	}
+	audioElement.src = song.preview;
 
 	return (
 		// <Paper
@@ -142,7 +150,12 @@ const Player = () => {
 								<SkipPreviousIcon />
 							)}
 						</IconButton> */}
-						<PlayButton audioElement={audioElement} />
+						{song.preview !== null ? (
+							<PlayButton audioElement={audioElement} />
+						) : (
+							"No available Preview"
+						)}
+
 						{/* <IconButton aria-label="next">
 							{theme.direction === "rtl" ? (
 								<SkipPreviousIcon />

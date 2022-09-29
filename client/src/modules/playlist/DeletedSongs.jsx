@@ -41,7 +41,12 @@ const DeletedSongs = ({ playlistId, hidden }) => {
 				new Date(cellData.formattedValue).toLocaleString(),
 		});
 
-		return <SongList data={data} title="Deleted songs from playlist" />;
+		return (
+			<SongList
+				data={data}
+				title="Deleted songs from playlist"
+			/>
+		);
 	}
 	return <CircularProgress />;
 };

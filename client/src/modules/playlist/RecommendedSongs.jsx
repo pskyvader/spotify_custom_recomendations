@@ -45,7 +45,12 @@ const RecommendedSongs = ({ playlistId, hidden }) => {
 			ButtonAddSong,
 			setCurrentSong
 		);
-		return <SongList data={data} title="Recommended Songs" />;
+		return (
+			<SongList
+				data={data}
+				title="Recommended Songs"
+			/>
+		);
 	}
 
 	return <CircularProgress />;

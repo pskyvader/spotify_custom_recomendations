@@ -38,7 +38,12 @@ const LastPlayedSongs = ({ hidden }) => {
 				return new Date(cellData.formattedValue).toLocaleString();
 			},
 		});
-		return <SongList data={data} title="Last Played Songs" />;
+		return (
+			<SongList
+				data={data}
+				title="Last Played Songs"
+			/>
+		);
 	}
 	return <CircularProgress />;
 };
