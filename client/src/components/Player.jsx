@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -16,32 +16,50 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 import { PlayerContext } from "../context/PlayerContextProvider";
 
-export default function Player() {
-	const theme = useTheme();
-	const { song } = useContext(PlayerContext);
-	const [isPlaying, setIsPlaying] = useState(false);
+const ProgressBar = ({ audioElement, isPlaying }) => {
 	const [progress, setProgress] = useState(0);
-	const [audioElement, setAudioElement] = useState(new Audio());
-
-	console.log(song);
-	if (song === null) {
-		return null;
-	}
-	let updateTimer;
-	audioElement.src = song.preview;
 
 	const getProgress = () => {
 		setProgress(audioElement.currentTime * (100 / audioElement.duration));
 	};
+	useEffect(() => {
+		setTimeout(() => {
+			if (isPlaying) {
+				getProgress();
+			}
+		}, 1000);
+	});
+
+	return <LinearProgress variant="determinate" value={progress} />;
+};
+
+const Player = () => {
+	const theme = useTheme();
+	const { song } = useContext(PlayerContext);
+	const [isPlaying, setIsPlaying] = useState(false);
+	const [audioElement] = useState(new Audio());
+
+	useEffect(() => {
+		if (song === null) {
+			audioElement.src = null;
+			return;
+		}
+		audioElement.src = song.preview;
+		audioElement.addEventListener("canplaythrough", () => {
+			audioElement.play();
+			setIsPlaying(true);
+		});
+	}, [audioElement, song]);
+
+	if (song === null) {
+		return null;
+	}
 	const playTrack = () => {
 		audioElement.play();
-		// updateTimer = setInterval(getProgress, 1000);
-		// getProgress();
 		setIsPlaying(true);
 	};
 
 	const pauseTrack = () => {
-		clearInterval(updateTimer);
 		audioElement.pause();
 		setIsPlaying(false);
 	};
@@ -49,8 +67,6 @@ export default function Player() {
 		if (!isPlaying) playTrack();
 		else pauseTrack();
 	};
-
-	audioElement.addEventListener("canplaythrough", playTrack);
 
 	return (
 		// <Paper
@@ -125,9 +141,14 @@ export default function Player() {
 						</IconButton>
 					</Box>
 				</Card>
-				<LinearProgress variant="determinate" value={progress} />
+				<ProgressBar
+					audioElement={audioElement}
+					isPlaying={isPlaying}
+				/>
 			</Stack>
 		</Grid>
 		// </Paper>
 	);
-}
+};
+
+export default Player;
