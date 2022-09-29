@@ -1,4 +1,5 @@
 const { getRecentlyPlayedSongsFromAPI } = require("../api/song/");
+const { Song } = require("../database");
 
 const { createUserSong, getSong } = require("../model");
 
@@ -19,6 +20,16 @@ const updateRecentSongs = async (user) => {
 	const addTasks = songsToAdd.map((songtoadd) => {
 		return getSong(user.access_token, songtoadd.id).then((song) => {
 			if (song.error) {
+				console.error("ADDING TO HISTORY ERROR");
+				console.error("ADDING TO HISTORY ERROR");
+				console.error("ADDING TO HISTORY ERROR");
+				console.error("ADDING TO HISTORY ERROR");
+				console.error("ADDING TO HISTORY ERROR");
+				console.error("ADDING TO HISTORY ERROR");
+				console.error("ADDING TO HISTORY ERROR");
+				console.error("ADDING TO HISTORY ERROR");
+				console.error("ADDING TO HISTORY ERROR");
+				console.error(song);
 				return song;
 			}
 			return createUserSong(user, song, songtoadd.played_date);
