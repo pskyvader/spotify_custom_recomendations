@@ -1,15 +1,14 @@
 import { useContext, useState, useEffect } from "react";
-// import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-// import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
-// import SkipNextIcon from "@mui/icons-material/SkipNext";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -77,23 +76,18 @@ const PlayButton = ({ audioElement }) => {
 };
 
 const Player = () => {
-	// const theme = useTheme();
 	const { song } = useContext(PlayerContext);
 	const [audioElement] = useState(new Audio());
-
-	// useEffect(() => {
-	// 	if (song === null) {
-	// 		audioElement.src = null;
-	// 		return;
-	// 	}
-	// 	audioElement.src = song.preview;
-	// }, [audioElement, song]);
+	useEffect(() => {
+		audioElement.src = song !== null && song.preview;
+		return () => {
+			audioElement.src = null;
+		};
+	}, [audioElement, song]);
 
 	if (song === null) {
-		audioElement.src = null;
 		return null;
 	}
-	audioElement.src = song.preview;
 
 	return (
 		// <Paper
@@ -153,7 +147,7 @@ const Player = () => {
 						{song.preview !== null ? (
 							<PlayButton audioElement={audioElement} />
 						) : (
-							"No available Preview"
+							<ErrorOutlineIcon sx={{ height: 38, width: 38 }} />
 						)}
 
 						{/* <IconButton aria-label="next">
@@ -165,10 +159,7 @@ const Player = () => {
 						</IconButton> */}
 					</Box>
 				</Card>
-				<ProgressBar
-					audioElement={audioElement}
-					// isPlaying={isPlaying}
-				/>
+				<ProgressBar audioElement={audioElement} />
 			</Stack>
 		</Grid>
 		// </Paper>

@@ -1,11 +1,11 @@
-import { useEffect, useContext, use } from "react";
+// import { useEffect, useContext } from "react";
 import { Toolbar, Typography } from "@mui/material";
 import { GridOverlay, DataGrid } from "@mui/x-data-grid";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import ListItemText from "@mui/material/ListItemText";
 import FolderIcon from "@mui/icons-material/Folder";
-import { PlayerContext } from "../context/PlayerContextProvider";
+// import { PlayerContext } from "../context/PlayerContextProvider";
 
 const renderTitle = (cellData, setCurrentSong = null) => {
 	const playSong = () => {
@@ -65,15 +65,11 @@ export const SongListColumns = (
 };
 
 const SongList = ({ data, title = "title" }) => {
-	const { song, setCurrentSong } = useContext(PlayerContext);
-	// const song2 = { ...song };
+	// const { setCurrentSong } = useContext(PlayerContext);
 
-	useEffect(() => {
-		// console.log(song2);
-		// if (song2 !== null) {
-		setCurrentSong(null);
-		// }
-	}, [setCurrentSong]);
+	// useEffect(() => {
+	// 	setCurrentSong(null);
+	// }, [setCurrentSong]);
 
 	return (
 		<DataGrid
