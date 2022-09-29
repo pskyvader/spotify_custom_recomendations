@@ -88,6 +88,7 @@ const automaticTasks = async () => {
 				}
 				return previousResponse;
 			});
+		response.error ||= promiseResponse.error;
 
 		response.message.push(...promiseResponse.message);
 	}
