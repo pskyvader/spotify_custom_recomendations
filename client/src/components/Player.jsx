@@ -1,15 +1,15 @@
 import { useContext, useState, useEffect } from "react";
-import { useTheme } from "@mui/material/styles";
+// import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+// import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
-import SkipNextIcon from "@mui/icons-material/SkipNext";
+// import SkipNextIcon from "@mui/icons-material/SkipNext";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -19,18 +19,19 @@ import { PlayerContext } from "../context/PlayerContextProvider";
 const ProgressBar = ({ audioElement }) => {
 	const [progress, setProgress] = useState(0);
 
-	const getProgress = () => {
-		const p = audioElement.currentTime * (100 / audioElement.duration);
-		console.log(p);
-		setProgress(p);
-	};
-	// useEffect(() => {
-	setInterval(() => {
-		if (!audioElement.paused) {
-			getProgress();
-		}
-	}, 500);
-	// });
+	useEffect(() => {
+		const getProgress = () => {
+			if (audioElement.paused) return;
+			const p = parseInt(
+				audioElement.currentTime * (100 / audioElement.duration)
+			);
+			if (p !== progress) {
+				clearInterval(progressInterval);
+				setProgress(p);
+			}
+		};
+		const progressInterval = setInterval(getProgress, 500);
+	}, [audioElement, progress]);
 
 	return <LinearProgress variant="determinate" value={progress} />;
 };
@@ -70,7 +71,7 @@ const PlayButton = ({ audioElement }) => {
 };
 
 const Player = () => {
-	const theme = useTheme();
+	// const theme = useTheme();
 	const { song } = useContext(PlayerContext);
 	const [audioElement] = useState(new Audio());
 
@@ -129,25 +130,26 @@ const Player = () => {
 						sx={{
 							display: "flex",
 							alignItems: "center",
-							pl: 1,
-							pb: 1,
+							p: 1,
+							// pl: 1,
+							// pb: 1,
 						}}
 					>
-						<IconButton aria-label="previous">
+						{/* <IconButton aria-label="previous">
 							{theme.direction === "rtl" ? (
 								<SkipNextIcon />
 							) : (
 								<SkipPreviousIcon />
 							)}
-						</IconButton>
+						</IconButton> */}
 						<PlayButton audioElement={audioElement} />
-						<IconButton aria-label="next">
+						{/* <IconButton aria-label="next">
 							{theme.direction === "rtl" ? (
 								<SkipPreviousIcon />
 							) : (
 								<SkipNextIcon />
 							)}
-						</IconButton>
+						</IconButton> */}
 					</Box>
 				</Card>
 				<ProgressBar

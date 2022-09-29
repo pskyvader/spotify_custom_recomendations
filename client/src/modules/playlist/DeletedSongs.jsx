@@ -4,10 +4,12 @@ import { Playlist } from "../../API";
 import SongList, { SongListColumns } from "../../components/SongList";
 import ButtonAddSong from "../../components/ButtonAddSong";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
+import { PlayerContext } from "../../context/PlayerContextProvider";
 
 const DeletedSongs = ({ playlistId, hidden }) => {
 	const { playlistDeletedSongs, setPlaylistDeletedSongs } =
 		useContext(PlaylistContext);
+	const { setCurrentSong } = useContext(PlayerContext);
 	useEffect(() => {
 		if (!playlistDeletedSongs[playlistId]) {
 			Playlist.DeletedSongs(playlistId).then((response) => {
@@ -27,7 +29,8 @@ const DeletedSongs = ({ playlistId, hidden }) => {
 		const data = SongListColumns(
 			playlistDeletedSongs[playlistId],
 			playlistId,
-			ButtonAddSong
+			ButtonAddSong,
+			setCurrentSong
 		);
 		data.columns.splice(2, 0, {
 			field: "removed_date",

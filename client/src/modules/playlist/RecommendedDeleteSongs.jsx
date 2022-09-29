@@ -4,9 +4,11 @@ import { Playlist } from "../../API";
 import SongList, { SongListColumns } from "../../components/SongList";
 import ButtonRemoveSong from "../../components/ButtonRemoveSong";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
+import { PlayerContext } from "../../context/PlayerContextProvider";
 const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
 	const { playlistDeleteTracks, setPlaylistDeleteTracks, playlistTracks } =
 		useContext(PlaylistContext);
+	const { setCurrentSong } = useContext(PlayerContext);
 	useEffect(() => {
 		if (!playlistTracks[playlistId]) {
 			return;
@@ -34,7 +36,8 @@ const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
 		const data = SongListColumns(
 			playlistDeleteTracks[playlistId],
 			playlistId,
-			ButtonRemoveSong
+			ButtonRemoveSong,
+			setCurrentSong
 		);
 		data.columns.splice(2, 0, {
 			field: "played_date",
@@ -45,7 +48,7 @@ const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
 				cellData.formattedValue !== null
 					? new Date(cellData.formattedValue).toLocaleString()
 					: "",
-		})
+		});
 		return <SongList data={data} title="Recommended for delete" />;
 	}
 	return <CircularProgress />;

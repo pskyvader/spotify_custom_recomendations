@@ -3,6 +3,7 @@ import { CircularProgress } from "@mui/material";
 import { Playlist } from "../../API";
 import ButtonAddSong from "../../components/ButtonAddSong";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
+import { PlayerContext } from "../../context/PlayerContextProvider";
 
 import SongList, { SongListColumns } from "../../components/SongList";
 
@@ -12,6 +13,7 @@ const RecommendedSongs = ({ playlistId, hidden }) => {
 		setPlaylistRecommendedTracks,
 		playlistTracks,
 	} = useContext(PlaylistContext);
+	const { setCurrentSong } = useContext(PlayerContext);
 	useEffect(() => {
 		if (!playlistTracks[playlistId]) {
 			return;
@@ -40,7 +42,8 @@ const RecommendedSongs = ({ playlistId, hidden }) => {
 		const data = SongListColumns(
 			playlistRecommendedTracks[playlistId],
 			playlistId,
-			ButtonAddSong
+			ButtonAddSong,
+			setCurrentSong
 		);
 		return <SongList data={data} title="Recommended Songs" />;
 	}

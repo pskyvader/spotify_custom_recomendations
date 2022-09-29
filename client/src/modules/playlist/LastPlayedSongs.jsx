@@ -4,10 +4,12 @@ import { CircularProgress } from "@mui/material";
 import { Playlist } from "../../API";
 import SongList, { SongListColumns } from "../../components/SongList";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
+import { PlayerContext } from "../../context/PlayerContextProvider";
 
 const LastPlayedSongs = ({ hidden }) => {
 	const { lastPlayedTracks, setLastPlayedTracks } =
 		useContext(PlaylistContext);
+	const { setCurrentSong } = useContext(PlayerContext);
 	useEffect(() => {
 		if (!lastPlayedTracks) {
 			Playlist.LastPlayed().then((response) => {
@@ -21,7 +23,12 @@ const LastPlayedSongs = ({ hidden }) => {
 		return null;
 	}
 	if (lastPlayedTracks) {
-		const data = SongListColumns(lastPlayedTracks);
+		const data = SongListColumns(
+			lastPlayedTracks,
+			null,
+			null,
+			setCurrentSong
+		);
 		data.columns.push({
 			field: "played_date",
 			headerName: "Last Played",
