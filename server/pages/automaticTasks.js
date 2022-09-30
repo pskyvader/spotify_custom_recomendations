@@ -9,39 +9,45 @@ const day = 86400000;
 let LastTask = null;
 
 const getAvailableUsers = async () => {
-	console.log("--------------------------------");
-	console.log("Getting Available Users");
+	const response = {
+		hourly: [],
+		daily: [],
+		message: [],
+		error: false,
+	};
+	response.message.push("--------------------------------");
+	response.message.push("Getting Available Users");
 	const userList = await User.findAll().catch((err) => ({
-		error: err.message,
+		error: true,
+		message: err.message,
 	}));
 	if (userList.error) {
 		return userList;
 	}
-	const availableUsersList = { hourly: [], daily: [] };
 
 	for (const user of userList) {
-		console.log("-----");
-		console.log(`User ${user.name} (${user.id})`);
+		response.message.push("-----");
+		response.message.push(`User ${user.name} (${user.id})`);
 		if (user.expiration < Date.now() + tenMinutes) {
 			const result = await refreshCookie(user);
 			if (result.error) {
-				console.error(`access token error, cannot continue`);
+				response.message.push(`access token error, cannot continue`);
 				continue;
 			}
-			console.log(`got Refresh token`);
+			response.message.push(`got Refresh token`);
 			user.access_token = result.access_token;
 			user.expiration = result.expiration;
 		}
-		console.log(`Expiration: ${user.expiration}`);
+		response.message.push(`Expiration: ${user.expiration}`);
 		if (user.last_modified_hourly < Date.now() - hour) {
-			availableUsersList.hourly.push(user);
+			response.hourly.push(user);
 		}
 		if (user.last_modified_daily < Date.now() - day) {
-			availableUsersList.daily.push(user);
+			response.daily.push(user);
 		}
 	}
-	console.log("--------------------------------");
-	return availableUsersList;
+	response.message.push("--------------------------------");
+	return response;
 };
 
 const automaticTasks = async () => {
@@ -80,11 +86,12 @@ const automaticTasks = async () => {
 				);
 				return Promise.all(dailyTaskList).then((responses) => {
 					for (const r in responses) {
-						previousResponse.error =
-							previousResponse.error || responses[r].error;
+						previousResponse.error ||= responses[r].error;
 						previousResponse.message.push(...responses[r].message);
+						previousResponse.message.push("----");
 					}
 					previousResponse.message.push("Daily Tasks Done");
+					previousResponse.message.push("--------------------");
 					// console.log("previousResponse", previousResponse);
 					return previousResponse;
 				});

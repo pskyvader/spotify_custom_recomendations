@@ -64,7 +64,7 @@ const Playlists = () => {
 		setTabNumber(newValue);
 	};
 
-	if (LoggedIn === false) {
+	if (LoggedIn === false || playlistid === null) {
 		return <Redirect to="/" />;
 	}
 
