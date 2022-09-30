@@ -52,7 +52,6 @@ const syncronizePlaylist = async (user, playlist) => {
 			return ["Syncronize completed successfully. "];
 		})
 		.then((result) => {
-			console.log(result);
 			return Promise.all(syncronizeRemoveSongListPromise).then(
 				(resultsyncRemove) => {
 					result.push("Syncronize Remove completed successfully. ");

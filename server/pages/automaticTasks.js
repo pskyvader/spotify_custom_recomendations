@@ -62,34 +62,35 @@ const automaticTasks = async () => {
 		response.message.push(`Hourly task for ${hourlyTaskList.length} users`);
 		const promiseResponse = await Promise.all(hourlyTaskList)
 			.then((hourlyResponses) => {
-				const totalresponses = { message: [] };
+				const totalresponses = { message: [], error: false };
 				for (const r in hourlyResponses) {
 					totalresponses.message.push(...hourlyResponses[r].message);
 				}
 				totalresponses.message.push("Hourly Tasks Done");
 				totalresponses.message.push("--------------------");
+				// console.log("totalresponses", totalresponses);
 				return totalresponses;
 			})
 			.then((previousResponse) => {
-				if (dailyTaskList.length > 0) {
-					previousResponse.message.push(
-						`Daily task for ${userList.daily.length} users`
-					);
-					return Promise.all(dailyTaskList).then((responses) => {
-						for (const r in responses) {
-							previousResponse.error =
-								previousResponse.error || responses[r].error;
-							previousResponse.message.push(
-								...responses[r].message
-							);
-						}
-						previousResponse.message.push("Daily Tasks Done");
-					});
+				if (dailyTaskList.length === 0) {
+					return previousResponse;
 				}
-				return previousResponse;
+				previousResponse.message.push(
+					`Daily task for ${userList.daily.length} users`
+				);
+				return Promise.all(dailyTaskList).then((responses) => {
+					for (const r in responses) {
+						previousResponse.error =
+							previousResponse.error || responses[r].error;
+						previousResponse.message.push(...responses[r].message);
+					}
+					previousResponse.message.push("Daily Tasks Done");
+					// console.log("previousResponse", previousResponse);
+					return previousResponse;
+				});
 			});
+		// console.log("promiseResponse", promiseResponse);
 		response.error ||= promiseResponse.error;
-
 		response.message.push(...promiseResponse.message);
 	}
 
