@@ -61,6 +61,8 @@ const automaticTasks = async () => {
 		return response;
 	}
 	const userList = await getAvailableUsers();
+	response.error ||= userList.error;
+	response.message.push(...userList.message);
 	const hourlyTaskList = getHourlyTasks(userList.hourly);
 	const dailyTaskList = getDailyTasks(userList.daily);
 
