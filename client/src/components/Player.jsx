@@ -115,15 +115,36 @@ const Player = () => {
 						image={song.image}
 						alt={song.album}
 					/>
-					<Box sx={{ display: "flex" }}>
-						<CardContent sx={{ flex: "1 0 auto" }}>
-							<Typography component="div" variant="h5">
+					<Box sx={{ display: "flex", overflow: "hidden" }}>
+						<CardContent
+							sx={{ flex: "1 0 auto", maxWidth: "100%" }}
+						>
+							<Typography
+								component="div"
+								variant="h5"
+								noWrap
+								sx={{
+									fontSize: {
+										xs: "1.0rem",
+										sm: "1.25rem",
+										md: "1.5rem",
+									},
+								}}
+							>
 								{song.name}
 							</Typography>
 							<Typography
 								variant="subtitle1"
 								color="text.secondary"
 								component="div"
+								noWrap
+								sx={{
+									fontSize: {
+										xs: "0.75rem",
+										sm: "0.875rem",
+										md: "1.0rem",
+									},
+								}}
 							>
 								{song.artist}
 							</Typography>
@@ -133,7 +154,7 @@ const Player = () => {
 						sx={{
 							display: "flex",
 							alignItems: "center",
-							flex:1,
+							flex: 1,
 							flexDirection: "row-reverse",
 							p: 1,
 							// pl: 1,
