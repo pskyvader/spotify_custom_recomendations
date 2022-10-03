@@ -42,8 +42,8 @@ const PlayButton = ({ audioElement }) => {
 	const [isPlaying, setIsPlaying] = useState(false);
 	useEffect(() => {
 		audioElement.addEventListener("canplaythrough", () => {
-			// audioElement.play();
-			// setIsPlaying(true);
+			audioElement.play();
+			setIsPlaying(true);
 		});
 	});
 
@@ -104,6 +104,7 @@ const Player = () => {
 				left: 0,
 				right: 0,
 				width: { xs: "auto", md: "max-content" },
+				maxWidth: { xs: "none", md: "50vw" },
 				margin: "auto",
 			}}
 		>
@@ -115,14 +116,24 @@ const Player = () => {
 						image={song.image}
 						alt={song.album}
 					/>
-					<Box sx={{ display: "flex", overflow: "hidden" }}>
+					<Box
+						sx={{
+							display: "flex",
+							overflow: "hidden",
+							maxHeight: 100,
+						}}
+					>
 						<CardContent
-							sx={{ flex: "1 0 auto", maxWidth: "100%" }}
+							sx={{
+								flex: "1 0 auto",
+								maxWidth: "100%",
+								overflow: "auto",
+							}}
 						>
 							<Typography
 								component="div"
 								variant="h5"
-								noWrap
+								// noWrap
 								sx={{
 									fontSize: {
 										xs: "1.0rem",
@@ -137,7 +148,7 @@ const Player = () => {
 								variant="subtitle1"
 								color="text.secondary"
 								component="div"
-								noWrap
+								// noWrap
 								sx={{
 									fontSize: {
 										xs: "0.75rem",
