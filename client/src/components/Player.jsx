@@ -103,9 +103,8 @@ const Player = () => {
 				bottom: 0,
 				left: 0,
 				right: 0,
-				width:"fit-content",
+				width: { xs: "auto", md: "max-content" },
 				margin: "auto",
-				// background: "transparent",
 			}}
 		>
 			<Stack>

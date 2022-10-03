@@ -21,10 +21,10 @@ const Root = styled("div")(({ theme }) => {
 	return {
 		maxHeight: `calc(100vh - ${
 			theme.mixins.toolbar.minHeight * 2
-		}px - ${theme.spacing(7)})`, // - ${theme.spacing(10)}
+		}px - ${theme.spacing(7) })`, // - ${theme.spacing(10)}
 		[theme.breakpoints.down("md")]: {
 			maxHeight: "none",
-			// marginBottom: theme.spacing(12),
+			marginBottom: theme.spacing(13),
 		},
 		minHeight: 400,
 		// height: "100vh",
