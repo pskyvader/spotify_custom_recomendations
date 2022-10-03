@@ -99,7 +99,7 @@ const Player = () => {
 			justifyContent="center"
 			alignItems="center"
 			sx={{
-				position: "fixed",
+				position: { xs: "sticky", md: "fixed" },
 				bottom: 0,
 				left: 0,
 				right: 0,
@@ -107,8 +107,8 @@ const Player = () => {
 				margin: "auto",
 			}}
 		>
-			<Stack>
-				<Card xs={12} sx={{ display: "flex" }}>
+			<Stack sx={{ width: "100%" }}>
+				<Card sx={{ display: "flex" }}>
 					<CardMedia
 						component="img"
 						sx={{ width: 100 }}
@@ -133,6 +133,8 @@ const Player = () => {
 						sx={{
 							display: "flex",
 							alignItems: "center",
+							flex:1,
+							flexDirection: "row-reverse",
 							p: 1,
 							// pl: 1,
 							// pb: 1,

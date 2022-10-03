@@ -24,7 +24,7 @@ const Root = styled("div")(({ theme }) => {
 		}px - ${theme.spacing(7) })`, // - ${theme.spacing(10)}
 		[theme.breakpoints.down("md")]: {
 			maxHeight: "none",
-			marginBottom: theme.spacing(13),
+			// marginBottom: theme.spacing(13),
 		},
 		minHeight: 400,
 		// height: "100vh",
