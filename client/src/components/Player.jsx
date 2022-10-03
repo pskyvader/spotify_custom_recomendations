@@ -42,8 +42,8 @@ const PlayButton = ({ audioElement }) => {
 	const [isPlaying, setIsPlaying] = useState(false);
 	useEffect(() => {
 		audioElement.addEventListener("canplaythrough", () => {
-			audioElement.play();
-			setIsPlaying(true);
+			// audioElement.play();
+			// setIsPlaying(true);
 		});
 	});
 
@@ -103,7 +103,9 @@ const Player = () => {
 				bottom: 0,
 				left: 0,
 				right: 0,
-				background: "transparent",
+				width:"fit-content",
+				margin: "auto",
+				// background: "transparent",
 			}}
 		>
 			<Stack>

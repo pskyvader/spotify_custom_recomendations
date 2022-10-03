@@ -61,7 +61,7 @@ const automaticTasks = async () => {
 		return response;
 	}
 	const userList = await getAvailableUsers();
-	response.error ||= userList.error;
+	response.error = response.error || userList.error;
 	response.message.push(...userList.message);
 	const hourlyTaskList = getHourlyTasks(userList.hourly);
 	const dailyTaskList = getDailyTasks(userList.daily);
@@ -88,7 +88,8 @@ const automaticTasks = async () => {
 				);
 				return Promise.all(dailyTaskList).then((responses) => {
 					for (const r in responses) {
-						previousResponse.error ||= responses[r].error;
+						previousResponse.error =
+							previousResponse.error || responses[r].error;
 						previousResponse.message.push(...responses[r].message);
 						previousResponse.message.push("----");
 					}
@@ -99,7 +100,7 @@ const automaticTasks = async () => {
 				});
 			});
 		// console.log("promiseResponse", promiseResponse);
-		response.error ||= promiseResponse.error;
+		response.error = response.error || promiseResponse.error;
 		response.message.push(...promiseResponse.message);
 	}
 
