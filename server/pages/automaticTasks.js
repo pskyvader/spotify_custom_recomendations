@@ -6,7 +6,7 @@ const { getHourlyTasks, getDailyTasks } = require("../tasks");
 const hour = 3600000;
 const tenMinutes = 600000;
 const day = 86400000;
-let LastTask = 0;
+let LastTask = Date.now() - day;
 
 const getAvailableUsers = async () => {
 	const response = {
