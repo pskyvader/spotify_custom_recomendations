@@ -244,9 +244,9 @@ app.get("/api/playlists/lastplayed", async (_req, res) => {
 				songResult.played_date = recentSong.played_date;
 				songResult.id = recentSong.id;
 				songResult.song_id = recentSong.Song.id;
-				if (songResult.preview === null) {
-					console.log("No preview available", songResult);
-				}
+				// if (songResult.preview === null) {
+				// 	console.log("No preview available", songResult);
+				// }
 				return songResult;
 			});
 			cache.set(`get-lastplayed-${user.id}`, result, tenMinutes);
@@ -264,9 +264,9 @@ app.get("/api/playlists/deletedsongs/:playlistId", async (req, res) => {
 			result = result.map((deletedSong) => {
 				const songResult = deletedSong.Song.toJSON();
 				songResult.removed_date = deletedSong.removed_date;
-				if (songResult.preview === null) {
-					console.log("No preview available", songResult);
-				}
+				// if (songResult.preview === null) {
+				// 	console.log("No preview available", songResult);
+				// }
 				return songResult;
 			});
 			cache.set(

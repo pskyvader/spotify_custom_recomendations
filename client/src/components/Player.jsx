@@ -89,9 +89,9 @@ const Player = () => {
 		return null;
 	}
 
-	if (song.preview === null) {
-		console.error("No preview available", song);
-	}
+	// if (song.preview === null) {
+	// 	console.error("No preview available", song);
+	// }
 
 	return (
 		// <Paper
