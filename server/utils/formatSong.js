@@ -5,6 +5,10 @@ const formatSongAPI = (song) => {
 	}, []);
 	const idartist = song.artists[0].id;
 
+	if (song.preview_url === null) {
+		console.log("No preview available in format song api", song);
+	}
+
 	return {
 		id: song.id,
 		name: song.name,

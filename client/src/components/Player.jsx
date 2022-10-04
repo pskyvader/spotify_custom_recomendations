@@ -89,6 +89,10 @@ const Player = () => {
 		return null;
 	}
 
+	if (song.preview === null) {
+		console.error("No preview available", song);
+	}
+
 	return (
 		// <Paper
 		// 	sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
