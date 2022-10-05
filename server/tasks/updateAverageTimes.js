@@ -48,6 +48,9 @@ const updateAverageTimes = async (
 		response.dates > 0 ? response.total_times / response.dates : 0;
 
 	response.message.push(response.average);
+	response.message.push("---------------");
+	response.message.push(...userSongs);
+	response.message.push("---------------");
 
 	return response;
 };

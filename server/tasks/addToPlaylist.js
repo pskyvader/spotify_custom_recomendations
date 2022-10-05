@@ -22,7 +22,7 @@ const addToSinglePlaylist = async (
 	}
 	if (playlistSongsList.length > _MAX_SONGS_PER_PLAYLIST) {
 		songsToAdd = Math.min(songsToAdd, previouslyRemoved);
-		songsToAdd -= 2;
+		songsToAdd -= 4;
 	}
 
 	if (songsToAdd <= 0) {
