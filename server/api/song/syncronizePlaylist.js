@@ -63,17 +63,20 @@ const syncronizePlaylist = async (user, playlist) => {
 			if (result.message.length === 0) {
 				result.message.push("Syncronize completed successfully. ");
 			}
+			return result;
 		})
 		.then((result) => {
 			return Promise.all(syncronizeRemoveSongListPromise).then(
 				(resultsyncRemove) => {
+					let isError = false;
 					for (const sync of resultsyncRemove) {
 						if (sync.error) {
+							isError = true;
 							result.error = true;
 							result.message.push(sync.message);
 						}
 					}
-					if (result.message.length === 0) {
+					if (isError) {
 						result.message.push(
 							"Syncronize Remove completed successfully. "
 						);
