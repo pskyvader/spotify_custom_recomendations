@@ -33,6 +33,17 @@ const getRecommendedSongsToRemove = async (playlist) => {
 		}
 		return song.UserSongHistories[0].played_date < Date.now() - 2 * week;
 	});
+	console.log(
+		recommendedForRemove.length,
+		recommendedForRemove.map((song) => {
+			if (song.UserSongHistories.length === 0) {
+				return null;
+			}
+			return new Date(
+				song.UserSongHistories[0].played_date
+			).toLocaleString();
+		})
+	);
 
 	return recommendedForRemove.slice(0, 15);
 };

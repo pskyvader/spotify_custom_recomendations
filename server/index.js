@@ -220,6 +220,7 @@ app.get("/api/playlists/deleterecommended/:playlistId", async (req, res) => {
 		result = await getRecommendedSongsToRemove(playlist);
 		if (!result.error) {
 			result = result.map((song) => song.toJSON());
+			console.log("detele recommended", result);
 			cache.set(
 				`get-playlist-deleterecommended-${req.params.playlistId}`,
 				result,
