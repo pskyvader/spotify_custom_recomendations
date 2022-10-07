@@ -28,29 +28,29 @@ const syncronizePlaylist = async (user, playlist) => {
 		(currentSong) => currentSong.id
 	);
 
-	const syncronizeRemoveSongListPromise = currentSongList.map(
-		(currentSong) => {
-			if (songListUpdatedIds.includes(currentSong.id)) {
-				return null;
-			}
+	const syncronizeRemoveSongListPromise = currentSongList
+		.filter((currentSong) => {
+			return !songListUpdatedIds.includes(currentSong.id);
+		})
+		.map((currentSong) => {
 			const deleteData = {
 				active: false,
 				removed_date: Date.now(),
 			};
 			return updatePlaylistSong(playlist.id, currentSong.id, deleteData);
-		}
-	);
+		});
 
-	const syncronizeAddSongListPromise = songListUpdated.map((currentSong) => {
-		if (currentSongListIds.includes(currentSong.id)) {
-			return null;
-		}
-		return getSong(user.access_token, currentSong.id, currentSong).then(
-			(newsong) => {
-				return getPlaylistSong(playlist, newsong);
-			}
-		);
-	});
+	const syncronizeAddSongListPromise = songListUpdated
+		.filter((currentSong) => {
+			return !currentSongListIds.includes(currentSong.id);
+		})
+		.map((currentSong) => {
+			return getSong(user.access_token, currentSong.id, currentSong).then(
+				(newsong) => {
+					return getPlaylistSong(playlist, newsong);
+				}
+			);
+		});
 	return Promise.all(syncronizeSongsPromise)
 		.then((resultSyncronized) => {
 			const result = { error: false, message: [] };
