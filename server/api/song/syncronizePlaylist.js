@@ -10,6 +10,10 @@ const {
 const syncronizePlaylist = async (user, playlist) => {
 	const currentSongList = await getPlaylistSongs(playlist);
 	const songListUpdated = await getPlaylistSongsFromAPI(user, playlist);
+	if (songListUpdated.error) {
+		songListUpdated.message = [songListUpdated.message];
+		return songListUpdated;
+	}
 
 	//it's not playlist-song, only "Song" in database
 	const syncronizeSongsPromise = songListUpdated.map((currentSong) => {
@@ -49,12 +53,31 @@ const syncronizePlaylist = async (user, playlist) => {
 	});
 	return Promise.all(syncronizeSongsPromise)
 		.then((resultSyncronized) => {
-			return ["Syncronize completed successfully. "];
+			const result = { error: false, message: [] };
+			for (const sync of resultSyncronized) {
+				if (sync.error) {
+					result.error = true;
+					result.message.push(sync.message);
+				}
+			}
+			if (result.message.length === 0) {
+				result.message.push("Syncronize completed successfully. ");
+			}
 		})
 		.then((result) => {
 			return Promise.all(syncronizeRemoveSongListPromise).then(
 				(resultsyncRemove) => {
-					result.push("Syncronize Remove completed successfully. ");
+					for (const sync of resultsyncRemove) {
+						if (sync.error) {
+							result.error = true;
+							result.message.push(sync.message);
+						}
+					}
+					if (result.message.length === 0) {
+						result.message.push(
+							"Syncronize Remove completed successfully. "
+						);
+					}
 					return result;
 				}
 			);
@@ -62,7 +85,17 @@ const syncronizePlaylist = async (user, playlist) => {
 		.then((result) => {
 			return Promise.all(syncronizeAddSongListPromise).then(
 				(resultsyncAdd) => {
-					result.push("Syncronize Add completed successfully. ");
+					for (const sync of resultsyncAdd) {
+						if (sync.error) {
+							result.error = true;
+							result.message.push(sync.message);
+						}
+					}
+					if (result.message.length === 0) {
+						result.message.push(
+							"Syncronize Add completed successfully. "
+						);
+					}
 					return result;
 				}
 			);
@@ -74,7 +107,9 @@ const syncronizeMultiplePlaylists = async (user) => {
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	for (const playlist of playlists) {
 		response.message.push(`Playlist ${playlist.name}`);
-		response.message.push(...(await syncronizePlaylist(user, playlist)));
+		const playlistResponse = await syncronizePlaylist(user, playlist);
+		response.error = response.error || playlistResponse.error;
+		response.message.push(...response.message);
 	}
 	return response;
 };

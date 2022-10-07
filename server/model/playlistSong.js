@@ -8,7 +8,7 @@ const createPlaylistSong = async (playlist, song) => {
 		SongId: song.id,
 	}).catch((err) => {
 		console.error("create playlist song error", err);
-		return { error: err.message };
+		return { error: true, message: err.message };
 	});
 
 	song.set({ last_time_used: Date.now() });

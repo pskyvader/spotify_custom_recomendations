@@ -49,7 +49,13 @@ const updateAverageTimes = async (
 
 	response.message.push(response.average);
 	response.message.push("---------------");
-	response.message.push(...userSongs);
+	response.message.push("Average Dates:");
+	response.message.push(
+		userSongs.reduce((dates, userSong) => {
+			dates[userSong.played] = userSong.total;
+			return dates;
+		}, {})
+	);
 	response.message.push("---------------");
 
 	return response;
