@@ -221,7 +221,10 @@ app.get("/api/playlists/deleterecommended/:playlistId", async (req, res) => {
 		if (!result.error) {
 			result = result.map((song) => {
 				const deleteSong = song.toJSON();
-				deleteSong.played_date = song.UserSongHistories[0].played_date;
+				deleteSong.played_date =
+					song.UserSongHistories.length > 0
+						? song.UserSongHistories[0].played_date
+						: null;
 				return deleteSong;
 			});
 			// console.log("delete recommended", result);
