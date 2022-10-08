@@ -44,17 +44,14 @@ const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
 			headerName: "Played",
 			minWidth: 200,
 			flex: 1,
-			renderCell: (cellData) =>
-				cellData.formattedValue !== null
+			renderCell: (cellData) => {
+				console.log(cellData.formattedValue);
+				return cellData.formattedValue !== null
 					? new Date(cellData.formattedValue).toLocaleString()
-					: "",
+					: "";
+			},
 		});
-		return (
-			<SongList
-				data={data}
-				title="Recommended for delete"
-			/>
-		);
+		return <SongList data={data} title="Recommended for delete" />;
 	}
 	return <CircularProgress />;
 };
