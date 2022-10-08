@@ -20,8 +20,8 @@ const getRecommendedSongsToRemove = async (playlist) => {
 				},
 			],
 			order: [
-				[PlaylistSong, "add_date", "ASC"],
 				[UserSongHistory, "played_date", "DESC"],
+				[PlaylistSong, "add_date", "ASC"],
 			],
 		})
 		.catch((err) => {
@@ -48,21 +48,24 @@ const getRecommendedSongsToRemove = async (playlist) => {
 		);
 	}
 
-	// console.log(
-	// 	"recommended for remove",
-	// 	recommendedForRemove.length,
-	// 	recommendedForRemove.map((song) => {
-	// 		if (song.UserSongHistories.length === 0) {
-	// 			return null;
-	// 		}
-	// 		return [
-	// 			new Date(
-	// 				song.UserSongHistories[0].played_date
-	// 			).toLocaleString(),
-	// 			song.UserSongHistories[0].played_date,
-	// 		];
-	// 	})
-	// );
+	console.log(
+		"recommended for remove",
+		recommendedForRemove.length,
+		recommendedForRemove.map((song) => {
+			const result = {
+				name: song.name,
+				length: recommendedForRemove.length,
+				last_played:
+					song.UserSongHistories.length > 0
+						? new Date(
+								song.UserSongHistories[0].played_date
+						  ).toLocaleString()
+						: "Never",
+				added: new Date(song.PlaylistSong.add_date).toLocaleString(),
+			}.join(",");
+			return JSON.stringify(result);
+		})
+	);
 
 	return recommendedForRemove.slice(0, 15);
 };
