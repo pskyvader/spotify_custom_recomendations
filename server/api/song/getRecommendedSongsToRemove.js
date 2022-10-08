@@ -49,6 +49,7 @@ const getRecommendedSongsToRemove = async (playlist) => {
 	}
 
 	console.log(
+		"recommended for remove",
 		recommendedForRemove.length,
 		recommendedForRemove.map((song) => {
 			if (song.UserSongHistories.length === 0) {
