@@ -48,7 +48,7 @@ const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
 				console.log(cellData.formattedValue);
 				return cellData.formattedValue !== null
 					? new Date(cellData.formattedValue).toLocaleString()
-					: "";
+					: "Never Played";
 			},
 		});
 		return <SongList data={data} title="Recommended for delete" />;
