@@ -48,21 +48,21 @@ const getRecommendedSongsToRemove = async (playlist) => {
 		);
 	}
 
-	console.log(
-		"recommended for remove",
-		recommendedForRemove.length,
-		recommendedForRemove.map((song) => {
-			if (song.UserSongHistories.length === 0) {
-				return null;
-			}
-			return [
-				new Date(
-					song.UserSongHistories[0].played_date
-				).toLocaleString(),
-				song.UserSongHistories[0].played_date,
-			];
-		})
-	);
+	// console.log(
+	// 	"recommended for remove",
+	// 	recommendedForRemove.length,
+	// 	recommendedForRemove.map((song) => {
+	// 		if (song.UserSongHistories.length === 0) {
+	// 			return null;
+	// 		}
+	// 		return [
+	// 			new Date(
+	// 				song.UserSongHistories[0].played_date
+	// 			).toLocaleString(),
+	// 			song.UserSongHistories[0].played_date,
+	// 		];
+	// 	})
+	// );
 
 	return recommendedForRemove.slice(0, 15);
 };
