@@ -112,7 +112,7 @@ const syncronizeMultiplePlaylists = async (user) => {
 		response.message.push(`Playlist ${playlist.name}`);
 		const playlistResponse = await syncronizePlaylist(user, playlist);
 		response.error = response.error || playlistResponse.error;
-		response.message.push(...response.message);
+		response.message.push(...playlistResponse.message);
 	}
 	return response;
 };
