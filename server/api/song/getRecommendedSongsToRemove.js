@@ -62,7 +62,7 @@ const getRecommendedSongsToRemove = async (playlist) => {
 						  ).toLocaleString()
 						: "Never",
 				added: new Date(song.PlaylistSong.add_date).toLocaleString(),
-			}.join(",");
+			};
 			return JSON.stringify(result);
 		})
 	);
