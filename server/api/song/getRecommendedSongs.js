@@ -8,7 +8,7 @@ const { getTopSongsFromAPI } = require("./getTopSongsFromAPI");
 const week = 604800000;
 
 const getRecommendedSongs = async (user, playlist) => {
-	let currentPlaylist = await getPlaylistSongs(playlist);
+	let currentPlaylist = await getPlaylistSongs(playlist); //TODO: filter by added at least 2 weeks ago or earlier
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}

@@ -1,4 +1,6 @@
 const { fn, col, Op } = require("sequelize");
+const { Song } = require("../database/");
+const { convertTime } = require("../utils");
 
 const week = 604800000;
 const updateAverageTimes = async (
@@ -12,14 +14,16 @@ const updateAverageTimes = async (
 	const userSongs = await user
 		.getUserSongHistories({
 			attributes: [
-				[fn("count", col("id")), "total"],
+				[fn("count", col("UserSongHistory.id")), "total"],
 				[date_format, "played"],
+				[fn("sum", col("Song.duration")), "total_time"],
 			],
 			where: {
 				played_date: {
 					[Op.gte]: Date.now() - 4 * week,
 				},
 			},
+			include: [Song],
 			order: [[date_format, "DESC"]],
 			group: [date_format],
 		})
@@ -53,7 +57,9 @@ const updateAverageTimes = async (
 	response.message.push(
 		userSongs.reduce((dates, userSong) => {
 			dates[userSong.getDataValue("played")] =
-				userSong.getDataValue("total");
+				userSong.getDataValue("total") +
+				"," +
+				convertTime(userSong.getDataValue("total_time"));
 			return dates;
 		}, {})
 	);
