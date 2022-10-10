@@ -7,7 +7,15 @@ test("Console render without errors", () => {
 		.then((user) => updateAverageTimes(user))
 		.then((response) => {
 			console.log(response);
-			expect(response.error).toBeFalsy();
+			expect(response).toHaveReturnedWith(
+				expect.objectContaining({
+					error: expect(false),
+					message: expect.any(Array),
+					dates: expect.any(Number),
+					total_times: expect.any(Number),
+					average: expect.any(Number),
+				})
+			);
 		});
 });
 
