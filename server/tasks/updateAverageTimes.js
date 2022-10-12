@@ -1,4 +1,4 @@
-const { fn, col, Op } = require("sequelize");
+const { fn, col, Op, literal } = require("sequelize");
 const { Song } = require("../database/");
 const { convertTime } = require("../utils");
 
@@ -17,18 +17,29 @@ const updateAverageTimes = async (
 				[fn("count", col("UserSongHistory.id")), "total"],
 				[date_format, "played"],
 				[fn("sum", col("Song.duration")), "total_time"],
-				[fn("count", col("Song.id")), "total_ids"],
+				// literal('DISTINCT ON("id") "Song".id"'),
+				// [fn("DISTINCT", col("Song.id")), "total_ids"],
 			],
 			where: {
 				played_date: {
 					[Op.gte]: Date.now() - 4 * week,
 				},
 			},
-			include: [{ model: Song, attributes: ["duration"] }],
+			include: [
+				{
+					model: Song,
+					attributes: [
+						[literal('DISTINCT ON("Song.id")'), "id"],
+						"duration",
+					],
+					required: true,
+				},
+			],
 			order: [[date_format, "DESC"]],
-			group: [date_format,col("Song.id")],
+			group: [date_format],
 		})
 		.catch((err) => {
+			console.error(err.sql);
 			return { error: true, message: err.message };
 		});
 
