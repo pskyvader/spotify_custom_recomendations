@@ -14,10 +14,11 @@ const updateAverageTimes = async (
 	const userSongs = await user
 		.getUserSongHistories({
 			attributes: [
-				[fn("count", col("UserSongHistory.id")), "total"],
+				literal('DISTINCT ON ("Song"."id") *'),
 				[date_format, "played"],
+				[fn("count", col("UserSongHistory.id")), "total"],
 				[fn("sum", col("Song.duration")), "total_time"],
-				// literal('DISTINCT ON("id") "Song".id"'),
+
 				// [fn("DISTINCT", col("Song.id")), "total_ids"],
 			],
 			where: {
@@ -29,13 +30,16 @@ const updateAverageTimes = async (
 				{
 					model: Song,
 					attributes: [
-						[literal('DISTINCT ON("Song.id")'), "id"],
+						// [literal('DISTINCT ON ("Song.id")'), "id2"],
 						"duration",
 					],
 					required: true,
 				},
 			],
-			order: [[date_format, "DESC"]],
+			order: [
+				[col("Song.id"), "ASC"],
+				[date_format, "DESC"],
+			],
 			group: [date_format],
 		})
 		.catch((err) => {
