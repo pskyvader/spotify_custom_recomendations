@@ -17,23 +17,16 @@ const updateAverageTimes = async (
 				[fn("count", col("UserSongHistory.id")), "total"],
 				[date_format, "played"],
 				[fn("sum", col("Song.duration")), "total_time"],
-				// [fn("string_agg", col("Song.id"), ","), "total_ids"],
+				[fn("count", col("Song.id")), "total_ids"],
 			],
 			where: {
 				played_date: {
 					[Op.gte]: Date.now() - 4 * week,
 				},
 			},
-			include: [
-				{
-					model: Song,
-					// attributes: [
-					// 	[fn("string_agg", col("Song.id"), "--"), "total_ids"],
-					// ],
-				},
-			],
+			include: [{ model: Song, attributes: ["duration"] }],
 			order: [[date_format, "DESC"]],
-			group: [date_format, [col("Song.id")]],
+			group: [date_format,col("Song.id")],
 		})
 		.catch((err) => {
 			return { error: true, message: err.message };
@@ -45,8 +38,7 @@ const updateAverageTimes = async (
 			message: response.message.concat(userSongs.message),
 		};
 	}
-
-	console.log(JSON.stringify(userSongs));
+	console.log(userSongs);
 	response.message.push("Average time for user:");
 	response.dates = 0;
 	response.total_times = 0;
