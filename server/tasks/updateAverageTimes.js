@@ -14,12 +14,10 @@ const updateAverageTimes = async (
 	const userSongs = await user
 		.getUserSongHistories({
 			attributes: [
-				literal('DISTINCT ON ("Song"."id") *'),
+				// literal('DISTINCT ON ("Song"."id") "Song"."id"'),
+				[col("Song.id"), "Song.id"],
 				[date_format, "played"],
 				[fn("count", col("UserSongHistory.id")), "total"],
-				[fn("sum", col("Song.duration")), "total_time"],
-
-				// [fn("DISTINCT", col("Song.id")), "total_ids"],
 			],
 			where: {
 				played_date: {
@@ -30,17 +28,20 @@ const updateAverageTimes = async (
 				{
 					model: Song,
 					attributes: [
-						// [literal('DISTINCT ON ("Song.id")'), "id2"],
-						"duration",
+						[fn("sum", col("duration")), "duration"],
+						[fn("STRING_AGG", "Song.id", "-"), "id"],
 					],
 					required: true,
 				},
 			],
 			order: [
-				[col("Song.id"), "ASC"],
+				// [col("Song.id"), "ASC"],
 				[date_format, "DESC"],
 			],
-			group: [date_format],
+			group: [
+				date_format,
+				// col("Song.id")
+			],
 		})
 		.catch((err) => {
 			console.error(err.sql);
@@ -53,7 +54,7 @@ const updateAverageTimes = async (
 			message: response.message.concat(userSongs.message),
 		};
 	}
-	console.log(userSongs);
+	console.log(userSongs, userSongs[0].Song);
 	response.message.push("Average time for user:");
 	response.dates = 0;
 	response.total_times = 0;
