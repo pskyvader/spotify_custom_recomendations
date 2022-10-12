@@ -13,7 +13,9 @@ const updateAverageTimes = async (
 	}
 	const userSongs = await user
 		.getUserSongHistories({
-			subQuery: false,
+			logging: (sql, queryObject) => {
+				console.log(sql, queryObject);
+			},
 			attributes: [
 				// literal('DISTINCT ON ("Song"."id") "Song"."id"'),
 				// [col("Song.id"), "Song.id"],
@@ -21,6 +23,9 @@ const updateAverageTimes = async (
 				[date_format, "played"],
 				[fn("count", col("UserSongHistory.id")), "total"],
 			],
+			// attributes: {
+			// 	exclude: ["id", "played_date"],
+			// },
 			where: {
 				played_date: {
 					[Op.gte]: Date.now() - 4 * week,
@@ -31,9 +36,10 @@ const updateAverageTimes = async (
 					model: Song,
 					attributes: [
 						[fn("sum", col("duration")), "duration"],
-						[fn("STRING_AGG", col("Song.id"), "-"), "id"],
+						[fn("STRING_AGG", col('"Song"."id"'), "-"), "id"],
+						// [col("Song.id"), "id"],
 					],
-					required: true,
+					// required: true,
 				},
 			],
 			order: [
