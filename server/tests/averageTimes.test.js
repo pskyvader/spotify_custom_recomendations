@@ -3,7 +3,6 @@ const { updateAverageTimes } = require("../tasks");
 const { User, UserSongHistory } = require("../database");
 
 test("Console render without errors", () => {
-	console.log(new UserSongHistory());
 	return User.findOne()
 		.then((user) => updateAverageTimes(user))
 		.then((response) => {

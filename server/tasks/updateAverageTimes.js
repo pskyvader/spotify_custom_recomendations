@@ -13,19 +13,14 @@ const updateAverageTimes = async (
 	}
 	const userSongs = await user
 		.getUserSongHistories({
-			logging: (sql, queryObject) => {
-				console.log(sql, queryObject);
-			},
+			raw: true,
+			// logging: (sql, queryObject) => {
+			// 	console.log(sql);
+			// },
 			attributes: [
-				// literal('DISTINCT ON ("Song"."id") "Song"."id"'),
-				// [col("Song.id"), "Song.id"],
-				// [fn("STRING_AGG", col("Song.id"), "-"), "Song.id"],
 				[date_format, "played"],
 				[fn("count", col("UserSongHistory.id")), "total"],
 			],
-			// attributes: {
-			// 	exclude: ["id", "played_date"],
-			// },
 			where: {
 				played_date: {
 					[Op.gte]: Date.now() - 4 * week,
@@ -35,21 +30,14 @@ const updateAverageTimes = async (
 				{
 					model: Song,
 					attributes: [
-						[fn("sum", col("duration")), "duration"],
-						[fn("STRING_AGG", col('"Song"."id"'), "-"), "id"],
+						[fn("sum", col("duration")), "total_time"],
+						// [fn("STRING_AGG", col('"Song"."id"'), "-"), "id"],
 						// [col("Song.id"), "id"],
 					],
-					// required: true,
 				},
 			],
-			order: [
-				// [col("Song.id"), "ASC"],
-				[date_format, "DESC"],
-			],
-			group: [
-				date_format,
-				// col("Song.id")
-			],
+			order: [[date_format, "DESC"]],
+			group: [date_format],
 		})
 		.catch((err) => {
 			console.error(err.sql);
@@ -62,14 +50,15 @@ const updateAverageTimes = async (
 			message: response.message.concat(userSongs.message),
 		};
 	}
-	console.log(userSongs, userSongs[0].Song);
+	// console.log(userSongs, userSongs[0].Song);
 	response.message.push("Average time for user:");
 	response.dates = 0;
 	response.total_times = 0;
 	for (const date of userSongs) {
 		// console.log(date.getDataValue("total"), date.getDataValue("played"));
 		response.dates += 1;
-		response.total_times += parseInt(date.getDataValue("total"));
+		// response.total_times += parseInt(date.getDataValue("total"));
+		response.total_times += parseInt(date.total);
 	}
 	// console.log(response);
 
@@ -81,10 +70,9 @@ const updateAverageTimes = async (
 	response.message.push("Average Dates:");
 	response.message.push(
 		userSongs.reduce((dates, userSong) => {
-			dates[userSong.getDataValue("played")] =
-				userSong.getDataValue("total") +
-				"," +
-				convertTime(userSong.getDataValue("total_time"));
+			// dates[userSong.getDataValue("played")] = userSong.getDataValue("total") + "," + convertTime(userSong.getDataValue("total_time"));
+			dates[userSong.played] =
+				userSong.total + "," + convertTime(userSong["Song.total_time"]);
 			return dates;
 		}, {})
 	);
