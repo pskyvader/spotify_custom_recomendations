@@ -1,6 +1,6 @@
 const { fn, col, Op, literal } = require("sequelize");
 const { Song } = require("../database/");
-const { convertTime } = require("../utils");
+const { convertTime, filterOutliers } = require("../utils");
 
 const week = 604800000;
 const updateAverageTimes = async (
@@ -50,20 +50,40 @@ const updateAverageTimes = async (
 			message: response.message.concat(userSongs.message),
 		};
 	}
-	console.log(userSongs);
 	response.message.push("Average time for user:");
-	response.dates = 0;
-	response.total_times = 0;
-	for (const date of userSongs) {
-		// console.log(date.getDataValue("total"), date.getDataValue("played"));
-		response.dates += 1;
-		// response.total_times += parseInt(date.getDataValue("total"));
-		response.total_times += parseInt(date.total);
-	}
+	// response.dates = 0;
+	// response.total_times = 0;
+	// for (const date of userSongs) {
+	// 	// console.log(date.getDataValue("total"), date.getDataValue("played"));
+	// 	response.dates += 1;
+	// 	// response.total_times += parseInt(date.getDataValue("total"));
+	// 	response.total_times += parseInt(date.total);
+	// }
 	// console.log(response);
+	const songsTotals = userSongs.map((song) => song.total);
+	const filteredOutliers = filterOutliers(songsTotals);
 
+	// console.log(
+	// 	filteredOutliers.length,
+	// 	Math.min(...filteredOutliers),
+	// 	Math.max(...filteredOutliers),
+	// 	filteredOutliers.reduce((a, b) => a + parseInt(b), 0) /
+	// 		(filteredOutliers.length || 1)
+	// );
+	// console.log(
+	// 	songsTotals.length,
+	// 	Math.min(...songsTotals),
+	// 	Math.max(...songsTotals),
+	// 	songsTotals.reduce((a, b) => a + parseInt(b), 0) /
+	// 		(songsTotals.length || 1)
+	// );
+
+	// response.average =
+	// 	response.dates > 0 ? response.total_times / response.dates : 0;
+	
 	response.average =
-		response.dates > 0 ? response.total_times / response.dates : 0;
+		filteredOutliers.reduce((a, b) => a + parseInt(b), 0) /
+		(filteredOutliers.length || 1);
 
 	response.message.push(response.average);
 	response.message.push("---------------");
@@ -72,7 +92,9 @@ const updateAverageTimes = async (
 		userSongs.reduce((dates, userSong) => {
 			// dates[userSong.getDataValue("played")] = userSong.getDataValue("total") + "," + convertTime(userSong.getDataValue("total_time"));
 			dates[userSong.played] =
-				userSong.total + "," + convertTime(userSong["Song.total_time"]);
+				userSong.total +
+				"---" +
+				convertTime(userSong["Song.total_time"]);
 			return dates;
 		}, {})
 	);
