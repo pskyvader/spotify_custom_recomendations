@@ -50,7 +50,7 @@ const updateAverageTimes = async (
 			message: response.message.concat(userSongs.message),
 		};
 	}
-	// console.log(userSongs, userSongs[0].Song);
+	console.log(userSongs);
 	response.message.push("Average time for user:");
 	response.dates = 0;
 	response.total_times = 0;
