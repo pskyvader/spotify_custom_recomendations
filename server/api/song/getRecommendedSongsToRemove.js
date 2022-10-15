@@ -5,6 +5,8 @@ const { UserSongHistory, PlaylistSong } = require("../../database");
 const week = 604800000;
 
 const getRecommendedSongsToRemove = async (playlist) => {
+	const minTimeInPlaylist = 1 * week;
+
 	const oldAddedSongs = await playlist
 		.getSongs({
 			include: [
@@ -14,7 +16,7 @@ const getRecommendedSongsToRemove = async (playlist) => {
 					where: {
 						active: true,
 						add_date: {
-							[Op.lte]: Date.now() - 1 * week,
+							[Op.lte]: Date.now() - 1 * minTimeInPlaylist,
 						},
 					},
 				},
@@ -33,7 +35,7 @@ const getRecommendedSongsToRemove = async (playlist) => {
 		return song.UserSongHistories.length === 0;
 	});
 
-	//never played + old played songs (over two weeks ago)
+	//never played + old played songs (over two * min time in playlist)
 	if (recommendedForRemove.length < 15) {
 		recommendedForRemove.push(
 			...oldAddedSongs
@@ -43,7 +45,7 @@ const getRecommendedSongsToRemove = async (playlist) => {
 					}
 					return (
 						song.UserSongHistories[0].played_date <
-						Date.now() - 2 * week
+						Date.now() - 2 * minTimeInPlaylist
 					);
 				})
 				.reverse() // order from least to most recently played

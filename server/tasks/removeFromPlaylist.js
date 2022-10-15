@@ -4,8 +4,8 @@ const {
 } = require("../api/song");
 const { removeSongFromPlaylistFromAPI } = require("../api/playlist");
 
-const _MAX_SONGS_PER_PLAYLIST = 200;
-const _MIN_SONGS_PER_PLAYLIST = 50;
+const _MIN_SONGS_PER_PLAYLIST = process.env.MIN_SONGS_PER_PLAYLIST;
+const _MAX_SONGS_PER_PLAYLIST = process.env.MAX_SONGS_PER_PLAYLIST;
 
 const removeFromSinglePlaylist = async (user, playlist, songsToRemove) => {
 	const response = { error: false, message: [], removedTotal: 0 };

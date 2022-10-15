@@ -2,8 +2,8 @@ const { getRecommendedSongs, getPlaylistSongs } = require("../api/song");
 const { addSongToPlaylist } = require("../api/playlist");
 const { getSong } = require("../model");
 
-const _MAX_SONGS_PER_PLAYLIST = 200;
-const _MIN_SONGS_PER_PLAYLIST = 50;
+const _MIN_SONGS_PER_PLAYLIST = process.env.MIN_SONGS_PER_PLAYLIST;
+const _MAX_SONGS_PER_PLAYLIST = process.env.MAX_SONGS_PER_PLAYLIST;
 
 const addToSinglePlaylist = async (
 	user,

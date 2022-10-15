@@ -18,6 +18,8 @@ env:
     PRODUCTION: production
     REDIRECT_URI: http://localhost:3000/callback
     REDIRECT_URI_PRODUCTION: http://localhost:5000/callback
+    MIN_SONGS_PER_PLAYLIST: 50
+    MAX_SONGS_PER_PLAYLIST: 50
 
 jobs:
     build:

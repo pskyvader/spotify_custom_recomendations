@@ -10,6 +10,7 @@ test("Console render without errors", () => {
 			expect(response).toHaveProperty("error", false);
 			expect(response).toHaveProperty("message");
 			expect(response).toHaveProperty("average");
+			expect(response).toHaveProperty("minTime");
 		});
 });
 
