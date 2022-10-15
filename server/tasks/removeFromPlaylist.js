@@ -7,13 +7,25 @@ const { removeSongFromPlaylistFromAPI } = require("../api/playlist");
 const _MIN_SONGS_PER_PLAYLIST = process.env.MIN_SONGS_PER_PLAYLIST;
 const _MAX_SONGS_PER_PLAYLIST = process.env.MAX_SONGS_PER_PLAYLIST;
 
-const removeFromSinglePlaylist = async (user, playlist, songsToRemove) => {
+const removeFromSinglePlaylist = async (
+	user,
+	playlist,
+	songsToRemove,
+	average = null
+) => {
 	const response = { error: false, message: [], removedTotal: 0 };
 	const playlistSongsList = await getPlaylistSongs(playlist);
 	if (playlistSongsList.error) {
 		return playlistSongsList;
 	}
-	const songlist = await getRecommendedSongsToRemove(playlist);
+	console.log(
+		parseInt(playlistSongsList.length / average || 1),
+		playlistSongsList.length
+	);
+	const songlist = await getRecommendedSongsToRemove(
+		playlist,
+		parseInt(playlistSongsList.length / average || 1)
+	);
 	if (songlist.error) {
 		return songlist;
 	}
@@ -61,11 +73,13 @@ const removeFromPlaylist = async (
 	response.removedTotal = {};
 	response.message.push("Removed :");
 	const playlists = await user.getPlaylists({ where: { active: true } });
+	const average = response.average || null;
 	for (const playlist of playlists) {
 		const singleResponse = await removeFromSinglePlaylist(
 			user,
 			playlist,
-			songsToRemove
+			songsToRemove,
+			average
 		);
 		response.message.push(...singleResponse.message);
 		response.removedTotal[playlist.id] = singleResponse.removedTotal;

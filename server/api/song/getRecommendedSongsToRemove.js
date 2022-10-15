@@ -1,11 +1,17 @@
 const { Op } = require("sequelize");
 const { UserSongHistory, PlaylistSong } = require("../../database");
 
-//week in ms
-const week = 604800000;
+//day in ms
+const day = 86400000;
 
-const getRecommendedSongsToRemove = async (playlist) => {
-	const minTimeInPlaylist = 1 * week;
+const getRecommendedSongsToRemove = async (playlist, minTime = null) => {
+	const minTimeInPlaylist =
+		day * (minTime && minTime > 0 ? Math.max(minTime, 7) : 7);
+	console.log(
+		`minTimeInPlaylist: ${minTimeInPlaylist} (${
+			minTime && minTime > 0 ? Math.max(minTime, 7) : 7
+		}) days`
+	);
 
 	const oldAddedSongs = await playlist
 		.getSongs({
