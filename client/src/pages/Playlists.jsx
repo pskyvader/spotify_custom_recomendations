@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { Container, CircularProgress, Switch } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useParams, Redirect } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -21,7 +21,7 @@ const Root = styled("div")(({ theme }) => {
 	return {
 		maxHeight: `calc(100vh - ${
 			theme.mixins.toolbar.minHeight * 2
-		}px - ${theme.spacing(7) })`, // - ${theme.spacing(10)}
+		}px - ${theme.spacing(7)})`, // - ${theme.spacing(10)}
 		[theme.breakpoints.down("md")]: {
 			maxHeight: "none",
 			// marginBottom: theme.spacing(13),
@@ -65,7 +65,7 @@ const Playlists = () => {
 	};
 
 	if (LoggedIn === false || playlistid === null) {
-		return <Redirect to="/" />;
+		return <Navigate to="/" />;
 	}
 
 	if (LoggedIn) {

@@ -8,7 +8,7 @@ import {
 
 import { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { PlaylistContext } from "../context/PlaylistContextProvider";
 import { ProfileContext } from "../context/ProfileContextProvider";
@@ -16,7 +16,7 @@ import { ProfileContext } from "../context/ProfileContextProvider";
 const DrawerItems = () => {
 	const { playlists } = useContext(PlaylistContext);
 	const { profile } = useContext(ProfileContext);
-	let history = useHistory();
+	let navigate = useNavigate();
 	const { playlistid } = useParams();
 
 	if (!profile) return "Profile Error";
@@ -29,7 +29,7 @@ const DrawerItems = () => {
 				// disabled={!currentPlaylist.active}
 				key={currentPlaylist.id}
 				selected={playlistid === currentPlaylist.id}
-				onClick={() => history.push("/playlist/" + currentPlaylist.id)}
+				onClick={() => navigate("/playlist/" + currentPlaylist.id)}
 			>
 				<ListItemIcon>
 					<Avatar

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import Playlists from "./Playlists";
 import Callback from "./Callback";
@@ -20,27 +20,38 @@ function App() {
 						<ProfileContextProvider>
 							<PlaylistContextProvider>
 								<div>
-									<Switch>
-										<Route exact path="/">
-											<Header>
-												<Home />
-											</Header>
-										</Route>
-										<Route path="/playlist/:playlistid">
-											<Header>
-												<Playlists />
-											</Header>
-										</Route>
+									<Routes>
+										<Route
+											exact
+											path="/"
+											element={
+												<Header>
+													<Home />
+												</Header>
+											}
+										></Route>
+										<Route
+											path="/playlist/:playlistid"
+											element={
+												<Header>
+													<Playlists />
+												</Header>
+											}
+										></Route>
+										<Route
+											path="/callback"
+											element={<Callback />}
+										></Route>
+										<Route
+											path="/login"
+											element={<Login />}
+										></Route>
 
-										<Route path="/callback">
-											<Callback />
-										</Route>
-										<Route path="/login">
-											<Login />
-										</Route>
-
-										<Route path="*">Not found </Route>
-									</Switch>
+										<Route
+											path="*"
+											element={<div>Not found </div>}
+										></Route>
+									</Routes>
 								</div>
 							</PlaylistContextProvider>
 						</ProfileContextProvider>

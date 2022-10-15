@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { updateAverageTimes } = require("../tasks");
-const { User, UserSongHistory } = require("../database");
+const { User } = require("../database");
 
 test("Console render without errors", () => {
 	return User.findOne()
@@ -9,8 +9,6 @@ test("Console render without errors", () => {
 			console.log(response);
 			expect(response).toHaveProperty("error", false);
 			expect(response).toHaveProperty("message");
-			expect(response).toHaveProperty("dates");
-			expect(response).toHaveProperty("total_times");
 			expect(response).toHaveProperty("average");
 		});
 });
