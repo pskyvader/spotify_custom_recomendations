@@ -9,6 +9,16 @@ on:
     pull_request:
         branches: ["main"]
 
+env:
+    DATABASE_URL: postgres://mpvvcxrdmgdolg:517605e80907421933c7208dfc8996b5bb4161c14cc223e9e1e8db01a54b6dac@ec2-3-216-113-109.compute-1.amazonaws.com:5432/ddqb2q0n3po8v6
+    CLIENT_ID: 6e8b594462ac469c95cf1f137ae901a7
+    CLIENT_SECRET: 9fed01b670d542eaa35c53f39bdefc02
+    STATEKEY: spotify_auth_state
+    SESSION_SECRET: 7c9431a4i98517aebe81e6c817ac3ae33
+    PRODUCTION: test
+    REDIRECT_URI: http://localhost:3000/callback
+    REDIRECT_URI_PRODUCTION: http://localhost:5000/callback
+
 jobs:
     build:
         runs-on: ubuntu-latest
