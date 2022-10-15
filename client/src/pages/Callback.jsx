@@ -1,16 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLayoutEffect } from "react";
+import { useLocation } from "react-router-dom";
 import GetRequest from "../API/Request";
 
 export default function Callback(props) {
-	// const [redirect, SetRedirect] = useState(null);
-	const navigate = useNavigate();
 	const url = "/authorizeuser" + useLocation().search;
-	console.log(url);
-	useEffect(() => {
-		// if (redirect !== null) {
-		// 	return;
-		// }
+	console.log("start", url);
+	useLayoutEffect(() => {
 		GetRequest(url)
 			.then((data) => {
 				if (data.error) {
@@ -22,7 +17,6 @@ export default function Callback(props) {
 				if (data.finalRedirect) {
 					return data;
 				}
-				console.log(data);
 				return GetRequest(
 					"https://accounts.spotify.com/api/token",
 					"POST",
@@ -44,22 +38,18 @@ export default function Callback(props) {
 			})
 			.then((tokenresponse) => {
 				if (tokenresponse.finalRedirect) {
-					return tokenresponse.finalRedirect;
+					return null;
 				}
 				if (!tokenresponse.loggedin) {
-					return "/#error=push_token_error";
+					return null;
 				}
 				return "/#loggedin=true";
 			})
-			.finally((finalRedirect) => {
-				console.log(finalRedirect);
-				navigate(finalRedirect);
+			.then((finalRedirect) => {
+				if (finalRedirect !== null) {
+					window.location = finalRedirect;
+				}
 			});
-	}, [url, navigate]);
-
-	// if (redirect) {
-	// 	window.location = redirect;
-	// }
-
+	}, [url]);
 	return null;
 }

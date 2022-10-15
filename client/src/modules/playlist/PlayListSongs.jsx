@@ -30,12 +30,7 @@ const PlayListSongs = ({ playlistId, hidden }) => {
 			ButtonRemoveSong,
 			setCurrentSong
 		);
-		return (
-			<SongList
-				data={data}
-				title="Playlist songs"
-			/>
-		);
+		return <SongList data={data} title="Playlist songs" />;
 	}
 	return <CircularProgress />;
 };
