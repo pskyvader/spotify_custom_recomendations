@@ -15,7 +15,7 @@ env:
     CLIENT_SECRET: 9fed01b670d542eaa35c53f39bdefc02
     STATEKEY: spotify_auth_state
     SESSION_SECRET: 7c9431a4i98517aebe81e6c817ac3ae33
-    PRODUCTION: test
+    PRODUCTION: production
     REDIRECT_URI: http://localhost:3000/callback
     REDIRECT_URI_PRODUCTION: http://localhost:5000/callback
 
