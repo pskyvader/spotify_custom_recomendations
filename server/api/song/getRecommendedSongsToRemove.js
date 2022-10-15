@@ -7,12 +7,6 @@ const day = 86400000;
 const getRecommendedSongsToRemove = async (playlist, minTime = null) => {
 	const minTimeInPlaylist =
 		day * (minTime && minTime > 0 ? Math.max(minTime, 7) : 7);
-	console.log(
-		`minTimeInPlaylist: ${minTimeInPlaylist} (${
-			minTime && minTime > 0 ? Math.max(minTime, 7) : 7
-		}) days`
-	);
-
 	const oldAddedSongs = await playlist
 		.getSongs({
 			include: [

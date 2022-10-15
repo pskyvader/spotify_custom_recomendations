@@ -19,18 +19,7 @@ function filterOutliers(someArray) {
 	maxValue = q3 + iqr * 1.5;
 	minValue = q1 - iqr * 1.5;
 
-	const finalresponse = values.filter((x) => x >= minValue && x <= maxValue);
-	// console.log(
-	// 	someArray.length,
-	// 	finalresponse.length,
-	// 	"numbers",
-	// 	minValue,
-	// 	maxValue,
-	// 	q1,
-	// 	q3,
-	// 	iqr
-	// );
-	return finalresponse;
+	return values.filter((x) => x >= minValue && x <= maxValue);
 }
 
 module.exports = { filterOutliers };

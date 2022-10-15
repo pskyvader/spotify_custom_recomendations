@@ -9,7 +9,8 @@ const addToSinglePlaylist = async (
 	user,
 	playlist,
 	songsToAdd,
-	previouslyRemoved
+	previouslyRemoved,
+	average = null
 ) => {
 	const responseMessage = [];
 	const playlistSongsList = await getPlaylistSongs(playlist);
@@ -32,7 +33,11 @@ const addToSinglePlaylist = async (
 		return responseMessage;
 	}
 
-	const songlist = await getRecommendedSongs(user, playlist);
+	const songlist = await getRecommendedSongs(
+		user,
+		playlist,
+		parseInt(playlistSongsList.length / average || 1)
+	);
 	if (songlist.error) {
 		return songlist;
 	}
@@ -78,6 +83,7 @@ const addToPlaylist = async (
 ) => {
 	response.message.push("Added :");
 	const playlists = await user.getPlaylists({ where: { active: true } });
+	const average = response.average || null;
 	for (const playlist of playlists) {
 		const singleResponse = await addToSinglePlaylist(
 			user,
@@ -85,7 +91,8 @@ const addToPlaylist = async (
 			songsToAdd,
 			removedTotal[playlist.id] !== undefined
 				? removedTotal[playlist.id]
-				: songsToAdd
+				: songsToAdd,
+			average
 		);
 		if (singleResponse.error) {
 			response.error = true;

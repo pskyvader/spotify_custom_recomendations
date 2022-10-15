@@ -4,19 +4,24 @@ const { getRecommendedSongsFromAPI } = require("./getRecommendedSongsFromAPI");
 const { getRecentlyPlayedSongs } = require("./getRecentlyPlayedSongs");
 const { getTopSongsFromAPI } = require("./getTopSongsFromAPI");
 
-//week in ms
-const week = 604800000;
+//day in ms
+const day = 86400000;
+const getRecommendedSongs = async (user, playlist, minTime = null) => {
+	const minTimeInPlaylist =
+		day * (minTime && minTime > 0 ? Math.max(minTime, 7) : 7);
 
-const getRecommendedSongs = async (user, playlist) => {
-	let currentPlaylist = await getPlaylistSongs(playlist); //TODO: filter by added at least 2 weeks ago or earlier
+	let currentPlaylist = await getPlaylistSongs(
+		playlist,
+		Date.now() - 2 * minTimeInPlaylist
+	); // filter by added 2 minTimeInPlaylist ago or earlier
 	if (currentPlaylist.error) {
 		return currentPlaylist;
 	}
 
-	// Recent: get playlist songs ids and played more recently than 1 week ago
+	// Recent: get playlist songs ids and played more recently than 2 minTimeInPlaylist ago
 	const RecentSongs = await getRecentlyPlayedSongs(
 		user,
-		Date.now() - 1 * week
+		Date.now() - 2 * minTimeInPlaylist
 	);
 	if (RecentSongs.error) {
 		return RecentSongs;

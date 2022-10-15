@@ -18,10 +18,7 @@ const removeFromSinglePlaylist = async (
 	if (playlistSongsList.error) {
 		return playlistSongsList;
 	}
-	console.log(
-		parseInt(playlistSongsList.length / average || 1),
-		playlistSongsList.length
-	);
+
 	const songlist = await getRecommendedSongsToRemove(
 		playlist,
 		parseInt(playlistSongsList.length / average || 1)
