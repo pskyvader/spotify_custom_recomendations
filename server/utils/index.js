@@ -3,7 +3,7 @@ const { request } = require("./request");
 const { genres } = require("./genres");
 const { convertTime } = require("./convertTime");
 const { formatSongAPI, formatSongAPIList } = require("./formatSong");
-const { filterOutliers } = require("./filterOutliers");
+const { filterOutliers } = require("./filterOutliersFunction");
 
 module.exports = {
 	generateRandomString,
