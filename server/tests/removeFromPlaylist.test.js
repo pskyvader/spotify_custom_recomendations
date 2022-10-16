@@ -14,9 +14,10 @@ test("Removed from playlist with no console errors, and 0 Removed", () => {
 			removeFromPlaylist(user, songsToModify, averageResponse)
 		)
 		.then((response) => {
-			console.log(response);
 			expect(response).toHaveProperty("error", false);
 			expect(response).toHaveProperty("message");
 			expect(response.removedTotal).toBeDefined();
+			console.log("removedTotal: ", response.removedTotal);
+			return response;
 		});
 });

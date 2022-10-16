@@ -15,7 +15,7 @@ test("Add to playlist with no console errors, and 0 added", () => {
 			expect(response).toHaveProperty("error", false);
 			expect(response).toHaveProperty("message");
 			expect(response.addedTotal).toBeDefined();
-			console.log(response.addedTotal);
+			console.log("addedTotal: ", response.addedTotal);
 			return response;
 		});
 });
