@@ -1,8 +1,8 @@
 require("dotenv").config();
-const { removeFromPlaylist } = require("../tasks");
+const { addToPlaylist } = require("../tasks");
 const { User } = require("../database");
 
-test("Removed from playlist with no console errors, and 0 Removed", () => {
+test("Add to playlist with no console errors, and 0 added", () => {
 	const songsToModify = -5;
 	const averageResponse = {
 		error: false,
@@ -10,13 +10,12 @@ test("Removed from playlist with no console errors, and 0 Removed", () => {
 		average: 37,
 	};
 	return User.findOne()
-		.then((user) =>
-			removeFromPlaylist(user, songsToModify, averageResponse)
-		)
+		.then((user) => addToPlaylist(user, songsToModify, {}, averageResponse))
 		.then((response) => {
-			console.log(response);
 			expect(response).toHaveProperty("error", false);
 			expect(response).toHaveProperty("message");
-			expect(response.removedTotal).toBeDefined();
+			expect(response.addedTotal).toBeDefined();
+			console.log(response.addedTotal);
+			return response;
 		});
 });

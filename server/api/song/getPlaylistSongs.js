@@ -5,14 +5,12 @@ const getPlaylistSongs = async (playlist, date = Date.now()) => {
 		.getSongs({
 			// raw: true,
 			// nest: true,
-			where: {
-				add_date: { [Op.lte]: date },
-			},
 			include: [
 				{
 					model: PlaylistSong,
 					where: {
 						active: true,
+						add_date: { [Op.lte]: date },
 					},
 				},
 			],

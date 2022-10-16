@@ -12,7 +12,7 @@ const addToSinglePlaylist = async (
 	previouslyRemoved,
 	average = null
 ) => {
-	const responseMessage = [];
+	const response = { error: false, message: [], addedTotal: 0 };
 	const playlistSongsList = await getPlaylistSongs(playlist);
 	if (playlistSongsList.error) {
 		return playlistSongsList;
@@ -27,10 +27,10 @@ const addToSinglePlaylist = async (
 	}
 
 	if (songsToAdd <= 0) {
-		responseMessage.push(
+		response.message.push(
 			`Too many songs in the playlist, and no song was removed. Current:${playlistSongsList.length}, MAX: ${_MAX_SONGS_PER_PLAYLIST}. Not adding new songs`
 		);
-		return responseMessage;
+		return response;
 	}
 
 	const songlist = await getRecommendedSongs(
@@ -42,7 +42,7 @@ const addToSinglePlaylist = async (
 		return songlist;
 	}
 
-	responseMessage.push(
+	response.message.push(
 		`Max songs available to add: ${songlist.length} to the ${playlistSongsList.length} already in playlist, will attempt to add a max of ${songsToAdd}. Previously removed: ${previouslyRemoved}`
 	);
 
@@ -63,16 +63,18 @@ const addToSinglePlaylist = async (
 			playlist
 		);
 		if (addSongResult.error) {
-			responseMessage.push(
+			response.error = true;
+			response.message.push(
 				`Error adding song ${currentSong.name} to playlist ${playlist.name}`
 			);
-			responseMessage.push(JSON.stringify(addSongResult));
+			response.message.push(JSON.stringify(addSongResult));
 			continue;
 		}
 		i++;
-		responseMessage.push(`Added song: ${currentSong.name}`);
+		response.message.push(`Added song: ${currentSong.name}`);
 	}
-	return responseMessage;
+	response.addedTotal = i;
+	return response;
 };
 
 const addToPlaylist = async (
@@ -81,6 +83,7 @@ const addToPlaylist = async (
 	removedTotal = {},
 	response = { error: false, message: [] }
 ) => {
+	response.addedTotal = {};
 	response.message.push("Added :");
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	const average = response.average || null;
@@ -94,12 +97,9 @@ const addToPlaylist = async (
 				: songsToAdd,
 			average
 		);
-		if (singleResponse.error) {
-			response.error = true;
-			response.message.push(singleResponse.message);
-			return response;
-		}
-		response.message.push(...singleResponse);
+		response.error = response.error || singleResponse.error;
+		response.message.push(...singleResponse.message);
+		response.addedTotal[playlist.id] = singleResponse.addedTotal;
 	}
 	return response;
 };
