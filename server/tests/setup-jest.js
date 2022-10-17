@@ -1,1 +1,1 @@
-process.env.PRODUCTION = "production";
+process.env.PRODUCTION = "test";
