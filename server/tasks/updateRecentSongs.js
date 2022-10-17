@@ -37,7 +37,7 @@ const updateRecentSongs = async (user) => {
 	});
 	return Promise.all(addTasks)
 		.then((results) => {
-			return { error: false, message: `${results.length} Songs updated` };
+			return { error: false, message: `${results.length} Recent Songs updated` };
 		})
 		.catch((err) => {
 			return { error: true, message: err.message };

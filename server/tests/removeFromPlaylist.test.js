@@ -19,5 +19,9 @@ test("Removed from playlist with no console errors, and 0 Removed", () => {
 			expect(response.removedTotal).toBeDefined();
 			console.log("removedTotal: ", response.removedTotal);
 			return response;
+		})
+		.catch((reason) => {
+			console.error(reason);
+			return { error: true, message: reason.message };
 		});
 });
