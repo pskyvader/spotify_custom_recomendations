@@ -1,9 +1,7 @@
-const { fetch } = require("node-fetch");
-
-// const fetch = (...args) =>
-// 	import("node-fetch").then(({ default: fetchFunction }) =>
-// 		fetchFunction(...args)
-// 	);
+const fetch = (...args) =>
+	import("node-fetch").then(({ default: fetchFunction }) => {
+		return fetchFunction(...args);
+	});
 const request = (
 	access_token,
 	url,
@@ -22,12 +20,10 @@ const request = (
 
 	return fetch(url, requestOptions)
 		.then((response) => {
-			console.log(response);
 			if (!response.ok) {
 				return response
 					.text()
 					.then((responsetext) => {
-						console.log(responsetext);
 						const finalresponse = {
 							error: true,
 							status: response.status,
@@ -54,7 +50,6 @@ const request = (
 			return response.json();
 		})
 		.catch((err) => {
-			console.log(err);
 			return { error: true, message: err.message };
 		});
 };
