@@ -39,13 +39,13 @@ app.use(
 	session({
 		store: new pgSession({
 			createTableIfMissing: true,
-			conObject: {
-				connectionString: process.env.DATABASE_URL,
-				ssl: {
-					// require: true,
-					rejectUnauthorized: false,
-				},
-			},
+			// conObject: {
+			// 	connectionString: process.env.DATABASE_URL,
+			// 	ssl: {
+			// 		// require: true,
+			// 		rejectUnauthorized: false,
+			// 	},
+			// },
 		}),
 		secret: process.env.SESSION_SECRET,
 		saveUninitialized: false,
@@ -417,7 +417,8 @@ app.get("*", (req, res) => {
 });
 
 // if not in production use the port 5000
-const PORT = process.env.PORT || 5000;
+// const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || "8080";
 
 app.listen(PORT, () => {
 	console.log(`Server listening on ${PORT}`);

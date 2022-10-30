@@ -28,3 +28,18 @@ yarn-error.log*
 
 */*.sqlite
 .secret
+
+Dockerfile
+.dockerignore
+node_modules
+.git
+*./node_modules
+*.sqlite
+.secret
+
+/build
+.env
+.vscode
+.autogit
+
+*/*.sqlite
