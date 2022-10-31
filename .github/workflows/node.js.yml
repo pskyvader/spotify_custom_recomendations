@@ -34,10 +34,10 @@ jobs:
     #         - run: npm test
     #         # - run: npm run build --if-present
 
-deploy:
-    name: Deploy app
-    runs-on: ubuntu-latest
-    steps:
-        - uses: actions/checkout@v2
-        - uses: superfly/flyctl-actions/setup-flyctl@master
-        - run: flyctl deploy --remote-only
+    deploy:
+        name: Deploy app
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: superfly/flyctl-actions/setup-flyctl@master
+            - run: flyctl deploy --remote-only
