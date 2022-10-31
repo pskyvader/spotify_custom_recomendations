@@ -6,43 +6,43 @@ kill_timeout = 5
 processes = []
 
 [env]
-  PORT = "8080"
-  CLIENT_ID="6e8b594462ac469c95cf1f137ae901a7"
-  CLIENT_SECRET="9fed01b670d542eaa35c53f39bdefc02"
-  STATEKEY="spotify_auth_state"
-  SESSION_SECRET="7c9431a4i98517aebe81e6c817ac3ae33"
-  PRODUCTION="production"
-  REDIRECT_URI="http://localhost:3000/callback"
-  REDIRECT_URI_PRODUCTION="http://localhost:5000/callback"
-  MIN_SONGS_PER_PLAYLIST="50"
-  MAX_SONGS_PER_PLAYLIST="200"
+PORT = "8080"
+CLIENT_ID = "6e8b594462ac469c95cf1f137ae901a7"
+CLIENT_SECRET = "9fed01b670d542eaa35c53f39bdefc02"
+STATEKEY = "spotify_auth_state"
+SESSION_SECRET = "7c9431a4i98517aebe81e6c817ac3ae33"
+PRODUCTION = "production"
+REDIRECT_URI = "http://localhost:3000/callback"
+REDIRECT_URI_PRODUCTION = "https://spotimagic.fly.dev/callback"
+MIN_SONGS_PER_PLAYLIST = "50"
+MAX_SONGS_PER_PLAYLIST = "200"
 
 [experimental]
-  allowed_public_ports = []
-  auto_rollback = true
+allowed_public_ports = []
+auto_rollback = true
 
 [[services]]
-  http_checks = []
-  internal_port = 8080
-  processes = ["app"]
-  protocol = "tcp"
-  script_checks = []
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
+http_checks = []
+internal_port = 8080
+processes = ["app"]
+protocol = "tcp"
+script_checks = []
+[services.concurrency]
+hard_limit = 25
+soft_limit = 20
+type = "connections"
 
-  [[services.ports]]
-    force_https = true
-    handlers = ["http"]
-    port = 80
+[[services.ports]]
+force_https = true
+handlers = ["http"]
+port = 80
 
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
+[[services.ports]]
+handlers = ["tls", "http"]
+port = 443
 
-  [[services.tcp_checks]]
-    grace_period = "1s"
-    interval = "15s"
-    restart_limit = 0
-    timeout = "2s"
+[[services.tcp_checks]]
+grace_period = "1s"
+interval = "15s"
+restart_limit = 0
+timeout = "2s"

@@ -10,34 +10,34 @@ on:
         branches: ["main"]
 
 env:
-    DATABASE_URL: postgres://mpvvcxrdmgdolg:517605e80907421933c7208dfc8996b5bb4161c14cc223e9e1e8db01a54b6dac@ec2-3-216-113-109.compute-1.amazonaws.com:5432/ddqb2q0n3po8v6
-    CLIENT_ID: 6e8b594462ac469c95cf1f137ae901a7
-    CLIENT_SECRET: 9fed01b670d542eaa35c53f39bdefc02
-    STATEKEY: spotify_auth_state
-    SESSION_SECRET: 7c9431a4i98517aebe81e6c817ac3ae33
-    PRODUCTION: test
-    REDIRECT_URI: http://localhost:3000/callback
-    REDIRECT_URI_PRODUCTION: http://localhost:5000/callback
-    MIN_SONGS_PER_PLAYLIST: 50
-    MAX_SONGS_PER_PLAYLIST: 200
+    DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+    # build:
+    #     runs-on: ubuntu-latest
 
-        strategy:
-            matrix:
-                node-version: [14.x, 16.x, 18.x]
-                # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    #     strategy:
+    #         matrix:
+    #             node-version: [14.x, 16.x, 18.x]
+    #             # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-        steps:
-            - uses: actions/checkout@v3
-            # - run: npm install && npm install --prefix client
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v3
-              with:
-                  node-version: ${{ matrix.node-version }}
-                  cache: "npm"
-            - run: npm ci
-            - run: npm test
-            - run: npm run build --if-present
+    #     steps:
+    #         - uses: actions/checkout@v3
+    #         # - run: npm install && npm install --prefix client
+    #         - name: Use Node.js ${{ matrix.node-version }}
+    #           uses: actions/setup-node@v3
+    #           with:
+    #               node-version: ${{ matrix.node-version }}
+    #               cache: "npm"
+    #         - run: npm ci
+    #         - run: npm test
+    #         # - run: npm run build --if-present
+
+deploy:
+    name: Deploy app
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v2
+        - uses: superfly/flyctl-actions/setup-flyctl@master
+        - run: flyctl deploy --remote-only
