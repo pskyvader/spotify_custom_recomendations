@@ -43,10 +43,7 @@ const addToSinglePlaylist = async (
 	}
 
 	response.message.push(
-		`Max songs available to add: ${songlist.length} to the ${playlistSongsList.length} already in playlist (MAX: ${_MAX_SONGS_PER_PLAYLIST}). \n Will attempt to add a max of ${songsToAdd}. Previously removed: ${previouslyRemoved}`
-	);
-	console.log(
-		`Max songs available to add: ${songlist.length} to the ${playlistSongsList.length} already in playlist (MAX: ${_MAX_SONGS_PER_PLAYLIST}). \n Will attempt to add a max of ${songsToAdd}. Previously removed: ${previouslyRemoved}`
+		`Max songs available to add: ${songlist.length} to the ${playlistSongsList.length} already in playlist (MAX: ${_MAX_SONGS_PER_PLAYLIST}). Will attempt to add a max of ${songsToAdd}. Previously removed: ${previouslyRemoved}`
 	);
 
 	let i = 0;
