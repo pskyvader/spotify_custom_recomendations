@@ -13,7 +13,7 @@ const deleteGarbage = async () => {
 		where: {
 			active: false,
 			removed_date: {
-				[Op.lte]: Date.now() - 2 * week,
+				[Op.lte]: Date.now() - 4 * week,
 			},
 		},
 	}).catch((err) => ({ error: true, message: err.message }));
@@ -23,7 +23,7 @@ const deleteGarbage = async () => {
 	const destroyedUserSong = await UserSongHistory.destroy({
 		where: {
 			played_date: {
-				[Op.lte]: Date.now() - 6 * week,
+				[Op.lte]: Date.now() - 8 * week,
 			},
 		},
 	}).catch((err) => ({ error: true, message: err.message }));
@@ -34,7 +34,7 @@ const deleteGarbage = async () => {
 	const songList = await Song.findAll({
 		where: {
 			last_time_used: {
-				[Op.lte]: Date.now() - 1 * week,
+				[Op.lte]: Date.now() - 2 * week,
 			},
 		},
 		include: [User, Playlist],
