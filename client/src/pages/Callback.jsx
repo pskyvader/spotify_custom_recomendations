@@ -4,7 +4,6 @@ import GetRequest from "../API/Request";
 
 export default function Callback(props) {
 	const url = "/authorizeuser" + useLocation().search;
-	// console.log("start", url);
 	useLayoutEffect(() => {
 		GetRequest(url)
 			.then((data) => {

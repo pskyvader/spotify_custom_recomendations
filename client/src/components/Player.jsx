@@ -89,15 +89,7 @@ const Player = () => {
 		return null;
 	}
 
-	// if (song.preview === null) {
-	// 	console.error("No preview available", song);
-	// }
-
 	return (
-		// <Paper
-		// 	sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
-		// 	elevation={3}
-		// >
 		<Grid
 			display="flex"
 			justifyContent="center"
@@ -201,7 +193,6 @@ const Player = () => {
 				<ProgressBar audioElement={audioElement} />
 			</Stack>
 		</Grid>
-		// </Paper>
 	);
 };
 

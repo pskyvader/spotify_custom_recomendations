@@ -45,7 +45,6 @@ const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
 			minWidth: 200,
 			flex: 1,
 			renderCell: (cellData) => {
-				// console.log(cellData.formattedValue);
 				return cellData.formattedValue !== null
 					? new Date(cellData.formattedValue).toLocaleString()
 					: "Never Played";

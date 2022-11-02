@@ -5,7 +5,6 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import ListItemText from "@mui/material/ListItemText";
 import FolderIcon from "@mui/icons-material/Folder";
-// import { PlayerContext } from "../context/PlayerContextProvider";
 
 const renderTitle = (cellData, setCurrentSong = null) => {
 	const playSong = () => {
@@ -65,12 +64,6 @@ export const SongListColumns = (
 };
 
 const SongList = ({ data, title = "title" }) => {
-	// const { setCurrentSong } = useContext(PlayerContext);
-
-	// useEffect(() => {
-	// 	setCurrentSong(null);
-	// }, [setCurrentSong]);
-
 	return (
 		<DataGrid
 			// autoPageSize={true}

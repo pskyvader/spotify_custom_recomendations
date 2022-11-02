@@ -23,7 +23,6 @@ import MainDrawer from "./MainDrawer";
 const UserInfo = () => {
 	const cookiefunctions = useCookies();
 	const removeCookie = cookiefunctions[2];
-	// console.log(cookiefunctions, removeCookie);
 	const { profile } = useContext(ProfileContext);
 	const { setLoggedIn } = useContext(SessionContext);
 	if (!profile) return null;
@@ -69,7 +68,7 @@ const Header = (props) => {
 		headerButton = <UserInfo />;
 	}
 	if (LoggedIn === false) {
-		<LoginButton />;
+		headerButton = <LoginButton />;
 	}
 
 	return (
