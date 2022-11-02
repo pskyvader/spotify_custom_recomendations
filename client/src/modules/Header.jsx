@@ -67,9 +67,9 @@ const Header = (props) => {
 	if (LoggedIn === true) {
 		headerButton = <UserInfo />;
 	}
-	if (LoggedIn === false) {
-		headerButton = <LoginButton />;
-	}
+	// if (LoggedIn === false) {
+	// 	headerButton = <LoginButton />;
+	// }
 
 	return (
 		<Fragment>
