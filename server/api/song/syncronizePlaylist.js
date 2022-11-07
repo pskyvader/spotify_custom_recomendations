@@ -7,6 +7,21 @@ const {
 	getSong,
 } = require("../../model/");
 
+const addErrorMessages = (mainResult, result, successMessage) => {
+	let isError = false;
+	for (const sync of result) {
+		if (sync.error) {
+			isError = true;
+			mainResult.error = true;
+			mainResult.message.push(sync.message);
+		}
+	}
+	if (!isError) {
+		mainResult.message.push(successMessage);
+	}
+	return mainResult;
+};
+
 const syncronizePlaylist = async (user, playlist) => {
 	const currentSongList = await getPlaylistSongs(playlist);
 	const songListUpdated = await getPlaylistSongsFromAPI(user, playlist);
@@ -53,53 +68,31 @@ const syncronizePlaylist = async (user, playlist) => {
 		});
 	return Promise.all(syncronizeSongsPromise)
 		.then((resultSyncronized) => {
-			const result = { error: false, message: [] };
-			for (const sync of resultSyncronized) {
-				if (sync.error) {
-					result.error = true;
-					result.message.push(sync.message);
-				}
-			}
-			if (result.message.length === 0) {
-				result.message.push("Syncronize completed successfully. ");
-			}
-			return result;
+			return addErrorMessages(
+				{ error: false, message: [] },
+				resultSyncronized,
+				"Syncronize completed successfully. "
+			);
 		})
 		.then((result) => {
 			return Promise.all(syncronizeRemoveSongListPromise).then(
 				(resultsyncRemove) => {
-					let isError = false;
-					for (const sync of resultsyncRemove) {
-						if (sync.error) {
-							isError = true;
-							result.error = true;
-							result.message.push(sync.message);
-						}
-					}
-					if (isError) {
-						result.message.push(
-							"Syncronize Remove completed successfully. "
-						);
-					}
-					return result;
+					return addErrorMessages(
+						result,
+						resultsyncRemove,
+						"Syncronize Remove completed successfully. "
+					);
 				}
 			);
 		})
 		.then((result) => {
 			return Promise.all(syncronizeAddSongListPromise).then(
 				(resultsyncAdd) => {
-					for (const sync of resultsyncAdd) {
-						if (sync.error) {
-							result.error = true;
-							result.message.push(sync.message);
-						}
-					}
-					if (result.message.length === 0) {
-						result.message.push(
-							"Syncronize Add completed successfully. "
-						);
-					}
-					return result;
+					return addErrorMessages(
+						result,
+						resultsyncAdd,
+						"Syncronize Add completed successfully. "
+					);
 				}
 			);
 		});

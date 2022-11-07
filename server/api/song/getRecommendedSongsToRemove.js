@@ -5,8 +5,8 @@ const { UserSongHistory, PlaylistSong } = require("../../database");
 const day = 86400000;
 
 const getRecommendedSongsToRemove = async (playlist, minTime = null) => {
-	const minTimeInPlaylist =
-		day * (minTime && minTime > 0 ? Math.max(minTime, 7) : 7);
+	const minTimeInPlaylist = day * (minTime && minTime > 0 ? minTime : 7);
+	// day * (minTime && minTime > 0 ? Math.max(minTime, 7) : 7);
 	const oldAddedSongs = await playlist
 		.getSongs({
 			include: [
@@ -52,24 +52,23 @@ const getRecommendedSongsToRemove = async (playlist, minTime = null) => {
 		);
 	}
 
-	// console.log(
-	// 	"recommended for remove",
-	// 	recommendedForRemove.length,
-	// 	recommendedForRemove.map((song) => {
-	// 		const result = {
-	// 			name: song.name,
-	// 			length: song.UserSongHistories.length,
-	// 			last_played:
-	// 				song.UserSongHistories.length > 0
-	// 					? new Date(
-	// 							song.UserSongHistories[0].played_date
-	// 					  ).toLocaleString()
-	// 					: "Never",
-	// 			added: new Date(song.PlaylistSong.add_date).toLocaleString(),
-	// 		};
-	// 		return JSON.stringify(result);
-	// 	})
-	// );
+	// only if there are not songs to remove
+	if (recommendedForRemove.length === 0) {
+		recommendedForRemove.push(
+			...oldAddedSongs
+				.filter((song) => {
+					if (song.UserSongHistories.length === 0) {
+						return false;
+					}
+					return (
+						song.UserSongHistories[0].played_date <
+						Date.now() - 1 * minTimeInPlaylist
+					);
+				})
+				.reverse()
+				.slice(0, 2) // order from least to most recently played, and get max 2
+		);
+	}
 
 	return recommendedForRemove.slice(0, 15);
 };
