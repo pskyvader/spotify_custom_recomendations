@@ -131,4 +131,5 @@ module.exports = {
 	Playlist,
 	PlaylistSong,
 	UserSongHistory,
+	SongFeatures,
 };

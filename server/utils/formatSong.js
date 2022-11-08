@@ -1,3 +1,26 @@
+const formatSongFeaturesAPI = (songfeatures) => {
+	return {
+		id: songfeatures.id,
+		danceability: songfeatures.danceability,
+		energy: songfeatures.energy,
+		key: songfeatures.key,
+		loudness: songfeatures.loudness,
+		mode: songfeatures.mode,
+		speechiness: songfeatures.speechiness,
+		acousticness: songfeatures.acousticness,
+		instrumentalness: songfeatures.instrumentalness,
+		liveness: songfeatures.liveness,
+		valence: songfeatures.valence,
+		tempo: songfeatures.tempo,
+		time_signature: songfeatures.time_signature,
+	};
+};
+const formatSongFeaturesAPIList = (songFeaturesList) => {
+	return songFeaturesList.map((songFeatures) => {
+		return formatSongFeaturesAPI(songFeatures);
+	});
+};
+
 const formatSongAPI = (song) => {
 	const art = song.artists.reduce((previous, artist) => {
 		previous.push(artist.name);
@@ -22,4 +45,10 @@ const formatSongAPIList = (songList) => {
 		return formatSongAPI(currentSong);
 	});
 };
-module.exports = { formatSongAPI, formatSongAPIList };
+
+module.exports = {
+	formatSongAPI,
+	formatSongAPIList,
+	formatSongFeaturesAPI,
+	formatSongFeaturesAPIList,
+};

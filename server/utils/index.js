@@ -2,7 +2,12 @@ const { generateRandomString } = require("./generateRandomString");
 const { request } = require("./request");
 const { genres } = require("./genres");
 const { convertTime } = require("./convertTime");
-const { formatSongAPI, formatSongAPIList } = require("./formatSong");
+const {
+	formatSongAPI,
+	formatSongAPIList,
+	formatSongFeaturesAPI,
+	formatSongFeaturesAPIList,
+} = require("./formatSong");
 const { filterOutliers } = require("./filterOutliersFunction");
 
 module.exports = {
@@ -12,5 +17,7 @@ module.exports = {
 	convertTime,
 	formatSongAPI,
 	formatSongAPIList,
+	formatSongFeaturesAPI,
+	formatSongFeaturesAPIList,
 	filterOutliers,
 };
