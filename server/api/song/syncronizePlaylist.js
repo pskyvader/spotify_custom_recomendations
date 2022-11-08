@@ -29,10 +29,9 @@ const addErrorMessages = (mainResult, result, successMessage) => {
 const syncronizePlaylist = async (user, playlist) => {
 	const currentSongList = await getPlaylistSongs(playlist);
 	const songListUpdated = await getPlaylistSongsFromAPI(user, playlist);
-	const songFeaturesListUpdated = await getSongFeaturesFromAPI(
-		user,
-		songListUpdated
-	);
+	const songFeaturesListUpdated = await getSongFeaturesFromAPI(user, {
+		...songListUpdated,
+	});
 
 	if (songListUpdated.error) {
 		songListUpdated.message = [songListUpdated.message];
