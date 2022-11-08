@@ -52,21 +52,24 @@ const getRecommendedSongsToRemove = async (playlist, minTime = null) => {
 		);
 	}
 
-	// only if there are not songs to remove
+	// only if there are no songs to remove
 	if (recommendedForRemove.length === 0) {
 		recommendedForRemove.push(
 			...oldAddedSongs
 				.filter((song) => {
-					if (song.UserSongHistories.length === 0) {
-						return false;
-					}
 					return (
 						song.UserSongHistories[0].played_date <
 						Date.now() - 1 * minTimeInPlaylist
 					);
 				})
-				.reverse()
-				.slice(0, 2) // order from least to most recently played, and get max 2
+				.reverse() // order from least to most recently played
+		);
+	}
+
+	// only if there are still no songs to remove
+	if (recommendedForRemove.length === 0) {
+		recommendedForRemove.push(
+			...oldAddedSongs.reverse().slice(0, 2) // order from least to most recently played,max 2 songs
 		);
 	}
 
