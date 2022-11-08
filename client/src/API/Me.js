@@ -20,6 +20,6 @@ export const Me = () => {
 };
 
 export const MePlaylist = () => {
-	const url = "/api/me/playlists";
+	const url = "/api/me/playlist";
 	return GetRequest(url);
 };

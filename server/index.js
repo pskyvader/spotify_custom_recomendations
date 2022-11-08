@@ -126,19 +126,19 @@ app.get("/api/me", async (_req, res) => {
 	res.json(user);
 });
 
-app.get("/api/me/playlists", async (_req, res) => {
-	let result = cache.get(`playlists-${user.id}`);
+app.get("/api/me/playlist", async (_req, res) => {
+	let result = cache.get(`playlist-user-${user.id}`);
 	if (!result) {
 		result = await getPlaylistsFromAPI(user);
 		if (!result.error) {
 			result = result.map((playlist) => playlist.toJSON());
-			cache.set(`playlists-${user.id}`, result, tenMinutes);
+			cache.set(`playlist-user-${user.id}`, result, tenMinutes);
 		}
 	}
 	res.json(result);
 });
 
-app.get("/api/playlists/get/:playlistId", async (req, res) => {
+app.get("/api/playlist/:playlistId", async (req, res) => {
 	let result = cache.get(`get-playlist-songs-${req.params.playlistId}`);
 	if (!result) {
 		let currentPlaylist = await getPlaylist(user, req.params.playlistId);
@@ -193,7 +193,7 @@ app.get("/api/playlist/:playlistId/deactivate", async (req, res) => {
 	res.json(result);
 });
 
-app.get("/api/playlists/recommended/:playlistId", async (req, res) => {
+app.get("/api/playlist/:playlistId/recommended", async (req, res) => {
 	let result = cache.get(`get-playlist-recommended-${req.params.playlistId}`);
 	if (!result || result.length < 5) {
 		const playlist = await getPlaylist(user, req.params.playlistId);
@@ -211,7 +211,7 @@ app.get("/api/playlists/recommended/:playlistId", async (req, res) => {
 	res.json(result);
 });
 
-app.get("/api/playlists/deleterecommended/:playlistId", async (req, res) => {
+app.get("/api/playlist/:playlistId/deleterecommended", async (req, res) => {
 	let result = cache.get(
 		`get-playlist-deleterecommended-${req.params.playlistId}`
 	);
@@ -239,7 +239,7 @@ app.get("/api/playlists/deleterecommended/:playlistId", async (req, res) => {
 	res.json(result);
 });
 
-app.get("/api/playlists/lastplayed", async (_req, res) => {
+app.get("/api/lastplayed", async (_req, res) => {
 	let result = cache.get(`get-lastplayed-${user.id}`);
 	if (!result) {
 		result = await getRecentlyPlayedSongs(user);
@@ -263,7 +263,7 @@ app.get("/api/playlists/lastplayed", async (_req, res) => {
 	res.json(result);
 });
 
-app.get("/api/playlists/deletedsongs/:playlistId", async (req, res) => {
+app.get("/api/playlist/:playlistId/deletedsongs", async (req, res) => {
 	let result = cache.get(`get-playlist-deleted-${req.params.playlistId}`);
 	if (!result) {
 		const playlist = await getPlaylist(user, req.params.playlistId);
@@ -287,7 +287,7 @@ app.get("/api/playlists/deletedsongs/:playlistId", async (req, res) => {
 	res.json(result);
 });
 
-app.post("/api/actions/add/:playlistId/:songId", async (req, res) => {
+app.post("/api/playlist/:playlistId/add/:songId", async (req, res) => {
 	const playlist = await getPlaylist(user, req.params.playlistId);
 	const song = await getSong(user.access_token, req.params.songId);
 	if (song.error) {
@@ -340,7 +340,7 @@ app.post("/api/actions/add/:playlistId/:songId", async (req, res) => {
 	res.json(result);
 });
 
-app.post("/api/actions/remove/:playlistId/:songId", async (req, res) => {
+app.post("/api/playlist/:playlistId/remove/:songId", async (req, res) => {
 	const playlist = await getPlaylist(user, req.params.playlistId);
 	const song = await getSong(user.access_token, req.params.songId);
 	if (song.error) {

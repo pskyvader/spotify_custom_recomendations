@@ -93,6 +93,17 @@ const syncronizePlaylist = async (user, playlist) => {
 			);
 		})
 		.then((result) => {
+			return Promise.all(syncronizeSongsFeaturesPromise).then(
+				(resultsyncFeatures) => {
+					return addErrorMessages(
+						result,
+						resultsyncFeatures,
+						"Syncronize features completed successfully. "
+					);
+				}
+			);
+		})
+		.then((result) => {
 			return Promise.all(syncronizeRemoveSongListPromise).then(
 				(resultsyncRemove) => {
 					return addErrorMessages(
