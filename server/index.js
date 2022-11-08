@@ -296,9 +296,12 @@ app.get("/api/playlist/:playlistId/songfeatures", async (req, res) => {
 		const playlist = await getPlaylist(user, req.params.playlistId);
 		result = await getPlaylistSongFeatures(playlist);
 		if (!result.error) {
-			result = result.map((song) =>
-				song.songFeature.toJSON()
-			);
+			result = result.map((songFeatures) => {
+				if (songFeatures.songFeature !== null) {
+					return songFeatures.songFeature.toJSON();
+				}
+				return null;
+			});
 			cache.set(
 				`get-playlist-songfeatures-${req.params.playlistId}`,
 				result,
