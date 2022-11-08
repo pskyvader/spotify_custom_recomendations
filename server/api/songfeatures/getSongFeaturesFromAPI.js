@@ -14,7 +14,7 @@ const getSongFeaturesFromAPI = async (user, songList) => {
 		if (response.error) {
 			return response;
 		}
-		items.push(...response);
+		items.push(...response.audio_features);
 	}
 
 	return formatSongFeaturesAPIList(items);
