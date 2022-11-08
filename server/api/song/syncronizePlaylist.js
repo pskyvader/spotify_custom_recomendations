@@ -85,7 +85,7 @@ const syncronizePlaylist = async (user, playlist) => {
 			return addErrorMessages(
 				{ error: false, message: [] },
 				resultSyncronized,
-				"Syncronize completed successfully. "
+				"Syncronize completed successfully. " + resultSyncronized.length
 			);
 		})
 		.then((result) => {
@@ -94,7 +94,8 @@ const syncronizePlaylist = async (user, playlist) => {
 					return addErrorMessages(
 						result,
 						resultsyncFeatures,
-						"Syncronize features completed successfully. "
+						"Syncronize features completed successfully. " +
+							resultsyncFeatures.length
 					);
 				}
 			);
@@ -105,7 +106,8 @@ const syncronizePlaylist = async (user, playlist) => {
 					return addErrorMessages(
 						result,
 						resultsyncRemove,
-						"Syncronize Remove completed successfully. "
+						"Syncronize Remove completed successfully. " +
+							resultsyncRemove.length
 					);
 				}
 			);
@@ -116,7 +118,8 @@ const syncronizePlaylist = async (user, playlist) => {
 					return addErrorMessages(
 						result,
 						resultsyncAdd,
-						"Syncronize Add completed successfully. "
+						"Syncronize Add completed successfully. " +
+							resultsyncAdd.length
 					);
 				}
 			);

@@ -76,7 +76,6 @@ const automaticTasks = async () => {
 				}
 				totalresponses.message.push("Hourly Tasks Done");
 				totalresponses.message.push("--------------------");
-				// console.log("totalresponses", totalresponses);
 				return totalresponses;
 			})
 			.then((previousResponse) => {
@@ -95,11 +94,9 @@ const automaticTasks = async () => {
 					}
 					previousResponse.message.push("Daily Tasks Done");
 					previousResponse.message.push("--------------------");
-					// console.log("previousResponse", previousResponse);
 					return previousResponse;
 				});
 			});
-		// console.log("promiseResponse", promiseResponse);
 		response.error = response.error || promiseResponse.error;
 		response.message.push(...promiseResponse.message);
 	}
