@@ -3,7 +3,7 @@ const { request, formatSongFeaturesAPIList } = require("../../utils");
 const getSongFeaturesFromAPI = async (user, songList) => {
 	let url = `https://api.spotify.com/v1/audio-features`;
 
-	const finalresponse = [];
+	let items = [];
 	while (songList.length > 0) {
 		const currentlist = songList.splice(0, 100);
 		const ids = currentlist.reduce(
@@ -14,10 +14,10 @@ const getSongFeaturesFromAPI = async (user, songList) => {
 		if (response.error) {
 			return response;
 		}
-		finalresponse.push(formatSongFeaturesAPIList(response));
+		items.push(response);
 	}
 
-	return finalresponse;
+	return formatSongFeaturesAPIList(items);
 };
 
 module.exports = { getSongFeaturesFromAPI };
