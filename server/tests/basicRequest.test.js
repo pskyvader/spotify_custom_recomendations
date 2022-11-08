@@ -10,7 +10,7 @@ test("Get a response from API", () => {
 			console.log(response);
 			expect(response).toBeDefined();
 			expect(response).not.toHaveProperty("error");
-			console.log("Recommended Songs: ", response);
+			console.log("My profile: ", response);
 			return response;
 		});
 });

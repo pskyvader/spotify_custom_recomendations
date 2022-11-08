@@ -44,12 +44,8 @@ const syncronizePlaylist = async (user, playlist) => {
 		return getSong(user.access_token, currentSong.id, currentSong);
 	});
 	const syncronizeSongsFeaturesPromise = songFeaturesListUpdated.map(
-		(currentSongFeatures) => {
-			return getSongFeatures(
-				user.access_token,
-				currentSongFeatures.id,
-				currentSongFeatures
-			);
+		(feature) => {
+			return getSongFeatures(user.access_token, feature.id, feature);
 		}
 	);
 
