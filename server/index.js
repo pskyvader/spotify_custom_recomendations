@@ -161,6 +161,7 @@ app.get("/api/playlist/:playlistId/sync", async (req, res) => {
 	if (result.error) {
 		console.error("sync error", result);
 	}
+	cache.flushAll();
 	res.json(result);
 });
 
