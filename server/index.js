@@ -300,7 +300,7 @@ app.get("/api/playlist/:playlistId/songfeatures", async (req, res) => {
 				if (songFeatures.songFeature !== null) {
 					return songFeatures.songFeature.toJSON();
 				}
-				return null;
+				return { id: songFeatures.id, data: null };
 			});
 			cache.set(
 				`get-playlist-songfeatures-${req.params.playlistId}`,
