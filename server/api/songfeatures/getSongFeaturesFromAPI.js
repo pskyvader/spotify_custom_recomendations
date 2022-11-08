@@ -1,6 +1,6 @@
 const { request, formatSongFeaturesAPIList } = require("../../utils");
 
-const getSongFeaturesFromApi = async (user, songList) => {
+const getSongFeaturesFromAPI = async (user, songList) => {
 	if (songlist.length > 100) {
 		return {
 			error: true,
@@ -20,4 +20,4 @@ const getSongFeaturesFromApi = async (user, songList) => {
 	return formatSongFeaturesAPIList(response);
 };
 
-module.exports = { getSongFeaturesFromApi };
+module.exports = { getSongFeaturesFromAPI };

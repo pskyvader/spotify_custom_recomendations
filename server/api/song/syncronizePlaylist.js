@@ -1,10 +1,14 @@
 const { getPlaylistSongsFromAPI } = require("./getPlaylistSongsFromAPI");
+const {
+	getSongFeaturesFromAPI,
+} = require("../songfeatures/getSongFeaturesFromAPI");
 const { getPlaylistSongs } = require("./getPlaylistSongs");
 
 const {
 	getPlaylistSong,
 	updatePlaylistSong,
 	getSong,
+	getSongFeatures,
 } = require("../../model/");
 
 const addErrorMessages = (mainResult, result, successMessage) => {
@@ -25,6 +29,11 @@ const addErrorMessages = (mainResult, result, successMessage) => {
 const syncronizePlaylist = async (user, playlist) => {
 	const currentSongList = await getPlaylistSongs(playlist);
 	const songListUpdated = await getPlaylistSongsFromAPI(user, playlist);
+	const songFeaturesListUpdated = await getSongFeaturesFromAPI(
+		user,
+		songListUpdated
+	);
+
 	if (songListUpdated.error) {
 		songListUpdated.message = [songListUpdated.message];
 		return songListUpdated;
@@ -34,6 +43,15 @@ const syncronizePlaylist = async (user, playlist) => {
 	const syncronizeSongsPromise = songListUpdated.map((currentSong) => {
 		return getSong(user.access_token, currentSong.id, currentSong);
 	});
+	const syncronizeSongsFeaturesPromise = songFeaturesListUpdated.map(
+		(currentSongFeatures) => {
+			return getSongFeatures(
+				user.access_token,
+				currentSongFeatures.id,
+				currentSongFeatures
+			);
+		}
+	);
 
 	const currentSongListIds = currentSongList.map(
 		(currentSong) => currentSong.id

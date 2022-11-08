@@ -7,6 +7,7 @@ const {
 	deletePlaylistSong,
 } = require("./playlistSong");
 const { createUserSong, getUserSong, deleteUserSong } = require("./userSong");
+const { getSongFeatures, deleteSongFeatures } = require("./songFeatures");
 
 module.exports = {
 	getSong,
@@ -24,4 +25,6 @@ module.exports = {
 	createUserSong,
 	getUserSong,
 	deleteUserSong,
+	getSongFeatures,
+	deleteSongFeatures,
 };
