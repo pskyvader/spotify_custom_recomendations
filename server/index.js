@@ -29,6 +29,7 @@ const {
 	getDeletedSongs,
 	syncronizePlaylist,
 } = require("./api/song");
+const { getPlaylistSongFeatures } = require("./api/songfeatures");
 
 const { getPlaylist, updatePlaylist, getSong } = require("./model");
 
@@ -279,6 +280,25 @@ app.get("/api/playlist/:playlistId/deletedsongs", async (req, res) => {
 			});
 			cache.set(
 				`get-playlist-deleted-${req.params.playlistId}`,
+				result,
+				tenMinutes
+			);
+		}
+	}
+	res.json(result);
+});
+
+app.get("/api/playlist/:playlistId/songfeatures", async (req, res) => {
+	let result = cache.get(
+		`get-playlist-songfeatures-${req.params.playlistId}`
+	);
+	if (!result) {
+		const playlist = await getPlaylist(user, req.params.playlistId);
+		result = await getPlaylistSongFeatures(playlist);
+		if (!result.error) {
+			result = result.map((songFeatures) => songFeatures.toJSON());
+			cache.set(
+				`get-playlist-songfeatures-${req.params.playlistId}`,
 				result,
 				tenMinutes
 			);
