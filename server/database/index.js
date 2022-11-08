@@ -1,6 +1,7 @@
 const { Sequelize, Model } = require("sequelize");
 const { UserConfiguration } = require("./User");
 const { SongConfiguration } = require("./Song");
+const { SongFeaturesConfiguration } = require("./SongFeatures");
 const { PlaylistSongConfiguration } = require("./PlaylistSong");
 const { UserSongHistoryConfiguration } = require("./UserSongHistory");
 const { PlaylistConfiguration } = require("./Playlist");
@@ -94,6 +95,16 @@ UserSongHistory.belongsTo(User);
 
 Song.hasMany(UserSongHistory);
 UserSongHistory.belongsTo(Song);
+
+class SongFeatures extends Model {}
+SongFeatures.init(SongFeaturesConfiguration, {
+	// Other model options go here
+	sequelize, // We need to pass the connection instance
+	// modelName: "SongFeatures", // We need to choose the model name
+});
+
+Song.hasOne(SongFeatures);
+SongFeatures.belongsTo(Song);
 
 const connection = async () => {
 	try {

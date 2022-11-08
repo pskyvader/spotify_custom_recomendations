@@ -15,12 +15,12 @@ const fillOptions = (songlist, currentgenres) => {
 			const randomSong = songlist[idsong];
 			const randomNumber = Math.floor(Math.random() * 100);
 
-			if (randomNumber < 60) {
+			if (randomNumber < 50) {
 				options.seed_tracks.push(randomSong.id);
 				// console.log(`Seed track ${randomSong.id} ${randomSong.name}`);
 				continue;
 			}
-			if (randomNumber < 90) {
+			if (randomNumber < 80) {
 				options.seed_artists.push(randomSong.idartist);
 				// console.log(
 				// 	`Seed artist ${randomSong.idartist} ${randomSong.artist}`
