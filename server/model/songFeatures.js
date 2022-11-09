@@ -14,14 +14,15 @@ const createSongFeatures = async (
 		}
 		data = formatSongFeaturesAPI(response);
 	}
-	SongFeatures.describe().then(({ features }) => {
-		console.log("Song Features attributes", (features));
+	SongFeatures.describe().then((features) => {
+		console.log("Song Features attributes", features);
 	});
 
 	const [newSongFeatures] = await SongFeatures.upsert(data).catch((err) => {
 		console.error("create song features error", data, err);
 		return { error: true, message: err.message };
 	});
+	console.log("new song features", newSongFeatures, data);
 
 	return newSongFeatures;
 };
