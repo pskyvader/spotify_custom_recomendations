@@ -13,6 +13,7 @@ const formatSongFeaturesAPI = (songfeatures) => {
 		valence: songfeatures.valence,
 		tempo: songfeatures.tempo,
 		time_signature: songfeatures.time_signature,
+		SongId: songfeatures.id,
 	};
 };
 const formatSongFeaturesAPIList = (songFeaturesList) => {
