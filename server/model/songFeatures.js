@@ -13,7 +13,11 @@ const createSongFeatures = async (
 			return response;
 		}
 		data = formatSongFeaturesAPI(response);
+		data.SongId = data.id;
 	}
+	// SongFeatures.describe().then(({ features }) => {
+	// 	console.log("Song Features attributes", JSON.stringify(features));
+	// });
 
 	const [newSongFeatures] = await SongFeatures.upsert(data).catch((err) => {
 		console.error("create song features error", data, err);
@@ -24,7 +28,9 @@ const createSongFeatures = async (
 };
 
 const getSongFeatures = async (access_token, songFeaturesId, data = null) => {
-	const currentSongFeatures = await SongFeatures.findByPk(songFeaturesId);
+	const currentSongFeatures = await SongFeatures.findOne({
+		where: { id: songFeaturesId, SongId: songFeaturesId },
+	});
 	if (currentSongFeatures !== null) {
 		return currentSongFeatures;
 	}
