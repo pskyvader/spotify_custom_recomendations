@@ -2,7 +2,8 @@ import { useContext, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 import { Playlist } from "../../API";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
-import { average } from "../../utils";
+import { average, stdDeviation } from "../../utils";
+import NormalDistribution from "normal-distribution";
 
 const transformFeatures = (data) => {
 	return data.reduce(
@@ -49,9 +50,16 @@ const gaussTransform = (data) => {
 			const dataArray = data[key];
 			newData[key] = {
 				average: average(dataArray),
-				stdev: null,
+				standardDeviation: stdDeviation(dataArray),
 				values: [],
 			};
+			const normDist = new NormalDistribution(
+				newData[key].average,
+				newData[key].standardDeviation
+			);
+			newData[key].values = dataArray.map((position) => {
+				return normDist.pdf(position);
+			});
 		}
 	}
 	return newData;
@@ -69,6 +77,7 @@ const Statistics = ({ playlistId, hidden }) => {
 			});
 		}
 	}, [playlistId, playlistFeatures, setPlaylistFeatures]);
+
 	if (playlistId === null) {
 		return null;
 	}
