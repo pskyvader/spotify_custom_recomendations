@@ -1,9 +1,13 @@
 import { useContext, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
+import NormalDistribution from "normal-distribution";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+
 import { Playlist } from "../../API";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
 import { average, stdDeviation } from "../../utils";
-import NormalDistribution from "normal-distribution";
 
 const transformFeatures = (data) => {
 	return data.reduce(
@@ -86,6 +90,43 @@ const Statistics = ({ playlistId, hidden }) => {
 	}
 	if (playlistFeatures[playlistId]) {
 		const features = transformFeatures(playlistFeatures[playlistId]);
+		const gaussData = gaussTransform(features);
+
+		const gaussGraphic = [];
+
+		for (const key in gaussData) {
+			const gaussCard = [];
+			if (Object.hasOwnProperty.call(gaussData, key)) {
+				const gaussElement = gaussData[key];
+				gaussCard.push(
+					<>
+						<Typography variant="h5" component="div">
+							Average: {gaussElement.average}
+						</Typography>
+						<Typography variant="h5" component="div">
+							standard Deviation: {gaussElement.standardDeviation}
+						</Typography>
+					</>
+				);
+			}
+
+			gaussGraphic.push(
+				<Card sx={{ minWidth: 275 }}>
+					<CardContent>
+						<Typography
+							sx={{ fontSize: 14 }}
+							color="text.secondary"
+							gutterBottom
+						>
+							{key}
+						</Typography>
+						{...gaussCard}
+					</CardContent>
+				</Card>
+			);
+		}
+
+		return <div>{...gaussGraphic}</div>;
 	}
 	return <CircularProgress />;
 };
