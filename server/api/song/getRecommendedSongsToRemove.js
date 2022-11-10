@@ -5,8 +5,7 @@ const { UserSongHistory, PlaylistSong } = require("../../database");
 const day = 86400000;
 
 const getRecommendedSongsToRemove = async (playlist, minTime = null) => {
-	const minTimeInPlaylist = day * (minTime && minTime > 0 ? minTime : 7);
-	// day * (minTime && minTime > 0 ? Math.max(minTime, 7) : 7);
+	const minTimeInPlaylist = day * (minTime && minTime > 3 ? minTime : 7);
 	const oldAddedSongs = await playlist
 		.getSongs({
 			include: [
