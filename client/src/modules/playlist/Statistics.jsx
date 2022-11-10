@@ -121,13 +121,17 @@ const Statistics = ({ playlistId, hidden }) => {
 						>
 							{key}
 						</Typography>
-						{...gaussCard}
+						{gaussCard.map((gaussElement) => gaussElement)}
 					</CardContent>
 				</Card>
 			);
 		}
 
-		return <div>{...gaussGraphic}</div>;
+		return (
+			<div>
+				{gaussGraphic.map((gaussGraphicElement) => gaussGraphicElement)}
+			</div>
+		);
 	}
 	return <CircularProgress />;
 };
