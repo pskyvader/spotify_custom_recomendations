@@ -108,6 +108,7 @@ const Statistics = ({ playlistId, hidden }) => {
 						</Typography>
 					</>
 				);
+				console.info(`${key} gauss values`, gaussElement.values);
 			}
 
 			gaussGraphic.push(
