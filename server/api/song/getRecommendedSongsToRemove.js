@@ -54,6 +54,21 @@ const getRecommendedSongsToRemove = async (playlist, minTime = null) => {
 
 	// only if there are no songs to remove
 	if (recommendedForRemove.length === 0) {
+		oldAddedSongs.sort((a, b) => {
+			if (
+				a.song.UserSongHistories.length >
+				b.song.UserSongHistories.length
+			) {
+				return -1;
+			}
+			if (
+				a.song.UserSongHistories.length <
+				b.song.UserSongHistories.length
+			) {
+				return 1;
+			}
+			return 0;
+		});
 		recommendedForRemove.push(
 			...oldAddedSongs
 				.filter((song) => {
