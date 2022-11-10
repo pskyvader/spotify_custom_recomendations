@@ -14,6 +14,7 @@ import RecommendedSongs from "../modules/playlist/RecommendedSongs";
 import RecommendedDeleteSongs from "../modules/playlist/RecommendedDeleteSongs";
 import LastPlayedSongs from "../modules/playlist/LastPlayedSongs";
 import DeletedSongs from "../modules/playlist/DeletedSongs";
+import Statistics from "../modules/playlist/Statistics";
 import { Playlist } from "../API";
 import Player from "../components/Player";
 
@@ -107,6 +108,7 @@ const Playlists = () => {
 						<Tab label="Delete" />
 						<Tab label="Last Played" />
 						<Tab label="Deleted Songs" />
+						<Tab label="Statistics" />
 					</Tabs>
 					<Root role="tabpanel" hidden={tabNumber !== 0}>
 						<PlayListSongs
@@ -133,6 +135,12 @@ const Playlists = () => {
 						<DeletedSongs
 							playlistId={playlistid}
 							hidden={tabNumber !== 4}
+						/>
+					</Root>
+					<Root role="tabpanel" hidden={tabNumber !== 5}>
+						<Statistics
+							playlistId={playlistid}
+							hidden={tabNumber !== 5}
 						/>
 					</Root>
 					<Player />
