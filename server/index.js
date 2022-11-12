@@ -3,11 +3,10 @@ const express = require("express");
 const NodeCache = require("node-cache");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const pgSession = require("connect-pg-simple")(session);
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
+
 const { connection } = require("./database");
-
 const { login, callback, automaticTasks } = require("./pages");
-
 const {
 	authorizeUser,
 	validateUserLogin,
@@ -33,26 +32,23 @@ const { getPlaylistSongFeatures } = require("./api/songfeatures");
 
 const { getPlaylist, updatePlaylist, getSong } = require("./model");
 
-connection();
+const sequelize = connection();
+const sessionStore = new SequelizeStore({
+	db: sequelize,
+});
 
 const app = express();
 app.use(
 	session({
-		store: new pgSession({
-			createTableIfMissing: true,
-			// conObject: {
-			// 	connectionString: process.env.DATABASE_URL,
-			// 	ssl: {
-			// 		// require: true,
-			// 		rejectUnauthorized: false,
-			// 	},
-			// },
-		}),
+		store: sessionStore,
 		secret: process.env.SESSION_SECRET,
 		saveUninitialized: false,
 		resave: false,
 	})
 );
+
+sessionStore.sync();
+
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.disable("x-powered-by");
 

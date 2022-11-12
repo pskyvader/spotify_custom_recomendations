@@ -149,7 +149,7 @@ const Statistics = ({ playlistId, hidden }) => {
 						)}
 					</>
 				);
-				console.info(`${key} gauss values`, gaussElement.values);
+				// console.info(`${key} gauss values`, gaussElement.values);
 			}
 
 			gaussGraphic.push(
