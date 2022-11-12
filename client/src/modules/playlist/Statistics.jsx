@@ -89,8 +89,8 @@ const GaussDistributionChart = ({ data, title }) => {
 	return (
 		<Paper key={"data" + title}>
 			<Chart data={data}>
-				{/* <ArgumentAxis showGrid /> */}
-				<ValueAxis />
+				{/* <ArgumentAxis showGrid />
+				<ValueAxis /> */}
 				<ScatterSeries valueField="x" argumentField="y" name={title} />
 				{/* <ScatterSeries valueField="val2" argumentField="arg2" />  */}
 				<Animation />
@@ -133,7 +133,6 @@ const Statistics = ({ playlistId, hidden }) => {
 				gaussGraphic.push(gaussElement);
 			}
 		}
-
 		return (
 			<div>
 				{gaussGraphic.map((gaussElement) => {
