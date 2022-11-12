@@ -62,7 +62,7 @@ const gaussTransform = (data) => {
 
 	for (const key in data) {
 		if (Object.hasOwnProperty.call(data, key)) {
-			const dataArray = data[key];
+			const dataArray = [...data[key]];
 			newData[key] = {
 				average: average(dataArray),
 				standardDeviation: stdDeviation(dataArray),
@@ -82,8 +82,8 @@ const gaussTransform = (data) => {
 
 const GaussDistributionChart = (data, title) => {
 	return (
-		<Paper>
-			<Chart data={data}>
+		<Paper key={"data" + title}>
+			{/* <Chart data={data}>
 				<ArgumentAxis />
 				<ValueAxis />
 				<ScatterSeries
@@ -91,12 +91,12 @@ const GaussDistributionChart = (data, title) => {
 					argumentField="arguments"
 					name={title}
 				/>
-				{/* <ScatterSeries valueField="val2" argumentField="arg2" /> */}
+				<ScatterSeries valueField="val2" argumentField="arg2" /> 
 				<Animation />
 				<Legend />
 				<EventTracker />
 				<Tooltip />
-			</Chart>
+			</Chart> */}
 		</Paper>
 	);
 };
@@ -131,7 +131,7 @@ const Statistics = ({ playlistId, hidden }) => {
 			if (Object.hasOwnProperty.call(gaussData, key)) {
 				const gaussElement = gaussData[key];
 				gaussCard.push(
-					<>
+					<div>
 						<Typography variant="h5" component="div">
 							Average: {gaussElement.average}
 						</Typography>
@@ -140,6 +140,7 @@ const Statistics = ({ playlistId, hidden }) => {
 						</Typography>
 						{!isNaN(gaussElement.average) && (
 							<GaussDistributionChart
+								key={"chart" + key}
 								data={{
 									values: features[key],
 									arguments: gaussElement.values,
@@ -147,13 +148,13 @@ const Statistics = ({ playlistId, hidden }) => {
 								title={key}
 							/>
 						)}
-					</>
+					</div>
 				);
 				// console.info(`${key} gauss values`, gaussElement.values);
 			}
 
 			gaussGraphic.push(
-				<Card sx={{ minWidth: 275 }}>
+				<Card sx={{ minWidth: 275 }} key={key}>
 					<CardContent>
 						<Typography
 							sx={{ fontSize: 14 }}

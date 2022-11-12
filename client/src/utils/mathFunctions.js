@@ -1,5 +1,11 @@
 const sum = (arr) => {
-	return arr.reduce((a, b) => a + b, 0);
+	const result = arr.reduce((a, b) => {
+		if (!isNaN(b)) {
+			return a + b;
+		}
+		return a;
+	}, 0);
+	return result;
 };
 
 const average = (arr) => {

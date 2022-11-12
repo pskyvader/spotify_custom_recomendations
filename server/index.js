@@ -5,7 +5,7 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
-const { connection } = require("./database");
+const { sequelize, connection } = require("./database");
 const { login, callback, automaticTasks } = require("./pages");
 const {
 	authorizeUser,
@@ -32,7 +32,7 @@ const { getPlaylistSongFeatures } = require("./api/songfeatures");
 
 const { getPlaylist, updatePlaylist, getSong } = require("./model");
 
-const sequelize = connection();
+connection();
 const sessionStore = new SequelizeStore({
 	db: sequelize,
 });
