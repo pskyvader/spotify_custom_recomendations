@@ -68,7 +68,7 @@ const automaticTasks = async () => {
 
 	if (hourlyTaskList.length > 0) {
 		response.message.push(`Hourly task for ${hourlyTaskList.length} users`);
-		const promiseResponse = await Promise.all(hourlyTaskList)
+		const promiseResponse = await Promise.allSettled(hourlyTaskList)
 			.then((hourlyResponses) => {
 				const totalresponses = { message: [], error: false };
 				for (const r in hourlyResponses) {
@@ -85,7 +85,7 @@ const automaticTasks = async () => {
 				previousResponse.message.push(
 					`Daily task for ${userList.daily.length} users`
 				);
-				return Promise.all(dailyTaskList).then((responses) => {
+				return Promise.allSettled(dailyTaskList).then((responses) => {
 					for (const r in responses) {
 						previousResponse.error =
 							previousResponse.error || responses[r].error;
