@@ -72,31 +72,32 @@ const gaussTransform = (data) => {
 				newData[key].average,
 				newData[key].standardDeviation
 			);
-			newData[key].values = dataArray.map((position) => {
-				return normDist.pdf(position);
-			});
+			newData[key].values = dataArray
+				.filter((value) => !isNaN(value))
+				.map((position) => {
+					return {
+						x: normDist.pdf(position),
+						y: position,
+					};
+				});
 		}
 	}
 	return newData;
 };
 
-const GaussDistributionChart = (data, title) => {
+const GaussDistributionChart = ({ data, title }) => {
 	return (
 		<Paper key={"data" + title}>
-			{/* <Chart data={data}>
-				<ArgumentAxis />
+			<Chart data={data}>
+				{/* <ArgumentAxis showGrid /> */}
 				<ValueAxis />
-				<ScatterSeries
-					valueField="values"
-					argumentField="arguments"
-					name={title}
-				/>
-				<ScatterSeries valueField="val2" argumentField="arg2" /> 
+				<ScatterSeries valueField="x" argumentField="y" name={title} />
+				{/* <ScatterSeries valueField="val2" argumentField="arg2" />  */}
 				<Animation />
 				<Legend />
 				<EventTracker />
 				<Tooltip />
-			</Chart> */}
+			</Chart>
 		</Paper>
 	);
 };
@@ -127,51 +128,46 @@ const Statistics = ({ playlistId, hidden }) => {
 		const gaussGraphic = [];
 
 		for (const key in gaussData) {
-			const gaussCard = [];
 			if (Object.hasOwnProperty.call(gaussData, key)) {
-				const gaussElement = gaussData[key];
-				gaussCard.push(
-					<div>
-						<Typography variant="h5" component="div">
-							Average: {gaussElement.average}
-						</Typography>
-						<Typography variant="h5" component="div">
-							standard Deviation: {gaussElement.standardDeviation}
-						</Typography>
-						{!isNaN(gaussElement.average) && (
-							<GaussDistributionChart
-								key={"chart" + key}
-								data={{
-									values: features[key],
-									arguments: gaussElement.values,
-								}}
-								title={key}
-							/>
-						)}
-					</div>
-				);
-				// console.info(`${key} gauss values`, gaussElement.values);
+				const gaussElement = { info: gaussData[key], key: key };
+				gaussGraphic.push(gaussElement);
 			}
-
-			gaussGraphic.push(
-				<Card sx={{ minWidth: 275 }} key={key}>
-					<CardContent>
-						<Typography
-							sx={{ fontSize: 14 }}
-							color="text.secondary"
-							gutterBottom
-						>
-							{key}
-						</Typography>
-						{gaussCard.map((gaussElement) => gaussElement)}
-					</CardContent>
-				</Card>
-			);
 		}
 
 		return (
 			<div>
-				{gaussGraphic.map((gaussGraphicElement) => gaussGraphicElement)}
+				{gaussGraphic.map((gaussElement) => {
+					const { info, key } = gaussElement;
+					return (
+						<Card sx={{ minWidth: 275 }} key={key}>
+							<CardContent>
+								<Typography
+									sx={{ fontSize: 14 }}
+									color="text.secondary"
+									gutterBottom
+								>
+									{key}
+								</Typography>
+								<div key={"div" + key}>
+									<Typography variant="h5" component="div">
+										Average: {info.average}
+									</Typography>
+									<Typography variant="h5" component="div">
+										standard Deviation:{" "}
+										{info.standardDeviation}
+									</Typography>
+									{!isNaN(info.average) && (
+										<GaussDistributionChart
+											key={"chart" + key}
+											data={info.values}
+											title={key}
+										/>
+									)}
+								</div>
+							</CardContent>
+						</Card>
+					);
+				})}
 			</div>
 		);
 	}
