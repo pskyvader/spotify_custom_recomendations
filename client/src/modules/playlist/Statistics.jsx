@@ -5,6 +5,17 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
+import Paper from "@mui/material/Paper";
+import {
+	Chart,
+	ScatterSeries,
+	ArgumentAxis,
+	ValueAxis,
+	Legend,
+	Tooltip,
+} from "@devexpress/dx-react-chart-material-ui";
+import { Animation, EventTracker } from "@devexpress/dx-react-chart";
+
 import { Playlist } from "../../API";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
 import { average, stdDeviation } from "../../utils";
@@ -69,6 +80,27 @@ const gaussTransform = (data) => {
 	return newData;
 };
 
+const GaussDistributionChart = (data, title) => {
+	return (
+		<Paper>
+			<Chart data={data}>
+				<ArgumentAxis />
+				<ValueAxis />
+				<ScatterSeries
+					valueField="values"
+					argumentField="arguments"
+					name={title}
+				/>
+				{/* <ScatterSeries valueField="val2" argumentField="arg2" /> */}
+				<Animation />
+				<Legend />
+				<EventTracker />
+				<Tooltip />
+			</Chart>
+		</Paper>
+	);
+};
+
 const Statistics = ({ playlistId, hidden }) => {
 	const { playlistFeatures, setPlaylistFeatures } =
 		useContext(PlaylistContext);
@@ -106,6 +138,15 @@ const Statistics = ({ playlistId, hidden }) => {
 						<Typography variant="h5" component="div">
 							standard Deviation: {gaussElement.standardDeviation}
 						</Typography>
+						{!isNaN(gaussElement.average) && (
+							<GaussDistributionChart
+								data={{
+									values: features[key],
+									arguments: gaussElement.values,
+								}}
+								title={key}
+							/>
+						)}
 					</>
 				);
 				console.info(`${key} gauss values`, gaussElement.values);
