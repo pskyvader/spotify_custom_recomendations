@@ -72,6 +72,7 @@ const gaussTransform = (data) => {
 				newData[key].average,
 				newData[key].standardDeviation
 			);
+			dataArray.push(0, 1);
 			newData[key].values = dataArray
 				.filter((value) => !isNaN(value))
 				.map((position) => {
@@ -89,8 +90,8 @@ const GaussDistributionChart = ({ data, title }) => {
 	return (
 		<Paper key={"data" + title}>
 			<Chart data={data}>
-				{/* <ArgumentAxis showGrid />
-				<ValueAxis /> */}
+				<ArgumentAxis showGrid />
+				<ValueAxis />
 				<ScatterSeries valueField="x" argumentField="y" name={title} />
 				{/* <ScatterSeries valueField="val2" argumentField="arg2" />  */}
 				<Animation />
