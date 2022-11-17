@@ -70,14 +70,14 @@ const getRecommendedSongsToRemove = async (playlist, minTime = null) => {
 						Date.now() - 1 * minTimeInPlaylist
 					);
 				})
-				.reverse() // order from least to most recently played
+				.reverse() // order from least to most times played
 		);
 	}
 
 	// only if there are still no songs to remove
 	if (recommendedForRemove.length === 0) {
 		recommendedForRemove.push(
-			...oldAddedSongs.reverse().slice(0, 2) // order from least to most recently played,max 2 songs
+			...oldAddedSongs.reverse().slice(0, 2) // order from least to most times played,max 2 songs
 		);
 	}
 
