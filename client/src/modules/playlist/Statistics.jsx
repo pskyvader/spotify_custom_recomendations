@@ -106,9 +106,19 @@ const GaussMultipleDistributionChart = ({ data }) => {
 	return (
 		<Paper>
 			<Chart data={proccessedData}>
-				<Palette scheme={['#42A5F5', '#FF7043', '#9CCC65', '#FFCA28', '#26A69A', '#EC407A','#40C4FF', '#FF5252', '#00C853', '#FFEB3B', '#FF4081', '#E040FB']} />
-				{/* <ArgumentAxis showGrid /> */}
-				{/* <ValueAxis /> */}
+				<Palette
+					scheme={[
+						"#42A5F5",
+						"#FF7043",
+						"#9CCC65",
+						"#FFCA28",
+						"#26A69A",
+						"#EC407A",
+						"#4F378B",
+					]}
+				/>
+				<ArgumentAxis showGrid />
+				<ValueAxis />
 				{data.map((d) => {
 					return (
 						<LineSeries
@@ -135,8 +145,8 @@ const GaussDistributionChart = ({ data, title }) => {
 	return (
 		<Paper key={"data" + title}>
 			<Chart data={data}>
-				{/* <ArgumentAxis showGrid />
-				<ValueAxis /> */}
+				<ArgumentAxis showGrid />
+				<ValueAxis />
 				<ScatterSeries valueField="x" argumentField="y" name={title} />
 				<Animation />
 				<Legend />
