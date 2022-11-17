@@ -86,14 +86,49 @@ const gaussTransform = (data) => {
 	return newData;
 };
 
+const GaussMultipleDistributionChart = ({ data }) => {
+	const proccessedData = data.reduce((previous, d) => {
+		const values = d.info.values.map((value) => {
+			const newValue = {};
+			newValue[`x_${d.key}`] = value.x;
+			newValue[`y_${d.key}`] = value.y;
+			return newValue;
+		});
+		return previous.concat(values);
+	}, []);
+
+	return (
+		<Paper>
+			<Chart data={proccessedData}>
+				{/* <ArgumentAxis showGrid /> */}
+				{/* <ValueAxis /> */}
+				{data.map((d) => {
+					return (
+						<ScatterSeries
+							key={d.key}
+							valueField={`x_${d.key}`}
+							argumentField={`y_${d.key}`}
+							name={d.key}
+						/>
+					);
+				})}
+
+				<Animation />
+				<Legend />
+				<EventTracker />
+				<Tooltip />
+			</Chart>
+		</Paper>
+	);
+};
+
 const GaussDistributionChart = ({ data, title }) => {
 	return (
 		<Paper key={"data" + title}>
 			<Chart data={data}>
-				<ArgumentAxis showGrid />
-				<ValueAxis />
+				{/* <ArgumentAxis showGrid />
+				<ValueAxis /> */}
 				<ScatterSeries valueField="x" argumentField="y" name={title} />
-				{/* <ScatterSeries valueField="val2" argumentField="arg2" />  */}
 				<Animation />
 				<Legend />
 				<EventTracker />
@@ -104,6 +139,15 @@ const GaussDistributionChart = ({ data, title }) => {
 };
 
 const Statistics = ({ playlistId, hidden }) => {
+	const validGauss = [
+		"danceability",
+		"energy",
+		"speechiness",
+		"acousticness",
+		"instrumentalness",
+		"liveness",
+		"valence",
+	];
 	const { playlistFeatures, setPlaylistFeatures } =
 		useContext(PlaylistContext);
 	useEffect(() => {
@@ -127,15 +171,22 @@ const Statistics = ({ playlistId, hidden }) => {
 		const gaussData = gaussTransform(features);
 
 		const gaussGraphic = [];
+		const validGaussGraphic = [];
 
 		for (const key in gaussData) {
 			if (Object.hasOwnProperty.call(gaussData, key)) {
 				const gaussElement = { info: gaussData[key], key: key };
-				gaussGraphic.push(gaussElement);
+				if (!validGauss.includes(key)) {
+					gaussGraphic.push(gaussElement);
+				} else {
+					validGaussGraphic.push(gaussElement);
+				}
 			}
 		}
 		return (
 			<div>
+				<GaussMultipleDistributionChart data={validGaussGraphic} />
+
 				{gaussGraphic.map((gaussElement) => {
 					const { info, key } = gaussElement;
 					return (
