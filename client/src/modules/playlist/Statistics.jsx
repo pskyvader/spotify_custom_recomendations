@@ -9,12 +9,14 @@ import Paper from "@mui/material/Paper";
 import {
 	Chart,
 	ScatterSeries,
+	LineSeries,
 	ArgumentAxis,
 	ValueAxis,
 	Legend,
 	Tooltip,
+	ZoomAndPan,
 } from "@devexpress/dx-react-chart-material-ui";
-import { Animation, EventTracker } from "@devexpress/dx-react-chart";
+import { Animation, EventTracker, Palette } from "@devexpress/dx-react-chart";
 
 import { Playlist } from "../../API";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
@@ -80,6 +82,9 @@ const gaussTransform = (data) => {
 						x: normDist.pdf(position),
 						y: position,
 					};
+				})
+				.sort((a, b) => {
+					return a.y - b.y;
 				});
 		}
 	}
@@ -91,7 +96,8 @@ const GaussMultipleDistributionChart = ({ data }) => {
 		const values = d.info.values.map((value) => {
 			const newValue = {};
 			newValue[`x_${d.key}`] = value.x;
-			newValue[`y_${d.key}`] = value.y;
+			// newValue[`y_${d.key}`] = value.y;
+			newValue[`y`] = value.y;
 			return newValue;
 		});
 		return previous.concat(values);
@@ -100,14 +106,16 @@ const GaussMultipleDistributionChart = ({ data }) => {
 	return (
 		<Paper>
 			<Chart data={proccessedData}>
+				<Palette scheme={['#42A5F5', '#FF7043', '#9CCC65', '#FFCA28', '#26A69A', '#EC407A','#40C4FF', '#FF5252', '#00C853', '#FFEB3B', '#FF4081', '#E040FB']} />
 				{/* <ArgumentAxis showGrid /> */}
 				{/* <ValueAxis /> */}
 				{data.map((d) => {
 					return (
-						<ScatterSeries
+						<LineSeries
 							key={d.key}
 							valueField={`x_${d.key}`}
-							argumentField={`y_${d.key}`}
+							// argumentField={`y_${d.key}`}
+							argumentField={`y`}
 							name={d.key}
 						/>
 					);
@@ -117,6 +125,7 @@ const GaussMultipleDistributionChart = ({ data }) => {
 				<Legend />
 				<EventTracker />
 				<Tooltip />
+				<ZoomAndPan />
 			</Chart>
 		</Paper>
 	);
