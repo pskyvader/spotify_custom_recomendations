@@ -147,7 +147,8 @@ const GaussDistributionChart = ({ data, title }) => {
 			<Chart data={data}>
 				<ArgumentAxis showGrid />
 				<ValueAxis />
-				<ScatterSeries valueField="x" argumentField="y" name={title} />
+				{/* <ScatterSeries valueField="x" argumentField="y" name={title} /> */}
+				<LineSeries valueField="x" argumentField="y" name={title} />
 				<Animation />
 				<Legend />
 				<EventTracker />
