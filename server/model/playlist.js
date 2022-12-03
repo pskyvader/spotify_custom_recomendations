@@ -17,6 +17,7 @@ const createPlaylist = async (user, idplaylist, active = false) => {
 	}).catch((err) => ({
 		error: err.message,
 	}));
+	console.log(newplaylist);
 	return newplaylist;
 };
 const getPlaylist = async (user, idplaylist) => {
