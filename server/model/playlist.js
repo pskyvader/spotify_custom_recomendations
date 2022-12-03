@@ -7,11 +7,20 @@ const createPlaylist = async (user, idplaylist, active = false) => {
 	if (response.error) {
 		return response;
 	}
+
+	let image = null;
+	if (response.images) {
+		image = response.images;
+	}
+	if (response.images[0]) {
+		image = response.images[0].url;
+	}
+
 	const [newplaylist] = await Playlist.upsert({
 		id: idplaylist,
 		name: response.name,
 		active: active,
-		image: response.images ? response.images[0].url : null,
+		image: image,
 		UserId: user.id,
 	}).catch((err) => ({
 		error: err.message,
