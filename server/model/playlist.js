@@ -15,6 +15,7 @@ const createPlaylist = async (user, idplaylist, active = false) => {
 	if (response.images[0]) {
 		image = response.images[0].url;
 	}
+	console.log(image);
 
 	const [newplaylist] = await Playlist.upsert({
 		id: idplaylist,
