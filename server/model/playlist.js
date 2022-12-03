@@ -11,7 +11,7 @@ const createPlaylist = async (user, idplaylist, active = false) => {
 		id: idplaylist,
 		name: response.name,
 		active: active,
-		image: response.images[0].url || null,
+		image: response.images ? response.images[0].url : null,
 		UserId: user.id,
 	}).catch((err) => ({
 		error: err.message,
