@@ -8,20 +8,11 @@ const createPlaylist = async (user, idplaylist, active = false) => {
 		return response;
 	}
 
-	let image = null;
-	if (response.images) {
-		image = response.images;
-	}
-	if (response.images[0]) {
-		image = response.images[0].url;
-	}
-	console.log(image);
-
 	const [newplaylist] = await Playlist.upsert({
 		id: idplaylist,
 		name: response.name,
 		active: active,
-		image: image,
+		image: response.images[0] && response.images[0].url,
 		UserId: user.id,
 	}).catch((err) => ({
 		error: err.message,
