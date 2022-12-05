@@ -13,6 +13,7 @@ const getRecommendedSongsToRemove = async (playlist, minTime = null) => {
 				{
 					model: PlaylistSong,
 					where: {
+						PlaylistSongId: playlist.id,
 						active: true,
 						add_date: {
 							[Op.lte]: Date.now() - 1 * minTimeInPlaylist,
