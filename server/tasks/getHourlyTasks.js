@@ -5,16 +5,7 @@ const getHourlyTasks = (userList) => {
 	return userList.map((user) => {
 		return updateRecentSongs(user)
 			.then((updateResult) => {
-				if (updateResult.error) {
-					console.log("updateRecentSongs error", updateResult.error);
-				}
 				return syncronizeMultiplePlaylists(user).then((syncResult) => {
-					if (syncResult.error) {
-						console.log(
-							"syncronizeMultiplePlaylists error",
-							syncResult.error
-						);
-					}
 					return {
 						error: updateResult.error || syncResult.error,
 						message: [updateResult.message, ...syncResult.message],

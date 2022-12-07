@@ -242,9 +242,6 @@ app.get("/api/lastplayed", async (_req, res) => {
 		result = await getRecentlyPlayedSongs(user);
 		if (!result.error) {
 			result = result.map((recentSong) => {
-				if (recentSong.Song === null) {
-					console.log(recentSong);
-				}
 				const songResult = recentSong.Song.toJSON();
 				songResult.played_date = recentSong.played_date;
 				songResult.id = recentSong.id;
@@ -291,7 +288,6 @@ app.get("/api/playlist/:playlistId/songfeatures", async (req, res) => {
 	if (!result) {
 		const playlist = await getPlaylist(user, req.params.playlistId);
 		result = await getPlaylistSongFeatures(playlist);
-		console.log(playlist, result);
 		if (!result.error) {
 			result = result.map((songFeatures) => {
 				if (songFeatures.SongFeature !== null) {

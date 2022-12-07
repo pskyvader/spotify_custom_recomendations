@@ -20,8 +20,8 @@ const createPlaylist = async (user, idplaylist, active = false) => {
 	return newplaylist;
 };
 const getPlaylist = async (user, idplaylist) => {
-	const currentPlaylist = await Playlist.findByPk(idplaylist, {
-		where: { UserId: user.id },
+	const currentPlaylist = await Playlist.findOne({
+		where: { id: idplaylist, UserId: user.id },
 	}); //, { raw: true, }
 	if (currentPlaylist !== null) {
 		return currentPlaylist;

@@ -1,15 +1,32 @@
 const { PlaylistSong, Song } = require("../database");
 const createPlaylistSong = async (playlist, song) => {
-	const [newplaylistsong] = await PlaylistSong.upsert({
+	const upsertData = {
 		add_date: Date.now(),
 		removed_date: null,
 		active: true,
 		PlaylistId: playlist.id,
 		SongId: song.id,
-	}).catch((err) => {
-		console.error("create playlist song error", err);
-		return { error: true, message: err.message };
-	});
+	};
+	const newplaylistsong = await PlaylistSong.findOne({
+		where: { PlaylistId: playlist.id, SongId: song.id },
+	})
+		.then((song) => {
+			if (song === null) {
+				return PlaylistSong.create(upsertData);
+			}
+			return PlaylistSong.update(upsertData, { where: { id: song.id } });
+		})
+		.catch((err) => {
+			console.error("create playlist song error", err);
+			return { error: true, message: err.message };
+		});
+
+	// const [newplaylistsong] = await PlaylistSong.upsert(upsertData).catch(
+	// 	(err) => {
+	// 		console.error("create playlist song error", err);
+	// 		return { error: true, message: err.message };
+	// 	}
+	// );
 
 	song.set({ last_time_used: Date.now() });
 	song.save();

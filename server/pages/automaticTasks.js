@@ -55,11 +55,11 @@ const automaticTasks = async () => {
 		error: false,
 		message: [],
 	};
-	if (LastTask > Date.now() - hour + tenMinutes) {
-		response.error = true;
-		response.message = "Not able to run task for next hour";
-		return response;
-	}
+	// if (LastTask > Date.now() - hour + tenMinutes) {
+	// 	response.error = true;
+	// 	response.message = "Not able to run task for next hour";
+	// 	return response;
+	// }
 	const userList = await getAvailableUsers();
 	response.error = response.error || userList.error;
 	response.message.push(...userList.message);
