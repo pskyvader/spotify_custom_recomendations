@@ -15,13 +15,17 @@ const createSongFeatures = async (
 		data = formatSongFeaturesAPI(response);
 	}
 
-	const [newSongFeatures, success] = await SongFeatures.upsert(data).catch(
-		(err) => {
+	const newSongFeatures = await SongFeatures.findByPk(data.id)
+		.then((features) => {
+			if (features === null) {
+				return SongFeatures.create(data);
+			}
+			return SongFeatures.update(data, { where: { id: features.id } });
+		})
+		.catch((err) => {
 			console.error("create song features error", data, err);
 			return { error: true, message: err.message };
-		}
-	);
-	console.log("create song features", success, newsongFeatures);
+		});
 
 	return newSongFeatures;
 };

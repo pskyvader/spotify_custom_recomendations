@@ -21,13 +21,6 @@ const createPlaylistSong = async (playlist, song) => {
 			return { error: true, message: err.message };
 		});
 
-	// const [newplaylistsong] = await PlaylistSong.upsert(upsertData).catch(
-	// 	(err) => {
-	// 		console.error("create playlist song error", err);
-	// 		return { error: true, message: err.message };
-	// 	}
-	// );
-
 	song.set({ last_time_used: Date.now() });
 	song.save();
 	return newplaylistsong;

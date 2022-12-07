@@ -39,12 +39,12 @@ const getAvailableUsers = async () => {
 			user.expiration = result.expiration;
 		}
 		response.message.push(`Expiration: ${user.expiration}`);
-		// if (user.last_modified_hourly < Date.now() - hour + tenMinutes) {
-		response.hourly.push(user);
-		// }
-		// if (user.last_modified_daily < Date.now() - day + tenMinutes) {
-		response.daily.push(user);
-		// }
+		if (user.last_modified_hourly < Date.now() - hour + tenMinutes) {
+			response.hourly.push(user);
+		}
+		if (user.last_modified_daily < Date.now() - day + tenMinutes) {
+			response.daily.push(user);
+		}
 	}
 	response.message.push("--------------------------------");
 	return response;
@@ -55,11 +55,11 @@ const automaticTasks = async () => {
 		error: false,
 		message: [],
 	};
-	// if (LastTask > Date.now() - hour + tenMinutes) {
-	// 	response.error = true;
-	// 	response.message = "Not able to run task for next hour";
-	// 	return response;
-	// }
+	if (LastTask > Date.now() - hour + tenMinutes) {
+		response.error = true;
+		response.message = "Not able to run task for next hour";
+		return response;
+	}
 	const userList = await getAvailableUsers();
 	response.error = response.error || userList.error;
 	response.message.push(...userList.message);

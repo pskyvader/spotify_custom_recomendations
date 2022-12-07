@@ -120,8 +120,8 @@ const GaussMultipleDistributionChart = ({ data }) => {
 						"#4F378B",
 					]}
 				/>
-				{/* <ArgumentAxis showGrid /> */}
-				{/* <ValueAxis /> */}
+				<ArgumentAxis showGrid />
+				<ValueAxis />
 				{data.map((d) => {
 					return (
 						<LineSeries
@@ -148,8 +148,8 @@ const GaussDistributionChart = ({ data, title }) => {
 	return (
 		<Paper key={"data" + title}>
 			<Chart data={data}>
-				{/* <ArgumentAxis showGrid /> */}
-				{/* <ValueAxis /> */}
+				<ArgumentAxis showGrid />
+				<ValueAxis />
 				{/* <ScatterSeries valueField="x" argumentField="y" name={title} /> */}
 				<LineSeries valueField="x" argumentField="y" name={title} />
 				<Animation />
