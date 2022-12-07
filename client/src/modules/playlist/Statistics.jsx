@@ -103,6 +103,7 @@ const GaussMultipleDistributionChart = ({ data }) => {
 		});
 		return previous.concat(values);
 	}, []);
+	console.log("proccessedData", proccessedData);
 
 	return (
 		<Paper>
@@ -121,6 +122,7 @@ const GaussMultipleDistributionChart = ({ data }) => {
 				<ArgumentAxis showGrid />
 				<ValueAxis />
 				{data.map((d) => {
+					console.log("render", d.key);
 					return (
 						<LineSeries
 							key={d.key}
@@ -210,6 +212,7 @@ const Statistics = ({ playlistId, hidden }) => {
 
 				{gaussGraphic.map((gaussElement) => {
 					const { info, key } = gaussElement;
+					console.log("render single", key);
 					return (
 						<Card sx={{ minWidth: 275 }} key={key}>
 							<CardContent>
