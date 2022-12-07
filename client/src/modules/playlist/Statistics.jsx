@@ -64,7 +64,7 @@ const gaussTransform = (data) => {
 
 	for (const key in data) {
 		if (Object.hasOwnProperty.call(data, key)) {
-			const dataArray = [...data[key]];
+			const dataArray = [...data[key].filter((item) => !isNaN(item))];
 			newData[key] = {
 				average: average(dataArray),
 				standardDeviation: stdDeviation(dataArray),

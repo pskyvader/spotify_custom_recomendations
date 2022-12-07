@@ -9,6 +9,7 @@ const getPlaylistSongFeatures = async (playlist) => {
 				{
 					model: PlaylistSong,
 					where: {
+						PlaylistId: playlist.id,
 						active: true,
 					},
 				},
