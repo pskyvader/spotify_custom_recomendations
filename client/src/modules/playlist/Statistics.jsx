@@ -192,9 +192,6 @@ const Statistics = ({ playlistId, hidden }) => {
 	if (playlistFeatures[playlistId]) {
 		const features = transformFeatures(playlistFeatures[playlistId]);
 		const gaussData = gaussTransform(features);
-		console.log(playlistFeatures[playlistId]);
-		console.log(["---"])
-		console.log(gaussData);
 
 		const gaussGraphic = [];
 		const validGaussGraphic = [];
