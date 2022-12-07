@@ -39,12 +39,12 @@ const getAvailableUsers = async () => {
 			user.expiration = result.expiration;
 		}
 		response.message.push(`Expiration: ${user.expiration}`);
-		if (user.last_modified_hourly < Date.now() - hour + tenMinutes) {
-			response.hourly.push(user);
-		}
-		if (user.last_modified_daily < Date.now() - day + tenMinutes) {
-			response.daily.push(user);
-		}
+		// if (user.last_modified_hourly < Date.now() - hour + tenMinutes) {
+		response.hourly.push(user);
+		// }
+		// if (user.last_modified_daily < Date.now() - day + tenMinutes) {
+		response.daily.push(user);
+		// }
 	}
 	response.message.push("--------------------------------");
 	return response;
@@ -72,7 +72,12 @@ const automaticTasks = async () => {
 			.then((hourlyResponses) => {
 				const totalresponses = { message: [], error: false };
 				for (const r in hourlyResponses) {
-					totalresponses.message.push(...hourlyResponses[r].message);
+					totalresponses.error =
+						totalresponses.error || hourlyResponses[r].value.error;
+					totalresponses.message.push(
+						...hourlyResponses[r].value.message
+					);
+					totalresponses.message.push("----");
 				}
 				totalresponses.message.push("Hourly Tasks Done");
 				totalresponses.message.push("--------------------");
@@ -88,8 +93,10 @@ const automaticTasks = async () => {
 				return Promise.allSettled(dailyTaskList).then((responses) => {
 					for (const r in responses) {
 						previousResponse.error =
-							previousResponse.error || responses[r].error;
-						previousResponse.message.push(...responses[r].message);
+							previousResponse.error || responses[r].value.error;
+						previousResponse.message.push(
+							...responses[r].value.message
+						);
 						previousResponse.message.push("----");
 					}
 					previousResponse.message.push("Daily Tasks Done");

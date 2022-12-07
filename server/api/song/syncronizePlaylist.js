@@ -128,6 +128,7 @@ const syncronizePlaylist = async (user, playlist) => {
 const syncronizeMultiplePlaylists = async (user) => {
 	const response = { error: false, message: [] };
 	const playlists = await user.getPlaylists({ where: { active: true } });
+	console.log("syncronizeMultiplePlaylists", playlists);
 	for (const playlist of playlists) {
 		response.message.push(`Playlist ${playlist.name}`);
 		const playlistResponse = await syncronizePlaylist(user, playlist);

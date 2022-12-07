@@ -92,6 +92,10 @@ const gaussTransform = (data) => {
 
 const GaussMultipleDistributionChart = ({ data }) => {
 	const proccessedData = data.reduce((previous, d) => {
+		if (isNaN(d.info.average) || d.info.average <= 0) {
+			return previous;
+		}
+
 		const values = d.info.values.map((value) => {
 			const newValue = {};
 			newValue[`x_${d.key}`] = value.x;
@@ -116,8 +120,8 @@ const GaussMultipleDistributionChart = ({ data }) => {
 						"#4F378B",
 					]}
 				/>
-				<ArgumentAxis showGrid />
-				<ValueAxis />
+				{/* <ArgumentAxis showGrid /> */}
+				{/* <ValueAxis /> */}
 				{data.map((d) => {
 					return (
 						<LineSeries
@@ -144,8 +148,8 @@ const GaussDistributionChart = ({ data, title }) => {
 	return (
 		<Paper key={"data" + title}>
 			<Chart data={data}>
-				<ArgumentAxis showGrid />
-				<ValueAxis />
+				{/* <ArgumentAxis showGrid /> */}
+				{/* <ValueAxis /> */}
 				{/* <ScatterSeries valueField="x" argumentField="y" name={title} /> */}
 				<LineSeries valueField="x" argumentField="y" name={title} />
 				<Animation />
@@ -188,6 +192,9 @@ const Statistics = ({ playlistId, hidden }) => {
 	if (playlistFeatures[playlistId]) {
 		const features = transformFeatures(playlistFeatures[playlistId]);
 		const gaussData = gaussTransform(features);
+		console.log(playlistFeatures[playlistId]);
+		console.log(["---"])
+		console.log(gaussData);
 
 		const gaussGraphic = [];
 		const validGaussGraphic = [];
@@ -226,13 +233,14 @@ const Statistics = ({ playlistId, hidden }) => {
 										standard Deviation:{" "}
 										{info.standardDeviation}
 									</Typography>
-									{!isNaN(info.average) && (
-										<GaussDistributionChart
-											key={"chart" + key}
-											data={info.values}
-											title={key}
-										/>
-									)}
+									{!isNaN(info.average) &&
+										info.average > 0 && (
+											<GaussDistributionChart
+												key={"chart" + key}
+												data={info.values}
+												title={key}
+											/>
+										)}
 								</div>
 							</CardContent>
 						</Card>

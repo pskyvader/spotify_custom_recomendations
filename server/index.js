@@ -291,6 +291,7 @@ app.get("/api/playlist/:playlistId/songfeatures", async (req, res) => {
 	if (!result) {
 		const playlist = await getPlaylist(user, req.params.playlistId);
 		result = await getPlaylistSongFeatures(playlist);
+		console.log(playlist, result);
 		if (!result.error) {
 			result = result.map((songFeatures) => {
 				if (songFeatures.SongFeature !== null) {
