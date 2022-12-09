@@ -90,7 +90,7 @@ const gaussTransform = (data) => {
 	return newData;
 };
 
-const GaussMultipleDistributionChart = ({ data }) => {
+const GaussMultipleDistributionChart = ({ data, playlistId }) => {
 	const proccessedData = data.reduce((previous, d) => {
 		if (isNaN(d.info.average) || d.info.average <= 0) {
 			return previous;
@@ -105,7 +105,7 @@ const GaussMultipleDistributionChart = ({ data }) => {
 	}, []);
 
 	return (
-		<Card sx={{ minWidth: 275 }} key={"GaussMultipleChart"}>
+		<Card sx={{ minWidth: 275 }} key={playlistId + "GaussMultipleChart"}>
 			<CardContent>
 				<Paper>
 					<Chart data={proccessedData}>
@@ -120,8 +120,8 @@ const GaussMultipleDistributionChart = ({ data }) => {
 								"#4F378B",
 							]}
 						/>
-						<ArgumentAxis showGrid />
-						<ValueAxis />
+						{/* <ArgumentAxis showGrid />
+						<ValueAxis /> */}
 						{data.map((d) => {
 							return (
 								<LineSeries
@@ -150,8 +150,8 @@ const GaussDistributionChart = ({ data, title }) => {
 	return (
 		<Paper key={"data" + title}>
 			<Chart data={data}>
-				<ArgumentAxis showGrid />
-				<ValueAxis />
+				{/* <ArgumentAxis showGrid />
+				<ValueAxis /> */}
 				{/* <ScatterSeries valueField="x" argumentField="y" name={title} /> */}
 				<LineSeries valueField="x" argumentField="y" name={title} />
 				<Animation />
@@ -210,7 +210,10 @@ const Statistics = ({ playlistId, hidden }) => {
 		}
 		return (
 			<>
-				<GaussMultipleDistributionChart data={validGaussGraphic} />
+				<GaussMultipleDistributionChart
+					data={validGaussGraphic}
+					playlistId={playlistId}
+				/>
 
 				{gaussGraphic.map((gaussElement) => {
 					const { info, key } = gaussElement;
