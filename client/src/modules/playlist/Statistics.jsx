@@ -95,11 +95,9 @@ const GaussMultipleDistributionChart = ({ data }) => {
 		if (isNaN(d.info.average) || d.info.average <= 0) {
 			return previous;
 		}
-
 		const values = d.info.values.map((value) => {
 			const newValue = {};
 			newValue[`x_${d.key}`] = value.x;
-			// newValue[`y_${d.key}`] = value.y;
 			newValue[`y`] = value.y;
 			return newValue;
 		});
@@ -107,40 +105,44 @@ const GaussMultipleDistributionChart = ({ data }) => {
 	}, []);
 
 	return (
-		<Paper>
-			<Chart data={proccessedData}>
-				<Palette
-					scheme={[
-						"#42A5F5",
-						"#FF7043",
-						"#9CCC65",
-						"#FFCA28",
-						"#26A69A",
-						"#EC407A",
-						"#4F378B",
-					]}
-				/>
-				<ArgumentAxis showGrid />
-				<ValueAxis />
-				{data.map((d) => {
-					return (
-						<LineSeries
-							key={d.key}
-							valueField={`x_${d.key}`}
-							// argumentField={`y_${d.key}`}
-							argumentField={`y`}
-							name={d.key}
+		<Card sx={{ minWidth: 275 }} key={"GaussMultipleChart"}>
+			<CardContent>
+				<Paper>
+					<Chart data={proccessedData}>
+						<Palette
+							scheme={[
+								"#42A5F5",
+								"#FF7043",
+								"#9CCC65",
+								"#FFCA28",
+								"#26A69A",
+								"#EC407A",
+								"#4F378B",
+							]}
 						/>
-					);
-				})}
+						<ArgumentAxis showGrid />
+						<ValueAxis />
+						{data.map((d) => {
+							return (
+								<LineSeries
+									key={d.key}
+									valueField={`x_${d.key}`}
+									// argumentField={`y_${d.key}`}
+									argumentField={`y`}
+									name={d.key}
+								/>
+							);
+						})}
 
-				<Animation />
-				<Legend />
-				<EventTracker />
-				<Tooltip />
-				<ZoomAndPan />
-			</Chart>
-		</Paper>
+						<Animation />
+						<Legend />
+						<EventTracker />
+						<Tooltip />
+						<ZoomAndPan />
+					</Chart>
+				</Paper>
+			</CardContent>
+		</Card>
 	);
 };
 
@@ -207,7 +209,7 @@ const Statistics = ({ playlistId, hidden }) => {
 			}
 		}
 		return (
-			<div>
+			<>
 				<GaussMultipleDistributionChart data={validGaussGraphic} />
 
 				{gaussGraphic.map((gaussElement) => {
@@ -243,7 +245,7 @@ const Statistics = ({ playlistId, hidden }) => {
 						</Card>
 					);
 				})}
-			</div>
+			</>
 		);
 	}
 	return <CircularProgress />;
