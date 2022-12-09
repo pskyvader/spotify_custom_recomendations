@@ -86,7 +86,7 @@ const Playlists = () => {
 			);
 		}
 		return (
-			<Container maxWidth={false}>
+			<Container maxWidth={false} key={playlistid + "container"}>
 				<div>
 					Playlist {playlistActive[playlistid].name} Active
 					<Switch
