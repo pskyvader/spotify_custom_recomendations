@@ -1,12 +1,26 @@
 const { request, genres, formatSongAPIList } = require("../../utils");
 
-const fillOptions = (songlist, currentgenres) => {
+const fillOptions = (songlist, currentgenres, playlistLength) => {
 	const options = {
 		seed_artists: [],
 		seed_genres: [],
 		seed_tracks: [],
 		market: "from_token",
 	};
+	const min = process.env.MIN_SONGS_PER_PLAYLIST;
+	const max = process.env.MAX_SONGS_PER_PLAYLIST;
+	const mid = min + Math.floor((max - min) / 2);
+
+	let weights = [50, 80]; //mid<n<max
+	if (playlistLength > max) {
+		weights = [60, 90];
+	}
+	if (playlistLength < mid) { //min<n<mid
+		weights = [40, 60];
+	}
+	if (playlistLength < min) {
+		weights = [30, 40];
+	}
 
 	if (songlist.length > 0) {
 		const half_songlist = Math.floor((songlist.length - 1) / 2);
@@ -15,12 +29,12 @@ const fillOptions = (songlist, currentgenres) => {
 			const randomSong = songlist[idsong];
 			const randomNumber = Math.floor(Math.random() * 100);
 
-			if (randomNumber < 50) {
+			if (randomNumber < weights[0]) {
 				options.seed_tracks.push(randomSong.id);
 				// console.log(`Seed track ${randomSong.id} ${randomSong.name}`);
 				continue;
 			}
-			if (randomNumber < 80) {
+			if (randomNumber < weights[1]) {
 				options.seed_artists.push(randomSong.idartist);
 				// console.log(
 				// 	`Seed artist ${randomSong.idartist} ${randomSong.artist}`
@@ -47,9 +61,10 @@ const fillOptions = (songlist, currentgenres) => {
 const getRecommendedSongsFromAPI = async (
 	access_token,
 	songList,
+	playlistLength,
 	currentgenres = genres
 ) => {
-	const options = fillOptions(songList, currentgenres);
+	const options = fillOptions(songList, currentgenres, playlistLength);
 
 	const url = "https://api.spotify.com/v1/recommendations";
 	let urlOptions = "?";

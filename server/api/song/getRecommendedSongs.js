@@ -55,7 +55,8 @@ const getRecommendedSongs = async (user, playlist, minTime = null) => {
 
 	const recommendedTracks = await getRecommendedSongsFromAPI(
 		user.access_token,
-		recommendedSongs
+		recommendedSongs,
+		playlist.countSongs({ where: { active: true } })
 	);
 	if (recommendedTracks.error) {
 		return recommendedTracks;
