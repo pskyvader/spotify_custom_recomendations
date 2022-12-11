@@ -9,6 +9,8 @@ const day = 86400000;
 const getRecommendedSongs = async (user, playlist, minTime = null) => {
 	const minTimeInPlaylist = day * (minTime && minTime > 3 ? minTime : 7);
 
+	let fullPlaylist = await getPlaylistSongs(playlist);
+
 	let currentPlaylist = await getPlaylistSongs(
 		playlist,
 		Date.now() - 2 * minTimeInPlaylist
@@ -56,7 +58,7 @@ const getRecommendedSongs = async (user, playlist, minTime = null) => {
 	const recommendedTracks = await getRecommendedSongsFromAPI(
 		user.access_token,
 		recommendedSongs,
-		playlist.countSongs({ where: { active: true } })
+		fullPlaylist.length
 	);
 	if (recommendedTracks.error) {
 		return recommendedTracks;
@@ -67,7 +69,7 @@ const getRecommendedSongs = async (user, playlist, minTime = null) => {
 	return recommendedTracks.filter((currentSong) => {
 		return (
 			!removedSongs.find((song) => song.Song.id === currentSong.id) &&
-			!currentPlaylist.find((song) => song.id === currentSong.id)
+			!fullPlaylist.find((song) => song.id === currentSong.id)
 		);
 	});
 };

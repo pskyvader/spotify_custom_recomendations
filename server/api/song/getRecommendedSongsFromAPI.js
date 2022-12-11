@@ -16,10 +16,10 @@ const fillOptions = (songlist, currentgenres, playlistLength) => {
 		weights = [60, 90];
 	}
 	if (playlistLength < mid) { //min<n<mid
-		weights = [40, 60];
+		weights = [30, 50];
 	}
 	if (playlistLength < min) {
-		weights = [30, 40];
+		weights = [20, 40];
 	}
 
 	if (songlist.length > 0) {
