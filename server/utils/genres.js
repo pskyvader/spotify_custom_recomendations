@@ -18,7 +18,7 @@ const genres = [
 	"chill",
 	"classical",
 	"club",
-	"comedy",
+	// "comedy",
 	"country",
 	"dance",
 	"dancehall",
