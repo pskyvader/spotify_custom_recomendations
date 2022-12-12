@@ -17,10 +17,10 @@ const fillOptions = (songlist, currentgenres, playlistLength) => {
 	}
 	if (playlistLength < mid) {
 		//min<n<mid
-		weights = [30, 50];
+		weights = [20, 30];
 	}
 	if (playlistLength < min) {
-		weights = [20, 40];
+		weights = [10, 20];
 	}
 
 	if (songlist.length > 0) {
@@ -58,10 +58,10 @@ const fillOptions = (songlist, currentgenres, playlistLength) => {
 
 	console.log(
 		"Generating seeds",
+		",songs:",
 		playlistLength,
 		",weights:",
 		JSON.stringify(weights),
-		"songs,",
 		",options:",
 		JSON.stringify(options)
 	);
