@@ -15,7 +15,8 @@ const fillOptions = (songlist, currentgenres, playlistLength) => {
 	if (playlistLength > max) {
 		weights = [60, 90];
 	}
-	if (playlistLength < mid) { //min<n<mid
+	if (playlistLength < mid) {
+		//min<n<mid
 		weights = [30, 50];
 	}
 	if (playlistLength < min) {
@@ -54,6 +55,16 @@ const fillOptions = (songlist, currentgenres, playlistLength) => {
 			currentgenres[Math.floor(Math.random() * currentgenres.length)]
 		);
 	}
+
+	console.log(
+		"Generating seeds",
+		playlistLength,
+		",weights:",
+		JSON.stringify(weights),
+		"songs,",
+		",options:",
+		JSON.stringify(options)
+	);
 
 	return options;
 };
