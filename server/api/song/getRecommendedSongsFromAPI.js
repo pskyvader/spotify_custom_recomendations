@@ -5,7 +5,7 @@ const fillOptions = (songlist, currentgenres, playlistLength) => {
 		seed_artists: [],
 		seed_genres: [],
 		seed_tracks: [],
-		market: "from_token",
+		// market: "from_token",
 	};
 	const min = process.env.MIN_SONGS_PER_PLAYLIST;
 	const max = process.env.MAX_SONGS_PER_PLAYLIST;
@@ -87,11 +87,13 @@ const getRecommendedSongsFromAPI = async (
 		return response;
 	}
 
-	const filtered = response.tracks.filter((song) => {
-		const currentSong = song.track || song;
-		//song playable and not in songlist
-		return currentSong.is_playable;
-	});
+	// const filtered = response.tracks.filter((song) => {
+	// 	const currentSong = song.track || song;
+	// 	//song playable
+	// 	return currentSong.is_playable;
+	// });
+	const filtered = response.tracks;
+
 	return formatSongAPIList(filtered);
 };
 

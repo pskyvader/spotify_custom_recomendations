@@ -44,7 +44,7 @@ const getRecommendedSongs = async (user, playlist, minTime = null) => {
 			return topSongsIds.includes(currentSong.id);
 		}),
 		...RecentSongsIds.filter((currentSong) => {
-			return currentPlaylist.includes(currentSong.id);
+			return fullPlaylist.includes(currentSong.id);
 		}).reverse(),
 	];
 
