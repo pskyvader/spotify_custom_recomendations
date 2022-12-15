@@ -30,7 +30,7 @@ const transformFeatures = (data) => {
 			previous.energy.push(current.energy);
 			previous.key.push(current.key);
 			previous.loudness.push(current.loudness);
-			previous.mode.push(current.mode === 1 ? "Major" : "Minor");
+			previous.mode.push(current.mode); // === 1 ? "Major" : "Minor");
 			previous.speechiness.push(current.speechiness);
 			previous.acousticness.push(current.acousticness);
 			previous.instrumentalness.push(current.instrumentalness);
