@@ -16,7 +16,12 @@ import {
 	Tooltip,
 	ZoomAndPan,
 } from "@devexpress/dx-react-chart-material-ui";
-import { Animation, EventTracker, Palette } from "@devexpress/dx-react-chart";
+import {
+	Animation,
+	EventTracker,
+	Palette,
+	SelectionState,
+} from "@devexpress/dx-react-chart";
 
 import { Playlist } from "../../API";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
@@ -110,6 +115,7 @@ const GaussMultipleDistributionChart = ({ data, playlistId }) => {
 			<CardContent>
 				<Paper>
 					<Chart data={proccessedData}>
+						<SelectionState />
 						<Palette
 							scheme={[
 								"#42A5F5",
