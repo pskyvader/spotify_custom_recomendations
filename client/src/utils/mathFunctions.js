@@ -1,4 +1,5 @@
 const sum = (arr) => {
+	if (arr.length === 0) return 0;
 	const result = arr.reduce((a, b) => {
 		if (!isNaN(b)) {
 			return a + b;
@@ -14,6 +15,8 @@ const average = (arr) => {
 };
 
 const stdDeviation = (arr, usePopulation = false) => {
+	if (arr.length === 0) return 0;
+
 	// Creating the mean with Array.reduce
 	let mean = average(arr);
 

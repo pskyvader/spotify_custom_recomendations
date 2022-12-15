@@ -74,7 +74,7 @@ const gaussTransform = (data) => {
 				newData[key].average,
 				newData[key].standardDeviation
 			);
-			dataArray.push(0, 1);
+			// dataArray.push(0, 1);
 			newData[key].values = dataArray
 				.map((position) => {
 					return {
