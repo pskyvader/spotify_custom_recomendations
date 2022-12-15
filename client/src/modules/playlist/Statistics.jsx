@@ -236,14 +236,13 @@ const Statistics = ({ playlistId, hidden }) => {
 										standard Deviation:{" "}
 										{info.standardDeviation}
 									</Typography>
-									{!isNaN(info.average) &&
-										info.average > 0 && (
-											<GaussDistributionChart
-												key={"chart" + key}
-												data={info.values}
-												title={key}
-											/>
-										)}
+									{info.average !== 0 && (
+										<GaussDistributionChart
+											key={"chart" + key}
+											data={info.values}
+											title={key}
+										/>
+									)}
 								</div>
 							</CardContent>
 						</Card>
