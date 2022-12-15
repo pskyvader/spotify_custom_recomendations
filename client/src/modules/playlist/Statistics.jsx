@@ -20,7 +20,7 @@ import { Animation, EventTracker, Palette } from "@devexpress/dx-react-chart";
 
 import { Playlist } from "../../API";
 import { PlaylistContext } from "../../context/PlaylistContextProvider";
-import { average, stdDeviation } from "../../utils";
+import { average, stdDeviation, filterOutliers } from "../../utils";
 
 const transformFeatures = (data) => {
 	return data.reduce(
@@ -64,7 +64,8 @@ const gaussTransform = (data) => {
 
 	for (const key in data) {
 		if (Object.hasOwnProperty.call(data, key)) {
-			const dataArray = [...data[key].filter((item) => !isNaN(item))];
+			const tmpArray = [...data[key].filter((item) => !isNaN(item))];
+			const dataArray = filterOutliers(tmpArray);
 			newData[key] = {
 				average: average(dataArray),
 				standardDeviation: stdDeviation(dataArray),
