@@ -92,7 +92,7 @@ const gaussTransform = (data) => {
 
 const GaussMultipleDistributionChart = ({ data, playlistId }) => {
 	const proccessedData = data.reduce((previous, d) => {
-		if (d.info.average <= 0) {
+		if (d.info.average === 0) {
 			return previous;
 		}
 		const values = d.info.values.map((value) => {
