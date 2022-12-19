@@ -6,6 +6,7 @@ const fillOptions = (songlist, currentgenres, playlistLength) => {
 		seed_genres: [],
 		seed_tracks: [],
 		// market: "from_token",
+		limit: 100,
 	};
 	const min = process.env.MIN_SONGS_PER_PLAYLIST;
 	const max = process.env.MAX_SONGS_PER_PLAYLIST;
