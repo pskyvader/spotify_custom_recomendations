@@ -1,13 +1,6 @@
 const { request, genres, formatSongAPIList } = require("../../utils");
 
-const fillOptions = (songlist, currentgenres, playlistLength) => {
-	const options = {
-		seed_artists: [],
-		seed_genres: [],
-		seed_tracks: [],
-		// market: "from_token",
-		limit: 100,
-	};
+const getWeights = (playlistLength) => {
 	const min = process.env.MIN_SONGS_PER_PLAYLIST;
 	const max = process.env.MAX_SONGS_PER_PLAYLIST;
 	const mid = min + Math.floor((max - min) / 2);
@@ -23,6 +16,17 @@ const fillOptions = (songlist, currentgenres, playlistLength) => {
 	if (playlistLength < min) {
 		weights = [10, 20];
 	}
+	return weights;
+};
+
+const fillOptions = (songlist, currentgenres, weights) => {
+	const options = {
+		seed_artists: [],
+		seed_genres: [],
+		seed_tracks: [],
+		// market: "from_token",
+		limit: 40,
+	};
 
 	if (songlist.length > 0) {
 		const half_songlist = Math.floor((songlist.length - 1) / 2);
@@ -57,6 +61,18 @@ const fillOptions = (songlist, currentgenres, playlistLength) => {
 		);
 	}
 
+	return options;
+};
+
+const getRecommendedSongsFromAPI = async (
+	access_token,
+	songList,
+	playlistLength,
+	currentgenres = genres
+) => {
+	const weights = getWeights(playlistLength);
+	const options = fillOptions(songList, currentgenres, weights);
+
 	console.log(
 		"Generating seeds",
 		",songs:",
@@ -67,22 +83,22 @@ const fillOptions = (songlist, currentgenres, playlistLength) => {
 		JSON.stringify(options)
 	);
 
-	return options;
-};
-
-const getRecommendedSongsFromAPI = async (
-	access_token,
-	songList,
-	playlistLength,
-	currentgenres = genres
-) => {
-	const options = fillOptions(songList, currentgenres, playlistLength);
-
 	const url = "https://api.spotify.com/v1/recommendations";
 	let urlOptions = "?";
-	Object.entries(options).forEach((option) => {
-		urlOptions += `${option[0]}=${option[1]}&`;
-	});
+
+	for (const key in object) {
+		if (Object.hasOwnProperty.call(object, key)) {
+			const option = object[key];
+			if (Array.isArray(option)) {
+				if (option.length > 0) {
+					urlOptions += `${key}=${option.join(",")}&`;
+				}
+			} else if (option !== "" && option !== undefined) {
+				urlOptions += `${key}=${option}&`;
+			}
+		}
+	}
+
 	const response = await request(access_token, url + urlOptions);
 	if (response.error) {
 		return response;
