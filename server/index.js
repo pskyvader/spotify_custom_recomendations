@@ -82,7 +82,7 @@ app.get("/callback", function (req, res) {
 });
 app.get("/tasks", function (req, res) {
 	automaticTasks().then((response) => {
-		console.log("Task response", response);
+		console.log("Task response", JSON.stringify(response));
 		res.json(response);
 	});
 });
