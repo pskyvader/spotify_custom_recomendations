@@ -37,14 +37,10 @@ const fillOptions = (songlist, currentgenres, weights) => {
 
 			if (randomNumber < weights[0]) {
 				options.seed_tracks.push(randomSong.id);
-				// console.log(`Seed track ${randomSong.id} ${randomSong.name}`);
 				continue;
 			}
 			if (randomNumber < weights[1]) {
 				options.seed_artists.push(randomSong.idartist);
-				// console.log(
-				// 	`Seed artist ${randomSong.idartist} ${randomSong.artist}`
-				// );
 				continue;
 			}
 
@@ -52,7 +48,6 @@ const fillOptions = (songlist, currentgenres, weights) => {
 				currentgenres[
 					Math.floor(Math.random() * (currentgenres.length - 1))
 				];
-			// console.log(`Seed genre ${randomGenre}`);
 			options.seed_genres.push(randomGenre);
 		}
 	} else {
@@ -86,12 +81,15 @@ const getRecommendedSongsFromAPI = async (
 	const url = "https://api.spotify.com/v1/recommendations";
 	let urlOptions = "?";
 
+	const seedOptions = [];
+
 	for (const key in options) {
 		if (Object.hasOwnProperty.call(options, key)) {
 			const option = options[key];
 			if (Array.isArray(option)) {
 				if (option.length > 0) {
-					urlOptions += `${key}=${option.join(",")}&`;
+					seedOptions.push(`${key}=${option.join(",")}&`);
+					// urlOptions += `${key}=${option.join(",")}&`;
 				}
 			} else if (
 				option !== "" &&
@@ -102,10 +100,13 @@ const getRecommendedSongsFromAPI = async (
 			}
 		}
 	}
-
-	const response = await request(access_token, url + urlOptions);
-	if (response.error) {
-		return response;
+	const filtered = [];
+	for (const seed in seedOptions) {
+		const response = await request(access_token, url + urlOptions + seed);
+		if (response.error) {
+			return response;
+		}
+		filtered.push(...response.tracks);
 	}
 
 	// const filtered = response.tracks.filter((song) => {
@@ -113,7 +114,7 @@ const getRecommendedSongsFromAPI = async (
 	// 	//song playable
 	// 	return currentSong.is_playable;
 	// });
-	const filtered = response.tracks;
+	// const filtered = response.tracks;
 
 	return formatSongAPIList(filtered);
 };
