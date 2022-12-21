@@ -25,7 +25,7 @@ const fillOptions = (songlist, currentgenres, weights) => {
 		seed_genres: [],
 		seed_tracks: [],
 		// market: "from_token",
-		limit: 40,
+		limit: 10,
 	};
 
 	if (songlist.length > 0) {
@@ -68,15 +68,6 @@ const getRecommendedSongsFromAPI = async (
 	const weights = getWeights(playlistLength);
 	const options = fillOptions(songList, currentgenres, weights);
 
-	console.log(
-		"Generating seeds",
-		",songs:",
-		playlistLength,
-		",weights:",
-		JSON.stringify(weights),
-		",options:",
-		JSON.stringify(options)
-	);
 
 	const url = "https://api.spotify.com/v1/recommendations";
 	let urlOptions = "?";
@@ -88,8 +79,10 @@ const getRecommendedSongsFromAPI = async (
 			const option = options[key];
 			if (Array.isArray(option)) {
 				if (option.length > 0) {
-					console.log(key, option, option.join(","));
-					seedOptions.push(`${key}=${option.join(",")}&`);
+					for (const o of option) {
+						seedOptions.push(`${key}=${o}&`);
+					}
+					// seedOptions.push(`${key}=${option.join(",")}&`);
 					// urlOptions += `${key}=${option.join(",")}&`;
 				}
 			} else if (
@@ -102,15 +95,24 @@ const getRecommendedSongsFromAPI = async (
 		}
 	}
 	const filtered = [];
-	console.log(seedOptions);
-	for (const seed in seedOptions) {
-		console.log(seed);
+	for (const seed of seedOptions) {
 		const response = await request(access_token, url + urlOptions + seed);
 		if (response.error) {
 			return response;
 		}
 		filtered.push(...response.tracks);
 	}
+
+	
+	console.log(
+		"Generating seeds",
+		",songs:",
+		playlistLength,
+		",weights:",
+		JSON.stringify(weights),
+		",options:",
+		JSON.stringify(options),
+	);
 
 	// const filtered = response.tracks.filter((song) => {
 	// 	const currentSong = song.track || song;
@@ -119,7 +121,7 @@ const getRecommendedSongsFromAPI = async (
 	// });
 	// const filtered = response.tracks;
 
-	return formatSongAPIList(filtered);
+	return formatSongAPIList(filtered.sort(() => Math.random() - 0.5));
 };
 
 module.exports = { getRecommendedSongsFromAPI };
