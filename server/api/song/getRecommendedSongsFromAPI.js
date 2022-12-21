@@ -93,7 +93,11 @@ const getRecommendedSongsFromAPI = async (
 				if (option.length > 0) {
 					urlOptions += `${key}=${option.join(",")}&`;
 				}
-			} else if (option !== "" && option !== undefined) {
+			} else if (
+				option !== "" &&
+				option !== undefined &&
+				option !== null
+			) {
 				urlOptions += `${key}=${option}&`;
 			}
 		}
