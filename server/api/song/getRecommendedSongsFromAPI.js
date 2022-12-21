@@ -88,6 +88,7 @@ const getRecommendedSongsFromAPI = async (
 			const option = options[key];
 			if (Array.isArray(option)) {
 				if (option.length > 0) {
+					console.log(key, option, option.join(","));
 					seedOptions.push(`${key}=${option.join(",")}&`);
 					// urlOptions += `${key}=${option.join(",")}&`;
 				}
@@ -101,7 +102,9 @@ const getRecommendedSongsFromAPI = async (
 		}
 	}
 	const filtered = [];
+	console.log(seedOptions);
 	for (const seed in seedOptions) {
+		console.log(seed);
 		const response = await request(access_token, url + urlOptions + seed);
 		if (response.error) {
 			return response;
