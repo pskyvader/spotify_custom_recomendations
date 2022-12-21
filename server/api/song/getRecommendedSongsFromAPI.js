@@ -86,9 +86,9 @@ const getRecommendedSongsFromAPI = async (
 	const url = "https://api.spotify.com/v1/recommendations";
 	let urlOptions = "?";
 
-	for (const key in object) {
-		if (Object.hasOwnProperty.call(object, key)) {
-			const option = object[key];
+	for (const key in options) {
+		if (Object.hasOwnProperty.call(options, key)) {
+			const option = options[key];
 			if (Array.isArray(option)) {
 				if (option.length > 0) {
 					urlOptions += `${key}=${option.join(",")}&`;
