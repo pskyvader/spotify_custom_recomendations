@@ -68,7 +68,6 @@ const getRecommendedSongsFromAPI = async (
 	const weights = getWeights(playlistLength);
 	const options = fillOptions(songList, currentgenres, weights);
 
-
 	const url = "https://api.spotify.com/v1/recommendations";
 	let urlOptions = "?";
 
@@ -94,16 +93,15 @@ const getRecommendedSongsFromAPI = async (
 			}
 		}
 	}
-	const filtered = [];
+	const recommendedSongs = [];
 	for (const seed of seedOptions) {
 		const response = await request(access_token, url + urlOptions + seed);
 		if (response.error) {
 			return response;
 		}
-		filtered.push(...response.tracks);
+		recommendedSongs.push(...response.tracks);
 	}
 
-	
 	console.log(
 		"Generating seeds",
 		",songs:",
@@ -111,17 +109,19 @@ const getRecommendedSongsFromAPI = async (
 		",weights:",
 		JSON.stringify(weights),
 		",options:",
-		JSON.stringify(options),
+		JSON.stringify(options)
 	);
 
-	// const filtered = response.tracks.filter((song) => {
+	// const recommendedSongs = response.tracks.filter((song) => {
 	// 	const currentSong = song.track || song;
 	// 	//song playable
 	// 	return currentSong.is_playable;
 	// });
-	// const filtered = response.tracks;
+	// const recommendedSongs = response.tracks;
 
-	return formatSongAPIList(filtered.sort(() => Math.random() - 0.5));
+	console.log("recommended Songs from api", recommendedSongs);
+
+	return formatSongAPIList(recommendedSongs.sort(() => Math.random() - 0.5));
 };
 
 module.exports = { getRecommendedSongsFromAPI };

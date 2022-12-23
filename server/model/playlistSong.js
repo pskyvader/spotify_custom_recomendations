@@ -27,7 +27,7 @@ const createPlaylistSong = async (playlist, song) => {
 	return newplaylistsong;
 };
 
-const getPlaylistSong = async (playlist, song) => {
+const _getPlaylistSong = async (playlist, song) => {
 	const currentPlaylistSong = await PlaylistSong.findOne({
 		where: { PlaylistId: playlist.id, SongId: song.id, active: true },
 	});
@@ -36,6 +36,12 @@ const getPlaylistSong = async (playlist, song) => {
 	}
 	return createPlaylistSong(playlist, song);
 };
+
+const getPlaylistSong = deprecate(
+	_getPlaylistSong,
+	"Deprecated Function, use createPlaylistSong instead",
+	"Deprecation API"
+);
 
 const updatePlaylistSong = async (
 	idplaylist,
@@ -84,17 +90,6 @@ const deletePlaylistSong = async (idplaylist, idsong) => {
 	}
 	return true;
 };
-
-
-
-
-const deprecateFunction = deprecate(
-	getPlaylistSong,
-	"Deprecated Function",
-	"Deprecation API"
-);
-
-deprecateFunction();
 
 module.exports = {
 	createPlaylistSong,
