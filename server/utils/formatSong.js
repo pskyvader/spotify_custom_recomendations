@@ -43,6 +43,9 @@ const formatSongAPI = (song) => {
 const formatSongAPIList = (songList) => {
 	return songList.map((song) => {
 		const currentSong = song.track || song;
+		if (currentSong === undefined) {
+			console.error("No song found", songList);
+		}
 		return formatSongAPI(currentSong);
 	});
 };

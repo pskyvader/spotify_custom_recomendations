@@ -119,7 +119,7 @@ const getRecommendedSongsFromAPI = async (
 	// });
 	// const recommendedSongs = response.tracks;
 
-	console.log("recommended Songs from api", recommendedSongs);
+	// console.log("recommended Songs from api", recommendedSongs);
 
 	return formatSongAPIList(recommendedSongs.sort(() => Math.random() - 0.5));
 };
