@@ -1,3 +1,4 @@
+const { deprecate } = require("util");
 const { PlaylistSong, Song } = require("../database");
 const createPlaylistSong = async (playlist, song) => {
 	const upsertData = {
@@ -83,6 +84,17 @@ const deletePlaylistSong = async (idplaylist, idsong) => {
 	}
 	return true;
 };
+
+
+
+
+const deprecateFunction = deprecate(
+	getPlaylistSong,
+	"Deprecated Function",
+	"Deprecation API"
+);
+
+deprecateFunction();
 
 module.exports = {
 	createPlaylistSong,
