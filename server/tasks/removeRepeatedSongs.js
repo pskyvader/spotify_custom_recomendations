@@ -1,6 +1,7 @@
 const { getRepeatedSongs } = require("../api/song");
 const {
 	removeSongFromPlaylistFromAPI,
+	addSongToPlaylistFromAPI,
 	addSongToPlaylist,
 } = require("../api/playlist");
 const { updatePlaylistSong } = require("../model");
@@ -15,7 +16,12 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 			repeatedSong,
 			playlist
 		);
-		const addSong = addSongToPlaylist(user, repeatedSong, playlist);
+		const addSongAPI = addSongToPlaylistFromAPI(
+			user,
+			playlist,
+			repeatedSong
+		);
+		const addSong = addSongToPlaylist(playlist, repeatedSong);
 
 		return playlistSong
 			.then((resultPlaylistSongs) => {
@@ -25,18 +31,24 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 				});
 			})
 			.then((resultRemove) => {
-				if (resultRemove.error) {
-					return resultRemove;
-				}
-				return addSong.then((result) => {
+				if (resultRemove.error) return resultRemove;
+
+				return addSongAPI.then((result) => {
 					result.add_date = resultRemove.add_date;
 					return result;
 				});
 			})
+			.then((resultAddAPI) => {
+				if (resultAddAPI.error) return resultAddAPI;
+
+				return addSong.then((result) => {
+					result.add_date = resultAddAPI.add_date;
+					return result;
+				});
+			})
 			.then((resultAdd) => {
-				if (resultAdd.error) {
-					return resultAdd;
-				}
+				if (resultAdd.error) return resultAdd;
+
 				const addData = {
 					active: true,
 					add_date: resultAdd.add_date,
@@ -48,9 +60,8 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 				);
 			})
 			.then((finalresult) => {
-				if (finalresult.error) {
-					return finalresult;
-				}
+				if (finalresult.error) return finalresult;
+
 				return `Removed repeated song ${repeatedSong.name}`;
 			});
 	});

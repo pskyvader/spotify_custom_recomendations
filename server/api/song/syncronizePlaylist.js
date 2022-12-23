@@ -5,7 +5,7 @@ const {
 const { getPlaylistSongs } = require("./getPlaylistSongs");
 
 const {
-	getPlaylistSong,
+	createPlaylistSong,
 	updatePlaylistSong,
 	getSong,
 	getSongFeatures,
@@ -75,7 +75,7 @@ const syncronizePlaylist = async (user, playlist) => {
 		.map((currentSong) => {
 			return getSong(user.access_token, currentSong.id, currentSong).then(
 				(newsong) => {
-					return getPlaylistSong(playlist, newsong);
+					return createPlaylistSong(playlist, newsong);
 				}
 			);
 		});

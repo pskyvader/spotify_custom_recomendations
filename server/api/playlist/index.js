@@ -1,3 +1,4 @@
+const { addSongToPlaylistFromAPI } = require("./addSongToPlaylistFromAPI");
 const { addSongToPlaylist } = require("./addSongToPlaylist");
 const { getPlaylistsFromAPI } = require("./getPlaylistsFromAPI");
 const {
@@ -5,6 +6,7 @@ const {
 } = require("./removeSongFromPlaylistFromAPI");
 
 module.exports = {
+	addSongToPlaylistFromAPI,
 	addSongToPlaylist,
 	getPlaylistsFromAPI,
 	removeSongFromPlaylistFromAPI,
