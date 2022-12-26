@@ -32,11 +32,11 @@ const deleteGarbage = async () => {
 	}
 
 	const songList = await Song.findAll({
-		where: {
-			last_time_used: {
-				[Op.lte]: Date.now() - 2 * week,
-			},
-		},
+		// where: {
+		// 	last_time_used: {
+		// 		[Op.lte]: Date.now() - 2 * week,
+		// 	},
+		// },
 		include: [User, Playlist],
 	});
 

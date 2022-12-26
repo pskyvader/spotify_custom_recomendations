@@ -1,5 +1,5 @@
 const { getPlaylistSongsFromAPI } = require("./getPlaylistSongsFromAPI");
-const { getSong } = require("../../model");
+const { createSong, getSong } = require("../../model");
 const getRepeatedSongs = async (user, playlist) => {
 	const songList = await getPlaylistSongsFromAPI(user, playlist);
 	// remove repeated ids from currentPlaylist array
@@ -12,7 +12,12 @@ const getRepeatedSongs = async (user, playlist) => {
 
 	const formattedFiltered = await Promise.all(
 		filtered.map((song) => {
-			const formattedSong = getSong(user.access_token, song.id, song);
+			const formattedSong = getSong(song.id).then((currentSong) => {
+				if (currentSong === null) {
+					return createSong(user.access_token, song.id, song);
+				}
+				return currentSong;
+			});
 			return formattedSong;
 		})
 	);

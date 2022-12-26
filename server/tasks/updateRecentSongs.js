@@ -1,7 +1,7 @@
 const { getRecentlyPlayedSongsFromAPI } = require("../api/song/");
-const { Song } = require("../database");
+// const { Song } = require("../database");
 
-const { createUserSong, getSong } = require("../model");
+const { createUserSong, createSong } = require("../model");
 
 const updateRecentSongs = async (user) => {
 	const recentSongsAPI = await getRecentlyPlayedSongsFromAPI(user);
@@ -18,16 +18,8 @@ const updateRecentSongs = async (user) => {
 	});
 
 	const addTasks = songsToAdd.map((songtoadd) => {
-		return getSong(user.access_token, songtoadd.id).then((song) => {
+		return createSong(user.access_token, songtoadd.id).then((song) => {
 			if (song.error) {
-				console.error("ADDING TO HISTORY ERROR");
-				console.error("ADDING TO HISTORY ERROR");
-				console.error("ADDING TO HISTORY ERROR");
-				console.error("ADDING TO HISTORY ERROR");
-				console.error("ADDING TO HISTORY ERROR");
-				console.error("ADDING TO HISTORY ERROR");
-				console.error("ADDING TO HISTORY ERROR");
-				console.error("ADDING TO HISTORY ERROR");
 				console.error("ADDING TO HISTORY ERROR");
 				console.error(song);
 				return song;
@@ -37,7 +29,10 @@ const updateRecentSongs = async (user) => {
 	});
 	return Promise.all(addTasks)
 		.then((results) => {
-			return { error: false, message: `${results.length} Recent Songs updated` };
+			return {
+				error: false,
+				message: `${results.length} Recent Songs updated`,
+			};
 		})
 		.catch((err) => {
 			return { error: true, message: err.message };

@@ -3,7 +3,10 @@ const {
 	addSongToPlaylistFromAPI,
 	addSongToPlaylist,
 } = require("../api/playlist");
-const { getSong } = require("../model");
+const {
+	createSong,
+	//  getSong
+} = require("../model");
 
 const _MIN_SONGS_PER_PLAYLIST = process.env.MIN_SONGS_PER_PLAYLIST;
 const _MAX_SONGS_PER_PLAYLIST = process.env.MAX_SONGS_PER_PLAYLIST;
@@ -54,7 +57,7 @@ const addToSinglePlaylist = async (
 		if (i >= songsToAdd) {
 			break;
 		}
-		const currentSong = await getSong(
+		const currentSong = await createSong(
 			user.access_token,
 			songInList.id,
 			songInList

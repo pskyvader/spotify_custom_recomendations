@@ -308,7 +308,13 @@ app.get("/api/playlist/:playlistId/songfeatures", async (req, res) => {
 
 app.post("/api/playlist/:playlistId/add/:songId", async (req, res) => {
 	const playlist = await getPlaylist(user, req.params.playlistId);
-	const song = await getSong(user.access_token, req.params.songId);
+	const song = await getSong(req.params.songId).then((currentSong) => {
+		if (currentSong === null) {
+			return createSong(user.access_token, req.params.songId);
+		}
+		return currentSong;
+	});
+
 	if (song.error) {
 		res.json(song);
 		return;
@@ -370,7 +376,13 @@ app.post("/api/playlist/:playlistId/add/:songId", async (req, res) => {
 
 app.post("/api/playlist/:playlistId/remove/:songId", async (req, res) => {
 	const playlist = await getPlaylist(user, req.params.playlistId);
-	const song = await getSong(user.access_token, req.params.songId);
+	const song = await getSong(req.params.songId).then((currentSong) => {
+		if (currentSong === null) {
+			return createSong(user.access_token, req.params.songId);
+		}
+		return currentSong;
+	});
+
 	if (song.error) {
 		res.json(song);
 		return;

@@ -7,7 +7,8 @@ const { getPlaylistSongs } = require("./getPlaylistSongs");
 const {
 	createPlaylistSong,
 	updatePlaylistSong,
-	getSong,
+	createSong,
+	// getSong,
 	getSongFeatures,
 } = require("../../model/");
 
@@ -40,7 +41,7 @@ const syncronizePlaylist = async (user, playlist) => {
 
 	//it's not playlist-song, only "Song" in database
 	const syncronizeSongsPromise = songListUpdated.map((currentSong) => {
-		return getSong(user.access_token, currentSong.id, currentSong);
+		return createSong(user.access_token, currentSong.id, currentSong);
 	});
 	const syncronizeSongsFeaturesPromise = songFeaturesListUpdated.map(
 		(feature) => {
@@ -73,11 +74,13 @@ const syncronizePlaylist = async (user, playlist) => {
 			return !currentSongListIds.includes(currentSong.id);
 		})
 		.map((currentSong) => {
-			return getSong(user.access_token, currentSong.id, currentSong).then(
-				(newsong) => {
-					return createPlaylistSong(playlist, newsong);
-				}
-			);
+			return createSong(
+				user.access_token,
+				currentSong.id,
+				currentSong
+			).then((newsong) => {
+				return createPlaylistSong(playlist, newsong);
+			});
 		});
 	return Promise.all(syncronizeSongsPromise)
 		.then((resultSyncronized) => {

@@ -19,12 +19,13 @@ const createSong = async (access_token, songId, data = null) => {
 	return newSong;
 };
 
-const getSong = async (access_token, songId, data = null) => {
-	const currentSong = await Song.findByPk(songId);
-	if (currentSong !== null) {
-		return currentSong;
-	}
-	return createSong(access_token, songId, data);
+const getSong = async (songId) => {
+	return Song.findByPk(songId);
+	// const currentSong = await Song.findByPk(songId);
+	// if (currentSong !== null) {
+	// 	return currentSong;
+	// }
+	// return createSong(access_token, songId, data);
 };
 
 const updateSong = async (
@@ -70,4 +71,4 @@ const deleteSong = async (idsong) => {
 	return true;
 };
 
-module.exports = { getSong, updateSong, deleteSong };
+module.exports = { createSong, getSong, updateSong, deleteSong };
