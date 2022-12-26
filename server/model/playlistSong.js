@@ -15,7 +15,11 @@ const createPlaylistSong = async (playlist, song) => {
 			if (song === null) {
 				return PlaylistSong.create(upsertData);
 			}
-			return PlaylistSong.update(upsertData, { where: { id: song.id } });
+			return PlaylistSong.update(upsertData, {
+				where: { id: song.id },
+			}).then(() => {
+				return song;
+			});
 		})
 		.catch((err) => {
 			console.error("create playlist song error", err);
