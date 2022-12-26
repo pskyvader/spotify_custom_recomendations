@@ -7,11 +7,11 @@ const request = (
 	url,
 	method = "GET",
 	body = null,
-	requestOverride = null
+	headersOverride = null
 ) => {
-	const requestOptions = requestOverride || {
+	const requestOptions = {
 		method: method,
-		headers: {
+		headers: headersOverride || {
 			"Content-Type": "application/json",
 			Authorization: "Bearer " + access_token,
 		},
