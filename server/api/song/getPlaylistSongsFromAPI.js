@@ -1,4 +1,5 @@
-const { request, formatSongAPIList } = require("../../utils");
+const { formatSongAPIList } = require("../../utils");
+const { request } = require("../../spotifyapi/");
 const getPlaylistSongsFromAPI = async (user, playlist) => {
 	if (!playlist.active) {
 		return { error: true, message: "Playlist not active" };

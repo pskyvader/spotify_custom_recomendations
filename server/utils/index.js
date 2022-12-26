@@ -1,5 +1,5 @@
 const { generateRandomString } = require("./generateRandomString");
-const { request } = require("./request");
+// const { request } = require("./request");
 const { genres } = require("./genres");
 const { convertTime } = require("./convertTime");
 const {
@@ -12,7 +12,7 @@ const { filterOutliers } = require("./filterOutliersFunction");
 
 module.exports = {
 	generateRandomString,
-	request,
+	// request,
 	genres,
 	convertTime,
 	formatSongAPI,

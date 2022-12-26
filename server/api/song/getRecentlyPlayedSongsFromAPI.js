@@ -1,4 +1,5 @@
-const { request, formatSongAPI } = require("../../utils");
+const { formatSongAPI } = require("../../utils");
+const { request } = require("../../spotifyapi/");
 const week = 604800000;
 
 const getRecentlyPlayedSongsFromAPI = async (user) => {

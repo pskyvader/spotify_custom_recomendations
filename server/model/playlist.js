@@ -1,5 +1,5 @@
 const { Playlist, PlaylistSong } = require("../database");
-const { request } = require("../utils");
+const { request } = require("../spotifyapi/");
 
 const createPlaylist = async (user, idplaylist, active = false) => {
 	let url = `https://api.spotify.com/v1/playlists/${idplaylist}`;

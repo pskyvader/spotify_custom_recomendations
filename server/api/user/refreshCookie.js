@@ -1,5 +1,5 @@
 const { credentials } = require("../../credentials");
-const { request } = require("../../utils");
+const { request } = require("../../spotifyapi/");
 
 const requestOptions = (refresh_token) => {
 	return {

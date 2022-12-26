@@ -1,4 +1,5 @@
-const { request, genres, formatSongAPIList } = require("../../utils");
+const { genres, formatSongAPIList } = require("../../utils");
+const { request } = require("../../spotifyapi/");
 
 const getWeights = (playlistLength) => {
 	const min = process.env.MIN_SONGS_PER_PLAYLIST;

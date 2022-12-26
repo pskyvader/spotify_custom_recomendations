@@ -1,4 +1,4 @@
-const { request } = require("../utils");
+const { request } = require("../spotifyapi/");
 const { User, UserSongHistory } = require("../database");
 const { Op } = require("sequelize");
 

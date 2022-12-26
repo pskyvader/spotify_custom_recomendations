@@ -1,5 +1,6 @@
 const { SongFeatures } = require("../database");
-const { request, formatSongFeaturesAPI } = require("../utils");
+const { formatSongFeaturesAPI } = require("../utils");
+const { request } = require("../spotifyapi/");
 
 const createSongFeatures = async (
 	access_token,

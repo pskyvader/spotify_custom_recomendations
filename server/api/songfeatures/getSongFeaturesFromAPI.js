@@ -1,4 +1,5 @@
-const { request, formatSongFeaturesAPIList } = require("../../utils");
+const { formatSongFeaturesAPIList } = require("../../utils");
+const { request } = require("../../spotifyapi/");
 
 const getSongFeaturesFromAPI = async (user, songList) => {
 	let url = `https://api.spotify.com/v1/audio-features`;

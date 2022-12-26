@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { request } = require("../utils");
+const { request } = require("../spotifyapi/");
 const { User } = require("../database");
 
 test("Get a response from API", () => {

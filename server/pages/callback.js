@@ -1,5 +1,6 @@
 const { credentials } = require("../credentials");
-const { request, generateRandomString } = require("../utils");
+const { generateRandomString } = require("../utils");
+const { request } = require("../spotifyapi/");
 
 const callback = async (req, res) => {
 	const code = req.query.code || null;

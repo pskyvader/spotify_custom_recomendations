@@ -1,4 +1,4 @@
-const { request } = require("../../utils");
+const { request } = require("../../spotifyapi/");
 const { updatePlaylistSong } = require("../../model");
 
 const removeSongFromPlaylistFromAPI = async (user, song, playlist) => {
