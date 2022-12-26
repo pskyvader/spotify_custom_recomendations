@@ -1,4 +1,4 @@
-const { request } = require("../../utils");
+const { request } = require("../../spotifyapi/");
 
 const addSongToPlaylistFromAPI = async (user, playlist, song) => {
 	const url =
