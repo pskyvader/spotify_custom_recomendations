@@ -31,7 +31,7 @@ const {
 } = require("./api/song");
 const { getPlaylistSongFeatures } = require("./api/songfeatures");
 
-const { getPlaylist, updatePlaylist, getSong } = require("./model");
+const { getPlaylist, updatePlaylist, createSong, getSong } = require("./model");
 
 connection();
 const sessionStore = new SequelizeStore({
