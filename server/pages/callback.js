@@ -1,6 +1,6 @@
 const { credentials } = require("../credentials");
 const { generateRandomString } = require("../utils");
-const { request } = require("../spotifyapi/");
+const { getAuthorizationToken } = require("../spotifyapi/user");
 
 const callback = async (req, res) => {
 	const code = req.query.code || null;
@@ -11,39 +11,16 @@ const callback = async (req, res) => {
 		return;
 	}
 
-	const requestOptions = {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/x-www-form-urlencoded",
-			Authorization:
-				"Basic " +
-				Buffer.from(
-					credentials.client_id + ":" + credentials.client_secret
-				).toString("base64"),
-		},
-		body: new URLSearchParams({
-			code: code,
-			redirect_uri: credentials.redirect_uri,
-			grant_type: "authorization_code",
-		}).toString(),
-	};
-
-	const response = await request(
+	const response = await getAuthorizationToken(
 		req.session.access_token,
-		"https://accounts.spotify.com/api/token",
-		"POST",
-		null,
-		requestOptions
+		code
 	);
-	if (!response.error) {
-		const access_token = response.access_token || null;
-		const refresh_token = response.refresh_token || null;
-		const expires_in = response.expires_in || null;
 
+	if (!response.error) {
 		req.session.loggedin = true;
-		req.session.access_token = access_token;
-		req.session.refresh_token = refresh_token;
-		req.session.expiration = Date.now() + expires_in * 1000;
+		req.session.access_token = response.access_token;
+		req.session.refresh_token = response.refresh_token;
+		req.session.expiration = Date.now() + response.expires_in * 1000;
 		req.session.hash = generateRandomString(10);
 
 		res.redirect("/#loggedin=true");

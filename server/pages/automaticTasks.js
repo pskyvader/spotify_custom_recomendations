@@ -1,5 +1,5 @@
 const { User } = require("../database");
-const { refreshCookie } = require("../api/user/refreshCookie");
+const { refreshCookie } = require("../spotifyapi/user");
 
 const { getHourlyTasks, getDailyTasks } = require("../tasks");
 

@@ -1,5 +1,5 @@
 const { getUser, updateUser } = require("../../model");
-const { refreshCookie } = require("./refreshCookie");
+const { refreshCookie } = require("../../spotifyapi/user");
 
 const validateUserLogin = async (loginData) => {
 	const response = { error: true, message: "" };

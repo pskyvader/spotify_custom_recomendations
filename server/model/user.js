@@ -1,13 +1,9 @@
-const { request } = require("../spotifyapi/");
+const { getUser } = require("../spotifyapi/user");
 const { User, UserSongHistory } = require("../database");
 const { Op } = require("sequelize");
 
 const createUser = async (session) => {
-	const response = await request(
-		session.access_token,
-		"https://api.spotify.com/v1/me"
-	);
-
+	const response = await getUser(session.access_token);
 	if (response.error) {
 		console.log("create user error", response);
 		return response;
