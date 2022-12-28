@@ -1,4 +1,3 @@
-const { credentials } = require("../credentials");
 const { generateRandomString } = require("../utils");
 const { getAuthorizationToken } = require("../spotifyapi/user");
 

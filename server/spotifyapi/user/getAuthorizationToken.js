@@ -1,27 +1,14 @@
-const { credentials } = require("../../credentials");
 const { request } = require("../");
+const { getAuthorizationObject } = require("./getAuthorizationObject");
 
 const getAuthorizationToken = (access_token, code) => {
-	const headers = {
-		"Content-Type": "application/x-www-form-urlencoded",
-		Authorization:
-			"Basic " +
-			Buffer.from(
-				credentials.client_id + ":" + credentials.client_secret
-			).toString("base64"),
-	};
-	const body = new URLSearchParams({
-		code: code,
-		redirect_uri: credentials.redirect_uri,
-		grant_type: "authorization_code",
-	}).toString();
-
+	const authObject = getAuthorizationObject(code);
 	return request(
 		access_token,
 		"https://accounts.spotify.com/api/token",
-		"POST",
-		body,
-		headers
+		authObject.method,
+		authObject.body,
+		authObject.headers
 	).then((response) => {
 		if (response.error) return response;
 		return {

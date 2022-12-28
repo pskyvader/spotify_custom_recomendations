@@ -450,6 +450,14 @@ app.get("/api/*", (req, res) => {
 	});
 });
 
+app.post("/api/*", (req, res) => {
+	res.json({
+		error: "Unknown module",
+		params: req.params,
+		req: req,
+	});
+});
+
 app.get("*", (req, res) => {
 	res.sendFile(
 		path.resolve(__dirname, "..", "client", "build", "index.html")

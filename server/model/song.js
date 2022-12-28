@@ -1,5 +1,6 @@
 const { Song } = require("../database");
 const { request } = require("../spotifyapi/");
+const { formatSongAPI } = require("../utils/");
 
 const createSong = async (access_token, songId, data = null) => {
 	if (data === null) {
