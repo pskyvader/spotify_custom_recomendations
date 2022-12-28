@@ -1,4 +1,3 @@
-const { credentials } = require("../../credentials");
 const { getAuthorizationObject } = require("../../spotifyapi/user");
 const authorizeUser = ({ query }) => {
 	const code = query.code || null;
