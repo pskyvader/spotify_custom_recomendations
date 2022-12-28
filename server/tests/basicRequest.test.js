@@ -1,23 +1,24 @@
 require("dotenv").config();
 const nockBack = require("nock").back;
+const path = require("path");
 const { request } = require("../spotifyapi/");
 const { User } = require("../database");
 
-nockBack.fixtures = "./nockfixtures/";
+nockBack.fixtures = path.join(__dirname, "__nock-fixtures__");
 nockBack.setMode("record");
 
+const url = "https://api.spotify.com/v1/me";
 test("Get a response from API", async () => {
 	const { nockDone } = await nockBack("basicRequest.json");
+	const user = await User.findOne();
 
-	const url = "https://api.spotify.com/v1/me";
-	return User.findOne()
-		.then((user) => request(user.access_token, url))
-		.then((response) => {
-			console.log(response);
-			expect(response).toBeDefined();
-			expect(response).not.toHaveProperty("error");
-			console.log("My profile: ", response);
-			nockDone();
-			return response;
-		});
+	console.log(user.access_token, url);
+	const response = await request(user.access_token, url);
+	console.log("My profile: ", response);
+
+	expect(response).toBeDefined();
+	expect(response).not.toHaveProperty("error");
+
+	nockDone();
+	// return response;
 });

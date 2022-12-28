@@ -20,34 +20,34 @@ const request = (
 
 	return fetch(url, requestOptions)
 		.then((response) => {
-			if (!response.ok) {
-				return response
-					.text()
-					.then((responsetext) => {
-						const finalresponse = {
-							error: true,
-							status: response.status,
-							message: responsetext,
-							url: response.url,
-							request_url: url,
-							requestOptions: requestOptions,
-						};
-						try {
-							finalresponse.detail = JSON.parse(responsetext);
-							return finalresponse;
-						} catch (error) {
-							return finalresponse;
-						}
-					})
-					.catch((err) => {
-						return {
-							...response,
-							error: true,
-							message: err.message,
-						};
-					});
+			if (response.ok) {
+				return response.json();
 			}
-			return response.json();
+			return response
+				.text()
+				.then((responsetext) => {
+					const finalresponse = {
+						error: true,
+						status: response.status,
+						message: responsetext,
+						url: response.url,
+						request_url: url,
+						requestOptions: requestOptions,
+					};
+					try {
+						finalresponse.detail = JSON.parse(responsetext);
+						return finalresponse;
+					} catch (error) {
+						return finalresponse;
+					}
+				})
+				.catch((err) => {
+					return {
+						...response,
+						error: true,
+						message: err.message,
+					};
+				});
 		})
 		.catch((err) => {
 			return { error: true, message: err.message };
