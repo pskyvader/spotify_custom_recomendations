@@ -1,9 +1,10 @@
 require("dotenv").config();
 const nockBack = require("nock").back;
-const { request } = require("../spotifyapi/");
+const path = require("path");
+const { request } = require("./spotifyapi/");
 const { User } = require("../database");
 
-nockBack.fixtures = "./nockfixtures";
+nockBack.fixtures = path.join(__dirname, "nockfixtures");
 nockBack.setMode("record");
 
 const url = "https://api.spotify.com/v1/me";
