@@ -40,5 +40,5 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - uses: superfly/flyctl-actions/setup-flyctl@master
-            - run: flyctl ssh console --command "docker system prune --force" --app fly-builder-restless-darkness-1142
+            # - run: flyctl ssh console --command "docker system prune --force" --app fly-builder-restless-darkness-1142
             - run: flyctl deploy --remote-only
