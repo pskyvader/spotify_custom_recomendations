@@ -40,4 +40,5 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - uses: superfly/flyctl-actions/setup-flyctl@master
+            - run: flyctl apps list | grep fly-builder | head -n1 | awk '{print $1;}' | xargs fly ssh console --command "docker system prune --force" --app
             - run: flyctl deploy --remote-only

@@ -2,6 +2,7 @@ const fetch = (...args) =>
 	import("node-fetch").then(({ default: fetchFunction }) => {
 		return fetchFunction(...args);
 	});
+
 const request = (
 	access_token,
 	url,
