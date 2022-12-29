@@ -7,9 +7,14 @@ const createPlaylist = (playlistData) => {
 	});
 };
 
-const getPlaylist = (user, idplaylist) => {
+const getPlaylist = (UserId, id) => {
 	return Playlist.findOne({
-		where: { id: idplaylist, UserId: user.id },
+		where: { id: id, UserId: UserId },
+	}).then((currentPlaylist) => {
+		if (currentPlaylist === null) {
+			return { error: true, message: "Playlist not found" };
+		}
+		return currentPlaylist;
 	});
 };
 

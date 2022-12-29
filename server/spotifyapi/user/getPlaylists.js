@@ -1,4 +1,5 @@
 const { request } = require("../request");
+const { formatPlaylistGroup } = require("../playlist");
 
 const getPlaylists = (
 	user,
@@ -11,7 +12,8 @@ const getPlaylists = (
 				console.log("Get playlist from API error", response);
 				return response;
 			}
-			playlists.push(...response.items);
+
+			playlists.push(...formatPlaylistGroup(response.items));
 			return getPlaylists(user, playlists, response.next);
 		});
 	}

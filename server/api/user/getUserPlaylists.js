@@ -8,11 +8,11 @@ const getUserPlaylists = (user) => {
 		});
 
 		const playlistsPromises = filtered.map((currentPlaylist) => {
-			return getPlaylist(user, currentPlaylist.id).then((playlist) => {
-				if (playlist !== null) {
+			return getPlaylist(user.id, currentPlaylist.id).then((playlist) => {
+				if (!playlist.error) {
 					return playlist;
 				}
-				return createPlaylist(user, currentPlay, currentPlaylist);
+				return createPlaylist(currentPlaylist);
 			});
 		});
 		return Promise.all(playlistsPromises);

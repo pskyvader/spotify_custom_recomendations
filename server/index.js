@@ -139,8 +139,13 @@ app.get("/api/me/playlist", async (_req, res) => {
 app.get("/api/playlist/:playlistId", async (req, res) => {
 	let result = cache.get(`get-playlist-songs-${req.params.playlistId}`);
 	if (!result) {
-		let currentPlaylist = await getPlaylist(user, req.params.playlistId);
-		result = await getPlaylistSongsFromAPI(user, currentPlaylist);
+		const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+		if (currentPlaylist === null) {
+			result = { error: true, message: "Playlist not found" };
+		}
+		if (!result.error) {
+			result = await getPlaylistSongsFromAPI(user, currentPlaylist);
+		}
 		if (!result.error) {
 			cache.set(
 				`get-playlist-songs-${req.params.playlistId}`,
