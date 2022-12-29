@@ -3,7 +3,7 @@ const { createPlaylist, getPlaylist } = require("../../model");
 
 const getUserPlaylists = (user) => {
 	return getPlaylists(user).then((playlists) => {
-		console("UserPlaylists", playlists);
+		console.log("UserPlaylists", playlists);
 		if (playlists.error) {
 			return playlists;
 		}
