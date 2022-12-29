@@ -1,6 +1,11 @@
 const { createSong, getSong, updateSong, deleteSong } = require("./song");
 const { getUser, updateUser, deleteUser } = require("./user");
-const { getPlaylist, updatePlaylist, deletePlaylist } = require("./playlist");
+const {
+	createPlaylist,
+	getPlaylist,
+	updatePlaylist,
+	deletePlaylist,
+} = require("./playlist");
 const {
 	createPlaylistSong,
 	getPlaylistSong,
@@ -18,6 +23,7 @@ module.exports = {
 	getUser,
 	updateUser,
 	deleteUser,
+	createPlaylist,
 	getPlaylist,
 	updatePlaylist,
 	deletePlaylist,

@@ -1,33 +1,16 @@
 const { Playlist, PlaylistSong } = require("../database");
-const { request } = require("../spotifyapi/");
 
-const createPlaylist = async (user, idplaylist, active = false) => {
-	let url = `https://api.spotify.com/v1/playlists/${idplaylist}`;
-	const response = await request(user.access_token, url);
-	if (response.error) {
-		return response;
-	}
-
-	const [newplaylist] = await Playlist.upsert({
-		id: idplaylist,
-		name: response.name,
-		active: active,
-		image: (response.images[0] && response.images[0].url) || null,
-		UserId: user.id,
-	}).catch((err) => ({
-		error: err.message,
-	}));
-	return newplaylist;
+const createPlaylist = (playlistData) => {
+	return Playlist.create(playlistData).catch((err) => {
+		console.error("create user song error ", err);
+		return { error: true, message: err.message };
+	});
 };
-const getPlaylist = async (user, idplaylist) => {
-	const currentPlaylist = await Playlist.findOne({
-		where: { id: idplaylist, UserId: user.id },
-	}); //, { raw: true, }
-	if (currentPlaylist !== null) {
-		return currentPlaylist;
-	}
 
-	return createPlaylist(user, idplaylist, false);
+const getPlaylist = (user, idplaylist) => {
+	return Playlist.findOne({
+		where: { id: idplaylist, UserId: user.id },
+	});
 };
 
 const updatePlaylist = async (
@@ -74,4 +57,9 @@ const deletePlaylist = async (user, idplaylist) => {
 	return true;
 };
 
-module.exports = { getPlaylist, updatePlaylist, deletePlaylist };
+module.exports = {
+	createPlaylist,
+	getPlaylist,
+	updatePlaylist,
+	deletePlaylist,
+};

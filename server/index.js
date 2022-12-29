@@ -13,9 +13,9 @@ const {
 	loginCookie,
 	pushToken,
 	logOut,
+	getUserPlaylists,
 } = require("./api/user");
 const {
-	getPlaylistsFromAPI,
 	addSongToPlaylistFromAPI,
 	addSongToPlaylist,
 	removeSongFromPlaylistFromAPI,
@@ -127,7 +127,7 @@ app.get("/api/me", async (_req, res) => {
 app.get("/api/me/playlist", async (_req, res) => {
 	let result = cache.get(`playlist-user-${user.id}`);
 	if (!result) {
-		result = await getPlaylistsFromAPI(user);
+		result = await getUserPlaylists(user);
 		if (!result.error) {
 			result = result.map((playlist) => playlist.toJSON());
 			cache.set(`playlist-user-${user.id}`, result, tenMinutes);
