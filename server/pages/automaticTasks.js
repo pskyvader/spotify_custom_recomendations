@@ -72,6 +72,14 @@ const automaticTasks = async () => {
 			.then((hourlyResponses) => {
 				const totalresponses = { message: [], error: false };
 				for (const r in hourlyResponses) {
+					if (hourlyResponses[r].value === undefined) {
+						console.log(
+							hourlyResponses,
+							hourlyResponses[r],
+							"allSettled hourlyResponses"
+						);
+					}
+
 					totalresponses.error =
 						totalresponses.error || hourlyResponses[r].value.error;
 					totalresponses.message.push(
