@@ -25,7 +25,7 @@ const fillOptions = (songlist, currentgenres, weights) => {
 		seed_artists: [],
 		seed_genres: [],
 		seed_tracks: [],
-		// market: "from_token",
+		market: "from_token",
 		limit: 10,
 	};
 

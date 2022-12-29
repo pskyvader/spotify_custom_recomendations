@@ -144,7 +144,7 @@ app.get("/api/playlist/:playlistId", async (req, res) => {
 		return res.json(cacheResult);
 	}
 
-	const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
 	}
@@ -164,7 +164,7 @@ app.get("/api/playlist/:playlistId", async (req, res) => {
 });
 
 app.get("/api/playlist/:playlistId/sync", async (req, res) => {
-	const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
 	}
@@ -177,7 +177,7 @@ app.get("/api/playlist/:playlistId/sync", async (req, res) => {
 });
 
 app.get("/api/playlist/:playlistId/status", async (req, res) => {
-	const result = await getPlaylist(user, req.params.playlistId);
+	const result = await getPlaylist(user.id, req.params.playlistId);
 	res.json(result);
 });
 
@@ -186,7 +186,10 @@ app.get("/api/playlist/:playlistId/activate", async (req, res) => {
 		active: true,
 	});
 	if (!result.error) {
-		const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+		const currentPlaylist = await getPlaylist(
+			user.id,
+			req.params.playlistId
+		);
 		if (currentPlaylist.error) {
 			return res.json(currentPlaylist);
 		}
@@ -211,7 +214,7 @@ app.get("/api/playlist/:playlistId/recommended", async (req, res) => {
 		return res.json(result);
 	}
 
-	const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
 	}
@@ -236,7 +239,7 @@ app.get("/api/playlist/:playlistId/deleterecommended", async (req, res) => {
 	if (result) {
 		return res.json(result);
 	}
-	const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
 	}
@@ -289,7 +292,7 @@ app.get("/api/playlist/:playlistId/deletedsongs", async (req, res) => {
 		return res.json(result);
 	}
 
-	const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
 	}
@@ -321,7 +324,7 @@ app.get("/api/playlist/:playlistId/songfeatures", async (req, res) => {
 		return res.json(result);
 	}
 
-	const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
 	}
@@ -346,7 +349,7 @@ app.get("/api/playlist/:playlistId/songfeatures", async (req, res) => {
 });
 
 app.post("/api/playlist/:playlistId/add/:songId", async (req, res) => {
-	const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
 	}
@@ -417,7 +420,7 @@ app.post("/api/playlist/:playlistId/add/:songId", async (req, res) => {
 });
 
 app.post("/api/playlist/:playlistId/remove/:songId", async (req, res) => {
-	const currentPlaylist = await getPlaylist(user, req.params.playlistId);
+	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
 	}

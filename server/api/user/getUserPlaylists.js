@@ -3,6 +3,9 @@ const { createPlaylist, getPlaylist } = require("../../model");
 
 const getUserPlaylists = (user) => {
 	return getPlaylists(user).then((playlists) => {
+		if (playlists.error) {
+			return playlists;
+		}
 		const filtered = playlists.filter((currentPlaylist) => {
 			return parseInt(user.id) === parseInt(currentPlaylist.owner.id);
 		});
