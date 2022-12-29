@@ -417,7 +417,7 @@ app.post("/api/playlist/:playlistId/add/:songId", async (req, res) => {
 			tenMinutes
 		);
 	}
-
+	console.log(result, song, song.toJSON());
 	res.json(result);
 });
 
