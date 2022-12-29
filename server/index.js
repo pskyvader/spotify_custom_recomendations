@@ -330,6 +330,8 @@ app.post("/api/playlist/:playlistId/add/:songId", async (req, res) => {
 		return;
 	}
 
+	result.song = song.toJSON();
+
 	const cacheplaylist = cache.get(
 		`get-playlist-songs-${req.params.playlistId}`
 	);

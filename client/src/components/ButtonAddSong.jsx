@@ -33,15 +33,16 @@ const ButtonAddSong = ({ PlaylistId, uri }) => {
 					const recommendedfiltered = playlistRecommendedTracks[
 						PlaylistId
 					].filter((song) => {
-						return response.SongId !== song.id;
+						return response.song.id !== song.id;
 					});
 					if (
 						playlistRecommendedTracks[PlaylistId].length !==
 						recommendedfiltered.length
 					) {
-						playlistRecommendedTracks[PlaylistId] = recommendedfiltered;
+						playlistRecommendedTracks[PlaylistId] =
+							recommendedfiltered;
 
-						if(playlistRecommendedTracks[PlaylistId]<5){
+						if (playlistRecommendedTracks[PlaylistId] < 5) {
 							delete playlistRecommendedTracks[PlaylistId];
 						}
 						setPlaylistRecommendedTracks({
@@ -52,7 +53,7 @@ const ButtonAddSong = ({ PlaylistId, uri }) => {
 					const deletedfiltered = playlistDeletedSongs[
 						PlaylistId
 					].filter((song) => {
-						return response.SongId !== song.id;
+						return response.song.id !== song.id;
 					});
 					if (
 						playlistDeletedSongs[PlaylistId].length !==

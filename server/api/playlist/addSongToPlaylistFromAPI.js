@@ -16,9 +16,9 @@ const addSongToPlaylistFromAPI = async (user, playlist, song) => {
 		return response;
 	}
 	return {
+		error: false,
 		message: "success",
 		snapshot_id: response.snapshot_id,
-		song: song.toJSON(),
 	};
 };
 
