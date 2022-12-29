@@ -243,7 +243,9 @@ app.get("/api/playlist/:playlistId/deleterecommended", async (req, res) => {
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
 	}
-	result = await getRecommendedSongsToRemove(currentPlaylist);
+	const recommendedSongsToRemove = await getRecommendedSongsToRemove(
+		currentPlaylist
+	);
 	if (recommendedSongsToRemove.error) {
 		return res.json(recommendedSongsToRemove);
 	}
@@ -328,7 +330,7 @@ app.get("/api/playlist/:playlistId/songfeatures", async (req, res) => {
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
 	}
-	const songFeaturesList = await getPlaylistSongFeatures(playlist);
+	const songFeaturesList = await getPlaylistSongFeatures(currentPlaylist);
 	if (songFeaturesList.error) {
 		return res.json(songFeaturesList);
 	}
