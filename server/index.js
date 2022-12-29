@@ -375,8 +375,6 @@ app.post("/api/playlist/:playlistId/add/:songId", async (req, res) => {
 		return res.json(result);
 	}
 
-	result.song = song.toJSON();
-
 	const cacheplaylist = cache.get(
 		`get-playlist-songs-${req.params.playlistId}`
 	);
@@ -417,8 +415,7 @@ app.post("/api/playlist/:playlistId/add/:songId", async (req, res) => {
 			tenMinutes
 		);
 	}
-	console.log(result, song, song.toJSON());
-	res.json(result);
+	res.json(song.toJSON());
 });
 
 app.post("/api/playlist/:playlistId/remove/:songId", async (req, res) => {

@@ -23,7 +23,7 @@ const ButtonAddSong = ({ PlaylistId, uri }) => {
 				return;
 			}
 			playlistTracks[PlaylistId] = [
-				response.song,
+				response,
 				...playlistTracks[PlaylistId],
 			];
 			setPlaylistTracks({ ...playlistTracks });
@@ -31,8 +31,7 @@ const ButtonAddSong = ({ PlaylistId, uri }) => {
 			const recommendedfiltered = playlistRecommendedTracks[
 				PlaylistId
 			].filter((song) => {
-				console.log(response, song);
-				return response.song.id !== song.id;
+				return response.id !== song.id;
 			});
 			if (
 				playlistRecommendedTracks[PlaylistId].length !==
@@ -50,7 +49,7 @@ const ButtonAddSong = ({ PlaylistId, uri }) => {
 
 			const deletedfiltered = playlistDeletedSongs[PlaylistId].filter(
 				(song) => {
-					return response.song.id !== song.id;
+					return response.id !== song.id;
 				}
 			);
 			if (
