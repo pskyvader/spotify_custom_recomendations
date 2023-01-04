@@ -23,6 +23,7 @@ const createUser = async (session) => {
 		name: response.display_name,
 		url: response.external_urls.spotify,
 		image: response.images[0].url,
+		country: response.country,
 		access_token: session.access_token,
 		refresh_token: session.refresh_token,
 		expiration: session.expiration,
