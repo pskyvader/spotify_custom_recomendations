@@ -21,7 +21,8 @@ const removeFromSinglePlaylist = async (
 
 	const songlist = await getRecommendedSongsToRemove(
 		playlist,
-		parseInt(playlistSongsList.length / average || 1)
+		parseInt(playlistSongsList.length / average || 1),
+		playlistSongsList.length > _MAX_SONGS_PER_PLAYLIST //force to remove only when excess of songs
 	);
 	if (songlist.error) {
 		return songlist;

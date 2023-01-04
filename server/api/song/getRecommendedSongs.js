@@ -7,7 +7,7 @@ const { getTopSongsFromAPI } = require("./getTopSongsFromAPI");
 //day in ms
 const day = 86400000;
 const getRecommendedSongs = async (user, playlist, minTime = null) => {
-	const minTimeInPlaylist = day * (minTime && minTime > 3 ? minTime : 7);
+	const minTimeInPlaylist = day * (minTime && minTime > 5 ? minTime : 5);
 
 	let fullPlaylist = await getPlaylistSongs(playlist);
 

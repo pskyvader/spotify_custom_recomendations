@@ -4,8 +4,12 @@ const { UserSongHistory, PlaylistSong } = require("../../database");
 //day in ms
 const day = 86400000;
 
-const getRecommendedSongsToRemove = async (playlist, minTime = null) => {
-	const minTimeInPlaylist = day * (minTime && minTime > 3 ? minTime : 7);
+const getRecommendedSongsToRemove = async (
+	playlist,
+	minTime = null,
+	forceRemove = false
+) => {
+	const minTimeInPlaylist = day * (minTime && minTime > 5 ? minTime : 5);
 	const oldAddedSongs = await playlist
 		.getSongs({
 			include: [
@@ -76,7 +80,7 @@ const getRecommendedSongsToRemove = async (playlist, minTime = null) => {
 	}
 
 	// only if there are still no songs to remove
-	if (recommendedForRemove.length === 0) {
+	if (forceRemove && recommendedForRemove.length === 0) {
 		recommendedForRemove.push(
 			...oldAddedSongs.reverse().slice(0, 2) // order from least to most times played,max 2 songs
 		);
