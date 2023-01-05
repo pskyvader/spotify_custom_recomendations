@@ -1,5 +1,5 @@
 const { createSong, getSong, updateSong, deleteSong } = require("./song");
-const { getUser, updateUser, deleteUser } = require("./user");
+const { createUser, getUser, updateUser, deleteUser } = require("./user");
 const {
 	createPlaylist,
 	getPlaylist,
@@ -20,6 +20,7 @@ module.exports = {
 	getSong,
 	updateSong,
 	deleteSong,
+	createUser,
 	getUser,
 	updateUser,
 	deleteUser,

@@ -2,7 +2,14 @@ const { getUser: getUserAPI } = require("../spotifyapi/user");
 const { User, UserSongHistory } = require("../database");
 const { Op } = require("sequelize");
 
-const createUser = async (session) => {
+const createUser = (userData) => {
+	return User.create(userData).catch((err) => {
+		console.error("create user song error ", err);
+		return { error: true, message: err.message };
+	});
+};
+
+const _createUser = async (session) => {
 	const response = await getUserAPI(session.access_token);
 	if (response.error) {
 		console.log("create user error", response);
@@ -36,11 +43,11 @@ const createUser = async (session) => {
 	return currentUser;
 };
 
-const getUser = async (session) => {
+const getUser = (session) => {
 	if (!session.hash) {
 		return { error: "Not logged in" };
 	}
-	const thisUser = await User.findOne({
+	return User.findOne({
 		where: {
 			[Op.or]: [
 				{ hash: session.hash },
@@ -60,11 +67,6 @@ const getUser = async (session) => {
 		console.error("get user error ", err);
 		return { error: true, message: err.message };
 	});
-
-	if (thisUser !== null) {
-		return thisUser;
-	}
-	return createUser(session);
 };
 
 const updateUser = async (session) => {
@@ -114,4 +116,4 @@ const deleteUser = async (session) => {
 	return true;
 };
 
-module.exports = { getUser, updateUser, deleteUser };
+module.exports = { createUser, getUser, updateUser, deleteUser };

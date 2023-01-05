@@ -2,7 +2,7 @@ const { Playlist, PlaylistSong } = require("../database");
 
 const createPlaylist = (playlistData) => {
 	return Playlist.create(playlistData).catch((err) => {
-		console.error("create user song error ", err);
+		console.error("create playlist error ", err);
 		return { error: true, message: err.message };
 	});
 };

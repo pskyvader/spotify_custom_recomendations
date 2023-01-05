@@ -1,4 +1,4 @@
-const { getUser, updateUser } = require("../../model");
+const { createUser, getUser, updateUser } = require("../../model");
 const { refreshCookie } = require("../../spotifyapi/user");
 
 const validateUserLogin = async (loginData) => {
@@ -7,7 +7,12 @@ const validateUserLogin = async (loginData) => {
 		response.message = "No user data found";
 		return response;
 	}
-	const currentUser = await getUser(loginData);
+	const currentUser = await getUser(loginData).then((thisUser) => {
+		if (thisUser === null) {
+			return createUser(loginData);
+		}
+		return thisUser;
+	});
 	if (currentUser.error) {
 		if (currentUser.status !== 401) {
 			return currentUser;
