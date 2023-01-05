@@ -9,59 +9,24 @@ const createUser = (userData) => {
 	});
 };
 
-const _createUser = async (session) => {
-	const response = await getUserAPI(session.access_token);
-	if (response.error) {
-		console.log("create user error", response);
-		return response;
-	}
-
-	const thisUserById = await User.findByPk(response.id).catch((err) => {
-		return { error: err.message };
-	});
-	if (thisUserById !== null) {
-		if (thisUserById.error) {
-			return thisUserById;
-		}
-		session.hash = thisUserById.hash;
-	}
-	const updatedata = {
-		id: response.id,
-		name: response.display_name,
-		url: response.external_urls.spotify,
-		image: response.images[0].url,
-		country: response.country,
-		access_token: session.access_token,
-		refresh_token: session.refresh_token,
-		expiration: session.expiration,
-		hash: session.hash,
-	};
-
-	const [currentUser] = await User.upsert(updatedata).catch((err) => {
-		return { error: err.message };
-	});
-	return currentUser;
-};
-
 const getUser = (session) => {
 	if (!session.hash) {
 		return { error: "Not logged in" };
 	}
+	const options = [{ hash: session.hash }];
+	if (session.id) {
+		options.push({ id: session.id });
+	}
+	if (session.access_token) {
+		options.push({ access_token: session.access_token });
+	}
+	if (session.refresh_token) {
+		options.push({ refresh_token: session.refresh_token });
+	}
+	
 	return User.findOne({
 		where: {
-			[Op.or]: [
-				{ hash: session.hash },
-				{
-					access_token: session.access_token
-						? session.access_token
-						: "invalid",
-				},
-				{
-					refresh_token: session.refresh_token
-						? session.refresh_token
-						: "invalid",
-				},
-			],
+			[Op.or]: options,
 		},
 	}).catch((err) => {
 		console.error("get user error ", err);

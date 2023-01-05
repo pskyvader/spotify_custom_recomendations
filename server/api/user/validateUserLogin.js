@@ -1,5 +1,5 @@
 const { createUser, getUser, updateUser } = require("../../model");
-const { refreshCookie } = require("../../spotifyapi/user");
+const { refreshCookie, getUser: getUserAPI } = require("../../spotifyapi/user");
 
 const validateUserLogin = async (loginData) => {
 	const response = { error: true, message: "" };
@@ -9,7 +9,11 @@ const validateUserLogin = async (loginData) => {
 	}
 	const currentUser = await getUser(loginData).then((thisUser) => {
 		if (thisUser === null) {
-			return createUser(loginData);
+			return getUserAPI(loginData.access_token, loginData).then(
+				(formattedUser) => {
+					return createUser(formattedUser);
+				}
+			);
 		}
 		return thisUser;
 	});
