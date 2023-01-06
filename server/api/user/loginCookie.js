@@ -1,7 +1,10 @@
 const { validateUserLogin } = require("./validateUserLogin");
 
 const loginCookie = async (req) => {
-	const cookies = req.cookies;
+	const cookies = {...req.cookies};
+	if(cookies.id){
+		delete cookies.id;
+	}
 	const currentUser = await validateUserLogin(cookies);
 	if (!currentUser.error) {
 		req.session.loggedin = true;

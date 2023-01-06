@@ -102,7 +102,11 @@ const cache = new NodeCache();
 const tenMinutes = 600;
 
 app.use("/api/*", async (req, res, next) => {
-	let response = await validateUserLogin(req.session);
+	const session = { ...req.session };
+	if (session.id) {
+		delete session.id;
+	}
+	let response = await validateUserLogin(session);
 	if (response.error) {
 		res.json(response);
 		return;
