@@ -3,10 +3,10 @@ const { refreshCookie, getUser: getUserAPI } = require("../../spotifyapi/user");
 
 const getAndUpdateUser = (newData) => {
 	return getUser(newData).then((thisUser) => {
-		if (thisUser.error) {
-			return thisUser;
-		}
 		if (thisUser !== null) {
+			if (thisUser.error) {
+				return thisUser;
+			}
 			return thisUser.update(newData);
 		}
 		if (newData.id) {
