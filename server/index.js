@@ -102,6 +102,7 @@ const cache = new NodeCache();
 const tenMinutes = 600;
 
 app.use("/api/*", async (req, res, next) => {
+	user = null;
 	const session = { ...req.session };
 	if (session.id) {
 		delete session.id;
