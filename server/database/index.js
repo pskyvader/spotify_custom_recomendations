@@ -112,10 +112,9 @@ const connection = async () => {
 			.authenticate()
 			.then(() => {
 				console.log("Connection has been established successfully.");
-				sequelize
-					.sync({ alter: false, force: false })
-					.then(() => console.log("Successfully Synced"));
+				return sequelize.sync({ alter: true, force: false });
 			})
+			.then(() => console.log("Successfully Synced"))
 			.catch((error) => {
 				console.error("Unable to connect to the database:", error);
 			});
