@@ -23,7 +23,7 @@ const getUser = (session) => {
 	if (session.refresh_token) {
 		options.push({ refresh_token: session.refresh_token });
 	}
-	
+
 	return User.findOne({
 		where: {
 			[Op.or]: options,
@@ -34,27 +34,27 @@ const getUser = (session) => {
 	});
 };
 
-const updateUser = async (session) => {
-	const currentUser = await getUser(session);
-	if (currentUser.error) {
-		console.error("error getting user", currentUser);
-		return currentUser;
-	}
-	const updateData = {
-		access_token: session.access_token,
-		refresh_token: session.refresh_token,
-		expiration: session.expiration,
-		hash: session.hash,
-	};
-	currentUser.set(updateData);
-	const userSaved = await currentUser
-		.save()
-		.catch((err) => ({ error: err.message }));
-	if (userSaved.error) {
-		return userSaved;
-	}
-	return currentUser;
-};
+// const updateUser = async (session) => {
+// 	const currentUser = await getUser(session);
+// 	if (currentUser.error) {
+// 		console.error("error getting user", currentUser);
+// 		return currentUser;
+// 	}
+// 	const updateData = {
+// 		access_token: session.access_token,
+// 		refresh_token: session.refresh_token,
+// 		expiration: session.expiration,
+// 		hash: session.hash,
+// 	};
+// 	currentUser.set(updateData);
+// 	const userSaved = await currentUser
+// 		.save()
+// 		.catch((err) => ({ error: err.message }));
+// 	if (userSaved.error) {
+// 		return userSaved;
+// 	}
+// 	return currentUser;
+// };
 
 const deleteUser = async (session) => {
 	const currentUser = await getUser(session);
@@ -81,4 +81,9 @@ const deleteUser = async (session) => {
 	return true;
 };
 
-module.exports = { createUser, getUser, updateUser, deleteUser };
+module.exports = {
+	createUser,
+	getUser,
+	// updateUser,
+	deleteUser,
+};
