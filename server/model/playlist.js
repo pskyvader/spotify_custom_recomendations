@@ -10,11 +10,9 @@ const createPlaylist = (playlistData) => {
 const getPlaylist = (UserId, id) => {
 	return Playlist.findOne({
 		where: { id: id, UserId: UserId },
-	}).then((currentPlaylist) => {
-		if (currentPlaylist === null) {
-			return { error: true, message: "Playlist not found" };
-		}
-		return currentPlaylist;
+	}).catch((err) => {
+		console.error("Playlist error ", err);
+		return { error: true, message: err.message };
 	});
 };
 

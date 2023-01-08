@@ -4,7 +4,7 @@ const { formatPlaylistGroup } = require("../playlist");
 const getPlaylists = (
 	user,
 	playlists = [],
-	url = "https://api.spotify.com/v1/me/playlists?limit=10"
+	url = "https://api.spotify.com/v1/me/playlists?limit=50"
 ) => {
 	if (url) {
 		return request(user.access_token, url).then((response) => {
