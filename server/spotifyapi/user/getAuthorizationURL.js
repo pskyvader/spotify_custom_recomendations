@@ -2,7 +2,7 @@ const { generateRandomString } = require("../../utils/generateRandomString");
 const { credentials } = require("../../credentials");
 // your application requests authorization
 const permissions = [
-	// "user-read-private",
+	"user-read-private",
 	"user-top-read",
 	"user-read-recently-played",
 	// "user-read-email",
