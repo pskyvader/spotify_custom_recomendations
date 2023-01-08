@@ -16,12 +16,18 @@ const getUserPlaylists = (user) => {
 					if (playlist.error) {
 						return playlist;
 					}
-					return playlist.update(currentPlaylist);
+					return playlist.update({
+						...currentPlaylist,
+						UserId: user.id,
+					});
 				}
 				return createPlaylist(currentPlaylist);
 			});
 		});
-		return Promise.allSettled(playlistsPromises);
+		return Promise.allSettled(playlistsPromises).then((playlists) => {
+			console.log(playlists);
+			return playlists.value;
+		});
 	});
 };
 

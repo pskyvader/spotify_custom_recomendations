@@ -9,7 +9,7 @@ const createPlaylist = (playlistData) => {
 
 const getPlaylist = (UserId, id) => {
 	return Playlist.findOne({
-		where: { id: id, UserId: UserId },
+		where: { id: id},
 	}).catch((err) => {
 		console.error("Playlist error ", err);
 		return { error: true, message: err.message };
