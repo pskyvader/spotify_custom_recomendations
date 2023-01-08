@@ -27,7 +27,7 @@ const UserConfiguration = {
 	},
 	country: {
 		type: DataTypes.STRING,
-		allowNull: true,
+		allowNull: false,
 	},
 	access_token: {
 		type: DataTypes.STRING(500),

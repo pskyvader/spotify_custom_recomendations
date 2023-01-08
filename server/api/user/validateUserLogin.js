@@ -28,7 +28,7 @@ const getAndUpdateUser = (newData) => {
 
 const validateUserLogin = async (loginData) => {
 	const response = { error: true, message: "" };
-	if (!loginData) {
+	if (!loginData || !loginData.hash) {
 		response.message = "No user data found";
 		return response;
 	}

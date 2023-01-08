@@ -2,6 +2,8 @@ const formatUser = (
 	rawData,
 	extraData = { access_token, refresh_token, expiration, hash }
 ) => {
+	console.log("rawdata", rawData);
+	console.log("extraData", extraData);
 	return {
 		id: rawData.id,
 		name: rawData.display_name,

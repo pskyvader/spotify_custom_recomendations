@@ -9,9 +9,6 @@ const createUser = (userData) => {
 };
 
 const getUser = (session) => {
-	if (!session.hash) {
-		return { error: "Not logged in" };
-	}
 	const options = [{ hash: session.hash }];
 	if (session.id) {
 		options.push({ id: session.id });
