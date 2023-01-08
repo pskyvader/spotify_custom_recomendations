@@ -134,7 +134,6 @@ app.get("/api/me/playlist", async (_req, res) => {
 	if (!result) {
 		result = await getUserPlaylists(user);
 		if (!result.error) {
-			console.log(result);
 			result = result.map((playlist) => playlist.toJSON());
 			cache.set(`playlist-user-${user.id}`, result, tenMinutes);
 		}

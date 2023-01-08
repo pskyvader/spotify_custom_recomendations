@@ -9,24 +9,33 @@ const getUserPlaylists = (user) => {
 		const filtered = playlists.filter((currentPlaylist) => {
 			return parseInt(user.id) === parseInt(currentPlaylist.UserId);
 		});
-
+		let count = 0;
 		const playlistsPromises = filtered.map((currentPlaylist) => {
-			return getPlaylist(user.id, currentPlaylist.id).then((playlist) => {
-				if (playlist !== null) {
-					if (playlist.error) {
-						return playlist;
+			const index = count++;
+			return getPlaylist(user.id, currentPlaylist.id)
+				.then((playlist) => {
+					if (playlist !== null) {
+						if (playlist.error) {
+							return playlist;
+						}
+						return playlist.update({
+							...currentPlaylist,
+							UserId: user.id,
+						});
 					}
-					return playlist.update({
-						...currentPlaylist,
-						UserId: user.id,
-					});
-				}
-				return createPlaylist(currentPlaylist);
-			});
+					return createPlaylist(currentPlaylist);
+				})
+				.then((result) => ({ result, index }));
 		});
 		return Promise.allSettled(playlistsPromises).then((playlists) => {
-			console.log(playlists);
-			return playlists.value;
+			const results = playlists
+				.sort((a, b) => {
+					return a.value.index - b.value.index;
+				})
+				.map((playlistresult) => {
+					return playlistresult.value.result;
+				});
+			return results;
 		});
 	});
 };
