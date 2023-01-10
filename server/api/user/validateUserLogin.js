@@ -1,33 +1,16 @@
 const { createUser, getUser } = require("../../model");
 const { refreshCookie, getUser: getUserAPI } = require("../../spotifyapi/user");
 
-const getAndUpdateUser = (newData) => {
-	return getUser(newData).then((thisUser) => {
-		if (thisUser !== null) {
-			if (thisUser.error) {
-				return thisUser;
-			}
-			return thisUser.update(newData);
-		}
-		if (newData.id) {
-			return createUser(newData);
-		}
-		return getUserAPI(newData.access_token, newData).then(
-			(formattedUser) => {
-				if (formattedUser.error) {
-					// if (formattedUser.status === 401) {
-					// 	formattedUser.error = false;
-					// }
-					return formattedUser;
-				}
-				return getAndUpdateUser(formattedUser);
-			}
-		);
-	});
-};
-
 const validateUserLogin = async (loginData) => {
 	const response = { error: true, message: "" };
+	let user = await getUser(loginData);
+	if (user !== null) {
+		if (user.error || Date.now() > new Date(user.expiration)) {
+			return user;
+		}
+		loginData = { ...user, ...loginData };
+	}
+
 	if (
 		!loginData ||
 		!loginData.hash ||
@@ -44,15 +27,20 @@ const validateUserLogin = async (loginData) => {
 			return loginData;
 		}
 	}
+	
+	const formattedUser = await getUserAPI(loginData.access_token, loginData);
+	if (formattedUser.error) {
+		return formattedUser;
+	}
+	const thisUser = await getUser(formattedUser);
+	if (thisUser === null) {
+		return createUser(formattedUser);
+	}
 
-	return getAndUpdateUser(loginData);
-
-	// if (user.error) {
-	// 	return user;
-	// }
-
-	// const newUser = await getAndUpdateUser(refreshData);
-	// return newUser;
+	if (thisUser.error) {
+		return thisUser;
+	}
+	return thisUser.update(formattedUser);
 };
 
 module.exports = { validateUserLogin };
