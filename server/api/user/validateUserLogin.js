@@ -15,9 +15,9 @@ const getAndUpdateUser = (newData) => {
 		return getUserAPI(newData.access_token, newData).then(
 			(formattedUser) => {
 				if (formattedUser.error) {
-					if (formattedUser.status === 401) {
-						formattedUser.error = false;
-					}
+					// if (formattedUser.status === 401) {
+					// 	formattedUser.error = false;
+					// }
 					return formattedUser;
 				}
 				return getAndUpdateUser(formattedUser);
@@ -28,24 +28,31 @@ const getAndUpdateUser = (newData) => {
 
 const validateUserLogin = async (loginData) => {
 	const response = { error: true, message: "" };
-	if (!loginData || !loginData.hash || !loginData.access_token) {
-		response.message = "No user data found";
+	if (
+		!loginData ||
+		!loginData.hash ||
+		!loginData.access_token ||
+		!loginData.expiration
+	) {
+		response.message = "No valid user data found";
 		return response;
 	}
 
-	const user = await getAndUpdateUser(loginData);
-	if (
-		user.error ||
-		(user.status !== 401 && Date.now() < new Date(user.expiration))
-	) {
-		return user;
+	if (Date.now() < new Date(loginData.expiration)) {
+		loginData = await refreshCookie(loginData);
+		if (loginData.error) {
+			return loginData;
+		}
 	}
-	const refreshData = await refreshCookie(loginData);
-	if (refreshData.error) {
-		return refreshData;
-	}
-	const newUser = await getAndUpdateUser(refreshData);
-	return newUser;
+
+	return getAndUpdateUser(loginData);
+
+	// if (user.error) {
+	// 	return user;
+	// }
+
+	// const newUser = await getAndUpdateUser(refreshData);
+	// return newUser;
 };
 
 module.exports = { validateUserLogin };

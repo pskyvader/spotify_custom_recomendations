@@ -1,4 +1,4 @@
-const formatPlaylist = (rawData, active = false) => {
+const formatPlaylist = (rawData, active = null) => {
 	return {
 		id: rawData.id,
 		name: rawData.name,

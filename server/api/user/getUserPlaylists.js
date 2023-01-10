@@ -21,9 +21,13 @@ const getUserPlaylists = (user) => {
 						return playlist.update({
 							...currentPlaylist,
 							UserId: user.id,
+							active: playlist.active,
 						});
 					}
-					return createPlaylist(currentPlaylist);
+					return createPlaylist({
+						...currentPlaylist,
+						active: false,
+					});
 				})
 				.then((result) => ({ result, index }));
 		});
