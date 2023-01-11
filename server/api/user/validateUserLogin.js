@@ -21,13 +21,13 @@ const validateUserLogin = async (loginData) => {
 		return response;
 	}
 
-	if (Date.now() < new Date(loginData.expiration)) {
-		loginData = await refreshCookie(loginData);
-		if (loginData.error) {
-			return loginData;
-		}
+	// if (Date.now() < new Date(loginData.expiration)) {
+	loginData = await refreshCookie(loginData);
+	if (loginData.error) {
+		return loginData;
 	}
-	
+	// }
+
 	const formattedUser = await getUserAPI(loginData.access_token, loginData);
 	if (formattedUser.error) {
 		return formattedUser;
