@@ -108,6 +108,10 @@ app.use("/api/*", async (req, res, next) => {
 		delete session.id;
 	}
 	let response = await validateUserLogin(session);
+	if (response === null) {
+		res.json({ error: true, message: "API error at Validating user" });
+		return;
+	}
 	if (response.error) {
 		res.json(response);
 		return;
