@@ -9,7 +9,10 @@ const createUser = (userData) => {
 };
 
 const getUser = (session) => {
-	const options = [{ hash: session.hash }];
+	const options = [];
+	if (session.hash) {
+		options.push({ hash: session.hash });
+	}
 	if (session.id) {
 		options.push({ id: session.id });
 	}
