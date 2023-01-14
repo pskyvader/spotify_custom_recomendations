@@ -1,8 +1,15 @@
+import { useContext } from "react";
 import { Button, FormControlLabel, Checkbox } from "@mui/material";
 import { useCookies } from "react-cookie";
 import { Me } from "../API";
 
-export const Logout = (removeCookie, setLoggedIn) => {
+import { SessionContext } from "../context/SessionContextProvider";
+
+export const Logout = (_removeCookie, _setLoggedIn) => {
+	const cookiefunctions = useCookies();
+	const removeCookie = cookiefunctions[2];
+	const { setLoggedIn } = useContext(SessionContext);
+
 	removeCookie("keep_logged");
 	removeCookie("access_token");
 	removeCookie("refresh_token");
