@@ -102,7 +102,14 @@ const cache = new NodeCache();
 const tenMinutes = 600;
 
 app.use("/api/*", async (req, res, next) => {
-	console.log("USE /api/*, user:", user, req, res, next);
+	console.log(
+		"USE /api/*, user:",
+		user,
+		"params:",
+		req.params,
+		req.url,
+		req.originalUrl
+	);
 	user = null;
 	const session = { ...req.session };
 	if (session.id) {
@@ -112,18 +119,27 @@ app.use("/api/*", async (req, res, next) => {
 	if (response === null) {
 		return res.json({
 			error: true,
-			message: "API error at Validating user",
+			message: "API error at user validation",
 		});
 	}
 	if (response.error) {
 		return res.json(response);
 	}
+	console.log(
+		"user not null, user: ",
+		user,
+		"response:",
+		response,
+		"going next step"
+	);
 	user = response;
-	if (user === null) {
-		res.json({ error: true, message: "API error at Validating user" });
-	} else {
-		next();
-	}
+
+	// if (user === null) {
+	// 	res.json({ error: true, message: "API error at Validating user" });
+	// } else {
+	// 	next();
+	// }
+	next();
 });
 
 app.get("/api/loggedin", async function (_req, res) {
@@ -152,7 +168,14 @@ app.get("/api/me/playlist", async (_req, res) => {
 });
 
 app.get("/api/playlist/:playlistId", async (req, res) => {
-	console.log("GET /api/playlist/:playlistId, user:", user, req, res);
+	console.log(
+		"GET /api/playlist/:playlistId, user:",
+		user,
+		"params:",
+		req.params,
+		req.url,
+		req.originalUrl
+	);
 
 	const cacheResult = cache.get(
 		`get-playlist-songs-${req.params.playlistId}`
@@ -518,6 +541,10 @@ app.get("/api/*", (req, res) => {
 		error: "Unknown module",
 		params: req.params,
 	});
+});
+
+app.get("*.*", (req, res) => {
+	res.status(404);
 });
 
 app.get("*", (req, res) => {
