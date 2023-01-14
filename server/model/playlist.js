@@ -7,7 +7,7 @@ const createPlaylist = (playlistData) => {
 	});
 };
 
-const getPlaylist = (UserId, id) => {
+const getPlaylist = (_UserId, id) => {
 	return Playlist.findOne({
 		where: { id: id},
 	}).catch((err) => {

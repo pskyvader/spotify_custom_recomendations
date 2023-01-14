@@ -102,6 +102,7 @@ const cache = new NodeCache();
 const tenMinutes = 600;
 
 app.use("/api/*", async (req, res, next) => {
+	console.log("USE /api/*, user:", user, req, res, next);
 	user = null;
 	const session = { ...req.session };
 	if (session.id) {
@@ -109,15 +110,20 @@ app.use("/api/*", async (req, res, next) => {
 	}
 	let response = await validateUserLogin(session);
 	if (response === null) {
-		res.json({ error: true, message: "API error at Validating user" });
-		return;
+		return res.json({
+			error: true,
+			message: "API error at Validating user",
+		});
 	}
 	if (response.error) {
-		res.json(response);
-		return;
+		return res.json(response);
 	}
 	user = response;
-	next();
+	if (user === null) {
+		res.json({ error: true, message: "API error at Validating user" });
+	} else {
+		next();
+	}
 });
 
 app.get("/api/loggedin", async function (_req, res) {
@@ -146,6 +152,8 @@ app.get("/api/me/playlist", async (_req, res) => {
 });
 
 app.get("/api/playlist/:playlistId", async (req, res) => {
+	console.log("GET /api/playlist/:playlistId, user:", user, req, res);
+
 	const cacheResult = cache.get(
 		`get-playlist-songs-${req.params.playlistId}`
 	);
