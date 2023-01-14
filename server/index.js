@@ -104,7 +104,7 @@ const tenMinutes = 600;
 app.use("/api/*", async (req, res, next) => {
 	console.log(
 		"USE /api/*, user:",
-		user,
+		user && user.id,
 		"params:",
 		req.params,
 		req.url,
@@ -127,9 +127,9 @@ app.use("/api/*", async (req, res, next) => {
 	}
 	console.log(
 		"user not null, user: ",
-		user,
+		user && user.id,
 		"response:",
-		response,
+		response && response.id,
 		"going next step"
 	);
 	user = response;
@@ -170,7 +170,7 @@ app.get("/api/me/playlist", async (_req, res) => {
 app.get("/api/playlist/:playlistId", async (req, res) => {
 	console.log(
 		"GET /api/playlist/:playlistId, user:",
-		user,
+		user && user.id,
 		"params:",
 		req.params,
 		req.url,
