@@ -544,7 +544,7 @@ app.get("/api/*", (req, res) => {
 });
 
 app.get("*.*", (req, res) => {
-	res.status(404);
+	res.sendStatus(404);
 });
 
 app.get("*", (req, res) => {
