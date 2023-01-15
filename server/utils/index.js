@@ -9,6 +9,7 @@ const {
 	formatSongFeaturesAPIList,
 } = require("./formatSong");
 const { filterOutliers } = require("./filterOutliersFunction");
+const cache = require("./cache");
 
 module.exports = {
 	generateRandomString,
@@ -20,4 +21,5 @@ module.exports = {
 	formatSongFeaturesAPI,
 	formatSongFeaturesAPIList,
 	filterOutliers,
+	cache,
 };

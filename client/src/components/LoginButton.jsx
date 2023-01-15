@@ -5,7 +5,7 @@ import { Me } from "../API";
 
 import { SessionContext } from "../context/SessionContextProvider";
 
-export const Logout = (_removeCookie, _setLoggedIn) => {
+export const Logout = () => {
 	const cookiefunctions = useCookies();
 	const removeCookie = cookiefunctions[2];
 	const { setLoggedIn } = useContext(SessionContext);

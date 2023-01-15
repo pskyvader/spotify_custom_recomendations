@@ -1,13 +1,14 @@
 const { createUser, getUser } = require("../../model");
 const { refreshCookie, getUser: getUserAPI } = require("../../spotifyapi/user");
 
+const tenMinutes = 600000;
 const validateUserLogin = async (loginData) => {
 	const response = { error: true, message: "" };
 
 	let user = await getUser(loginData);
 
 	if (user !== null) {
-		if (user.error || new Date(user.expiration) > Date.now()) {
+		if (user.error || new Date(user.expiration) > Date.now() + tenMinutes) {
 			return user;
 		}
 
