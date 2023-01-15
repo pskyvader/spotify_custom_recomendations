@@ -97,48 +97,56 @@ app.get("/pushtoken", function (req, res) {
 	res.json(result);
 });
 
-let user = null;
 const cache = new NodeCache();
 const tenMinutes = 600;
 
 app.use("/api/*", async (req, res, next) => {
+	const session = { ...req.session };
+	if (session.id) {
+		delete session.id;
+	}
+
+	if (!session.hash) {
+		return res.json({
+			error: true,
+			message: "No valid user data found",
+		});
+	}
+
+	const userCache = cache.get(`session-user-${session.hash}`);
+	if (userCache) {
+		return next();
+	}
 	console.log(
 		"USE /api/*, user:",
-		user && user.id,
+		userCache && userCache.id,
+		"session:",
+		session,
 		"params:",
 		req.params,
 		req.url,
 		req.originalUrl
 	);
-	user = null;
-	const session = { ...req.session };
-	if (session.id) {
-		delete session.id;
-	}
-	let response = await validateUserLogin(session);
-	if (response === null) {
+
+	const validUser = await validateUserLogin(session);
+	if (validUser === null) {
 		return res.json({
 			error: true,
 			message: "API error at user validation",
 		});
 	}
-	if (response.error) {
-		return res.json(response);
+	if (validUser.error) {
+		return res.json(validUser);
 	}
+
 	console.log(
 		"user not null, user: ",
 		user && user.id,
-		"response:",
-		response && response.id,
+		"validUser:",
+		validUser && validUser.id,
 		"going next step"
 	);
-	user = response;
-
-	// if (user === null) {
-	// 	res.json({ error: true, message: "API error at Validating user" });
-	// } else {
-	// 	next();
-	// }
+	cache.set(`session-user-${session.hash}`, validUser, tenMinutes);
 	next();
 });
 
@@ -155,7 +163,8 @@ app.get("/api/me", async (_req, res) => {
 	res.json(user);
 });
 
-app.get("/api/me/playlist", async (_req, res) => {
+app.get("/api/me/playlist", async (req, res) => {
+	const user = cache.get(`session-user-${req.session.hash}`);
 	let result = cache.get(`playlist-user-${user.id}`);
 	if (!result) {
 		result = await getUserPlaylists(user);
@@ -168,6 +177,13 @@ app.get("/api/me/playlist", async (_req, res) => {
 });
 
 app.get("/api/playlist/:playlistId", async (req, res) => {
+	const cacheResult = cache.get(
+		`get-playlist-songs-${req.params.playlistId}`
+	);
+	if (cacheResult) {
+		return res.json(cacheResult);
+	}
+	const user = cache.get(`session-user-${req.session.hash}`);
 	console.log(
 		"GET /api/playlist/:playlistId, user:",
 		user && user.id,
@@ -176,13 +192,6 @@ app.get("/api/playlist/:playlistId", async (req, res) => {
 		req.url,
 		req.originalUrl
 	);
-
-	const cacheResult = cache.get(
-		`get-playlist-songs-${req.params.playlistId}`
-	);
-	if (cacheResult) {
-		return res.json(cacheResult);
-	}
 
 	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
@@ -204,6 +213,7 @@ app.get("/api/playlist/:playlistId", async (req, res) => {
 });
 
 app.get("/api/playlist/:playlistId/sync", async (req, res) => {
+	const user = cache.get(`session-user-${req.session.hash}`);
 	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
@@ -217,11 +227,13 @@ app.get("/api/playlist/:playlistId/sync", async (req, res) => {
 });
 
 app.get("/api/playlist/:playlistId/status", async (req, res) => {
+	const user = cache.get(`session-user-${req.session.hash}`);
 	const result = await getPlaylist(user.id, req.params.playlistId);
 	res.json(result);
 });
 
 app.get("/api/playlist/:playlistId/activate", async (req, res) => {
+	const user = cache.get(`session-user-${req.session.hash}`);
 	const result = await updatePlaylist(req.params.playlistId, {
 		active: true,
 	});
@@ -253,6 +265,7 @@ app.get("/api/playlist/:playlistId/recommended", async (req, res) => {
 	if (result && result.length > 5) {
 		return res.json(result);
 	}
+	const user = cache.get(`session-user-${req.session.hash}`);
 
 	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
@@ -279,6 +292,7 @@ app.get("/api/playlist/:playlistId/deleterecommended", async (req, res) => {
 	if (result) {
 		return res.json(result);
 	}
+	const user = cache.get(`session-user-${req.session.hash}`);
 	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
@@ -308,6 +322,7 @@ app.get("/api/playlist/:playlistId/deleterecommended", async (req, res) => {
 });
 
 app.get("/api/lastplayed", async (_req, res) => {
+	const user = cache.get(`session-user-${req.session.hash}`);
 	let result = cache.get(`get-lastplayed-${user.id}`);
 	if (!result) {
 		result = await getRecentlyPlayedSongs(user);
@@ -333,6 +348,7 @@ app.get("/api/playlist/:playlistId/deletedsongs", async (req, res) => {
 	if (result) {
 		return res.json(result);
 	}
+	const user = cache.get(`session-user-${req.session.hash}`);
 
 	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
@@ -365,6 +381,7 @@ app.get("/api/playlist/:playlistId/songfeatures", async (req, res) => {
 	if (result) {
 		return res.json(result);
 	}
+	const user = cache.get(`session-user-${req.session.hash}`);
 
 	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
@@ -391,6 +408,7 @@ app.get("/api/playlist/:playlistId/songfeatures", async (req, res) => {
 });
 
 app.post("/api/playlist/:playlistId/add/:songId", async (req, res) => {
+	const user = cache.get(`session-user-${req.session.hash}`);
 	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
@@ -459,6 +477,7 @@ app.post("/api/playlist/:playlistId/add/:songId", async (req, res) => {
 });
 
 app.post("/api/playlist/:playlistId/remove/:songId", async (req, res) => {
+	const user = cache.get(`session-user-${req.session.hash}`);
 	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
 	if (currentPlaylist.error) {
 		return res.json(currentPlaylist);
