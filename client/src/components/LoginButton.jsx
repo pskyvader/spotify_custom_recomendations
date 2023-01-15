@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useCallback } from "react";
 import { Button, FormControlLabel, Checkbox } from "@mui/material";
 import { useCookies } from "react-cookie";
 import { Me } from "../API";
@@ -10,12 +10,21 @@ export const Logout = () => {
 	const removeCookie = cookiefunctions[2];
 	const { setLoggedIn } = useContext(SessionContext);
 
-	removeCookie("keep_logged");
-	removeCookie("access_token");
-	removeCookie("refresh_token");
-	removeCookie("hash");
-	Me.LogOut();
-	setLoggedIn(false);
+	const logoutAndRemoveCookie = useCallback(() => {
+		removeCookie("keep_logged");
+		removeCookie("access_token");
+		removeCookie("refresh_token");
+		removeCookie("hash");
+		Me.LogOut().then(() => {
+			setLoggedIn(false);
+		});
+	}, [setLoggedIn, removeCookie]);
+
+	return (
+		<Button variant="contained" onClick={logoutAndRemoveCookie}>
+			Logout
+		</Button>
+	);
 };
 
 const KeepLogged = (signed, setCookie) => {

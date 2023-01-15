@@ -21,13 +21,12 @@ import MainDrawer from "./MainDrawer";
 
 const UserInfo = () => {
 	const { profile } = useContext(ProfileContext);
+
 	if (!profile) return null;
 	return (
 		<Box sx={{ display: "flex" }}>
 			<Avatar sx={{ mr: 2 }} alt={profile.name} src={profile.image} />
-			<Button variant="contained" onClick={Logout}>
-				Logout
-			</Button>
+			<Logout />
 		</Box>
 	);
 };
