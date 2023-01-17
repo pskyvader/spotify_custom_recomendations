@@ -1,8 +1,14 @@
-const { createPlaylistSong } = require("../../model");
-
 const addSongToPlaylist = async (playlist, song) => {
-	const addedSong = await createPlaylistSong(playlist, song);
-	return addedSong;
+	const songData = {
+		add_date: Date.now(),
+		active: true,
+		removed_date: null,
+	};
+	const currentSong = await playlist.getSongs({ where: { id: song.id } });
+	if (currentSong === null) {
+		return currentSong.update(songData);
+	}
+	return playlist.addSong(song, { through: songData });
 };
 
 module.exports = { addSongToPlaylist };
