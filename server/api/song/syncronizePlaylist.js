@@ -12,19 +12,19 @@ const {
 	getSongFeatures,
 } = require("../../model/");
 
-const addErrorMessages = (mainResult, result, successMessage) => {
+const addErrorMessages = (mainResponse, response, successMessage) => {
 	let isError = false;
-	for (const sync of result) {
+	for (const sync of response) {
 		if (sync.error) {
 			isError = true;
-			mainResult.error = true;
-			mainResult.message.push(sync.message);
+			mainResponse.error = true;
+			mainResponse.message.push(sync.message);
 		}
 	}
 	if (!isError) {
-		mainResult.message.push(successMessage);
+		mainResponse.message.push(successMessage);
 	}
-	return mainResult;
+	return mainResponse;
 };
 
 const syncronizePlaylist = async (user, playlist) => {
@@ -83,45 +83,45 @@ const syncronizePlaylist = async (user, playlist) => {
 			});
 		});
 	return Promise.all(syncronizeSongsPromise)
-		.then((resultSyncronized) => {
+		.then((responseSyncronized) => {
 			return addErrorMessages(
 				{ error: false, message: [] },
-				resultSyncronized,
-				"Syncronize completed successfully. " + resultSyncronized.length
+				responseSyncronized,
+				"Syncronize completed successfully. " + responseSyncronized.length
 			);
 		})
-		.then((result) => {
+		.then((response) => {
 			return Promise.all(syncronizeSongsFeaturesPromise).then(
-				(resultsyncFeatures) => {
+				(responsesyncFeatures) => {
 					return addErrorMessages(
-						result,
-						resultsyncFeatures,
+						response,
+						responsesyncFeatures,
 						"Syncronize features completed successfully. " +
-							resultsyncFeatures.length
+							responsesyncFeatures.length
 					);
 				}
 			);
 		})
-		.then((result) => {
+		.then((response) => {
 			return Promise.all(syncronizeRemoveSongListPromise).then(
-				(resultsyncRemove) => {
+				(responsesyncRemove) => {
 					return addErrorMessages(
-						result,
-						resultsyncRemove,
+						response,
+						responsesyncRemove,
 						"Syncronize Remove completed successfully. " +
-							resultsyncRemove.length
+							responsesyncRemove.length
 					);
 				}
 			);
 		})
-		.then((result) => {
+		.then((response) => {
 			return Promise.all(syncronizeAddSongListPromise).then(
-				(resultsyncAdd) => {
+				(responsesyncAdd) => {
 					return addErrorMessages(
-						result,
-						resultsyncAdd,
+						response,
+						responsesyncAdd,
 						"Syncronize Add completed successfully. " +
-							resultsyncAdd.length
+							responsesyncAdd.length
 					);
 				}
 			);

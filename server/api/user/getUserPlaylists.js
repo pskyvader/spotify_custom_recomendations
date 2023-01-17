@@ -2,7 +2,7 @@ const { getPlaylists } = require("../../spotifyapi/user");
 const { createPlaylist, getPlaylist } = require("../../model");
 
 const getUserPlaylists = (user) => {
-	return getPlaylists(user).then((playlists) => {
+	return getPlaylists(user.access_token).then((playlists) => {
 		if (playlists.error) {
 			return playlists;
 		}
@@ -29,17 +29,17 @@ const getUserPlaylists = (user) => {
 						active: false,
 					});
 				})
-				.then((result) => ({ result, index }));
+				.then((response) => ({ response, index }));
 		});
 		return Promise.allSettled(playlistsPromises).then((playlists) => {
-			const results = playlists
+			const responses = playlists
 				.sort((a, b) => {
 					return a.value.index - b.value.index;
 				})
-				.map((playlistresult) => {
-					return playlistresult.value.result;
+				.map((playlistresponse) => {
+					return playlistresponse.value.response;
 				});
-			return results;
+			return responses;
 		});
 	});
 };

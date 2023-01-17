@@ -72,12 +72,12 @@ app.get("/tasks", function (req, res) {
 });
 
 app.get("/authorizeuser", function (req, res) {
-	const result = authorizeUser(req);
-	res.json(result);
+	const response = authorizeUser(req);
+	res.json(response);
 });
 app.get("/pushtoken", function (req, res) {
-	const result = pushToken(req);
-	res.json(result);
+	const response = pushToken(req);
+	res.json(response);
 });
 
 const tenMinutes = 600;

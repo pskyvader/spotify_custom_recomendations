@@ -29,14 +29,14 @@ const getAvailableUsers = async () => {
 		response.message.push("-----");
 		response.message.push(`User ${user.name} (${user.id})`);
 		if (user.expiration < Date.now() + tenMinutes) {
-			const result = await refreshCookie(user);
-			if (result.error) {
+			const response = await refreshCookie(user);
+			if (response.error) {
 				response.message.push(`access token error, cannot continue`);
 				continue;
 			}
 			response.message.push(`got Refresh token`);
-			user.access_token = result.access_token;
-			user.expiration = result.expiration;
+			user.access_token = response.access_token;
+			user.expiration = response.expiration;
 		}
 		response.message.push(`Expiration: ${user.expiration}`);
 		if (user.last_modified_hourly < Date.now() - hour + tenMinutes) {

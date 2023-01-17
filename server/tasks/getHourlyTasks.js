@@ -4,11 +4,11 @@ const { syncronizeMultiplePlaylists } = require("../api/song");
 const getHourlyTasks = (userList) => {
 	return userList.map((user) => {
 		return updateRecentSongs(user)
-			.then((updateResult) => {
-				return syncronizeMultiplePlaylists(user).then((syncResult) => {
+			.then((updateResponse) => {
+				return syncronizeMultiplePlaylists(user).then((syncResponse) => {
 					return {
-						error: updateResult.error || syncResult.error,
-						message: [updateResult.message, ...syncResult.message],
+						error: updateResponse.error || syncResponse.error,
+						message: [updateResponse.message, ...syncResponse.message],
 					};
 				});
 			})

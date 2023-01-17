@@ -2,7 +2,7 @@ const {
 	getRecommendedSongsToRemove,
 	getPlaylistSongs,
 } = require("../api/song");
-const { removeSongFromPlaylistFromAPI } = require("../api/playlist");
+const { removeSongFromPlaylist } = require("../api/playlist");
 
 const _MIN_SONGS_PER_PLAYLIST = process.env.MIN_SONGS_PER_PLAYLIST;
 const _MAX_SONGS_PER_PLAYLIST = process.env.MAX_SONGS_PER_PLAYLIST;
@@ -44,7 +44,7 @@ const removeFromSinglePlaylist = async (
 		if (i >= songsToRemove) {
 			break;
 		}
-		const removeResponse = await removeSongFromPlaylistFromAPI(
+		const removeResponse = await removeSongFromPlaylist(
 			user,
 			songInList,
 			playlist

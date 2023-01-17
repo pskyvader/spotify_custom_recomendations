@@ -1,7 +1,6 @@
 const { getRepeatedSongs } = require("../api/song");
 const {
-	removeSongFromPlaylistFromAPI,
-	addSongToPlaylistFromAPI,
+	removeSongFromPlaylist,
 	addSongToPlaylist,
 } = require("../api/playlist");
 const { updatePlaylistSong } = require("../model");
@@ -11,47 +10,38 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 
 	const repeatedTasks = repeatedList.map((repeatedSong) => {
 		const playlistSong = repeatedSong.getPlaylistSongs();
-		const removeSong = removeSongFromPlaylistFromAPI(
+		const removeSong = removeSongFromPlaylist(
 			user,
 			repeatedSong,
 			playlist
 		);
-		const addSongAPI = addSongToPlaylistFromAPI(
-			user,
+		const addSong = addSongToPlaylist(
+			user.access_token,
 			playlist,
 			repeatedSong
 		);
-		const addSong = addSongToPlaylist(playlist, repeatedSong);
 
 		return playlistSong
-			.then((resultPlaylistSongs) => {
-				return removeSong.then((result) => {
-					result.add_date = resultPlaylistSongs[0].add_date;
-					return result;
+			.then((responsePlaylistSongs) => {
+				return removeSong.then((response) => {
+					response.add_date = responsePlaylistSongs[0].add_date;
+					return response;
 				});
 			})
-			.then((resultRemove) => {
-				if (resultRemove.error) return resultRemove;
+			.then((responseRemove) => {
+				if (responseRemove.error) return responseRemove;
 
-				return addSongAPI.then((result) => {
-					result.add_date = resultRemove.add_date;
-					return result;
+				return addSong.then((response) => {
+					response.add_date = responseAddAPI.add_date;
+					return response;
 				});
 			})
-			.then((resultAddAPI) => {
-				if (resultAddAPI.error) return resultAddAPI;
-
-				return addSong.then((result) => {
-					result.add_date = resultAddAPI.add_date;
-					return result;
-				});
-			})
-			.then((resultAdd) => {
-				if (resultAdd.error) return resultAdd;
+			.then((responseAdd) => {
+				if (responseAdd.error) return responseAdd;
 
 				const addData = {
 					active: true,
-					add_date: resultAdd.add_date,
+					add_date: responseAdd.add_date,
 				};
 				return updatePlaylistSong(
 					playlist.id,
@@ -59,15 +49,15 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 					addData
 				);
 			})
-			.then((finalresult) => {
-				if (finalresult.error) return finalresult;
+			.then((finalresponse) => {
+				if (finalresponse.error) return finalresponse;
 
 				return `Removed repeated song ${repeatedSong.name}`;
 			});
 	});
 
-	return Promise.all(repeatedTasks).then((result) => {
-		return { message: result, removedTotal: result.length };
+	return Promise.all(repeatedTasks).then((response) => {
+		return { message: response, removedTotal: response.length };
 	});
 };
 

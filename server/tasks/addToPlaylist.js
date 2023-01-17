@@ -1,6 +1,5 @@
 const { getRecommendedSongs, getPlaylistSongs } = require("../api/song");
 const {
-	addSongToPlaylistFromAPI,
 	addSongToPlaylist,
 } = require("../api/playlist");
 const {
@@ -63,26 +62,17 @@ const addToSinglePlaylist = async (
 			songInList
 		);
 
-		const addSongResultAPI = await addSongToPlaylistFromAPI(
-			user,
+		const addSongResponse = await addSongToPlaylist(
+			user.access_token,
 			playlist,
 			currentSong
 		);
-		if (addSongResultAPI.error) {
-			response.error = true;
-			response.message.push(
-				`Error adding song ${currentSong.name} to playlist API ${playlist.name}`
-			);
-			response.message.push(JSON.stringify(addSongResultAPI));
-			continue;
-		}
-		const addSongResult = await addSongToPlaylist(playlist, currentSong);
-		if (addSongResult.error) {
+		if (addSongResponse.error) {
 			response.error = true;
 			response.message.push(
 				`Error adding song ${currentSong.name} to playlist Database ${playlist.name}`
 			);
-			response.message.push(JSON.stringify(addSongResult));
+			response.message.push(JSON.stringify(addSongResponse));
 			continue;
 		}
 

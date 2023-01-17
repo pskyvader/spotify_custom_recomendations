@@ -3,9 +3,8 @@ const router = express.Router();
 
 const { getUserPlaylists } = require("../api/user");
 const {
-	addSongToPlaylistFromAPI,
 	addSongToPlaylist,
-	removeSongFromPlaylistFromAPI,
+	removeSongFromPlaylist,
 } = require("../api/playlist");
 
 const {
@@ -50,23 +49,23 @@ router.get("/me", async (req, res) => {
 
 router.get("/me/playlist", async (req, res) => {
 	const user = cache.get(`session-user-${req.session.hash}`);
-	let result = cache.get(`playlist-user-${user.id}`);
-	if (!result) {
-		result = await getUserPlaylists(user);
-		if (!result.error) {
-			result = result.map((playlist) => playlist.toJSON());
-			cache.set(`playlist-user-${user.id}`, result, tenMinutes);
+	let response = cache.get(`playlist-user-${user.id}`);
+	if (!response) {
+		response = await getUserPlaylists(user);
+		if (!response.error) {
+			response = response.map((playlist) => playlist.toJSON());
+			cache.set(`playlist-user-${user.id}`, response, tenMinutes);
 		}
 	}
-	res.json(result);
+	res.json(response);
 });
 
 router.get("/playlist/:playlistId", async (req, res) => {
-	const cacheResult = cache.get(
+	const cacheResponse = cache.get(
 		`get-playlist-songs-${req.params.playlistId}`
 	);
-	if (cacheResult) {
-		return res.json(cacheResult);
+	if (cacheResponse) {
+		return res.json(cacheResponse);
 	}
 	const user = cache.get(`session-user-${req.session.hash}`);
 	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
@@ -74,18 +73,18 @@ router.get("/playlist/:playlistId", async (req, res) => {
 		return res.json(currentPlaylist);
 	}
 
-	const result = await getPlaylistSongsFromAPI(user, currentPlaylist);
-	if (result.error) {
-		return res.json(result);
+	const response = await getPlaylistSongsFromAPI(user, currentPlaylist);
+	if (response.error) {
+		return res.json(response);
 	}
 
 	cache.set(
 		`get-playlist-songs-${req.params.playlistId}`,
-		result,
+		response,
 		tenMinutes
 	);
 
-	res.json(result);
+	res.json(response);
 });
 
 router.get("/playlist/:playlistId/sync", async (req, res) => {
@@ -95,25 +94,25 @@ router.get("/playlist/:playlistId/sync", async (req, res) => {
 		return res.json(currentPlaylist);
 	}
 
-	const result = await syncronizePlaylist(user, currentPlaylist);
-	if (result.error) {
-		console.error("sync error", result);
+	const response = await syncronizePlaylist(user, currentPlaylist);
+	if (response.error) {
+		console.error("sync error", response);
 	}
-	res.json(result);
+	res.json(response);
 });
 
 router.get("/playlist/:playlistId/status", async (req, res) => {
 	const user = cache.get(`session-user-${req.session.hash}`);
-	const result = await getPlaylist(user.id, req.params.playlistId);
-	res.json(result);
+	const response = await getPlaylist(user.id, req.params.playlistId);
+	res.json(response);
 });
 
 router.get("/playlist/:playlistId/activate", async (req, res) => {
 	const user = cache.get(`session-user-${req.session.hash}`);
-	const result = await updatePlaylist(req.params.playlistId, {
+	const response = await updatePlaylist(req.params.playlistId, {
 		active: true,
 	});
-	if (!result.error) {
+	if (!response.error) {
 		const currentPlaylist = await getPlaylist(
 			user.id,
 			req.params.playlistId
@@ -121,25 +120,27 @@ router.get("/playlist/:playlistId/activate", async (req, res) => {
 		if (currentPlaylist.error) {
 			return res.json(currentPlaylist);
 		}
-		const syncResult = await syncronizePlaylist(user, currentPlaylist);
-		if (syncResult.error) {
-			console.error("sync error", syncResult);
+		const syncResponse = await syncronizePlaylist(user, currentPlaylist);
+		if (syncResponse.error) {
+			console.error("sync error", syncResponse);
 		}
 	}
-	res.json(result);
+	res.json(response);
 });
 
 router.get("/playlist/:playlistId/deactivate", async (req, res) => {
-	const result = await updatePlaylist(req.params.playlistId, {
+	const response = await updatePlaylist(req.params.playlistId, {
 		active: false,
 	});
-	res.json(result);
+	res.json(response);
 });
 
 router.get("/playlist/:playlistId/recommended", async (req, res) => {
-	let result = cache.get(`get-playlist-recommended-${req.params.playlistId}`);
-	if (result && result.length > 5) {
-		return res.json(result);
+	let response = cache.get(
+		`get-playlist-recommended-${req.params.playlistId}`
+	);
+	if (response && response.length > 5) {
+		return res.json(response);
 	}
 	const user = cache.get(`session-user-${req.session.hash}`);
 
@@ -162,11 +163,11 @@ router.get("/playlist/:playlistId/recommended", async (req, res) => {
 });
 
 router.get("/playlist/:playlistId/deleterecommended", async (req, res) => {
-	let result = cache.get(
+	let response = cache.get(
 		`get-playlist-deleterecommended-${req.params.playlistId}`
 	);
-	if (result) {
-		return res.json(result);
+	if (response) {
+		return res.json(response);
 	}
 	const user = cache.get(`session-user-${req.session.hash}`);
 	const currentPlaylist = await getPlaylist(user.id, req.params.playlistId);
@@ -180,7 +181,7 @@ router.get("/playlist/:playlistId/deleterecommended", async (req, res) => {
 		return res.json(recommendedSongsToRemove);
 	}
 
-	result = recommendedSongsToRemove.map((song) => {
+	response = recommendedSongsToRemove.map((song) => {
 		const deleteSong = song.toJSON();
 		deleteSong.played_date =
 			song.UserSongHistories.length > 0
@@ -190,39 +191,39 @@ router.get("/playlist/:playlistId/deleterecommended", async (req, res) => {
 	});
 	cache.set(
 		`get-playlist-deleterecommended-${req.params.playlistId}`,
-		result,
+		response,
 		tenMinutes
 	);
 
-	res.json(result);
+	res.json(response);
 });
 
 router.get("/lastplayed", async (req, res) => {
 	const user = cache.get(`session-user-${req.session.hash}`);
-	let result = cache.get(`get-lastplayed-${user.id}`);
-	if (!result) {
-		result = await getRecentlyPlayedSongs(user);
-		if (!result.error) {
-			result = result.map((recentSong) => {
-				const songResult = recentSong.Song.toJSON();
-				songResult.played_date = recentSong.played_date;
-				songResult.id = recentSong.id;
-				songResult.song_id = recentSong.Song.id;
-				// if (songResult.preview === null) {
-				// 	console.log("No preview available", songResult);
+	let response = cache.get(`get-lastplayed-${user.id}`);
+	if (!response) {
+		response = await getRecentlyPlayedSongs(user);
+		if (!response.error) {
+			response = response.map((recentSong) => {
+				const songResponse = recentSong.Song.toJSON();
+				songResponse.played_date = recentSong.played_date;
+				songResponse.id = recentSong.id;
+				songResponse.song_id = recentSong.Song.id;
+				// if (songResponse.preview === null) {
+				// 	console.log("No preview available", songResponse);
 				// }
-				return songResult;
+				return songResponse;
 			});
-			cache.set(`get-lastplayed-${user.id}`, result, tenMinutes);
+			cache.set(`get-lastplayed-${user.id}`, response, tenMinutes);
 		}
 	}
-	res.json(result);
+	res.json(response);
 });
 
 router.get("/playlist/:playlistId/deletedsongs", async (req, res) => {
-	let result = cache.get(`get-playlist-deleted-${req.params.playlistId}`);
-	if (result) {
-		return res.json(result);
+	let response = cache.get(`get-playlist-deleted-${req.params.playlistId}`);
+	if (response) {
+		return res.json(response);
 	}
 	const user = cache.get(`session-user-${req.session.hash}`);
 
@@ -236,26 +237,26 @@ router.get("/playlist/:playlistId/deletedsongs", async (req, res) => {
 		return res.json(deletedSongs);
 	}
 
-	result = deletedSongs.map((deletedSong) => {
-		const songResult = deletedSong.Song.toJSON();
-		songResult.removed_date = deletedSong.removed_date;
-		return songResult;
+	response = deletedSongs.map((deletedSong) => {
+		const songResponse = deletedSong.Song.toJSON();
+		songResponse.removed_date = deletedSong.removed_date;
+		return songResponse;
 	});
 	cache.set(
 		`get-playlist-deleted-${req.params.playlistId}`,
-		result,
+		response,
 		tenMinutes
 	);
 
-	res.json(result);
+	res.json(response);
 });
 
 router.get("/playlist/:playlistId/songfeatures", async (req, res) => {
-	let result = cache.get(
+	let response = cache.get(
 		`get-playlist-songfeatures-${req.params.playlistId}`
 	);
-	if (result) {
-		return res.json(result);
+	if (response) {
+		return res.json(response);
 	}
 	const user = cache.get(`session-user-${req.session.hash}`);
 
@@ -268,7 +269,7 @@ router.get("/playlist/:playlistId/songfeatures", async (req, res) => {
 		return res.json(songFeaturesList);
 	}
 
-	result = songFeaturesList.map((songFeatures) => {
+	response = songFeaturesList.map((songFeatures) => {
 		if (songFeatures.SongFeature !== null) {
 			return songFeatures.SongFeature.toJSON();
 		}
@@ -276,11 +277,11 @@ router.get("/playlist/:playlistId/songfeatures", async (req, res) => {
 	});
 	cache.set(
 		`get-playlist-songfeatures-${req.params.playlistId}`,
-		result,
+		response,
 		tenMinutes
 	);
 
-	res.json(result);
+	res.json(response);
 });
 
 router.post("/playlist/:playlistId/add/:songId", async (req, res) => {
@@ -300,13 +301,13 @@ router.post("/playlist/:playlistId/add/:songId", async (req, res) => {
 	if (song.error) {
 		return res.json(song);
 	}
-	let result = await addSongToPlaylistFromAPI(user, currentPlaylist, song);
-	if (result.error) {
-		return res.json(result);
-	}
-	result = await addSongToPlaylist(currentPlaylist, song);
-	if (result.error) {
-		return res.json(result);
+	const response = await addSongToPlaylist(
+		user.access_token,
+		currentPlaylist,
+		song
+	);
+	if (response.error) {
+		return res.json(response);
 	}
 
 	const cacheplaylist = cache.get(
@@ -368,14 +369,14 @@ router.post("/playlist/:playlistId/remove/:songId", async (req, res) => {
 	if (song.error) {
 		return res.json(song);
 	}
-	const result = await removeSongFromPlaylistFromAPI(
+	const response = await removeSongFromPlaylist(
 		user,
 		song,
 		currentPlaylist
 	);
 
-	if (result.error) {
-		return res.json(result);
+	if (response.error) {
+		return res.json(response);
 	}
 	const cacheplaylist = cache.get(
 		`get-playlist-songs-${req.params.playlistId}`
@@ -428,7 +429,7 @@ router.post("/playlist/:playlistId/remove/:songId", async (req, res) => {
 		// cache.del(`get-playlist-deleted-${req.params.playlistId}`);
 	}
 
-	res.json(result);
+	res.json(response);
 });
 
 router.get("/*", (req, res) => {

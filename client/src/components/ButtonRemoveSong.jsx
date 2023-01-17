@@ -27,7 +27,7 @@ const ButtonRemoveSong = ({ PlaylistId, uri }) => {
 
 					const playlistFiltered = playlistTracks[PlaylistId].filter(
 						(song) => {
-							return response.song.id !== song.id;
+							return response.id !== song.id;
 						}
 					);
 					if (
@@ -41,7 +41,7 @@ const ButtonRemoveSong = ({ PlaylistId, uri }) => {
 					const deleterecommendedfiltered = playlistDeleteTracks[
 						PlaylistId
 					].filter((song) => {
-						return response.song.id !== song.id;
+						return response.id !== song.id;
 					});
 					if (
 						playlistDeleteTracks[PlaylistId].length !==
