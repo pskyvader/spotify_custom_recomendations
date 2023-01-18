@@ -16,7 +16,7 @@ const getSongs = async (access_token, playlist) => {
 		url = response.next;
 		items.push(...response.items);
 	}
-	return formatSongGroup(items);
+	return formatSongGroup(items.map((item) => item.track));
 };
 
 module.exports = { getSongs };

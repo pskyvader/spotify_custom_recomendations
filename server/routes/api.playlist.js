@@ -31,9 +31,7 @@ router.get("/", async (req, res) => {
 	if (cacheResponse) {
 		return res.json(cacheResponse);
 	}
-	const user = req.user;
-
-	const playlistSongs = await getPlaylistSongs(user, playlist);
+	const playlistSongs = await getPlaylistSongs(playlist);
 	if (playlistSongs.error) {
 		return res.json(playlistSongs);
 	}
@@ -55,21 +53,39 @@ router.get("/sync", async (req, res) => {
 
 router.get("/status", async (req, res) => {
 	const playlist = req.playlist;
+	if (playlist.status === false) {
+		return res.json(playlist);
+	}
+
+	const syncCache = cache.get(`get-playlist-last-sync-${playlist.id}`);
+	if (syncCache) {
+		return res.json(playlist);
+	}
+	const user = req.user;
+	const syncResponse = await syncronizePlaylist(user, playlist);
+	if (syncResponse.error) {
+		console.error("sync error", syncResponse);
+	}
+	cache.set(
+		`get-playlist-last-sync-${playlist.id}`,
+		syncResponse.error,
+		tenMinutes
+	);
+
 	res.json(playlist);
 });
 
 router.get("/activate", async (req, res) => {
 	const playlist = req.playlist;
-	const user = req.user;
-	const response = await playlist.update({ active: true }).then(() => {
-		return syncronizePlaylist(user, playlist);
-	});
+	const response = await playlist.update({ active: true });
+	cache.del(`get-playlist-last-sync-${playlist.id}`);
 	res.json(response);
 });
 
 router.get("/deactivate", async (req, res) => {
 	const playlist = req.playlist;
 	const response = await playlist.update({ active: false });
+	cache.del(`get-playlist-last-sync-${playlist.id}`);
 	res.json(response);
 });
 

@@ -16,7 +16,7 @@ const getPlaylistSongs = async (playlist, date = Date.now()) => {
 		})
 		.catch((err) => {
 			console.error("getPlaylistSongs error", err);
-			return { error: err.message };
+			return { error: true, messages: err.message };
 		});
 };
 

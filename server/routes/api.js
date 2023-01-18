@@ -60,7 +60,7 @@ router.get("/lastplayed", async (req, res) => {
 	res.json(response);
 });
 
-router.use("/playlist/:playlistId/*", async (req, res, next) => {
+router.use("/playlist/:playlistId*", async (req, res, next) => {
 	const user = req.user;
 	const playlistId = req.params.playlistId;
 	const playlist = playlistCache[user.hash + "-" + playlistId];
@@ -74,8 +74,8 @@ router.use("/playlist/:playlistId/*", async (req, res, next) => {
 	if (currentPlaylist.length === 0) {
 		return res.json({ error: true, message: "No playlist found" });
 	}
-	playlistCache[user.hash + "-" + playlistId] = currentPlaylist;
-	req.playlist = currentPlaylist;
+	playlistCache[user.hash + "-" + playlistId] = currentPlaylist[0];
+	req.playlist = currentPlaylist[0];
 	next();
 });
 
