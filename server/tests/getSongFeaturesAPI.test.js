@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { getSongFeaturesFromAPI } = require("../api/songfeatures");
-const { getPlaylistSongs } = require("../api/song");
+const { getPlaylistSongs } = require("../api/playlist");
 const { validateUserLogin } = require("../api/user");
 const { User } = require("../database");
 

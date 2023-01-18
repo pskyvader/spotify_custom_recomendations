@@ -80,7 +80,8 @@ app.get("/pushtoken", function (req, res) {
 	res.json(response);
 });
 
-const tenMinutes = 600;
+const tenMinutes = 600000;
+const userCache = {};
 
 app.use("/api/*", async (req, res, next) => {
 	const session = { ...req.session };
@@ -95,8 +96,9 @@ app.use("/api/*", async (req, res, next) => {
 		});
 	}
 
-	const userCache = cache.get(`session-user-${session.hash}`);
-	if (userCache) {
+	const user = userCache[session.hash];
+	if (user && new Date(user.expiration) > Date.now() + tenMinutes) {
+		req.user = user;
 		return next();
 	}
 	const validUser = await validateUserLogin(session);
@@ -109,7 +111,8 @@ app.use("/api/*", async (req, res, next) => {
 	if (validUser.error) {
 		return res.json(validUser);
 	}
-	cache.set(`session-user-${session.hash}`, validUser, tenMinutes);
+	userCache[session.hash] = validUser;
+	req.user = validUser;
 	next();
 });
 

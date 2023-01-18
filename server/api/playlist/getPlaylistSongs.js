@@ -3,8 +3,6 @@ const { PlaylistSong } = require("../../database");
 const getPlaylistSongs = async (playlist, date = Date.now()) => {
 	return playlist
 		.getSongs({
-			// raw: true,
-			// nest: true,
 			include: [
 				{
 					model: PlaylistSong,

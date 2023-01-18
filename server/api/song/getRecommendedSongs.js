@@ -1,4 +1,4 @@
-const { getPlaylistSongs } = require("./getPlaylistSongs");
+const { getPlaylistSongs } = require("../playlist");
 const { getDeletedSongs } = require("./getDeletedSongs");
 const { getRecommendedSongsFromAPI } = require("./getRecommendedSongsFromAPI");
 const { getRecentlyPlayedSongs } = require("./getRecentlyPlayedSongs");

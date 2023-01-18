@@ -1,8 +1,5 @@
-const {
-	getRecommendedSongsToRemove,
-	getPlaylistSongs,
-} = require("../api/song");
-const { removeSongFromPlaylist } = require("../api/playlist");
+const { getRecommendedSongsToRemove } = require("../api/song");
+const { removeSongFromPlaylist, getPlaylistSongs } = require("../api/playlist");
 
 const _MIN_SONGS_PER_PLAYLIST = process.env.MIN_SONGS_PER_PLAYLIST;
 const _MAX_SONGS_PER_PLAYLIST = process.env.MAX_SONGS_PER_PLAYLIST;

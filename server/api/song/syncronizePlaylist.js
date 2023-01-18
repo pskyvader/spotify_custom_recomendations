@@ -2,7 +2,7 @@ const { getSongs } = require("../../spotifyapi/playlist");
 const {
 	getSongFeaturesFromAPI,
 } = require("../songfeatures/getSongFeaturesFromAPI");
-const { getPlaylistSongs } = require("./getPlaylistSongs");
+const { getPlaylistSongs } = require("../playlist");
 
 const {
 	createPlaylistSong,
@@ -87,7 +87,8 @@ const syncronizePlaylist = async (user, playlist) => {
 			return addErrorMessages(
 				{ error: false, message: [] },
 				responseSyncronized,
-				"Syncronize completed successfully. " + responseSyncronized.length
+				"Syncronize completed successfully. " +
+					responseSyncronized.length
 			);
 		})
 		.then((response) => {
