@@ -1,4 +1,4 @@
-const { getPlaylistSongsFromAPI } = require("./getPlaylistSongsFromAPI");
+const { getSongs } = require("../../spotifyapi/playlist");
 const {
 	getSongFeaturesFromAPI,
 } = require("../songfeatures/getSongFeaturesFromAPI");
@@ -29,7 +29,7 @@ const addErrorMessages = (mainResponse, response, successMessage) => {
 
 const syncronizePlaylist = async (user, playlist) => {
 	const currentSongList = await getPlaylistSongs(playlist);
-	const songListUpdated = await getPlaylistSongsFromAPI(user, playlist);
+	const songListUpdated = await getSongs(user.access_token, playlist);
 	const songFeaturesListUpdated = await getSongFeaturesFromAPI(user, [
 		...songListUpdated,
 	]);

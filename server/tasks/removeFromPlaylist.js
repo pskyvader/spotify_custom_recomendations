@@ -45,7 +45,7 @@ const removeFromSinglePlaylist = async (
 			break;
 		}
 		const removeResponse = await removeSongFromPlaylist(
-			user,
+			user.access_token,
 			songInList,
 			playlist
 		);

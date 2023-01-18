@@ -1,7 +1,7 @@
 const { removeSong } = require("../../spotifyapi/playlist");
 
-const removeSongFromPlaylist = async (user, song, playlist) => {
-	const response = await removeSong(user.access_token, playlist.id, song.id);
+const removeSongFromPlaylist = async (access_token, song, playlist) => {
+	const response = await removeSong(access_token, playlist.id, song.id);
 	if (response.error) {
 		return response;
 	}

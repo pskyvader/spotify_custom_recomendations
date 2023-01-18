@@ -1,7 +1,7 @@
-const { getPlaylistSongsFromAPI } = require("./getPlaylistSongsFromAPI");
 const { createSong, getSong } = require("../../model");
+const { getSongs } = require("../../spotifyapi/playlist");
 const getRepeatedSongs = async (user, playlist) => {
-	const songList = await getPlaylistSongsFromAPI(user, playlist);
+	const songList = await getSongs(user.access_token, playlist);
 	// remove repeated ids from currentPlaylist array
 	const filtered = songList.filter((currentSong, index, self) => {
 		const found = self.findIndex((song) => {

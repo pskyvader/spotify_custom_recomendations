@@ -1,4 +1,4 @@
-const { request } = require("../../spotifyapi/");
+const { request } = require("../");
 
 const addSong = async (access_token, playlistId, songId) => {
 	const url =

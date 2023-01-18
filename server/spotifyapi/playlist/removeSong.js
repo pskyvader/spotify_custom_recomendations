@@ -1,4 +1,4 @@
-const { request } = require("../../spotifyapi/");
+const { request } = require("../");
 
 const removeSong = async (access_token, playlistId, songId) => {
 	const url =

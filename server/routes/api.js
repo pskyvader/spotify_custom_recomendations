@@ -370,7 +370,7 @@ router.post("/playlist/:playlistId/remove/:songId", async (req, res) => {
 		return res.json(song);
 	}
 	const response = await removeSongFromPlaylist(
-		user,
+		user.access_token,
 		song,
 		currentPlaylist
 	);

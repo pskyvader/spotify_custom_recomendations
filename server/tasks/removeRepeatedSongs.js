@@ -11,7 +11,7 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 	const repeatedTasks = repeatedList.map((repeatedSong) => {
 		const playlistSong = repeatedSong.getPlaylistSongs();
 		const removeSong = removeSongFromPlaylist(
-			user,
+			user.access_token,
 			repeatedSong,
 			playlist
 		);
