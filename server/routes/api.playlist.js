@@ -22,6 +22,8 @@ const tenMinutes = 600;
 
 router.use("/*", (req, res, next) => {
 	console.log("req url:", req.baseUrl);
+	console.log("req user:", req.user);
+	console.log("req playlist:", req.playlist);
 	next();
 });
 
