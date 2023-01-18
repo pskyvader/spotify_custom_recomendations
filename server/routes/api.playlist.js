@@ -44,6 +44,9 @@ router.get("/", async (req, res) => {
 router.get("/sync", async (req, res) => {
 	const playlist = req.playlist;
 	const user = req.user;
+	if (playlist.active === false) {
+		return res.json({ error: true, message: "Playlist is not active" });
+	}
 	const response = await syncronizePlaylist(user, playlist);
 	if (response.error) {
 		console.error("sync error", response);
@@ -53,7 +56,7 @@ router.get("/sync", async (req, res) => {
 
 router.get("/status", async (req, res) => {
 	const playlist = req.playlist;
-	if (playlist.status === false) {
+	if (playlist.active === false) {
 		return res.json(playlist);
 	}
 
