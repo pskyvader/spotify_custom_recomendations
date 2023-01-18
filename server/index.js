@@ -14,7 +14,6 @@ const {
 	logOut,
 } = require("./api/user");
 const apiRoute = require("./routes/api");
-const { cache } = require("./utils");
 
 connection();
 const sessionStore = new SequelizeStore({
