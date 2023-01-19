@@ -18,7 +18,7 @@ const RecommendedSongs = ({ playlistId, hidden }) => {
 		if (!playlistTracks[playlistId]) {
 			return;
 		}
-		if (!playlistRecommendedTracks[playlistId]) {
+		if (!hidden && !playlistRecommendedTracks[playlistId]) {
 			Playlist.PlaylistRecommended(playlistId).then((response) => {
 				if (response.error) return console.log(response);
 				playlistRecommendedTracks[playlistId] = response;
@@ -26,6 +26,7 @@ const RecommendedSongs = ({ playlistId, hidden }) => {
 			});
 		}
 	}, [
+		hidden,
 		playlistId,
 		playlistRecommendedTracks,
 		setPlaylistRecommendedTracks,
@@ -45,12 +46,7 @@ const RecommendedSongs = ({ playlistId, hidden }) => {
 			ButtonAddSong,
 			setCurrentSong
 		);
-		return (
-			<SongList
-				data={data}
-				title="Recommended Songs"
-			/>
-		);
+		return <SongList data={data} title="Recommended Songs" />;
 	}
 
 	return <CircularProgress />;

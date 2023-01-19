@@ -13,7 +13,7 @@ const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
 		if (!playlistTracks[playlistId]) {
 			return;
 		}
-		if (!playlistDeleteTracks[playlistId]) {
+		if (!hidden && !playlistDeleteTracks[playlistId]) {
 			Playlist.PlaylistDeleteRecommended(playlistId).then((response) => {
 				if (response.error) return console.log(response);
 				playlistDeleteTracks[playlistId] = response;
@@ -21,6 +21,7 @@ const RecommendedDeleteSongs = ({ playlistId, hidden }) => {
 			});
 		}
 	}, [
+		hidden,
 		playlistId,
 		playlistDeleteTracks,
 		setPlaylistDeleteTracks,

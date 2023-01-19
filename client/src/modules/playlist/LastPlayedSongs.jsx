@@ -11,13 +11,13 @@ const LastPlayedSongs = ({ hidden }) => {
 		useContext(PlaylistContext);
 	const { setCurrentSong } = useContext(PlayerContext);
 	useEffect(() => {
-		if (!lastPlayedTracks) {
+		if (!hidden && !lastPlayedTracks) {
 			Playlist.LastPlayed().then((response) => {
 				if (response.error) return console.log(response);
 				setLastPlayedTracks(response);
 			});
 		}
-	}, [lastPlayedTracks, setLastPlayedTracks]);
+	}, [hidden, lastPlayedTracks, setLastPlayedTracks]);
 
 	if (hidden) {
 		return null;
@@ -38,12 +38,7 @@ const LastPlayedSongs = ({ hidden }) => {
 				return new Date(cellData.formattedValue).toLocaleString();
 			},
 		});
-		return (
-			<SongList
-				data={data}
-				title="Last Played Songs"
-			/>
-		);
+		return <SongList data={data} title="Last Played Songs" />;
 	}
 	return <CircularProgress />;
 };

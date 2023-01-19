@@ -20,12 +20,12 @@ const { cache } = require("../utils");
 
 const tenMinutes = 600;
 
-router.use("/*", (req, res, next) => {
-	console.log("req url:", req.baseUrl);
-	console.log("req user:", req.user);
-	console.log("req playlist:", req.playlist);
-	next();
-});
+// router.use("/*", (req, res, next) => {
+// 	console.log("req url:", req.baseUrl);
+// 	// console.log("req user:", req.user);
+// 	// console.log("req playlist:", req.playlist);
+// 	next();
+// });
 
 router.get("/", async (req, res) => {
 	const playlist = req.playlist;
@@ -37,10 +37,20 @@ router.get("/", async (req, res) => {
 	if (playlistSongs.error) {
 		return res.json(playlistSongs);
 	}
+	const parsedPlaylistSongs = playlistSongs.map((song) => {
+		return {
+			...song.toJSON(),
+			PlaylistSong: song.PlaylistSongs[0].toJSON(),
+		};
+	});
 
-	cache.set(`get-playlist-songs-${playlist.id}`, playlistSongs, tenMinutes);
+	cache.set(
+		`get-playlist-songs-${playlist.id}`,
+		parsedPlaylistSongs,
+		tenMinutes
+	);
 
-	res.json(playlistSongs);
+	res.json(parsedPlaylistSongs);
 });
 
 router.get("/sync", async (req, res) => {

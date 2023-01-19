@@ -11,14 +11,14 @@ const DeletedSongs = ({ playlistId, hidden }) => {
 		useContext(PlaylistContext);
 	const { setCurrentSong } = useContext(PlayerContext);
 	useEffect(() => {
-		if (!playlistDeletedSongs[playlistId]) {
+		if (!hidden && !playlistDeletedSongs[playlistId]) {
 			Playlist.DeletedSongs(playlistId).then((response) => {
 				if (response.error) return console.log(response);
 				playlistDeletedSongs[playlistId] = response;
 				setPlaylistDeletedSongs({ ...playlistDeletedSongs });
 			});
 		}
-	}, [playlistId, playlistDeletedSongs, setPlaylistDeletedSongs]);
+	}, [hidden, playlistId, playlistDeletedSongs, setPlaylistDeletedSongs]);
 	if (playlistId === null) {
 		return null;
 	}
@@ -41,12 +41,7 @@ const DeletedSongs = ({ playlistId, hidden }) => {
 				new Date(cellData.formattedValue).toLocaleString(),
 		});
 
-		return (
-			<SongList
-				data={data}
-				title="Deleted songs from playlist"
-			/>
-		);
+		return <SongList data={data} title="Deleted songs from playlist" />;
 	}
 	return <CircularProgress />;
 };

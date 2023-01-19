@@ -9,14 +9,14 @@ const PlayListSongs = ({ playlistId, hidden }) => {
 	const { playlistTracks, setPlaylistTracks } = useContext(PlaylistContext);
 	const { setCurrentSong } = useContext(PlayerContext);
 	useEffect(() => {
-		if (!playlistTracks[playlistId]) {
+		if (!hidden && !playlistTracks[playlistId]) {
 			Playlist.Playlist(playlistId).then((response) => {
 				if (response.error) return console.log(response);
 				playlistTracks[playlistId] = response;
 				setPlaylistTracks({ ...playlistTracks });
 			});
 		}
-	}, [playlistId, playlistTracks, setPlaylistTracks]);
+	}, [hidden, playlistId, playlistTracks, setPlaylistTracks]);
 	if (playlistId === null) {
 		return null;
 	}
