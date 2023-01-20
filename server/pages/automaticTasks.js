@@ -89,7 +89,13 @@ const automaticTasks = async () => {
 				}
 				totalresponses.message.push("Hourly Tasks Done");
 				totalresponses.message.push("--------------------");
-				return totalresponses;
+				if (totalresponses.error) {
+					return totalresponses;
+				}
+				return {
+					message: ["Hourly Tasks Done", "No Errors"],
+					error: false,
+				};
 			})
 			.then((previousResponse) => {
 				if (dailyTaskList.length === 0) {
