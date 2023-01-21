@@ -101,7 +101,7 @@ const getRecommendedSongsFromAPI = async (
 		if (response.error) {
 			return response;
 		}
-		recommendeSdongs.push(...response.tracks);
+		recommendedSongs.push(...response.tracks);
 	}
 
 	// console.log(
