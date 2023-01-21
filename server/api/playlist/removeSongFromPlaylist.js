@@ -14,6 +14,7 @@ const removeSongFromPlaylist = async (access_token, song, playlist) => {
 		await playlist.addSong(song, { through: songData });
 		return song;
 	}
+        console.log("removeSongFromPlaylist", currentSong);
 	await currentSong[0].PlaylistSongs[0].update(songData);
 	return song;
 };
