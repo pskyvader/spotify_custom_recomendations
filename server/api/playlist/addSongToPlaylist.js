@@ -14,8 +14,8 @@ const addSongToPlaylist = async (access_token, playlist, song) => {
 		await playlist.addSong(song, { through: songData });
 		return song;
 	}
-	console.log("addSongToPlaylist", currentSong);
-	await currentSong[0].PlaylistSongs[0].update(songData);
+	// console.log("addSongToPlaylist", currentSong);
+	await currentSong[0].PlaylistSong.update(songData);
 	return song;
 };
 
