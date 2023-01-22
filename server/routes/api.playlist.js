@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
 	const parsedPlaylistSongs = playlistSongs.map((song) => {
 		return {
 			...song.toJSON(),
-			PlaylistSong: song.PlaylistSongs[0].toJSON(),
+			PlaylistSong: song.PlaylistSong.toJSON(),
 		};
 	});
 

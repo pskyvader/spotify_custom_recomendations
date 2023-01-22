@@ -12,7 +12,7 @@ const getPlaylistSongs = async (playlist, date = Date.now()) => {
 					},
 				},
 			],
-			order: [[PlaylistSong, "add_date", "ASC"]],
+			order: [[PlaylistSong, "add_date", "DESC"]],
 		})
 		.catch((err) => {
 			console.error("getPlaylistSongs error", err);
