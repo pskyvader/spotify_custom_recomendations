@@ -33,12 +33,15 @@ const DeletedSongs = ({ playlistId, hidden }) => {
 			setCurrentSong
 		);
 		data.columns.splice(2, 0, {
-			field: "removed_date",
-			headerName: "Removed",
+			field: "Removed",
+			// headerName: "Removed",
 			minWidth: 200,
 			flex: 1,
-			renderCell: (cellData) =>
-				new Date(cellData.formattedValue).toLocaleString(),
+			valueGetter: (params) => {
+				return new Date(
+					params.row.PlaylistSong.removed_date
+				).toLocaleString();
+			},
 		});
 
 		return <SongList data={data} title="Deleted songs from playlist" />;

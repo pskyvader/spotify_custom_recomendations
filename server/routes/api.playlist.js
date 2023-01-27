@@ -159,24 +159,29 @@ router.get("/deleterecommended", async (req, res) => {
 
 router.get("/deletedsongs", async (req, res) => {
 	const playlist = req.playlist;
-	let response = cache.get(`get-playlist-deleted-${playlist.id}`);
-	if (response) {
-		return res.json(response);
+	const cacheResponse = cache.get(`get-playlist-deleted-${playlist.id}`);
+	if (cacheResponse) {
+		return res.json(cacheResponse);
 	}
 
 	const deletedSongs = await getDeletedSongs(playlist);
 	if (deletedSongs.error) {
 		return res.json(deletedSongs);
 	}
-
-	response = deletedSongs.map((deletedSong) => {
-		const songResponse = deletedSong.Song.toJSON();
-		songResponse.removed_date = deletedSong.removed_date;
-		return songResponse;
+	const parsedDeletedSongs = deletedSongs.map((song) => {
+		return {
+			...song.toJSON(),
+			PlaylistSong: song.PlaylistSong.toJSON(),
+		};
 	});
-	cache.set(`get-playlist-deleted-${playlist.id}`, response, tenMinutes);
 
-	res.json(response);
+	cache.set(
+		`get-playlist-deleted-${playlist.id}`,
+		parsedDeletedSongs,
+		tenMinutes
+	);
+
+	res.json(parsedDeletedSongs);
 });
 
 router.get("/songfeatures", async (req, res) => {
