@@ -68,7 +68,7 @@ const getRecommendedSongs = async (user, playlist, minTime = null) => {
 	//remove songs recently removed and songs already in playlist
 	return recommendedTracks.filter((currentSong) => {
 		return (
-			!removedSongs.find((song) => song.Song.id === currentSong.id) &&
+			!removedSongs.find((song) => song.id === currentSong.id) &&
 			!fullPlaylist.find((song) => song.id === currentSong.id)
 		);
 	});

@@ -11,6 +11,7 @@ const PlayListSongs = ({ playlistId, hidden }) => {
 	useEffect(() => {
 		if (!hidden && !playlistTracks[playlistId]) {
 			Playlist.Playlist(playlistId).then((response) => {
+				console.log("Playlist Songs", response);
 				if (response.error) return console.log(response);
 				playlistTracks[playlistId] = response;
 				setPlaylistTracks({ ...playlistTracks });
