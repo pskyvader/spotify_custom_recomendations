@@ -1,16 +1,23 @@
-const { PlaylistSong } = require("../../database");
+const { Song } = require("../../database");
 const getDeletedSongs = async (playlist) => {
 	return playlist
-		.getSongs({
+		.getPlaylistSongs({
+			where: {
+				active: false,
+			},
 			include: [
 				{
-					model: PlaylistSong,
-					where: {
-						active: false,
-					},
+					model: Song,
 				},
 			],
-			order: [[PlaylistSong, "removed_date", "DESC"]],
+			order: [["removed_date", "DESC"]],
+		})
+		.then((playlistSongList) => {
+			return playlistSongList.map((playlistSong) => {
+				const song = playlistSong.Song;
+				song.PlaylistSong = playlistSong;
+				return song;
+			});
 		})
 		.catch((err) => {
 			console.error("getDeletedSongs error", err);

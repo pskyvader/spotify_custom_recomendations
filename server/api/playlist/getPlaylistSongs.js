@@ -1,18 +1,21 @@
 const { Op } = require("sequelize");
-const { PlaylistSong } = require("../../database");
+const { Song } = require("../../database");
 const getPlaylistSongs = async (playlist, date = Date.now()) => {
 	return playlist
-		.getSongs({
-			include: [
-				{
-					model: PlaylistSong,
-					where: {
-						active: true,
-						add_date: { [Op.lte]: date },
-					},
-				},
-			],
-			order: [[PlaylistSong, "add_date", "DESC"]],
+		.getPlaylistSongs({
+			where: {
+				active: true,
+				add_date: { [Op.lte]: date },
+			},
+			include: [Song],
+			order: [["add_date", "DESC"]],
+		})
+		.then((playlistSongList) => {
+			return playlistSongList.map((playlistSong) => {
+				const song = playlistSong.Song;
+				song.PlaylistSong = playlistSong;
+				return song;
+			});
 		})
 		.catch((err) => {
 			console.error("getPlaylistSongs error", err);
