@@ -24,6 +24,7 @@ const tenMinutes = 600;
 // 	console.log("req url:", req.baseUrl);
 // 	// console.log("req user:", req.user);
 // 	// console.log("req playlist:", req.playlist);
+// 	console.log("req params:", req.params);
 // 	next();
 // });
 
@@ -43,7 +44,6 @@ router.get("/", async (req, res) => {
 			PlaylistSong: song.PlaylistSong.toJSON(),
 		};
 	});
-
 	cache.set(
 		`get-playlist-songs-${playlist.id}`,
 		parsedPlaylistSongs,
@@ -81,6 +81,7 @@ router.get("/status", async (req, res) => {
 	if (syncResponse.error) {
 		console.error("sync error", syncResponse);
 	}
+	// console.log("sync", syncResponse);
 	cache.set(
 		`get-playlist-last-sync-${playlist.id}`,
 		syncResponse.error,
@@ -168,6 +169,7 @@ router.get("/deletedsongs", async (req, res) => {
 	if (deletedSongs.error) {
 		return res.json(deletedSongs);
 	}
+
 	const parsedDeletedSongs = deletedSongs.map((song) => {
 		return {
 			...song.toJSON(),

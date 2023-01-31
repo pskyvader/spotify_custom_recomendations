@@ -26,6 +26,7 @@ const DeletedSongs = ({ playlistId, hidden }) => {
 		return null;
 	}
 	if (playlistDeletedSongs[playlistId]) {
+		console.log("Playlist deleted", playlistDeletedSongs[playlistId]);
 		const data = SongListColumns(
 			playlistDeletedSongs[playlistId],
 			playlistId,
