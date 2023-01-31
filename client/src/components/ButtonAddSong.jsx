@@ -13,6 +13,11 @@ const PostProcessPlaylist = (response, PlaylistId) => {
 		setPlaylistDeletedSongs,
 	} = useContext(PlaylistContext);
 
+	playlistTracks[PlaylistId] = playlistTracks[PlaylistId] || [];
+	playlistRecommendedTracks[PlaylistId] =
+		playlistRecommendedTracks[PlaylistId] || [];
+	playlistDeletedSongs[PlaylistId] = playlistDeletedSongs[PlaylistId] || [];
+
 	playlistTracks[PlaylistId] = [response, ...playlistTracks[PlaylistId]];
 	setPlaylistTracks({ ...playlistTracks });
 
