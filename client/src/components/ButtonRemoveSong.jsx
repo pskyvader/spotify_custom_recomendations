@@ -3,16 +3,18 @@ import { Playlist } from "../API";
 import { useContext, useState, useCallback } from "react";
 import { PlaylistContext } from "../context/PlaylistContextProvider";
 
-const PostProcessPlaylist = (response, PlaylistId) => {
-	const {
+const postProcessPlaylist = (
+	response,
+	PlaylistId,
+	{
 		playlistTracks,
 		setPlaylistTracks,
 		playlistDeleteTracks,
 		setPlaylistDeleteTracks,
 		playlistDeletedSongs,
 		setPlaylistDeletedSongs,
-	} = useContext(PlaylistContext);
-
+	}
+) => {
 	playlistTracks[PlaylistId] = playlistTracks[PlaylistId] || [];
 	playlistDeleteTracks[PlaylistId] = playlistDeleteTracks[PlaylistId] || [];
 	playlistDeletedSongs[PlaylistId] = playlistDeletedSongs[PlaylistId] || [];
@@ -41,7 +43,7 @@ const PostProcessPlaylist = (response, PlaylistId) => {
 	}
 
 	playlistDeletedSongs[PlaylistId] = [
-		response.song,
+		response,
 		...playlistDeletedSongs[PlaylistId],
 	];
 	setPlaylistDeletedSongs({
@@ -50,6 +52,7 @@ const PostProcessPlaylist = (response, PlaylistId) => {
 };
 
 const ButtonRemoveSong = ({ PlaylistId, uri }) => {
+	const playlistcontext = useContext(PlaylistContext);
 	const [disabled, setDisabled] = useState(false);
 
 	const deleteButtonCallback = useCallback(() => {
@@ -60,9 +63,9 @@ const ButtonRemoveSong = ({ PlaylistId, uri }) => {
 				console.log(response);
 				return;
 			}
-			PostProcessPlaylist(response, PlaylistId);
+			postProcessPlaylist(response, PlaylistId, playlistcontext);
 		});
-	}, [PlaylistId, uri]);
+	}, [PlaylistId, uri, playlistcontext]);
 
 	return (
 		<Button disabled={disabled} onClick={deleteButtonCallback}>

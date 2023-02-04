@@ -15,7 +15,7 @@ const addSongToPlaylist = async (access_token, playlist, song) => {
 		return song;
 	}
 	await currentSong[0].PlaylistSong.update(songData);
-	return song;
+	return currentSong[0];
 };
 
 module.exports = { addSongToPlaylist };

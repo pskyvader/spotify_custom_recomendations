@@ -3,16 +3,18 @@ import { Playlist } from "../API";
 import { useContext, useState, useCallback } from "react";
 import { PlaylistContext } from "../context/PlaylistContextProvider";
 
-const PostProcessPlaylist = (response, PlaylistId) => {
-	const {
+const postProcessPlaylist = (
+	response,
+	PlaylistId,
+	{
 		playlistTracks,
 		setPlaylistTracks,
 		playlistRecommendedTracks,
 		setPlaylistRecommendedTracks,
 		playlistDeletedSongs,
 		setPlaylistDeletedSongs,
-	} = useContext(PlaylistContext);
-
+	}
+) => {
 	playlistTracks[PlaylistId] = playlistTracks[PlaylistId] || [];
 	playlistRecommendedTracks[PlaylistId] =
 		playlistRecommendedTracks[PlaylistId] || [];
@@ -52,6 +54,7 @@ const PostProcessPlaylist = (response, PlaylistId) => {
 };
 
 const ButtonAddSong = ({ PlaylistId, uri }) => {
+	const playlistcontext = useContext(PlaylistContext);
 	const [disabled, setDisabled] = useState(false);
 
 	const addButtonCallback = useCallback(() => {
@@ -62,9 +65,9 @@ const ButtonAddSong = ({ PlaylistId, uri }) => {
 				console.log(response);
 				return;
 			}
-			PostProcessPlaylist(response, PlaylistId);
+			postProcessPlaylist(response, PlaylistId, playlistcontext);
 		});
-	}, [PlaylistId, uri]);
+	}, [PlaylistId, uri, playlistcontext]);
 
 	return (
 		<Button disabled={disabled} onClick={addButtonCallback}>

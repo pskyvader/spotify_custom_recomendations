@@ -15,7 +15,8 @@ const removeSongFromPlaylist = async (access_token, song, playlist) => {
 		return song;
 	}
 	await currentSong[0].PlaylistSong.update(songData);
-	return song;
+	// return song;
+	return currentSong[0];
 };
 
 module.exports = { removeSongFromPlaylist };
