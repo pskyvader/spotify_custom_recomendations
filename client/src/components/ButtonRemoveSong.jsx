@@ -15,40 +15,46 @@ const postProcessPlaylist = (
 		setPlaylistDeletedSongs,
 	}
 ) => {
-	playlistTracks[PlaylistId] = playlistTracks[PlaylistId] || [];
-	playlistDeleteTracks[PlaylistId] = playlistDeleteTracks[PlaylistId] || [];
-	playlistDeletedSongs[PlaylistId] = playlistDeletedSongs[PlaylistId] || [];
+	// playlistTracks[PlaylistId] = playlistTracks[PlaylistId] || [];
+	// playlistDeleteTracks[PlaylistId] = playlistDeleteTracks[PlaylistId] || [];
+	// playlistDeletedSongs[PlaylistId] = playlistDeletedSongs[PlaylistId] || [];
 
-	const playlistFiltered = playlistTracks[PlaylistId].filter((song) => {
-		return response.id !== song.id;
-	});
-	if (playlistTracks[PlaylistId].length !== playlistFiltered.length) {
-		playlistTracks[PlaylistId] = playlistFiltered;
-		setPlaylistTracks({ ...playlistTracks });
+	if (playlistTracks[PlaylistId]) {
+		const playlistFiltered = playlistTracks[PlaylistId].filter((song) => {
+			return response.id !== song.id;
+		});
+		if (playlistTracks[PlaylistId].length !== playlistFiltered.length) {
+			playlistTracks[PlaylistId] = playlistFiltered;
+			setPlaylistTracks({ ...playlistTracks });
+		}
 	}
 
-	const deleterecommendedfiltered = playlistDeleteTracks[PlaylistId].filter(
-		(song) => {
+	if (playlistDeleteTracks[PlaylistId]) {
+		const deleterecommendedfiltered = playlistDeleteTracks[
+			PlaylistId
+		].filter((song) => {
 			return response.id !== song.id;
+		});
+		if (
+			playlistDeleteTracks[PlaylistId].length !==
+			deleterecommendedfiltered.length
+		) {
+			playlistDeleteTracks[PlaylistId] = deleterecommendedfiltered;
+			setPlaylistDeleteTracks({
+				...playlistDeleteTracks,
+			});
 		}
-	);
-	if (
-		playlistDeleteTracks[PlaylistId].length !==
-		deleterecommendedfiltered.length
-	) {
-		playlistDeleteTracks[PlaylistId] = deleterecommendedfiltered;
-		setPlaylistDeleteTracks({
-			...playlistDeleteTracks,
+	}
+
+	if (playlistDeletedSongs[PlaylistId]) {
+		playlistDeletedSongs[PlaylistId] = [
+			response,
+			...playlistDeletedSongs[PlaylistId],
+		];
+		setPlaylistDeletedSongs({
+			...playlistDeletedSongs,
 		});
 	}
-
-	playlistDeletedSongs[PlaylistId] = [
-		response,
-		...playlistDeletedSongs[PlaylistId],
-	];
-	setPlaylistDeletedSongs({
-		...playlistDeletedSongs,
-	});
 };
 
 const ButtonRemoveSong = ({ PlaylistId, uri }) => {

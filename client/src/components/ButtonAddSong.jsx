@@ -15,41 +15,51 @@ const postProcessPlaylist = (
 		setPlaylistDeletedSongs,
 	}
 ) => {
-	playlistTracks[PlaylistId] = playlistTracks[PlaylistId] || [];
-	playlistRecommendedTracks[PlaylistId] =
-		playlistRecommendedTracks[PlaylistId] || [];
-	playlistDeletedSongs[PlaylistId] = playlistDeletedSongs[PlaylistId] || [];
+	// playlistTracks[PlaylistId] = playlistTracks[PlaylistId] || [];
+	// playlistRecommendedTracks[PlaylistId] =
+	// 	playlistRecommendedTracks[PlaylistId] || [];
+	// playlistDeletedSongs[PlaylistId] = playlistDeletedSongs[PlaylistId] || [];
 
-	playlistTracks[PlaylistId] = [response, ...playlistTracks[PlaylistId]];
-	setPlaylistTracks({ ...playlistTracks });
-
-	const recommendedfiltered = playlistRecommendedTracks[PlaylistId].filter(
-		(song) => {
-			return response.id !== song.id;
-		}
-	);
-	if (
-		playlistRecommendedTracks[PlaylistId].length !==
-		recommendedfiltered.length
-	) {
-		playlistRecommendedTracks[PlaylistId] = recommendedfiltered;
-
-		if (playlistRecommendedTracks[PlaylistId] < 5) {
-			delete playlistRecommendedTracks[PlaylistId];
-		}
-		setPlaylistRecommendedTracks({
-			...playlistRecommendedTracks,
-		});
+	if (playlistTracks[PlaylistId]) {
+		playlistTracks[PlaylistId] = [response, ...playlistTracks[PlaylistId]];
+		setPlaylistTracks({ ...playlistTracks });
 	}
 
-	const deletedfiltered = playlistDeletedSongs[PlaylistId].filter((song) => {
-		return response.id !== song.id;
-	});
-	if (playlistDeletedSongs[PlaylistId].length !== deletedfiltered.length) {
-		playlistDeletedSongs[PlaylistId] = deletedfiltered;
-		setPlaylistDeletedSongs({
-			...playlistDeletedSongs,
+	if (playlistRecommendedTracks[PlaylistId]) {
+		const recommendedfiltered = playlistRecommendedTracks[
+			PlaylistId
+		].filter((song) => {
+			return response.id !== song.id;
 		});
+		if (
+			playlistRecommendedTracks[PlaylistId].length !==
+			recommendedfiltered.length
+		) {
+			playlistRecommendedTracks[PlaylistId] = recommendedfiltered;
+
+			if (playlistRecommendedTracks[PlaylistId] < 5) {
+				delete playlistRecommendedTracks[PlaylistId];
+			}
+			setPlaylistRecommendedTracks({
+				...playlistRecommendedTracks,
+			});
+		}
+	}
+
+	if (playlistDeletedSongs[PlaylistId]) {
+		const deletedfiltered = playlistDeletedSongs[PlaylistId].filter(
+			(song) => {
+				return response.id !== song.id;
+			}
+		);
+		if (
+			playlistDeletedSongs[PlaylistId].length !== deletedfiltered.length
+		) {
+			playlistDeletedSongs[PlaylistId] = deletedfiltered;
+			setPlaylistDeletedSongs({
+				...playlistDeletedSongs,
+			});
+		}
 	}
 };
 
