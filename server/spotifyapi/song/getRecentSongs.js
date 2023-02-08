@@ -1,8 +1,8 @@
-const { formatSongAPI } = require("../../utils");
-const { request } = require("../../spotifyapi/");
+const { request } = require("../");
+const { formatSong } = require("./formatSong");
 const week = 604800000;
 
-const getRecentlyPlayedSongsFromAPI = async (user) => {
+const getRecentSongs = async (user) => {
 	const after = Date.now() - week;
 	let url =
 		"https://api.spotify.com/v1/me/player/recently-played?limit=50&after" +
@@ -19,10 +19,10 @@ const getRecentlyPlayedSongsFromAPI = async (user) => {
 	}
 
 	return items.map((song) => {
-		const formatted = formatSongAPI(song.track);
+		const formatted = formatSong(song.track);
 		formatted.played_date = song.played_at;
 		return formatted;
 	});
 };
 
-module.exports = { getRecentlyPlayedSongsFromAPI };
+module.exports = { getRecentSongs };

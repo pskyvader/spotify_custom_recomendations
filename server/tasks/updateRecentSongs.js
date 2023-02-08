@@ -1,10 +1,10 @@
-const { getRecentlyPlayedSongsFromAPI } = require("../api/song/");
+const { getRecentSongs } = require("../spotifyapi/song");
 // const { Song } = require("../database");
 
 const { createUserSong, createSong, getSong } = require("../model");
 
 const updateRecentSongs = async (user) => {
-	const recentSongsAPI = await getRecentlyPlayedSongsFromAPI(user);
+	const recentSongsAPI = await getRecentSongs(user);
 	const userSongHistory = await user.getUserSongHistories();
 	const songsToAdd = recentSongsAPI.filter((song) => {
 		song.played_date = new Date(song.played_date).getTime();

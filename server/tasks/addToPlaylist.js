@@ -5,8 +5,9 @@ const {
 	//  getSong
 } = require("../model");
 
-const _MIN_SONGS_PER_PLAYLIST = process.env.MIN_SONGS_PER_PLAYLIST;
-const _MAX_SONGS_PER_PLAYLIST = process.env.MAX_SONGS_PER_PLAYLIST;
+const min = process.env.MIN_SONGS_PER_PLAYLIST;
+const max = process.env.MAX_SONGS_PER_PLAYLIST;
+const mid = min + Math.floor((max - min) / 2);
 
 const addToSinglePlaylist = async (
 	user,
@@ -21,17 +22,22 @@ const addToSinglePlaylist = async (
 		return playlistSongsList;
 	}
 
-	if (playlistSongsList.length < _MIN_SONGS_PER_PLAYLIST) {
+	if (playlistSongsList.length < min) {
 		songsToAdd += 2;
 	}
-	if (playlistSongsList.length > _MAX_SONGS_PER_PLAYLIST) {
+
+	if (playlistSongsList.length < mid) {
+		songsToAdd += 1;
+	}
+
+	if (playlistSongsList.length > max) {
 		songsToAdd = Math.min(songsToAdd, previouslyRemoved);
 		songsToAdd -= 4;
 	}
 
 	if (songsToAdd <= 0) {
 		response.message.push(
-			`Too many songs in the playlist, and no song was removed. Current:${playlistSongsList.length}, MAX: ${_MAX_SONGS_PER_PLAYLIST}. Not adding new songs`
+			`Too many songs in the playlist, and no song was removed. Current:${playlistSongsList.length}, MAX: ${max}. Not adding new songs`
 		);
 		return response;
 	}
@@ -46,7 +52,7 @@ const addToSinglePlaylist = async (
 	}
 
 	response.message.push(
-		`Max songs available to add: ${songlist.length} to the ${playlistSongsList.length} already in playlist (MAX: ${_MAX_SONGS_PER_PLAYLIST}). Will attempt to add a max of ${songsToAdd}. Previously removed: ${previouslyRemoved}`
+		`Max songs available to add: ${songlist.length} to the ${playlistSongsList.length} already in playlist (MAX: ${max}). Will attempt to add a max of ${songsToAdd}. Previously removed: ${previouslyRemoved}`
 	);
 
 	let i = 0;
