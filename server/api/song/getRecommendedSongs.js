@@ -2,7 +2,7 @@ const { getPlaylistSongs } = require("../playlist");
 const { getDeletedSongs } = require("./getDeletedSongs");
 const { getRecommendedSongsFromAPI } = require("./getRecommendedSongsFromAPI");
 const { getRecentlyPlayedSongs } = require("./getRecentlyPlayedSongs");
-const { getTopSongsFromAPI } = require("./getTopSongsFromAPI");
+const { getTopSongs } = require("../../spotifyapi/song");
 
 //day in ms
 const day = 86400000;
@@ -31,7 +31,7 @@ const getRecommendedSongs = async (user, playlist, minTime = null) => {
 		return currentSong.Song.id;
 	});
 
-	const topSongs = await getTopSongsFromAPI(user);
+	const topSongs = await getTopSongs(user.user_token);
 	if (topSongs.error) {
 		return topSongs;
 	}

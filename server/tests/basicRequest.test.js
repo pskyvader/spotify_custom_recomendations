@@ -1,7 +1,7 @@
 require("dotenv").config();
 const nockBack = require("nock").back;
 const path = require("path");
-const { request } = require("./spotifyapi/");
+const { request } = require("../spotifyapi/");
 const { User } = require("../database");
 
 nockBack.fixtures = path.join(__dirname, "nockfixtures");

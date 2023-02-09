@@ -4,7 +4,6 @@ const { getRecommendedSongs } = require("./getRecommendedSongs");
 const {
 	getRecommendedSongsToRemove,
 } = require("./getRecommendedSongsToRemove");
-const { getTopSongsFromAPI } = require("./getTopSongsFromAPI");
 const { getDeletedSongs } = require("./getDeletedSongs");
 const {
 	syncronizePlaylist,
@@ -18,7 +17,6 @@ module.exports = {
 	getRecentlyPlayedSongs,
 	getRecommendedSongs,
 	getRecommendedSongsToRemove,
-	getTopSongsFromAPI,
 	getDeletedSongs,
 	syncronizePlaylist,
 	syncronizeMultiplePlaylists,

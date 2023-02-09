@@ -1,11 +1,11 @@
-const { formatSongAPIList } = require("../../utils");
-const { request } = require("../../spotifyapi/");
+const { request } = require("../");
+const { formatSongGroup } = require("./formatSong");
 
-const getTopSongsFromAPI = async (user) => {
+const getTopSongs = async (access_token) => {
 	let url = "https://api.spotify.com/v1/me/top/tracks?limit=50"; //&time_range=long_term
 	let items = [];
 	while (url) {
-		const response = await request(user.access_token, url);
+		const response = await request(access_token, url);
 		if (response.error) {
 			console.log("Get top songs from API error", response);
 			return response;
@@ -13,7 +13,7 @@ const getTopSongsFromAPI = async (user) => {
 		url = response.next;
 		items.push(...response.items);
 	}
-	return formatSongAPIList(items);
+	return formatSongGroup(items);
 };
 
-module.exports = { getTopSongsFromAPI };
+module.exports = { getTopSongs };
