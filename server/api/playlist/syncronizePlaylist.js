@@ -1,16 +1,15 @@
 const { getSongs } = require("../../spotifyapi/playlist");
 const {
-	getSongFeaturesFromAPI,
-} = require("../songfeatures/getSongFeaturesFromAPI");
-const { getPlaylistSongs } = require("../playlist");
+	getSongFeatures: getSongFeaturesAPI,
+} = require("../../spotifyapi/song");
+const { getPlaylistSongs } = require(".");
 
 const {
 	createPlaylistSong,
 	updatePlaylistSong,
 	createSong,
-	// getSong,
 	getSongFeatures,
-} = require("../../model/");
+} = require("../../model");
 
 const addErrorMessages = (mainResponse, response, successMessage) => {
 	let isError = false;
@@ -30,7 +29,7 @@ const addErrorMessages = (mainResponse, response, successMessage) => {
 const syncronizePlaylist = async (user, playlist) => {
 	const currentSongList = await getPlaylistSongs(playlist);
 	const songListUpdated = await getSongs(user.access_token, playlist);
-	const songFeaturesListUpdated = await getSongFeaturesFromAPI(user, [
+	const songFeaturesListUpdated = await getSongFeaturesAPI(user, [
 		...songListUpdated,
 	]);
 

@@ -5,13 +5,13 @@ const {
 	addSongToPlaylist,
 	removeSongFromPlaylist,
 	getPlaylistSongs,
+	syncronizePlaylist,
 } = require("../api/playlist");
 
 const {
 	getRecommendedSongs,
 	getRecommendedSongsToRemove,
 	getDeletedSongs,
-	syncronizePlaylist,
 } = require("../api/song");
 const { getPlaylistSongFeatures } = require("../api/songfeatures");
 

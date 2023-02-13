@@ -1,9 +1,10 @@
-const { request } = require("../../spotifyapi/");
+const { request } = require("../");
+const genres = require("./genres");
 function getRandomParams() {
 	// Define a list of available countries
 	const countries = ["US", "GB", "DE", "FR", "IT", "JP", "BR"];
 	// Define a list of available genres
-	const genres = ["rock", "pop", "hip hop", "electronic", "classical"];
+	// const genres = ["rock", "pop", "hip hop", "electronic", "classical"];
 
 	// Generate a random year between 1950 and the current year
 	const randomYear =
@@ -33,6 +34,7 @@ const getRandomSongs = async (access_token, userCountry) => {
 
 	const response = await request(access_token, baseURL + queryString);
 	if (response.error) {
+		console.log("Get random songs from API error", response);
 		return response;
 	}
 	const tracks = response.tracks.items;

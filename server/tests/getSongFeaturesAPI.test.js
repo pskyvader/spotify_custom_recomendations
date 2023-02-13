@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { getSongFeaturesFromAPI } = require("../api/songfeatures");
+const { getSongFeatures } = require("../spotifyapi/song");
 const { getPlaylistSongs } = require("../api/playlist");
 const { validateUserLogin } = require("../api/user");
 const { User } = require("../database");
@@ -21,7 +21,7 @@ const getfeatures = () => {
 				return { user, songList };
 			});
 		})
-		.then(({ user, songList }) => getSongFeaturesFromAPI(user, songList))
+		.then(({ user, songList }) => getSongFeatures(user, songList))
 		.then((response) => {
 			// expect(response).toBeDefined();
 			// expect(response).not.toHaveProperty("error");

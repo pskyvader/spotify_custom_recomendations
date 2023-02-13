@@ -1,16 +1,21 @@
 const { updateRecentSongs } = require("./updateRecentSongs");
-const { syncronizeMultiplePlaylists } = require("../api/song");
+const { syncronizeMultiplePlaylists } = require("../api/playlist");
 
 const getHourlyTasks = (userList) => {
 	return userList.map((user) => {
 		return updateRecentSongs(user)
 			.then((updateResponse) => {
-				return syncronizeMultiplePlaylists(user).then((syncResponse) => {
-					return {
-						error: updateResponse.error || syncResponse.error,
-						message: [updateResponse.message, ...syncResponse.message],
-					};
-				});
+				return syncronizeMultiplePlaylists(user).then(
+					(syncResponse) => {
+						return {
+							error: updateResponse.error || syncResponse.error,
+							message: [
+								updateResponse.message,
+								...syncResponse.message,
+							],
+						};
+					}
+				);
 			})
 			.then((response) => {
 				user.set({ last_modified_hourly: Date.now() });

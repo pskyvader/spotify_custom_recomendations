@@ -1,6 +1,6 @@
-const { genres } = require("../../utils");
-const { request } = require("../../spotifyapi/");
-const { formatSongGroup } = require("../../spotifyapi/song");
+const { genres } = require("./genres");
+const { request } = require("../");
+const { formatSongGroup } = require("./formatSong");
 
 const getWeights = (playlistLength) => {
 	const min = process.env.MIN_SONGS_PER_PLAYLIST;
@@ -61,7 +61,7 @@ const fillOptions = (songlist, currentgenres, weights) => {
 	return options;
 };
 
-const getRecommendedSongsFromAPI = async (
+const getRecommendedSongs = async (
 	access_token,
 	songList,
 	playlistLength,
@@ -99,6 +99,7 @@ const getRecommendedSongsFromAPI = async (
 	for (const seed of seedOptions) {
 		const response = await request(access_token, url + urlOptions + seed);
 		if (response.error) {
+			console.log("Get recommended songs from API error", response);
 			return response;
 		}
 		recommendedSongs.push(...response.tracks);
@@ -127,4 +128,4 @@ const getRecommendedSongsFromAPI = async (
 	// return formatSongAPIList(recommendedSongs.sort(() => Math.random() - 0.5));
 };
 
-module.exports = { getRecommendedSongsFromAPI };
+module.exports = { getRecommendedSongs };
