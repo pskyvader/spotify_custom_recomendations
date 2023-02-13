@@ -1,7 +1,10 @@
-const fetch = (...args) =>
-	import("node-fetch").then(({ default: fetchFunction }) => {
-		return fetchFunction(...args);
-	});
+if (typeof fetch === "undefined") {
+	fetch = require("node-fetch");
+	// fetch = (...args) =>
+	// 	import("node-fetch").then(({ default: fetchFunction }) => {
+	// 		return fetchFunction(...args);
+	// 	});
+}
 
 const request = (
 	access_token,
