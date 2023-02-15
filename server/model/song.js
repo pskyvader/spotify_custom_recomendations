@@ -2,7 +2,14 @@ const { Song } = require("../database");
 const { request } = require("../spotifyapi/");
 const { formatSongAPI } = require("../utils/");
 
-const createSong = async (access_token, songId, data = null) => {
+const createSong = (songData) => {
+	return Song.create(songData).catch((err) => {
+		console.error("create song error ", err);
+		return { error: true, message: err.message };
+	});
+};
+
+const createSong2 = async (access_token, songId, data = null) => {
 	if (data === null) {
 		let url = `https://api.spotify.com/v1/tracks/${songId}`;
 		const response = await request(access_token, url);
@@ -21,12 +28,10 @@ const createSong = async (access_token, songId, data = null) => {
 };
 
 const getSong = async (songId) => {
-	return Song.findByPk(songId);
-	// const currentSong = await Song.findByPk(songId);
-	// if (currentSong !== null) {
-	// 	return currentSong;
-	// }
-	// return createSong(access_token, songId, data);
+	return Song.findByPk(songId).catch((err) => {
+		console.error("Get Song error ", err);
+		return { error: true, message: err.message };
+	});
 };
 
 const updateSong = async (

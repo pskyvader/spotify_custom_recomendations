@@ -12,10 +12,9 @@ const {
 	getRecommendedSongs,
 	getRecommendedSongsToRemove,
 	getDeletedSongs,
+	getSong,
 } = require("../api/song");
 const { getPlaylistSongFeatures } = require("../api/songfeatures");
-
-const { createSong, getSong } = require("../model");
 const { cache } = require("../utils");
 
 const tenMinutes = 600;
@@ -213,12 +212,7 @@ router.post("/add/:songId", async (req, res) => {
 	const playlist = req.playlist;
 	const user = req.user;
 
-	const song = await getSong(req.params.songId).then((currentSong) => {
-		if (currentSong === null) {
-			return createSong(user.access_token, req.params.songId);
-		}
-		return currentSong;
-	});
+	const song = await getSong(req.params.songId);
 
 	if (song.error) {
 		return res.json(song);
@@ -271,12 +265,7 @@ router.post("/remove/:songId", async (req, res) => {
 	const playlist = req.playlist;
 	const user = req.user;
 
-	const song = await getSong(req.params.songId).then((currentSong) => {
-		if (currentSong === null) {
-			return createSong(user.access_token, req.params.songId);
-		}
-		return currentSong;
-	});
+	const song = await getSong(req.params.songId);
 
 	if (song.error) {
 		return res.json(song);

@@ -8,10 +8,8 @@ const createPlaylist = (playlistData) => {
 };
 
 const getPlaylist = (_UserId, id) => {
-	return Playlist.findOne({
-		where: { id: id},
-	}).catch((err) => {
-		console.error("Playlist error ", err);
+	return Playlist.findByPk(id).catch((err) => {
+		console.error("Get Playlist error ", err);
 		return { error: true, message: err.message };
 	});
 };

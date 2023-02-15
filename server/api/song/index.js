@@ -6,6 +6,7 @@ const {
 const { getDeletedSongs } = require("./getDeletedSongs");
 const { getRecentlyAddedSongs } = require("./getRecentlyAddedSongs");
 const { getRepeatedSongs } = require("./getRepeatedSongs");
+const { getSong } = require("./getSong");
 
 module.exports = {
 	getRecentlyPlayedSongs,
@@ -14,4 +15,5 @@ module.exports = {
 	getDeletedSongs,
 	getRecentlyAddedSongs,
 	getRepeatedSongs,
+	getSong,
 };

@@ -21,10 +21,19 @@ const updateRecentSongs = async (user) => {
 		return getSong(songtoadd.id)
 			.then((currentSong) => {
 				if (currentSong === null) {
-					return createSong(user.access_token, songtoadd.id);
+					return getSongAPI(req.params.songId).then((songFromAPI) => {
+						if (songFromAPI.error) {
+							return songFromAPI;
+						}
+						return createSong(songFromAPI);
+					});
 				}
-				return currentSong;
+				if (currentSong.error) {
+					return currentSong;
+				}
+				return currentSong.update(song);
 			})
+
 			.then((song) => {
 				if (song.error) {
 					console.error("ADDING TO HISTORY ERROR");
