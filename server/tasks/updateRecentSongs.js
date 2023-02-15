@@ -1,7 +1,7 @@
 const { getRecentSongs } = require("../spotifyapi/song");
-// const { Song } = require("../database");
 
-const { createUserSong, createSong, getSong } = require("../model");
+const { createUserSong } = require("../model");
+const { getSong } = require("../api/song");
 
 const updateRecentSongs = async (user) => {
 	const recentSongsAPI = await getRecentSongs(user);
@@ -18,30 +18,14 @@ const updateRecentSongs = async (user) => {
 	});
 
 	const addTasks = songsToAdd.map((songtoadd) => {
-		return getSong(songtoadd.id)
-			.then((currentSong) => {
-				if (currentSong === null) {
-					return getSongAPI(req.params.songId).then((songFromAPI) => {
-						if (songFromAPI.error) {
-							return songFromAPI;
-						}
-						return createSong(songFromAPI);
-					});
-				}
-				if (currentSong.error) {
-					return currentSong;
-				}
-				return currentSong.update(song);
-			})
-
-			.then((song) => {
-				if (song.error) {
-					console.error("ADDING TO HISTORY ERROR");
-					console.error(song);
-					return song;
-				}
-				return createUserSong(user, song, songtoadd.played_date);
-			});
+		return getSong(songtoadd.id, songtoadd).then((song) => {
+			if (song.error) {
+				console.error("ADDING TO HISTORY ERROR");
+				console.error(song);
+				return song;
+			}
+			return createUserSong(user, song, songtoadd.played_date);
+		});
 	});
 	return Promise.all(addTasks)
 		.then((responses) => {
