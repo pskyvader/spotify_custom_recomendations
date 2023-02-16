@@ -9,24 +9,6 @@ const createSong = (songData) => {
 	});
 };
 
-const createSong2 = async (access_token, songId, data = null) => {
-	if (data === null) {
-		let url = `https://api.spotify.com/v1/tracks/${songId}`;
-		const response = await request(access_token, url);
-		if (response.error) {
-			return response;
-		}
-		data = formatSongAPI(response);
-	}
-
-	const [newSong] = await Song.upsert(data).catch((err) => {
-		console.error("create song error", data, err);
-		return { error: true, message: err.message };
-	});
-
-	return newSong;
-};
-
 const getSong = async (songId) => {
 	return Song.findByPk(songId).catch((err) => {
 		console.error("Get Song error ", err);
