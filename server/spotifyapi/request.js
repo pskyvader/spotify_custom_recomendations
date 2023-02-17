@@ -1,9 +1,16 @@
-async function getFetch() {
-	if (typeof window !== "undefined") return window.fetch;
-	if (typeof globalThis !== "undefined") return globalThis.fetch;
-	const { default: fetch } = await import("node-fetch");
-	return fetch;
-}
+const getFetch = () => {
+	if (typeof window !== "undefined") {
+		return Promise.resolve(window.fetch);
+	}
+	if (typeof globalThis !== "undefined") {
+		return Promise.resolve(globalThis.fetch);
+	}
+	return import("node-fetch").then((module) => module.default || module);
+};
+// fetch = (...args) =>
+// 	import("node-fetch").then(({ default: fetchFunction }) => {
+// 		return fetchFunction(...args);
+// 	});
 
 const request = async (
 	access_token,
