@@ -1,15 +1,21 @@
 const getFetch = async () => {
-	if (typeof fetch === "function") return fetch;
+	if (typeof fetch === "function") {
+		console.log("basic", fetch);
+		return fetch;
+	}
 	if (
 		typeof globalThis !== "undefined" &&
 		typeof globalThis.fetch === "function"
 	) {
+		console.log("global", globalThis.fetch);
 		return globalThis.fetch;
 	}
 	if (typeof window !== "undefined" && typeof window.fetch === "function") {
+		console.log("window", window.fetch);
 		return window.fetch;
 	}
 	const fetchModule = await import("node-fetch");
+	console.log("import", fetchModule.default);
 	return fetchModule.default;
 };
 // fetch = (...args) =>
@@ -33,6 +39,7 @@ const request = async (
 		body: body,
 	};
 	const fetch = await getFetch();
+	console.log("getFetch", fetch);
 
 	return fetch(url, requestOptions)
 		.then((response) => {
