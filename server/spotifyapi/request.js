@@ -1,11 +1,16 @@
-const getFetch = () => {
-	if (typeof window !== "undefined") {
-		return Promise.resolve(window.fetch);
+const getFetch = async () => {
+	if (typeof fetch === "function") return fetch;
+	if (
+		typeof globalThis !== "undefined" &&
+		typeof globalThis.fetch === "function"
+	) {
+		return globalThis.fetch;
 	}
-	if (typeof globalThis !== "undefined") {
-		return Promise.resolve(globalThis.fetch);
+	if (typeof window !== "undefined" && typeof window.fetch === "function") {
+		return window.fetch;
 	}
-	return import("node-fetch").then((module) => module.default || module);
+	const fetchModule = await import("node-fetch");
+	return fetchModule.default;
 };
 // fetch = (...args) =>
 // 	import("node-fetch").then(({ default: fetchFunction }) => {
