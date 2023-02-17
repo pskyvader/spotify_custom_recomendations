@@ -1,10 +1,11 @@
-if (typeof fetch === "undefined") {
-	fetch = require("node-fetch");
-	// fetch = (...args) =>
-	// 	import("node-fetch").then(({ default: fetchFunction }) => {
-	// 		return fetchFunction(...args);
-	// 	});
+async function getFetch() {
+	if (typeof window !== "undefined") return window.fetch;
+	if (typeof globalThis !== "undefined") return globalThis.fetch;
+	const { default: fetch } = await import("node-fetch");
+	return fetch;
 }
+
+const fetch = await getFetch();
 
 const request = (
 	access_token,
