@@ -2,7 +2,7 @@ const { getSongs } = require("../../spotifyapi/playlist");
 const {
 	getSongFeatures: getSongFeaturesAPI,
 } = require("../../spotifyapi/song");
-const { getPlaylistSongs } = require(".");
+const { getPlaylistSongs } = require("./getPlaylistSongs");
 
 const {
 	createPlaylistSong,
