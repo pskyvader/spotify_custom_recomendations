@@ -5,9 +5,7 @@ async function getFetch() {
 	return fetch;
 }
 
-const fetch = await getFetch();
-
-const request = (
+const request = async (
 	access_token,
 	url,
 	method = "GET",
@@ -22,6 +20,7 @@ const request = (
 		},
 		body: body,
 	};
+	const fetch = await getFetch();
 
 	return fetch(url, requestOptions)
 		.then((response) => {
