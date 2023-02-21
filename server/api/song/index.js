@@ -15,5 +15,5 @@ module.exports = {
 	getDeletedSongs,
 	getRecentlyAddedSongs,
 	getRepeatedSongs,
-	getSong
+	getSong,
 };

@@ -41,6 +41,7 @@ const syncronizePlaylist = async (user, playlist) => {
 
 	//it's not playlist-song, only "Song" in database
 	const syncronizeSongsPromise = songListUpdated.map((currentSong) => {
+		console.log("getSong type:", typeof getSong);
 		return getSong(user.access_token, currentSong.id, currentSong);
 	});
 	const syncronizeSongsFeaturesPromise = songFeaturesListUpdated.map(
