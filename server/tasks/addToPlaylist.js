@@ -1,7 +1,7 @@
-const { getRecommendedSongs } = require("../api/song");
+const { getRecommendedSongs, getSong } = require("../api/song");
 const { addSongToPlaylist, getPlaylistSongs } = require("../api/playlist");
 const {
-	createSong,
+	// createSong,
 	//  getSong
 } = require("../model");
 
@@ -60,7 +60,7 @@ const addToSinglePlaylist = async (
 		if (i >= songsToAdd) {
 			break;
 		}
-		const currentSong = await createSong(
+		const currentSong = await getSong(
 			user.access_token,
 			songInList.id,
 			songInList

@@ -212,7 +212,7 @@ router.post("/add/:songId", async (req, res) => {
 	const playlist = req.playlist;
 	const user = req.user;
 
-	const song = await getSong(req.params.songId);
+	const song = await getSong(user.access_token, req.params.songId);
 
 	if (song.error) {
 		return res.json(song);
@@ -265,7 +265,7 @@ router.post("/remove/:songId", async (req, res) => {
 	const playlist = req.playlist;
 	const user = req.user;
 
-	const song = await getSong(req.params.songId);
+	const song = await getSong(user.access_token, req.params.songId);
 
 	if (song.error) {
 		return res.json(song);

@@ -12,7 +12,7 @@ const getRepeatedSongs = async (user, playlist) => {
 
 	const formattedFiltered = await Promise.allSettled(
 		filtered.map((song) => {
-			return getSong(song.id, song);
+			return getSong(user.access_token, song.id, song);
 		})
 	);
 

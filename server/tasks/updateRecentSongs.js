@@ -18,14 +18,16 @@ const updateRecentSongs = async (user) => {
 	});
 
 	const addTasks = songsToAdd.map((songtoadd) => {
-		return getSong(songtoadd.id, songtoadd).then((song) => {
-			if (song.error) {
-				console.error("ADDING TO HISTORY ERROR");
-				console.error(song);
-				return song;
+		return getSong(user.access_token, songtoadd.id, songtoadd).then(
+			(song) => {
+				if (song.error) {
+					console.error("ADDING TO HISTORY ERROR");
+					console.error(song);
+					return song;
+				}
+				return createUserSong(user, song, songtoadd.played_date);
 			}
-			return createUserSong(user, song, songtoadd.played_date);
-		});
+		);
 	});
 	return Promise.all(addTasks)
 		.then((responses) => {

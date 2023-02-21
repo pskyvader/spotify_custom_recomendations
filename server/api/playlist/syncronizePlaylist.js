@@ -3,11 +3,12 @@ const {
 	getSongFeatures: getSongFeaturesAPI,
 } = require("../../spotifyapi/song");
 const { getPlaylistSongs } = require("./getPlaylistSongs");
+const { getSong } = require("../song");
 
 const {
 	createPlaylistSong,
 	updatePlaylistSong,
-	createSong,
+	// createSong,
 	getSongFeatures,
 } = require("../../model");
 
@@ -40,7 +41,7 @@ const syncronizePlaylist = async (user, playlist) => {
 
 	//it's not playlist-song, only "Song" in database
 	const syncronizeSongsPromise = songListUpdated.map((currentSong) => {
-		return createSong(user.access_token, currentSong.id, currentSong);
+		return getSong(user.access_token, currentSong.id, currentSong);
 	});
 	const syncronizeSongsFeaturesPromise = songFeaturesListUpdated.map(
 		(feature) => {
@@ -73,13 +74,11 @@ const syncronizePlaylist = async (user, playlist) => {
 			return !currentSongListIds.includes(currentSong.id);
 		})
 		.map((currentSong) => {
-			return createSong(
-				user.access_token,
-				currentSong.id,
-				currentSong
-			).then((newsong) => {
-				return createPlaylistSong(playlist, newsong);
-			});
+			return getSong(user.access_token, currentSong.id, currentSong).then(
+				(newsong) => {
+					return createPlaylistSong(playlist, newsong);
+				}
+			);
 		});
 	return Promise.all(syncronizeSongsPromise)
 		.then((responseSyncronized) => {
