@@ -18,7 +18,7 @@ const getSong = (access_token, songId, songData = null) => {
 			if (currentSong.error) {
 				return currentSong;
 			}
-			return currentSong.update(song);
+			return currentSong.update(songData);
 		})
 		.catch((err) => {
 			return { error: true, message: err.message };

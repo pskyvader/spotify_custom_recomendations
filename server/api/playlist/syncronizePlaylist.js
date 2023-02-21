@@ -76,7 +76,6 @@ const syncronizePlaylist = async (user, playlist) => {
 		.map((currentSong) => {
 			return getSong(user.access_token, currentSong.id, currentSong).then(
 				(newsong) => {
-					console.log("new song", newsong);
 					if (newsong.error) {
 						return newsong;
 					}
