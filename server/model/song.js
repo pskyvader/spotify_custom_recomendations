@@ -2,14 +2,12 @@ const { Song } = require("../database");
 
 const createSong = (songData) => {
 	return Song.create(songData).catch((err) => {
-		console.error("create song error ", err);
 		return { error: true, message: err.message };
 	});
 };
 
-const getSong = async (songId) => {
+const getSong = (songId) => {
 	return Song.findByPk(songId).catch((err) => {
-		console.error("Get Song error ", err);
 		return { error: true, message: err.message };
 	});
 };

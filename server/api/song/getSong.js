@@ -2,15 +2,13 @@ const { getSong: getSongDB, createSong } = require("../../model");
 const { getSong: getSongAPI } = require("../../spotifyapi/song");
 
 const getSong = (access_token, songId, songData = null) => {
-	return getSongDB(access_token, songId)
+	return getSongDB(songId)
 		.then((currentSong) => {
-			console.log("Current song: ", currentSong, songId);
 			if (currentSong === null) {
 				if (songData !== null) {
-					console.log("createSong ", songData);
 					return createSong(songData);
 				}
-				return getSongAPI(songId).then((songFromAPI) => {
+				return getSongAPI(access_token, songId).then((songFromAPI) => {
 					if (songFromAPI.error) {
 						return songFromAPI;
 					}

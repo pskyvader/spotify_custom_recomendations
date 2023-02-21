@@ -76,6 +76,7 @@ const syncronizePlaylist = async (user, playlist) => {
 		.map((currentSong) => {
 			return getSong(user.access_token, currentSong.id, currentSong).then(
 				(newsong) => {
+					console.log("new song", newsong);
 					if (newsong.error) {
 						return newsong;
 					}
@@ -83,6 +84,7 @@ const syncronizePlaylist = async (user, playlist) => {
 				}
 			);
 		});
+
 	return Promise.allSettled(syncronizeSongsPromise)
 		.then((responseSyncronized) => {
 			return addErrorMessages(
