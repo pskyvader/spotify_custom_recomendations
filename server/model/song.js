@@ -1,6 +1,4 @@
 const { Song } = require("../database");
-const { request } = require("../spotifyapi/");
-const { formatSongAPI } = require("../utils/");
 
 const createSong = (songData) => {
 	return Song.create(songData).catch((err) => {

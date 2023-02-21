@@ -3,7 +3,7 @@ const {
 	getSongFeatures: getSongFeaturesAPI,
 } = require("../../spotifyapi/song");
 const { getPlaylistSongs } = require("./getPlaylistSongs");
-const { getSong } = require("../song");
+const { getSong } = require("../song/getSong");
 
 const {
 	createPlaylistSong,
@@ -41,7 +41,6 @@ const syncronizePlaylist = async (user, playlist) => {
 
 	//it's not playlist-song, only "Song" in database
 	const syncronizeSongsPromise = songListUpdated.map((currentSong) => {
-		console.log("getSong type:", typeof getSong);
 		return getSong(user.access_token, currentSong.id, currentSong);
 	});
 	const syncronizeSongsFeaturesPromise = songFeaturesListUpdated.map(
@@ -77,11 +76,14 @@ const syncronizePlaylist = async (user, playlist) => {
 		.map((currentSong) => {
 			return getSong(user.access_token, currentSong.id, currentSong).then(
 				(newsong) => {
+					if (newsong.error) {
+						return newsong;
+					}
 					return createPlaylistSong(playlist, newsong);
 				}
 			);
 		});
-	return Promise.all(syncronizeSongsPromise)
+	return Promise.allSettled(syncronizeSongsPromise)
 		.then((responseSyncronized) => {
 			return addErrorMessages(
 				{ error: false, message: [] },
@@ -91,7 +93,7 @@ const syncronizePlaylist = async (user, playlist) => {
 			);
 		})
 		.then((response) => {
-			return Promise.all(syncronizeSongsFeaturesPromise).then(
+			return Promise.allSettled(syncronizeSongsFeaturesPromise).then(
 				(responsesyncFeatures) => {
 					return addErrorMessages(
 						response,
@@ -103,7 +105,7 @@ const syncronizePlaylist = async (user, playlist) => {
 			);
 		})
 		.then((response) => {
-			return Promise.all(syncronizeRemoveSongListPromise).then(
+			return Promise.allSettled(syncronizeRemoveSongListPromise).then(
 				(responsesyncRemove) => {
 					return addErrorMessages(
 						response,
@@ -115,7 +117,7 @@ const syncronizePlaylist = async (user, playlist) => {
 			);
 		})
 		.then((response) => {
-			return Promise.all(syncronizeAddSongListPromise).then(
+			return Promise.allSettled(syncronizeAddSongListPromise).then(
 				(responsesyncAdd) => {
 					return addErrorMessages(
 						response,

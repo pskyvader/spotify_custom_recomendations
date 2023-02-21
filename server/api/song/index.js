@@ -8,8 +8,6 @@ const { getRecentlyAddedSongs } = require("./getRecentlyAddedSongs");
 const { getRepeatedSongs } = require("./getRepeatedSongs");
 const { getSong } = require("./getSong");
 
-console.log(getSong);
-
 module.exports = {
 	getRecentlyPlayedSongs,
 	getRecommendedSongs,

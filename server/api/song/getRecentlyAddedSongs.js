@@ -4,7 +4,7 @@ const { PlaylistSong } = require("../../database");
 //one week in ms
 const week = 604800000;
 
-const getRecentlyAddedSongs = async (playlist) => {
+const getRecentlyAddedSongs = (playlist) => {
 	return playlist
 		.getSongs({
 			include: [
