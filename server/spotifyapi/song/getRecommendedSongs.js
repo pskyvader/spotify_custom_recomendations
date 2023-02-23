@@ -4,20 +4,18 @@ const { request } = require("../");
 const { formatSongGroup } = require("./formatSong");
 
 const getWeights = (playlistLength) => {
-	const min = process.env.MIN_SONGS_PER_PLAYLIST;
-	const max = process.env.MAX_SONGS_PER_PLAYLIST;
-	const mid = min + Math.floor((max - min) / 2);
-
-	let weights = [50, 80]; //mid<n<max
-	if (playlistLength > max) {
-		weights = [60, 90];
-	}
-	if (playlistLength < mid) {
-		//min<n<mid
-		weights = [20, 30];
-	}
+	const min = process.env.MIN_SONGS_PER_PLAYLIST; //200
+	const max = process.env.MAX_SONGS_PER_PLAYLIST; //50
+	const mid = min + Math.floor((max - min) / 2); //125
+	let weights;
 	if (playlistLength < min) {
-		weights = [10, 20];
+		weights = { song: 10, artist: 20, random: 70 }; // less than 50
+	} else if (playlistLength < mid) {
+		weights = { song: 20, artist: 30, random: 50 }; // between 50 and 125
+	} else if (playlistLength <= max) {
+		weights = { song: 40, artist: 30, random: 30 }; // between 125 and 200
+	} else {
+		weights = { song: 60, artist: 30, random: 10 }; // greater than 200
 	}
 	return weights;
 };
@@ -64,14 +62,13 @@ const getRecommendedSongs = async (
 		const randomNumber = Math.floor(Math.random() * 100);
 		let url = "";
 
-		if (randomNumber < weights[0]) {
+		if (randomNumber < weights.song) {
 			url = getRandomSongURL(songList);
-		} else if (randomNumber < weights[1]) {
+		} else if (randomNumber < weights.song + weights.artist) {
 			url = getRandomArtistURL(songList);
 		} else {
 			url = getRandomURL();
 		}
-
 		const response = await request(access_token, url);
 		if (response.error) {
 			console.log("Get recommended songs from API error", response);
