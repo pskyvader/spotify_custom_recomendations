@@ -12,37 +12,31 @@ const day = 86400000;
 const getRecommendedSongs = async (user, playlist, minDays = null) => {
 	const minDaysInPlaylist = day * (minDays && minDays > 5 ? minDays : 5);
 
-	let fullPlaylist = await getPlaylistSongs(playlist);
+	const [fullPlaylist, currentPlaylist, recentSongs, topSongs] =
+		await Promise.all([
+			getPlaylistSongs(playlist),
+			getPlaylistSongs(playlist, Date.now() - 2 * minDaysInPlaylist),
+			getRecentlyPlayedSongs(user, Date.now() - 2 * minDaysInPlaylist),
+			getTopSongs(user.access_token),
+		]);
 
-	let currentPlaylist = await getPlaylistSongs(
-		playlist,
-		Date.now() - 2 * minDaysInPlaylist
-	); // filter by added 2 minDaysInPlaylist ago or earlier
+	if (fullPlaylist.error) return fullPlaylist;
 	if (currentPlaylist.error) return currentPlaylist;
-
-	const RecentSongs = await getRecentlyPlayedSongs(
-		user,
-		Date.now() - 2 * minDaysInPlaylist
-	);
-	if (RecentSongs.error) return RecentSongs;
-
-	const RecentSongsIds = RecentSongs.map(
-		(currentSong) => currentSong.Song.id
-	);
-
-	const topSongs = await getTopSongs(user.access_token);
+	if (recentSongs.error) return recentSongs;
 	if (topSongs.error) return topSongs;
 
+	const recentSongsIds = recentSongs.map(
+		(currentSong) => currentSong.Song.id
+	);
 	const topSongsIds = topSongs.map((song) => song.id);
 
-	let recommendedSongs = [
-		...currentPlaylist.filter((currentSong) =>
-			topSongsIds.includes(currentSong.id)
-		),
-		...RecentSongsIds.filter((currentSong) =>
-			fullPlaylist.includes(currentSong)
-		).reverse(),
-	];
+	let recommendedSongs = currentPlaylist
+		.filter((currentSong) => topSongsIds.includes(currentSong.id))
+		.concat(
+			recentSongsIds
+				.filter((currentSong) => fullPlaylist.includes(currentSong))
+				.reverse()
+		);
 
 	if (recommendedSongs.length === 0) {
 		recommendedSongs = topSongs;
@@ -54,6 +48,7 @@ const getRecommendedSongs = async (user, playlist, minDays = null) => {
 		fullPlaylist.length,
 		country.country
 	);
+
 	if (recommendedTracks.error) return recommendedTracks;
 
 	const removedSongs = await getDeletedSongs(playlist);
