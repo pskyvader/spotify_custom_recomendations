@@ -1,4 +1,5 @@
 const { genres } = require("./genres");
+const { countries } = require("./countries");
 const { request } = require("../");
 const { formatSongGroup } = require("./formatSong");
 
@@ -21,111 +22,70 @@ const getWeights = (playlistLength) => {
 	return weights;
 };
 
-const fillOptions = (songlist, currentgenres, weights) => {
-	const options = {
-		seed_artists: [],
-		seed_genres: [],
-		seed_tracks: [],
-		market: "from_token",
-		limit: 10,
-	};
+const getRandomURL = () => {
+	// Generate a random year between 1950 and the current year
+	const randomYear =
+		1950 + Math.floor(Math.random() * (new Date().getFullYear() - 1950));
+	const randomCountry =
+		countries[Math.floor(Math.random() * countries.length)];
+	const randomGenre = genres[Math.floor(Math.random() * genres.length)];
 
-	if (songlist.length > 0) {
-		const half_songlist = Math.floor((songlist.length - 1) / 2);
-		for (let index = 0; index < 5; index++) {
-			const idsong = Math.floor(Math.random() * half_songlist);
-			const randomSong = songlist[idsong];
-			const randomNumber = Math.floor(Math.random() * 100);
-
-			if (randomNumber < weights[0]) {
-				options.seed_tracks.push(randomSong.id);
-				continue;
-			}
-			if (randomNumber < weights[1]) {
-				options.seed_artists.push(randomSong.idartist);
-				continue;
-			}
-
-			const randomGenre =
-				currentgenres[
-					Math.floor(Math.random() * (currentgenres.length - 1))
-				];
-			options.seed_genres.push(randomGenre);
-		}
-	} else {
-		options.seed_genres.push(
-			currentgenres[Math.floor(Math.random() * currentgenres.length)]
-		);
-	}
-
-	return options;
+	const url = "https://api.spotify.com/v1/search";
+	const urlOptions = `?q=year:${randomYear}%20country:${randomCountry}%20genre:${randomGenre}&type=track&limit=10`;
+	return url + urlOptions;
+};
+const getRandomSongURL = (songlist) => {
+	const half_songlist = Math.floor((songlist.length - 1) / 2);
+	const idsong = Math.floor(Math.random() * half_songlist);
+	const url = "https://api.spotify.com/v1/recommendations";
+	const urlOptions = `?seed_tracks=${idsong}&limit=10`;
+	return url + urlOptions;
+};
+const getRandomArtistURL = (songlist) => {
+	const half_songlist = Math.floor((songlist.length - 1) / 2);
+	const idsong = Math.floor(Math.random() * half_songlist);
+	const randomSong = songlist[idsong];
+	const url = "https://api.spotify.com/v1/recommendations";
+	const urlOptions = `?seed_artists=${randomSong.idartist}&limit=10`;
+	return url + urlOptions;
 };
 
 const getRecommendedSongs = async (
 	access_token,
 	songList,
 	playlistLength,
-	currentgenres = genres
+	userCountry,
+	groups = 5
 ) => {
 	const weights = getWeights(playlistLength);
-	const options = fillOptions(songList, currentgenres, weights);
 
-	const url = "https://api.spotify.com/v1/recommendations";
-	let urlOptions = "?";
-
-	const seedOptions = [];
-
-	for (const key in options) {
-		if (Object.hasOwnProperty.call(options, key)) {
-			const option = options[key];
-			if (Array.isArray(option)) {
-				if (option.length > 0) {
-					for (const o of option) {
-						seedOptions.push(`${key}=${o}&`);
-					}
-					// seedOptions.push(`${key}=${option.join(",")}&`);
-					// urlOptions += `${key}=${option.join(",")}&`;
-				}
-			} else if (
-				option !== "" &&
-				option !== undefined &&
-				option !== null
-			) {
-				urlOptions += `${key}=${option}&`;
-			}
-		}
-	}
 	const recommendedSongs = [];
-	for (const seed of seedOptions) {
-		const response = await request(access_token, url + urlOptions + seed);
+	for (let i = 0; i < groups; i++) {
+		const randomNumber = Math.floor(Math.random() * 100);
+		let url = "";
+
+		if (randomNumber < weights[0]) {
+			url = getRandomSongURL(songList);
+		} else if (randomNumber < weights[1]) {
+			url = getRandomArtistURL(songList);
+		} else {
+			url = getRandomURL();
+		}
+
+		const response = await request(access_token, url);
 		if (response.error) {
 			console.log("Get recommended songs from API error", response);
 			return response;
 		}
-		recommendedSongs.push(...response.tracks);
+		recommendedSongs.push(...(response.tracks.items || response.tracks));
 	}
 
-	// console.log(
-	// 	"Generating seeds",
-	// 	",songs:",
-	// 	playlistLength,
-	// 	",weights:",
-	// 	JSON.stringify(weights),
-	// 	",options:",
-	// 	JSON.stringify(options)
-	// );
+	// Filter the list of tracks to only include tracks that are available in the user's country
+	const filteredTracks = recommendedSongs.filter((track) =>
+		track.available_markets.includes(userCountry)
+	);
 
-	// const recommendedSongs = response.tracks.filter((song) => {
-	// 	const currentSong = song.track || song;
-	// 	//song playable
-	// 	return currentSong.is_playable;
-	// });
-	// const recommendedSongs = response.tracks;
-
-	// console.log("recommended Songs from api", recommendedSongs);
-	return formatSongGroup(recommendedSongs.sort(() => Math.random() - 0.5));
-
-	// return formatSongAPIList(recommendedSongs.sort(() => Math.random() - 0.5));
+	return formatSongGroup(filteredTracks.sort(() => Math.random() - 0.5));
 };
 
 module.exports = { getRecommendedSongs };
