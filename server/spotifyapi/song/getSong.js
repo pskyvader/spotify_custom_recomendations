@@ -7,7 +7,6 @@ const getSong = async (access_token, songId) => {
 	if (response.error) {
 		return response;
 	}
-
 	return formatSong(response);
 };
 

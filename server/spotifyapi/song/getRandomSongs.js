@@ -1,11 +1,8 @@
 const { request } = require("../");
 const genres = require("./genres");
+const countries = require("./countries");
+const { formatSongGroup } = require("./formatSong");
 function getRandomParams() {
-	// Define a list of available countries
-	const countries = ["US", "GB", "DE", "FR", "IT", "JP", "BR"];
-	// Define a list of available genres
-	// const genres = ["rock", "pop", "hip hop", "electronic", "classical"];
-
 	// Generate a random year between 1950 and the current year
 	const randomYear =
 		1950 + Math.floor(Math.random() * (new Date().getFullYear() - 1950));
@@ -27,23 +24,23 @@ const getRandomSongs = async (access_token, userCountry) => {
 	// Get the random year, country, and genre
 	const params = getRandomParams();
 	// Set up the base URL for the Spotify API's search function
-	const baseURL = "https://api.spotify.com/v1/search";
+	const url = "https://api.spotify.com/v1/search";
 
 	// Set up the query string with the random year, country, and genre
-	const queryString = `?q=year:${params.year}%20country:${params.country}%20genre:${params.genre}&type=track`;
+	const urlOptions = `?q=year:${params.year}%20country:${params.country}%20genre:${params.genre}&type=track`;
 
-	const response = await request(access_token, baseURL + queryString);
+	const response = await request(access_token, url + urlOptions);
 	if (response.error) {
 		console.log("Get random songs from API error", response);
 		return response;
 	}
 	const tracks = response.tracks.items;
+
 	// Filter the list of tracks to only include tracks that are available in the user's country
-	const availableTracks = tracks.filter((track) =>
+	const filteredTracks = tracks.filter((track) =>
 		track.available_markets.includes(userCountry)
 	);
-	// Return the list of available tracks
-	return availableTracks;
+	return formatSongGroup(filteredTracks);
 };
 
 module.exports = {
