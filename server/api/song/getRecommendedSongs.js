@@ -46,7 +46,7 @@ const getRecommendedSongs = async (user, playlist, minDays = null) => {
 		user.access_token,
 		recommendedSongs,
 		fullPlaylist.length,
-		country.country
+		user.country
 	);
 
 	if (recommendedTracks.error) return recommendedTracks;
