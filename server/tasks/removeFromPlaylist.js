@@ -70,6 +70,7 @@ const removeFromPlaylist = async (
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	const average = response.average || null;
 	for (const playlist of playlists) {
+		response.message.push(`Playlist: ${playlist.name}`);
 		const singleResponse = await removeFromSinglePlaylist(
 			user,
 			playlist,

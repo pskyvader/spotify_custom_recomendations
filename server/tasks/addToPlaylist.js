@@ -98,6 +98,7 @@ const addToPlaylist = async (
 	const playlists = await user.getPlaylists({ where: { active: true } });
 	const average = response.average || null;
 	for (const playlist of playlists) {
+		response.message.push(`Playlist: ${playlist.name}`);
 		const singleResponse = await addToSinglePlaylist(
 			user,
 			playlist,
