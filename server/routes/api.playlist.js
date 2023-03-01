@@ -62,6 +62,8 @@ router.get("/sync", async (req, res) => {
 	if (response.error) {
 		console.error("sync error", response);
 	}
+	delete req.playlistCache[user.hash + "-" + playlistId];
+
 	res.json(response);
 });
 
@@ -80,6 +82,7 @@ router.get("/status", async (req, res) => {
 	if (syncResponse.error) {
 		console.error("sync error", syncResponse);
 	}
+	delete req.playlistCache[user.hash + "-" + playlistId];
 	// console.log("sync", syncResponse);
 	cache.set(
 		`get-playlist-last-sync-${playlist.id}`,

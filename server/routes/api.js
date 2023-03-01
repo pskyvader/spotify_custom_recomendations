@@ -64,6 +64,7 @@ router.use("/playlist/:playlistId*", async (req, res, next) => {
 	const user = req.user;
 	const playlistId = req.params.playlistId;
 	const playlist = playlistCache[user.hash + "-" + playlistId];
+	req.playlistCache = playlistCache;
 	if (playlist) {
 		req.playlist = playlist;
 		return next();

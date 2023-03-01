@@ -50,37 +50,23 @@ const updateAverageTimes = async (
 	const songsTotals = userSongs.map((song) => parseInt(song.total));
 	const filteredOutliers = filterOutliers(songsTotals);
 
-	// console.log(
-	// 	filteredOutliers.length,
-	// 	Math.min(...filteredOutliers),
-	// 	Math.max(...filteredOutliers),
-	// 	filteredOutliers.reduce((a, b) => a + b, 0) /
-	// 		(filteredOutliers.length || 1)
-	// );
-	// console.log(
-	// 	songsTotals.length,
-	// 	Math.min(...songsTotals),
-	// 	Math.max(...songsTotals),
-	// 	songsTotals.reduce((a, b) => a + b, 0) / (songsTotals.length || 1)
-	// );
-
 	response.average =
 		filteredOutliers.reduce((a, b) => a + b, 0) /
 		(filteredOutliers.length || 1);
 	response.message.push("Average time for user:");
 	response.message.push(response.average);
 	response.message.push("---------------");
-	response.message.push("Average Dates:");
-	response.message.push(
-		userSongs.reduce((dates, userSong) => {
-			dates[userSong.played] =
-				userSong.total +
-				"---" +
-				convertTime(userSong["Song.total_time"]);
-			return dates;
-		}, {})
-	);
-	response.message.push("---------------");
+	// response.message.push("Average Dates:");
+	// response.message.push(
+	// 	userSongs.reduce((dates, userSong) => {
+	// 		dates[userSong.played] =
+	// 			userSong.total +
+	// 			"---" +
+	// 			convertTime(userSong["Song.total_time"]);
+	// 		return dates;
+	// 	}, {})
+	// );
+	// response.message.push("---------------");
 
 	return response;
 };

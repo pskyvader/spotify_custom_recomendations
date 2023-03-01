@@ -72,7 +72,8 @@ const getRecommendedSongs = async (
 		const response = await request(access_token, url);
 		if (response.error) {
 			console.log("Get recommended songs from API error", response);
-			return response;
+			console.log("Source", url);
+			return [response, { error: true, message: url }];
 		}
 		recommendedSongs.push(...(response.tracks.items || response.tracks));
 	}
