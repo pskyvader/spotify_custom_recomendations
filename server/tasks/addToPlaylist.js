@@ -108,7 +108,11 @@ const addToPlaylist = async (
 				: songsToAdd,
 			average
 		);
-		response.error = response.error || singleResponse.error;
+
+		if (singleResponse.error) {
+			response.error = singleResponse.error;
+			singleResponse.message = [singleResponse.message];
+		}
 		response.message.push(...singleResponse.message);
 		response.addedTotal[playlist.id] = singleResponse.addedTotal;
 	}

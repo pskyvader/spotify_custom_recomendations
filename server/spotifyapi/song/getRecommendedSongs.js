@@ -69,10 +69,16 @@ const getRecommendedSongs = async (
 			url = getRandomArtistURL(songList);
 		} else {
 			url = getRandomURL();
+			console.log("random url", url);
 		}
 		const response = await request(access_token, url);
+
+		if (randomNumber > weights.song + weights.artist) {
+			console.log("random url response", response);
+		}
+
 		if (response.error) {
-			return [response];
+			return response;
 		}
 		recommendedSongs.push(...(response.tracks.items || response.tracks));
 	}
