@@ -19,7 +19,7 @@ const getRepeatedSongs = async (user, playlist) => {
 	const unique = [
 		...new Map(
 			formattedFiltered.map((song) => {
-				return [song.id, song];
+				return [song.id, song.value];
 			})
 		).values(),
 	];

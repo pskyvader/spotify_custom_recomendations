@@ -54,7 +54,7 @@ router.get("/", async (req, res) => {
 
 router.get("/sync", async (req, res) => {
 	const playlist = req.playlist;
-        const playlistId = req.params.playlistId;
+	const playlistId = req.params.playlistId;
 	const user = req.user;
 	if (playlist.active === false) {
 		return res.json({ error: true, message: "Playlist is not active" });
@@ -70,7 +70,7 @@ router.get("/sync", async (req, res) => {
 
 router.get("/status", async (req, res) => {
 	const playlist = req.playlist;
-        const playlistId = req.params.playlistId;
+	const playlistId = req.params.playlistId;
 	if (playlist.active === false) {
 		return res.json(playlist);
 	}
