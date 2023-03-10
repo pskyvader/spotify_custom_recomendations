@@ -12,17 +12,20 @@ test("Add to playlist with no console errors, and 0 added", () => {
 	};
 	return User.findOne()
 		.then((user) => {
-			return validateUserLogin(user);
+			return validateUserLogin({
+				hash: user.hash,
+				access_token: user.access_token,
+				expiration: user.expiration,
+			});
 		})
 		.then((user) => {
-			console.log(user);
 			return addToPlaylist(user, songsToModify, {}, averageResponse);
 		})
 		.then((response) => {
 			expect(response).toHaveProperty("error", false);
 			expect(response).toHaveProperty("message");
 			expect(response.addedTotal).toBeDefined();
-			console.log("addedTotal: ", response.addedTotal);
+			// console.log("addedTotal: ", response.addedTotal);
 			return response;
 		});
 });

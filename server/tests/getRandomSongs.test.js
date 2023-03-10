@@ -9,9 +9,13 @@ nockBack.fixtures = path.join(__dirname, "nockfixtures");
 nockBack.setMode("record");
 
 test("Get a list with random songs", async () => {
-	const { nockDone } = await nockBack("basicRequest.json");
+	const { nockDone } = await nockBack("randomSongs.json");
 	const user = await User.findOne().then((user) => {
-		return validateUserLogin(user);
+		return validateUserLogin({
+			hash: user.hash,
+			access_token: user.access_token,
+			expiration: user.expiration,
+		});
 	});
 	const response = await getRecommendedSongs(
 		user.access_token,
@@ -19,10 +23,9 @@ test("Get a list with random songs", async () => {
 		0,
 		user.country
 	);
-	console.log(response);
-
 	expect(response).toBeDefined();
 	expect(response).not.toHaveProperty("error");
+	expect(response).not.toHaveLength(0);
 
 	nockDone();
 	// return response;

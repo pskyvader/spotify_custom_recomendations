@@ -9,16 +9,18 @@ nockBack.fixtures = path.join(__dirname, "nockfixtures");
 nockBack.setMode("record");
 
 const url = "https://api.spotify.com/v1/me";
-const tenMinutes = 600000;
 test("Get a response from API", async () => {
 	const { nockDone } = await nockBack("basicRequest.json");
 	const user = await User.findOne().then((user) => {
-		return validateUserLogin(user);
+		return validateUserLogin({
+			hash: user.hash,
+			access_token: user.access_token,
+			expiration: user.expiration,
+		});
 	});
 
-	console.log(user.access_token, url);
 	const response = await request(user.access_token, url);
-	console.log("My profile: ", response);
+	// console.log("My profile: ", response);
 
 	expect(response).toBeDefined();
 	expect(response).not.toHaveProperty("error");

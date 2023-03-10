@@ -6,10 +6,13 @@ const { validateUserLogin } = require("../api/user");
 test("Get Average times with no console errors, and defined average number", () => {
 	return User.findOne()
 		.then((user) => {
-			return validateUserLogin(user);
+			return validateUserLogin({
+				hash: user.hash,
+				access_token: user.access_token,
+				expiration: user.expiration,
+			});
 		})
 		.then((user) => {
-			console.log(user);
 			return updateAverageTimes(user);
 		})
 		.then((response) => {

@@ -7,10 +7,13 @@ test("Get a list of recommended Songs", () => {
 	const minTime = parseInt(200 / 37 || 1);
 	return User.findOne()
 		.then((user) => {
-			return validateUserLogin(user);
+			return validateUserLogin({
+				hash: user.hash,
+				access_token: user.access_token,
+				expiration: user.expiration,
+			});
 		})
 		.then((user) => {
-			console.log(user);
 			return user
 				.getPlaylists({ where: { active: true } })
 				.then((playlists) => {
@@ -23,7 +26,8 @@ test("Get a list of recommended Songs", () => {
 		.then((response) => {
 			expect(response).toBeDefined();
 			expect(response).not.toHaveProperty("error");
-			console.log("Recommended Songs: ", response);
+			expect(response).not.toHaveLength(0);
+			// console.log("Recommended Songs: ", response);
 			return response;
 		});
 });

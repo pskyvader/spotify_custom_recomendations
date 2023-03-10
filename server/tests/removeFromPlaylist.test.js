@@ -12,7 +12,11 @@ test("Removed from playlist with no console errors, and 0 Removed", () => {
 	};
 	return User.findOne()
 		.then((user) => {
-			return validateUserLogin(user);
+			return validateUserLogin({
+				hash: user.hash,
+				access_token: user.access_token,
+				expiration: user.expiration,
+			});
 		})
 		.then((user) =>
 			removeFromPlaylist(user, songsToModify, averageResponse)

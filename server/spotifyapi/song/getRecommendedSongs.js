@@ -76,7 +76,10 @@ const getRecommendedSongs = async (
 		}
 		const response = await request(access_token, url);
 
-		if (randomNumber > weights.song + weights.artist) {
+		if (
+			songList.length === 0 ||
+			randomNumber > weights.song + weights.artist
+		) {
 			console.log("random url response", response);
 		}
 

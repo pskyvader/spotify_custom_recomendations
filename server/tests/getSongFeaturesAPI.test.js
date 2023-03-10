@@ -7,10 +7,13 @@ const { User } = require("../database");
 const getfeatures = () => {
 	return User.findOne()
 		.then((user) => {
-			return validateUserLogin(user);
+			return validateUserLogin({
+				hash: user.hash,
+				access_token: user.access_token,
+				expiration: user.expiration,
+			});
 		})
 		.then((user) => {
-			console.log(user);
 			return user
 				.getPlaylists({ where: { active: true } })
 				.then((playlists) => {
@@ -24,13 +27,14 @@ const getfeatures = () => {
 		})
 		.then(({ user, songList }) => getSongFeatures(user, songList))
 		.then((response) => {
-			// expect(response).toBeDefined();
-			// expect(response).not.toHaveProperty("error");
-			console.log("song Features: ", response);
+			expect(response).toBeDefined();
+			expect(response).not.toHaveProperty("error");
+			expect(response).not.toHaveLength(0);
+			// console.log("song Features: ", response.length);
 			return response;
 		});
 };
 
-test("Get a list of song Features", getfeatures);
+test("Get a non empty list of song Features", getfeatures);
 
 // getfeatures();
