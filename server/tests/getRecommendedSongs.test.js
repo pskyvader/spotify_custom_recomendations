@@ -1,11 +1,16 @@
 require("dotenv").config();
 const { getRecommendedSongs } = require("../api/song");
 const { User } = require("../database");
+const { validateUserLogin } = require("../api/user");
 
 test("Get a list of recommended Songs", () => {
 	const minTime = parseInt(200 / 37 || 1);
 	return User.findOne()
 		.then((user) => {
+			return validateUserLogin(user);
+		})
+		.then((user) => {
+			console.log(user);
 			return user
 				.getPlaylists({ where: { active: true } })
 				.then((playlists) => {

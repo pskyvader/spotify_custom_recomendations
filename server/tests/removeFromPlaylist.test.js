@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { removeFromPlaylist } = require("../tasks");
 const { User } = require("../database");
+const { validateUserLogin } = require("../api/user");
 
 test("Removed from playlist with no console errors, and 0 Removed", () => {
 	const songsToModify = -5;
@@ -10,6 +11,9 @@ test("Removed from playlist with no console errors, and 0 Removed", () => {
 		average: 37,
 	};
 	return User.findOne()
+		.then((user) => {
+			return validateUserLogin(user);
+		})
 		.then((user) =>
 			removeFromPlaylist(user, songsToModify, averageResponse)
 		)

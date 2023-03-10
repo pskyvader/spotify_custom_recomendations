@@ -10,6 +10,7 @@ const getfeatures = () => {
 			return validateUserLogin(user);
 		})
 		.then((user) => {
+			console.log(user);
 			return user
 				.getPlaylists({ where: { active: true } })
 				.then((playlists) => {
@@ -30,6 +31,6 @@ const getfeatures = () => {
 		});
 };
 
-// test("Get a list of song Features", getfeatures);
+test("Get a list of song Features", getfeatures);
 
-getfeatures();
+// getfeatures();

@@ -63,7 +63,10 @@ const getRecommendedSongs = async (
 		const randomNumber = Math.floor(Math.random() * 100);
 		let url = "";
 
-		if (randomNumber < weights.song) {
+		if (songList.length === 0) {
+			url = getRandomURL();
+			console.log("random url, no songs in playlist", url);
+		} else if (randomNumber < weights.song) {
 			url = getRandomSongURL(songList);
 		} else if (randomNumber < weights.song + weights.artist) {
 			url = getRandomArtistURL(songList);

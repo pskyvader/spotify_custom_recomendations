@@ -15,6 +15,8 @@ const validateUserLogin = async (loginData) => {
 		loginData = { ...user, ...loginData };
 	}
 
+	console.log("validateUserLogin", loginData);
+
 	if (
 		!loginData ||
 		!loginData.hash ||
