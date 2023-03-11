@@ -17,12 +17,14 @@ test("Get a list with random songs", async () => {
 			expiration: user.expiration,
 		});
 	});
+	console.log(user);
 	const response = await getRecommendedSongs(
 		user.access_token,
 		[],
 		0,
 		user.country
 	);
+	console.log("RANDOM SONGS", response);
 	expect(response).toBeDefined();
 	expect(response).not.toHaveProperty("error");
 	expect(response).not.toHaveLength(0);

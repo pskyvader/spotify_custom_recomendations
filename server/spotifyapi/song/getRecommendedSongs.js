@@ -29,9 +29,12 @@ const getRandomURL = () => {
 	const randomGenre = genres[Math.floor(Math.random() * genres.length)];
 
 	const url = "https://api.spotify.com/v1/search";
-	const urlOptions = `?q=year:${randomYear}%20country:${randomCountry}%20genre:${randomGenre}&type=track&limit=10`;
+	const urlOptions = `?q=year:${randomYear}%20genre:${randomGenre}&type=track&market=${randomCountry}`;
 	return url + urlOptions;
 };
+
+//https://api.spotify.com/v1/search?q=remaster%2520track%3ADoxy%2520artist%3AMiles%2520Davis&market=ES&limit=10&offset=5
+
 const getRandomSongURL = (songlist) => {
 	const half_songlist = Math.floor((songlist.length - 1) / 2);
 	const index = Math.floor(Math.random() * half_songlist);
@@ -68,19 +71,31 @@ const getRecommendedSongs = async (
 			console.log("random url, no songs in playlist", url);
 		} else if (randomNumber < weights.song) {
 			url = getRandomSongURL(songList);
+			console.log("random song", url);
 		} else if (randomNumber < weights.song + weights.artist) {
 			url = getRandomArtistURL(songList);
+			console.log("random artist", url);
 		} else {
 			url = getRandomURL();
 			console.log("random url", url);
 		}
 		const response = await request(access_token, url);
 
-		if (
-			songList.length === 0 ||
-			randomNumber > weights.song + weights.artist
-		) {
-			console.log("random url response", response);
+		// if (
+		// 	songList.length === 0 ||
+		// 	randomNumber > weights.song + weights.artist
+		// ) {
+		// 	console.log("random url response", response);
+		// }
+
+		if (response.tracks) {
+			console.log(
+				response.tracks.items
+					? response.tracks.items.length
+					: response.tracks.length
+			);
+		} else {
+			console.log("empty list", response);
 		}
 
 		if (response.error) {
