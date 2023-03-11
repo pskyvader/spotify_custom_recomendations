@@ -12,7 +12,7 @@ const validateUserLogin = async (loginData) => {
 			return user;
 		}
 
-		loginData = { ...user, ...loginData };
+		loginData = { ...user.toJSON(), ...loginData };
 	}
 
 	if (

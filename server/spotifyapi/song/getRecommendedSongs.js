@@ -24,12 +24,12 @@ const getRandomURL = () => {
 	// Generate a random year between 1950 and the current year
 	const randomYear =
 		1950 + Math.floor(Math.random() * (new Date().getFullYear() - 1950));
-	const randomCountry =
-		countries[Math.floor(Math.random() * countries.length)];
+	// const randomCountry =
+	// 	countries[Math.floor(Math.random() * countries.length)];
 	const randomGenre = genres[Math.floor(Math.random() * genres.length)];
 
 	const url = "https://api.spotify.com/v1/search";
-	const urlOptions = `?q=year:${randomYear}%20genre:${randomGenre}&type=track&market=${randomCountry}`;
+	const urlOptions = `?q=year:${randomYear}%20genre:${randomGenre}&type=track&limit=10`; //&market=${randomCountry}
 	return url + urlOptions;
 };
 
@@ -68,35 +68,34 @@ const getRecommendedSongs = async (
 
 		if (songList.length === 0) {
 			url = getRandomURL();
-			console.log("random url, no songs in playlist", url);
+			// console.log("random url, no songs in playlist", url);
 		} else if (randomNumber < weights.song) {
 			url = getRandomSongURL(songList);
-			console.log("random song", url);
+			// console.log("random song", url);
 		} else if (randomNumber < weights.song + weights.artist) {
 			url = getRandomArtistURL(songList);
-			console.log("random artist", url);
+			// console.log("random artist", url);
 		} else {
 			url = getRandomURL();
-			console.log("random url", url);
+			// console.log("random url", url);
 		}
-		const response = await request(access_token, url);
 
-		// if (
-		// 	songList.length === 0 ||
-		// 	randomNumber > weights.song + weights.artist
-		// ) {
-		// 	console.log("random url response", response);
-		// }
-
-		if (response.tracks) {
-			console.log(
-				response.tracks.items
+		let response = {};
+		let responseItems = 0;
+		while (responseItems === 0 && !response.error) {
+			response = await request(access_token, url);
+			if (response.tracks) {
+				responseItems = response.tracks.items
 					? response.tracks.items.length
-					: response.tracks.length
-			);
-		} else {
-			console.log("empty list", response);
+					: response.tracks.length;
+			}
+			if (responseItems === 0) {
+				url = getRandomURL();
+				// console.log("New url", url);
+			}
+			// console.log("responseItems", responseItems);
 		}
+
 
 		if (response.error) {
 			return response;
@@ -105,9 +104,9 @@ const getRecommendedSongs = async (
 	}
 
 	// Filter the list of tracks to only include tracks that are available in the user's country
-	const filteredTracks = recommendedSongs.filter((track) =>
-		track.available_markets.includes(userCountry)
-	);
+	const filteredTracks = recommendedSongs.filter((track) => {
+		return track.available_markets.includes(userCountry);
+	});
 
 	return formatSongGroup(filteredTracks.sort(() => Math.random() - 0.5));
 };
