@@ -4,11 +4,14 @@ const { loginCookie } = require("./loginCookie");
 const { pushToken } = require("./pushToken");
 const { logOut } = require("./logOut");
 const { getUserPlaylists } = require("./getUserPlaylists");
+const { getUserPlayedTime } = require("./getUserPlayedTime");
 
 module.exports = {
 	authorizeUser,
 	validateUserLogin,
 	loginCookie,
 	pushToken,
-	logOut,getUserPlaylists
+	logOut,
+	getUserPlaylists,
+	getUserPlayedTime,
 };
