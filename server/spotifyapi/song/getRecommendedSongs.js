@@ -24,12 +24,12 @@ const getRandomURL = () => {
 	// Generate a random year between 1950 and the current year
 	const randomYear =
 		1950 + Math.floor(Math.random() * (new Date().getFullYear() - 1950));
-	// const randomCountry =
-	// 	countries[Math.floor(Math.random() * countries.length)];
+	const randomCountry =
+		countries[Math.floor(Math.random() * countries.length)];
 	const randomGenre = genres[Math.floor(Math.random() * genres.length)];
 
 	const url = "https://api.spotify.com/v1/search";
-	const urlOptions = `?q=year:${randomYear}%20genre:${randomGenre}&type=track&limit=10`; //&market=${randomCountry}
+	const urlOptions = `?q=year:${randomYear}%20genre:${randomGenre}&type=track&market=${randomCountry}&limit=10`;
 	return url + urlOptions;
 };
 
@@ -96,7 +96,6 @@ const getRecommendedSongs = async (
 			// console.log("responseItems", responseItems);
 		}
 
-
 		if (response.error) {
 			return response;
 		}
@@ -105,6 +104,9 @@ const getRecommendedSongs = async (
 
 	// Filter the list of tracks to only include tracks that are available in the user's country
 	const filteredTracks = recommendedSongs.filter((track) => {
+		if (!track.available_markets) {
+			return true;
+		}
 		return track.available_markets.includes(userCountry);
 	});
 
