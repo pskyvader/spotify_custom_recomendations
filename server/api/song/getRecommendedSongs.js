@@ -16,7 +16,7 @@ const getRecommendedSongs = async (user, playlist, minDays = null) => {
 		await Promise.all([
 			getPlaylistSongs(playlist),
 			getPlaylistSongs(playlist, Date.now() - 2 * minDaysInPlaylist),
-			getRecentlyPlayedSongs(user, Date.now() - 2 * minDaysInPlaylist),
+			getRecentlyPlayedSongs(user, Date.now() - 1 * minDaysInPlaylist),
 			getTopSongs(user.access_token),
 		]);
 
@@ -34,7 +34,7 @@ const getRecommendedSongs = async (user, playlist, minDays = null) => {
 		.filter((currentSong) => topSongsIds.includes(currentSong.id))
 		.concat(
 			recentSongsIds
-				.filter((currentSong) => fullPlaylist.includes(currentSong))
+				// .filter((currentSong) => fullPlaylist.includes(currentSong))
 				.reverse()
 		);
 

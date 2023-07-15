@@ -20,7 +20,7 @@ const getRecommendedSongsToRemove = async (
 						PlaylistId: playlist.id,
 						active: true,
 						add_date: {
-							[Op.lte]: Date.now() - 1 * minTimeInPlaylist,
+							[Op.lte]: Date.now() - 2 * minTimeInPlaylist,
 						},
 					},
 				},
@@ -49,7 +49,7 @@ const getRecommendedSongsToRemove = async (
 					}
 					return (
 						song.UserSongHistories[0].played_date <
-						Date.now() - 2 * minTimeInPlaylist
+						Date.now() - 4 * minTimeInPlaylist
 					);
 				})
 				.reverse() // order from least to most recently played
@@ -72,7 +72,7 @@ const getRecommendedSongsToRemove = async (
 				.filter((song) => {
 					return (
 						song.UserSongHistories[0].played_date <
-						Date.now() - 1 * minTimeInPlaylist
+						Date.now() - 2 * minTimeInPlaylist
 					);
 				})
 				.reverse() // order from least to most times played
