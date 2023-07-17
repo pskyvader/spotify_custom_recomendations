@@ -97,6 +97,7 @@ const getRecommendedSongs = async (
 		}
 
 		if (response.error) {
+			console.log("Get recommended songs from API error", response);
 			return response;
 		}
 		recommendedSongs.push(...(response.tracks.items || response.tracks));

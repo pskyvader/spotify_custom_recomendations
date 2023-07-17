@@ -51,14 +51,20 @@ const request = async (
 				.then((responsetext) => {
 					const finalresponse = {
 						error: true,
-						status: response.status,
-						message: responsetext,
-						url: response.url,
-						request_url: url,
-						requestOptions: requestOptions,
+						message: {
+							responsetext,
+							status: response.status,
+							url: response.url,
+							request_url: url,
+							requestOptions: requestOptions,
+						},
 					};
 					try {
-						finalresponse.detail = JSON.parse(responsetext);
+						finalresponse.message.detail = JSON.parse(responsetext);
+						finalresponse.message = JSON.parse(
+							finalresponse.message
+						);
+
 						return finalresponse;
 					} catch (error) {
 						return finalresponse;
@@ -66,9 +72,9 @@ const request = async (
 				})
 				.catch((err) => {
 					return {
-						...response,
 						error: true,
-						message: err.message,
+						message: err.message + ", URL:" + url,
+						...response,
 					};
 				});
 		})
