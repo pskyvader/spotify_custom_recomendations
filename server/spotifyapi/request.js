@@ -56,7 +56,7 @@ const request = async (
 							status: response.status,
 							url: response.url,
 							request_url: url,
-							requestOptions: requestOptions,
+							requestOptions: JSON.parse(requestOptions),
 						},
 					};
 					try {

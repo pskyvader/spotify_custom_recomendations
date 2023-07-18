@@ -25,17 +25,13 @@ const getRecommendedSongs = async (user, playlist, minDays = null) => {
 	if (recentSongs.error) return recentSongs;
 	if (topSongs.error) return topSongs;
 
-	const recentSongsIds = recentSongs.map(
-		(currentSong) => currentSong.Song.id
-	);
+	const recentSongsList = recentSongs.map((currentSong) => currentSong.Song);
 	const topSongsIds = topSongs.map((song) => song.id);
 
 	let recommendedSongs = currentPlaylist
 		.filter((currentSong) => topSongsIds.includes(currentSong.id))
-		.concat(
-			// recentSongsIds.filter((currentSong) => fullPlaylist.includes(currentSong)).reverse()
-			recentSongsIds.reverse()
-		);
+		.concat(recentSongsList.reverse());
+	// recentSongsIds.filter((currentSong) => fullPlaylist.includes(currentSong)).reverse()
 
 	if (recommendedSongs.length === 0) {
 		recommendedSongs = topSongs;
