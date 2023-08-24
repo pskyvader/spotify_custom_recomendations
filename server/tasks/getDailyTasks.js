@@ -5,7 +5,7 @@ const { deleteGarbage } = require("./deleteGarbage");
 const { removeRepeatedSongs } = require("./removeRepeatedSongs");
 
 const getDailyTasks = (userList) => {
-	const songsToModify = 5 + Math.floor(Math.random() * 5);
+	const songsToModify = 1 + Math.floor(Math.random() * 4);
 	const taskList = userList.map((user) => {
 		return removeRepeatedSongs(user)
 			.then((responseRepeated) =>
