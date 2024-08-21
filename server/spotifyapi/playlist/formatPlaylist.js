@@ -3,7 +3,7 @@ const formatPlaylist = (rawData, active = null) => {
 		id: rawData.id,
 		name: rawData.name,
 		active: active,
-		image: (rawData.images[0] && rawData.images[0].url) || null,
+		image: ((rawData.images && rawData.images[0]) && rawData.images[0].url) || null,
 		UserId: rawData.owner.id,
 	};
 };
