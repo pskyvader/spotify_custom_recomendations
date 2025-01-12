@@ -57,6 +57,7 @@ const request = async (
 							url: response.url,
 							request_url: url,
 							requestOptions,
+							access_token: access_token
 						},
 					};
 					try {
@@ -75,13 +76,14 @@ const request = async (
 						error: true,
 						message: err.message + ", URL:" + url,
 						requestOptions,
+						access_token: access_token
 						...err,
 						...response,
 					};
 				});
 		})
 		.catch((err) => {
-			return { error: true, message: err.message + ", URL:" + url, requestOptions};
+			return { error: true, message: err.message + ", URL:" + url, requestOptions,access_token:access_token  };
 		});
 };
 
