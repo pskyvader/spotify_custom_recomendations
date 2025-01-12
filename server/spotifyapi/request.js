@@ -56,7 +56,7 @@ const request = async (
 							status: response.status,
 							url: response.url,
 							request_url: url,
-							requestOptions: JSON.parse(requestOptions),
+							requestOptions,
 						},
 					};
 					try {
@@ -74,14 +74,14 @@ const request = async (
 					return {
 						error: true,
 						message: err.message + ", URL:" + url,
-						requestOptions: JSON.parse(requestOptions),
+						requestOptions,
 						...err,
 						...response,
 					};
 				});
 		})
 		.catch((err) => {
-			return { error: true, message: err.message + ", URL:" + url, requestOptions: JSON.parse(requestOptions) };
+			return { error: true, message: err.message + ", URL:" + url, requestOptions};
 		});
 };
 
