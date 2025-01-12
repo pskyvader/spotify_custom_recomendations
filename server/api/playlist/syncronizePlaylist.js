@@ -38,6 +38,10 @@ const syncronizePlaylist = async (user, playlist) => {
 		songListUpdated.message = [songListUpdated.message];
 		return songListUpdated;
 	}
+	if (songFeaturesListUpdated.error) {
+		songFeaturesListUpdated.message = [songFeaturesListUpdated.message];
+		return songFeaturesListUpdated;
+	}
 
 	//it's not playlist-song, only "Song" in database
 	const syncronizeSongsPromise = songListUpdated.map((currentSong) => {
