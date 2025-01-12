@@ -61,6 +61,7 @@ const request = async (
 						},
 					};
 					try {
+						finalresponse.message.requestOptions = JSON.stringify(finalresponse.message.requestOptions);
 						finalresponse.message.requestOptions = JSON.parse(finalresponse.message.requestOptions);
 						finalresponse.message.detail = JSON.parse(responsetext);
 						finalresponse.message = JSON.parse(
