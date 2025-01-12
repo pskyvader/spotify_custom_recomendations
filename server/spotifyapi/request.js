@@ -74,12 +74,14 @@ const request = async (
 					return {
 						error: true,
 						message: err.message + ", URL:" + url,
+						requestOptions: JSON.parse(requestOptions),
+						...err,
 						...response,
 					};
 				});
 		})
 		.catch((err) => {
-			return { error: true, message: err.message };
+			return { error: true, message: err.message + ", URL:" + url, requestOptions: JSON.parse(requestOptions) };
 		});
 };
 
