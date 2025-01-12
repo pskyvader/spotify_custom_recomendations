@@ -76,7 +76,7 @@ const request = async (
 						error: true,
 						message: err.message + ", URL:" + url,
 						requestOptions,
-						access_token: access_token
+						access_token: access_token, 
 						...err,
 						...response,
 					};
