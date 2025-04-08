@@ -39,16 +39,16 @@ const getRandomSongURL = (songlist) => {
 	const half_songlist = Math.floor((songlist.length - 1) / 2);
 	const index = Math.floor(Math.random() * half_songlist);
 	const randomSong = songlist[index];
-	const url = "https://api.spotify.com/v1/recommendations";
-	const urlOptions = `?seed_tracks=${randomSong.id}&limit=10`;
+	const url = "https://api.spotify.com/v1/search";
+	const urlOptions = `?q=album:${randomSong.album}%20artist:${randomSong.artist}&limit=10&type=track`;
 	return url + urlOptions;
 };
 const getRandomArtistURL = (songlist) => {
 	const half_songlist = Math.floor((songlist.length - 1) / 2);
 	const index = Math.floor(Math.random() * half_songlist);
 	const randomSong = songlist[index];
-	const url = "https://api.spotify.com/v1/recommendations";
-	const urlOptions = `?seed_artists=${randomSong.idartist}&limit=10`;
+	const url = "https://api.spotify.com/v1/search";
+	const urlOptions = `?q=artist:${randomSong.artist}&limit=10&type=track`;
 	return url + urlOptions;
 };
 
