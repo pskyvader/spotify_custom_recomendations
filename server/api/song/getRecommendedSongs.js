@@ -16,7 +16,7 @@ const getRecommendedSongs = async (user, playlist, minDays = null) => {
 		await Promise.all([
 			getPlaylistSongs(playlist),
 			getPlaylistSongs(playlist, Date.now() - 2 * minDaysInPlaylist),
-			getRecentlyPlayedSongs(user, Date.now() - 1 * minDaysInPlaylist),
+			getRecentlyPlayedSongs(user, Date.now() - 1 * minDaysInPlaylist, 10),
 			getTopSongs(user.access_token),
 		]);
 
