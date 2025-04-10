@@ -111,7 +111,7 @@ const getRecommendedSongs = async (
 		return track.available_markets.includes(userCountry);
 	});
 
-	return formatSongGroup(filteredTracks.sort(() => Math.random() - 0.5));
+	return formatSongGroup(filteredTracks.sort(() => Math.random() - 0.3));
 };
 
 module.exports = { getRecommendedSongs };
