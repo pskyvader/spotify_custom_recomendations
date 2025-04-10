@@ -49,7 +49,7 @@ const getRecommendedSongs = async (user, playlist, minDays = null) => {
 	const removedSongs = await getDeletedSongs(playlist);
 
 	return recommendedTracks
-		.concat(recentSongsList)
+		//.concat(recentSongsList)
 		.filter(
 			(currentSong) =>
 				!removedSongs.find((song) => song.id === currentSong.id) &&
