@@ -1,7 +1,7 @@
 const { getSongs } = require("../../spotifyapi/playlist");
-const {
+/*const {
 	getSongFeatures: getSongFeaturesAPI,
-} = require("../../spotifyapi/song");
+} = require("../../spotifyapi/song");*/
 const { getPlaylistSongs } = require("./getPlaylistSongs");
 const { getSong } = require("../song/getSong");
 
@@ -30,28 +30,28 @@ const addErrorMessages = (mainResponse, response, successMessage) => {
 const syncronizePlaylist = async (user, playlist) => {
 	const currentSongList = await getPlaylistSongs(playlist);
 	const songListUpdated = await getSongs(user.access_token, playlist);
-	const songFeaturesListUpdated = await getSongFeaturesAPI(user, [
+	/*const songFeaturesListUpdated = await getSongFeaturesAPI(user, [
 		...songListUpdated,
-	]);
+	]);*/
 
 	if (songListUpdated.error) {
 		songListUpdated.message = [songListUpdated.message];
 		return songListUpdated;
 	}
-	if (songFeaturesListUpdated.error) {
+	/*if (songFeaturesListUpdated.error) {
 		songFeaturesListUpdated.message = [songFeaturesListUpdated.message];
 		return songFeaturesListUpdated;
-	}
+	}*/
 
 	//it's not playlist-song, only "Song" in database
 	const syncronizeSongsPromise = songListUpdated.map((currentSong) => {
 		return getSong(user.access_token, currentSong.id, currentSong);
 	});
-	const syncronizeSongsFeaturesPromise = songFeaturesListUpdated.map(
+	/*const syncronizeSongsFeaturesPromise = songFeaturesListUpdated.map(
 		(feature) => {
 			return getSongFeatures(user.access_token, feature.id, feature);
 		}
-	);
+	);*/
 
 	const currentSongListIds = currentSongList.map(
 		(currentSong) => currentSong.id
@@ -97,7 +97,7 @@ const syncronizePlaylist = async (user, playlist) => {
 					responseSyncronized.length
 			);
 		})
-		.then((response) => {
+		/*.then((response) => {
 			return Promise.allSettled(syncronizeSongsFeaturesPromise).then(
 				(responsesyncFeatures) => {
 					return addErrorMessages(
@@ -108,7 +108,7 @@ const syncronizePlaylist = async (user, playlist) => {
 					);
 				}
 			);
-		})
+		})*/
 		.then((response) => {
 			return Promise.allSettled(syncronizeRemoveSongListPromise).then(
 				(responsesyncRemove) => {
