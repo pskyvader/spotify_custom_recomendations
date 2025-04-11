@@ -13,7 +13,7 @@ const getWeights = (playlistLength) => {
 	} else if (playlistLength < mid) {
 		weights = { song: 20, artist: 30, random: 50 }; // between 50 and 125
 	} else if (playlistLength <= max) {
-		weights = { song: 40, artist: 30, random: 30 }; // between 125 and 200
+		weights = { song: 50, artist: 30, random: 20 }; // between 125 and 200
 	} else {
 		weights = { song: 60, artist: 30, random: 10 }; // greater than 200
 	}
@@ -21,15 +21,15 @@ const getWeights = (playlistLength) => {
 };
 
 const getRandomURL = () => {
-	// Generate a random year between 1950 and the current year
+	// Generate a random year between 1750 and the current year
 	const randomYear =
-		1950 + Math.floor(Math.random() * (new Date().getFullYear() - 1950));
+		1750 + Math.floor(Math.random() * (new Date().getFullYear() - 1750));
 	const randomCountry =
 		countries[Math.floor(Math.random() * countries.length)];
 	const randomGenre = genres[Math.floor(Math.random() * genres.length)];
 
 	const url = "https://api.spotify.com/v1/search";
-	const urlOptions = `?q=year:${randomYear}%20genre:${randomGenre}&type=track&market=${randomCountry}&limit=10`;
+	const urlOptions = `?q=year:${randomYear} OR genre:"${randomGenre}"&type=track&market=${randomCountry}&limit=10`;
 	return url + urlOptions;
 };
 
@@ -40,7 +40,7 @@ const getRandomSongURL = (songlist) => {
 	const index = Math.floor(Math.random() * half_songlist);
 	const randomSong = songlist[index];
 	const url = "https://api.spotify.com/v1/search";
-	const urlOptions = `?q=album:${randomSong.album}%20artist:${randomSong.artist}&limit=10&type=track`;
+	const urlOptions = `?q=album:"${randomSong.album}" artist:"${randomSong.artist}"&limit=10&type=track`;
 	return url + urlOptions;
 };
 const getRandomArtistURL = (songlist) => {
@@ -48,7 +48,7 @@ const getRandomArtistURL = (songlist) => {
 	const index = Math.floor(Math.random() * half_songlist);
 	const randomSong = songlist[index];
 	const url = "https://api.spotify.com/v1/search";
-	const urlOptions = `?q=artist:${randomSong.artist}&limit=10&type=track`;
+	const urlOptions = `?q=artist:"${randomSong.artist}"&limit=10&type=track`;
 	return url + urlOptions;
 };
 
