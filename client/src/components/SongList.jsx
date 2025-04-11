@@ -21,6 +21,7 @@ const renderTitle = (cellData, setCurrentSong = null) => {
 				primary={cellData.row.name}
 				secondary={cellData.row.artist}
 			/>
+			<ListItemText primary={cellData.row.id} />
 		</Stack>
 	);
 };
