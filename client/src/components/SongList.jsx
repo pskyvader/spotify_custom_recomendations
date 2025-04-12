@@ -13,7 +13,7 @@ const renderTitle = (cellData, setCurrentSong = null) => {
 	};
 
 	return (
-		<Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} useFlexGap sx={{ flexWrap: 'wrap' }}>
+		<Stack direction={{ xs: 'column', md: 'row' }} spacing={2} useFlexGap sx={{ flexWrap: 'wrap' }}>
 			<Avatar src={cellData.row.image} onClick={playSong}>
 				<FolderIcon />
 			</Avatar>
