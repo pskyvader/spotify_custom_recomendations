@@ -23,11 +23,11 @@ const renderTitle = (cellData, setCurrentSong = null) => {
 					secondary={cellData.row.artist}
 				/>
 			</Stack>
-			<Stack>
+			{/* <Stack>
 				<ListItem>
 					{cellData.row.id}
 				</ListItem>
-			</Stack>
+			</Stack> */}
 		</>
 	);
 };
@@ -43,7 +43,7 @@ export const SongListColumns = (
 		return <ActionButton PlaylistId={PlaylistId} uri={uri} />;
 	};
 	const columns = [
-		// { field: "id", headerName: "ID", minWidth: 100, flex: 1, resizable: true },
+		{ field: "id", headerName: "ID", minWidth: 100, flex: 1, resizable: true },
 		{
 			field: "name",
 			headerName: "Title",
@@ -57,7 +57,7 @@ export const SongListColumns = (
 
 	if (PlaylistId !== null && ActionButton !== null) {
 		columns.push({
-			field: "id",
+			field: "",
 			headerName: "",
 			minWidth: 120,
 			flex: 1,
