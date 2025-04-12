@@ -15,10 +15,6 @@ const postProcessPlaylist = (
 		setPlaylistDeletedSongs,
 	}
 ) => {
-	// playlistTracks[PlaylistId] = playlistTracks[PlaylistId] || [];
-	// playlistDeleteTracks[PlaylistId] = playlistDeleteTracks[PlaylistId] || [];
-	// playlistDeletedSongs[PlaylistId] = playlistDeletedSongs[PlaylistId] || [];
-
 	if (playlistTracks[PlaylistId]) {
 		const playlistFiltered = playlistTracks[PlaylistId].filter((song) => {
 			return response.id !== song.id;

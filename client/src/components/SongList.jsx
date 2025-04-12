@@ -1,4 +1,4 @@
-import { Toolbar, Typography } from "@mui/material";
+import { ListItem, Toolbar, Typography } from "@mui/material";
 import { GridOverlay, DataGrid } from "@mui/x-data-grid";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
@@ -13,15 +13,22 @@ const renderTitle = (cellData, setCurrentSong = null) => {
 	};
 
 	return (
-		<Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: 'wrap' }}>
-			<Avatar src={cellData.row.image} onClick={playSong}>
-				<FolderIcon />
-			</Avatar>
-			<ListItemText
-				primary={cellData.row.name}
-				secondary={cellData.row.artist}
-			/>
-		</Stack>
+		<>
+			<Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: 'wrap' }}>
+				<Avatar src={cellData.row.image} onClick={playSong}>
+					<FolderIcon />
+				</Avatar>
+				<ListItemText
+					primary={cellData.row.name}
+					secondary={cellData.row.artist}
+				/>
+			</Stack>
+			<Stack>
+				<ListItem>
+					{cellData.row.id}
+				</ListItem>
+			</Stack>
+		</>
 	);
 };
 
@@ -35,8 +42,8 @@ export const SongListColumns = (
 		const uri = cellData.formattedValue;
 		return <ActionButton PlaylistId={PlaylistId} uri={uri} />;
 	};
-	const columns = [	
-		{ field: "id", headerName: "ID", minWidth: 100, flex: 1 ,resizable: true},
+	const columns = [
+		// { field: "id", headerName: "ID", minWidth: 100, flex: 1, resizable: true },
 		{
 			field: "name",
 			headerName: "Title",
@@ -45,7 +52,7 @@ export const SongListColumns = (
 			resizable: true,
 			renderCell: (cellData) => renderTitle(cellData, setCurrentSong),
 		},
-	        { field: "album", headerName: "Album", minWidth: 200, flex: 1 },
+		{ field: "album", headerName: "Album", minWidth: 200, flex: 1 },
 	];
 
 	if (PlaylistId !== null && ActionButton !== null) {
@@ -96,7 +103,7 @@ const SongList = ({ data, title = "title" }) => {
 			columnThreshold={2}
 			autoHeight={true}
 			// disableExtendRowFullWidth
-			//getRowHeight={() => 'auto'}
+			getRowHeight={() => 'auto'}
 		/>
 	);
 };
