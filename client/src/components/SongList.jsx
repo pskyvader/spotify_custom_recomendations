@@ -96,7 +96,7 @@ const SongList = ({ data, title = "title" }) => {
 			columnThreshold={2}
 			autoHeight={true}
 			// disableExtendRowFullWidth
-			getRowHeight={() => 'auto'}
+			//getRowHeight={() => 'auto'}
 		/>
 	);
 };
