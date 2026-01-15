@@ -14,25 +14,25 @@ env:
     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 jobs:
-    # build:
-    #     runs-on: ubuntu-latest
+    build:
+         runs-on: ubuntu-latest
 
-    #     strategy:
-    #         matrix:
-    #             node-version: [14.x, 16.x, 18.x]
-    #             # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+         strategy:
+             matrix:
+                 node-version: [14.x, 16.x, 18.x]
+                 # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    #     steps:
-    #         - uses: actions/checkout@v3
-    #         # - run: npm install && npm install --prefix client
-    #         - name: Use Node.js ${{ matrix.node-version }}
-    #           uses: actions/setup-node@v3
-    #           with:
-    #               node-version: ${{ matrix.node-version }}
-    #               cache: "npm"
-    #         - run: npm ci
-    #         - run: npm test
-    #         # - run: npm run build --if-present
+         steps:
+             - uses: actions/checkout@v3
+             - run: npm install && npm install --prefix client
+             - name: Use Node.js ${{ matrix.node-version }}
+               uses: actions/setup-node@v3
+               with:
+                   node-version: ${{ matrix.node-version }}
+                   cache: "npm"
+             - run: npm ci
+             - run: npm test
+             - run: npm run build --if-present
 
     deploy:
         name: Deploy app
@@ -40,5 +40,5 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - uses: superfly/flyctl-actions/setup-flyctl@master
-            # - run: flyctl ssh console --command "docker system prune --force" --app fly-builder-restless-darkness-1142
+            - run: flyctl ssh console --command "docker system prune --force" --app fly-builder-restless-darkness-1142
             - run: flyctl deploy --remote-only
