@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const path = require("path");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
@@ -37,11 +38,15 @@ app.use(cookieParser(process.env.SESSION_SECRET));
 app.disable("x-powered-by");
 
 // serve up production assets
-app.use(express.static("client/build")); //Serves resources from public folder
+const clientBuildPath = path.resolve(__dirname, "..", "client", "build");
+const fs = require("fs");
+if (fs.existsSync(clientBuildPath)) {
+	app.use(express.static("client/build")); //Serves resources from public folder
+}
 
 // let the react app to handle any unknown routes
 // serve up the index.html if express does'nt recognize the route
-const path = require("path");
+// const path = require("path");
 
 app.get("/login", function (req, res) {
 	log("GET /login - Redirecting to Spotify");
@@ -99,7 +104,7 @@ app.get("/pushtoken", function (req, res) {
 const tenMinutes = 600000;
 const userCache = {};
 
-app.use("/api/*", async (req, res, next) => {
+app.use("/api", async (req, res, next) => {
 	log("API Middleware Check", req.originalUrl, "Hash:", req.session.hash);
 	const session = { ...req.session };
 	if (session.id) {
@@ -140,16 +145,19 @@ app.use("/api/*", async (req, res, next) => {
 
 app.use("/api", apiRoute);
 
-app.get("*.*", (req, res) => {
+app.get(/.*\..*/, (req, res) => {
 	log("GET *.* (Missing Asset)", req.originalUrl);
 	res.sendStatus(404);
 });
 
-app.get("*", (req, res) => {
+app.get(/.*/, (req, res) => {
 	log("GET * (SPA Fallback)", req.originalUrl);
-	res.sendFile(
-		path.resolve(__dirname, "..", "client", "build", "index.html")
-	);
+	const indexFile = path.resolve(__dirname, "..", "client", "build", "index.html");
+	if (fs.existsSync(indexFile)) {
+		res.sendFile(indexFile);
+	} else {
+		res.status(404).send("Client build not found");
+	}
 });
 
 // if not in production use the port 5000

@@ -69,8 +69,8 @@ router.get("/lastplayed", async (req, res) => {
 	res.json(response);
 });
 
-router.use("/playlist/:playlistId*", async (req, res, next) => {
-	log("Middleware /playlist/:playlistId*", req.params);
+router.use("/playlist/:playlistId", async (req, res, next) => {
+	log("Middleware /playlist/:playlistId", req.params);
 	const user = req.user;
 	const playlistId = req.params.playlistId;
 	const playlist = playlistCache[user.hash + "-" + playlistId];
@@ -107,7 +107,7 @@ router.use("/playlist/:playlistId*", async (req, res, next) => {
 
 router.use("/playlist/:playlistId", apiRoute);
 
-router.get("/*", (req, res) => {
+router.get(/.*/, (req, res) => {
 	log("GET /api/* (Unknown module)", req.params);
 	const response = {
 		error: "Unknown module",

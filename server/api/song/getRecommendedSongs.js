@@ -5,6 +5,7 @@ const { getRecentlyPlayedSongs } = require("./getRecentlyPlayedSongs");
 const {
 	getTopSongs,
 	getRecommendedSongs: getRecommendedSongsAPI,
+	formatSongGroup,
 } = require("../../spotifyapi/song");
 
 //day in ms
@@ -45,8 +46,12 @@ const getRecommendedSongs = async (user, playlist, minDays = null) => {
 		fullPlaylist.length,
 		user.country
 	);
+	
+	const formattedRecommendedTracks = recommendedTracks.error ? [] : formatSongGroup(recommendedTracks);
+
 	// If API returns error (even after internal retries), fallback to topSongs
-	const validRecommendedTracks = recommendedTracks.error ? topSongs : recommendedTracks;
+	// Also if empty array
+	const validRecommendedTracks = formattedRecommendedTracks.length > 0 ? formattedRecommendedTracks : topSongs;
 
 	const removedSongs = await getDeletedSongs(playlist);
 	const nostalgicSongs = await getNostalgicSongs(user, playlist);
