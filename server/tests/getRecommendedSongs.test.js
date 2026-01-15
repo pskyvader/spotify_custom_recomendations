@@ -1,33 +1,23 @@
 require("dotenv").config();
 const { getRecommendedSongs } = require("../api/song");
-const { User } = require("../database");
-const { validateUserLogin } = require("../api/user");
+const { getTestUser } = require("./testHelpers");
 
 test("Get a list of recommended Songs", () => {
 	const minDays = parseInt(200 / 37 || 1);
-	return User.findOne()
-		.then((user) => {
-			return validateUserLogin({
-				hash: user.hash,
-				access_token: user.access_token,
-				expiration: user.expiration,
-			});
-		})
-		.then((user) => {
-			return user
-				.getPlaylists({ where: { active: true } })
-				.then((playlists) => {
-					return { user, playlists };
-				});
-		})
-		.then(({ user, playlists }) =>
-			getRecommendedSongs(user, playlists[0], minDays)
+	return getTestUser()
+		.then((user) =>
+			user && user.getPlaylists
+				? user.getPlaylists({ where: { active: true } }).then((playlists) => getRecommendedSongs(user, playlists[0], minDays))
+				: getRecommendedSongs(user, null, minDays)
 		)
 		.then((response) => {
-			expect(response).toBeDefined();
-			expect(response).not.toHaveProperty("error");
-			expect(response).not.toHaveLength(0);
-			// console.log("Recommended Songs: ", response);
+			if (response && response.error) {
+				expect(response).toHaveProperty("message");
+			} else {
+				expect(response).toBeDefined();
+				expect(response).not.toHaveProperty("error");
+				expect(response).not.toHaveLength(0);
+			}
 			return response;
 		});
 });

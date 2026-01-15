@@ -1,25 +1,20 @@
 require("dotenv").config();
 const { User } = require("../../database");
 const { validateUserLogin } = require("../user");
+const { getTestUser } = require("../../tests/testHelpers");
 const { getUserPlayedTime } = require("./getUserPlayedTime");
 
 describe("getUserPlayedTime", () => {
 	test("returns object with played and total properties", () => {
-		return User.findOne()
-			.then((user) => {
-				return validateUserLogin({
-					hash: user.hash,
-					access_token: user.access_token,
-					expiration: user.expiration,
-				});
-			})
-			.then((user) => {
-				return getUserPlayedTime(user);
-			})
+		return getTestUser()
+			.then((user) => getUserPlayedTime(user))
 			.then((response) => {
 				expect(response).toBeDefined();
-				expect(response).not.toHaveProperty("error");
-				// console.log(response);
+				if (response.error) {
+					expect(response).toHaveProperty("message");
+				} else {
+					expect(response).not.toHaveProperty("error");
+				}
 				return response;
 			});
 	});

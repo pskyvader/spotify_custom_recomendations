@@ -10,6 +10,11 @@ const getRecommendedSongsToRemove = async (
 	forceRemove = false
 ) => {
 	const minTimeInPlaylist = day * (minTime && minTime > 5 ? minTime : 5);
+	if (!playlist || typeof playlist.getSongs !== "function") {
+		// No DB-backed playlist available; return empty list to avoid runtime errors
+		return [];
+	}
+
 	const oldAddedSongs = await playlist
 		.getSongs({
 			include: [

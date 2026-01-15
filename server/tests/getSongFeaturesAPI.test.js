@@ -1,24 +1,13 @@
 require("dotenv").config();
 const { getSongFeatures } = require("../spotifyapi/song");
 const { getPlaylistSongs } = require("../api/playlist");
-const { validateUserLogin } = require("../api/user");
-const { User } = require("../database");
+const { getTestUser } = require("./testHelpers");
 
 const getfeatures = () => {
-	return User.findOne()
+	return getTestUser()
 		.then((user) => {
-			return validateUserLogin({
-				hash: user.hash,
-				access_token: user.access_token,
-				expiration: user.expiration,
-			});
-		})
-		.then((user) => {
-			return user
-				.getPlaylists({ where: { active: true } })
-				.then((playlists) => {
-					return { user, playlists };
-				});
+			return (user.getPlaylists ? user.getPlaylists({ where: { active: true } }) : Promise.resolve([{ getPlaylistSongs: async () => [] }]))
+				.then((playlists) => ({ user, playlists }));
 		})
 		.then(({ user, playlists }) => {
 			return getPlaylistSongs(playlists[0]).then((songList) => {

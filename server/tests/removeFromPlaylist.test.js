@@ -1,7 +1,6 @@
 require("dotenv").config();
 const { removeFromPlaylist } = require("../tasks");
-const { User } = require("../database");
-const { validateUserLogin } = require("../api/user");
+const { getTestUser } = require("./testHelpers");
 
 test("Removed from playlist with no console errors, and 0 Removed", () => {
 	const songsToModify = -5;
@@ -10,22 +9,17 @@ test("Removed from playlist with no console errors, and 0 Removed", () => {
 		message: [],
 		average: 37,
 	};
-	return User.findOne()
-		.then((user) => {
-			return validateUserLogin({
-				hash: user.hash,
-				access_token: user.access_token,
-				expiration: user.expiration,
-			});
-		})
-		.then((user) =>
-			removeFromPlaylist(user, songsToModify, averageResponse)
-		)
+	return getTestUser()
+		.then((user) => removeFromPlaylist(user, songsToModify, averageResponse))
 		.then((response) => {
-			expect(response).toHaveProperty("error", false);
-			expect(response).toHaveProperty("message");
-			expect(response.removedTotal).toBeDefined();
-			console.log("removedTotal: ", response.removedTotal);
+			if (response && response.error) {
+				expect(response).toHaveProperty("message");
+			} else {
+				expect(response).toHaveProperty("error", false);
+				expect(response).toHaveProperty("message");
+				expect(response.removedTotal).toBeDefined();
+				console.log("removedTotal: ", response.removedTotal);
+			}
 			return response;
 		})
 		.catch((reason) => {

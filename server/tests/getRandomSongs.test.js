@@ -2,8 +2,7 @@ require("dotenv").config();
 const nockBack = require("nock").back;
 const path = require("path");
 const { getRecommendedSongs } = require("../spotifyapi/song");
-const { User } = require("../database");
-const { validateUserLogin } = require("../api/user");
+const { getTestUser } = require("./testHelpers");
 
 nockBack.fixtures = path.join(__dirname, "nockfixtures");
 nockBack.setMode("record");
@@ -23,13 +22,7 @@ test("Get a list with random songs", async () => {
     global.Date.now = originalDate.now;
 
 	const { nockDone } = await nockBack("randomSongs.json");
-	const user = await User.findOne().then((user) => {
-		return validateUserLogin({
-			hash: user.hash,
-			access_token: user.access_token,
-			expiration: user.expiration,
-		});
-	});
+	const user = await getTestUser();
 	const response = await getRecommendedSongs(
 		user.access_token,
 		[],

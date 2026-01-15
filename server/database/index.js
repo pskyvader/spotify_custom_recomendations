@@ -23,7 +23,6 @@ let sequelize = new Sequelize(process.env.DATABASE_URL, {
 
 if (process.env.PRODUCTION === "test") {
 	sequelize = new Sequelize("database", "", "", {
-		host: "0.0.0.0",
 		dialect: "sqlite",
 		logging: false,
 		pool: {
@@ -31,10 +30,8 @@ if (process.env.PRODUCTION === "test") {
 			min: 0,
 			idle: 10000,
 		},
-		// Data is stored in the file `database.sqlite` in the folder `db`.
-		// Note that if you leave your app public, this database file will be copied if
-		// someone forks your app. So don't use it to store sensitive information.
-		storage: path.resolve(__dirname, "..", "databasetest.sqlite"),
+		// Use in-memory storage for tests to avoid filesystem/permission issues in CI
+		storage: ":memory:",
 	});
 }
 
@@ -108,25 +105,27 @@ SongFeatures.belongsTo(Song);
 
 const connection = async () => {
 	try {
-		sequelize
-			.authenticate()
-			.then(() => {
-				console.log("Connection has been established successfully.");
-				// return sequelize.sync({ alter: true, force: false });
-				return sequelize.sync({ force: false, alter: false });
-			})
-			.then(() => console.log("Successfully Synced"))
-			.catch((error) => {
-				console.error("Unable to connect to the database:", error);
-			});
+		await sequelize.authenticate();
+		console.log("Connection has been established successfully.");
+		await sequelize.sync({ force: false, alter: false });
+		console.log("Successfully Synced");
 	} catch (error) {
 		console.error("Unable to connect to the database:", error);
+		// mark DB as unavailable and continue in degraded mode
+		try {
+			module.exports.dbAvailable = false;
+		} catch (e) {
+			// ignore
+		}
+		return false;
 	}
 };
 
 module.exports = {
 	sequelize,
 	connection,
+	// Export a flag to indicate DB availability. Default to true.
+	dbAvailable: true,
 	User,
 	Song,
 	Playlist,

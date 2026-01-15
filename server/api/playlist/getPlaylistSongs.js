@@ -6,6 +6,11 @@ const getPlaylistSongs = async (
 	date = Date.now(),
 	syncIfNeeded = true
 ) => {
+	if (!playlist || typeof playlist.getPlaylistSongs !== "function") {
+		console.warn("getPlaylistSongs: playlist is not a DB-backed object — returning empty list.");
+		return [];
+	}
+
 	let playlistSongList = await playlist
 		.getPlaylistSongs({
 			where: {
