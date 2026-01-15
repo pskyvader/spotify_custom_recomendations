@@ -14,6 +14,7 @@ const {
 	logOut,
 } = require("./api/user");
 const apiRoute = require("./routes/api");
+const { log, error } = require("./utils/logger");
 
 connection();
 const sessionStore = new SequelizeStore({
@@ -43,11 +44,14 @@ app.use(express.static("client/build")); //Serves resources from public folder
 const path = require("path");
 
 app.get("/login", function (req, res) {
+	log("GET /login - Redirecting to Spotify");
 	login(req, res);
 });
 app.get("/logincookie", async (req, res) => {
+	log("GET /logincookie");
 	const response = { loggedin: false, hash: null };
 	const loggedinResponse = await loginCookie(req);
+	log("GET /logincookie response", response);
 	if (!loggedinResponse.error) {
 		response.loggedin = true;
 		response.hash = loggedinResponse.hash;
@@ -56,26 +60,39 @@ app.get("/logincookie", async (req, res) => {
 });
 
 app.get("/logout", async function (req, res) {
+	log("GET /logout");
 	await logOut(req);
-	res.json({ logout: true });
+	req.session.destroy((err) => {
+		if (err) {
+			log("Error destroying session", err);
+		}
+		res.clearCookie("connect.sid");
+		res.json({ logout: true });
+	});
 });
 
 app.get("/callback", function (req, res) {
+	log("GET /callback", req.query);
 	callback(req, res);
 });
 app.get("/tasks", function (req, res) {
+	log("GET /tasks");
 	automaticTasks().then((response) => {
-		console.log("Task response", response);
+		log("GET /tasks response", response);
 		res.json(response);
 	});
 });
 
 app.get("/authorizeuser", function (req, res) {
+	log("GET /authorizeuser");
 	const response = authorizeUser(req);
+	log("GET /authorizeuser response", response);
 	res.json(response);
 });
 app.get("/pushtoken", function (req, res) {
+	log("GET /pushtoken");
 	const response = pushToken(req);
+	log("GET /pushtoken response", response);
 	res.json(response);
 });
 
@@ -83,12 +100,14 @@ const tenMinutes = 600000;
 const userCache = {};
 
 app.use("/api/*", async (req, res, next) => {
+	log("API Middleware Check", req.originalUrl, "Hash:", req.session.hash);
 	const session = { ...req.session };
 	if (session.id) {
 		delete session.id;
 	}
 
 	if (!session.hash) {
+		log("API Middleware: No hash found in session. Response: No valid user data found");
 		return res.json({
 			error: true,
 			message: "No valid user data found",
@@ -97,17 +116,21 @@ app.use("/api/*", async (req, res, next) => {
 
 	const user = userCache[session.hash];
 	if (user && new Date(user.expiration) > Date.now() + tenMinutes) {
+		log("API Middleware: User found in cache (User ID: " + user.id + ")");
 		req.user = user;
 		return next();
 	}
+	log("API Middleware: Validating user login");
 	const validUser = await validateUserLogin(session);
 	if (validUser === null) {
+		error("API Middleware: validateUserLogin returned null. Response: API error at user validation");
 		return res.json({
 			error: true,
 			message: "API error at user validation",
 		});
 	}
 	if (validUser.error) {
+		error("API Middleware: Validation error", validUser, "Response:", validUser);
 		return res.json(validUser);
 	}
 	userCache[session.hash] = validUser;
@@ -118,10 +141,12 @@ app.use("/api/*", async (req, res, next) => {
 app.use("/api", apiRoute);
 
 app.get("*.*", (req, res) => {
+	log("GET *.* (Missing Asset)", req.originalUrl);
 	res.sendStatus(404);
 });
 
 app.get("*", (req, res) => {
+	log("GET * (SPA Fallback)", req.originalUrl);
 	res.sendFile(
 		path.resolve(__dirname, "..", "client", "build", "index.html")
 	);

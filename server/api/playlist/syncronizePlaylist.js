@@ -1,15 +1,11 @@
 const { getSongs } = require("../../spotifyapi/playlist");
-const {
-	getSongFeatures: getSongFeaturesAPI,
-} = require("../../spotifyapi/song");
 const { getPlaylistSongs } = require("./getPlaylistSongs");
 const { getSong } = require("../song/getSong");
+const { UserSongHistory } = require("../../database");
 
 const {
 	createPlaylistSong,
 	updatePlaylistSong,
-	// createSong,
-	getSongFeatures,
 } = require("../../model");
 
 const addErrorMessages = (mainResponse, response, successMessage) => {
@@ -28,11 +24,8 @@ const addErrorMessages = (mainResponse, response, successMessage) => {
 };
 
 const syncronizePlaylist = async (user, playlist) => {
-	const currentSongList = await getPlaylistSongs(playlist);
+	const currentSongList = await getPlaylistSongs(playlist, Date.now(), false);
 	const songListUpdated = await getSongs(user.access_token, playlist);
-	const songFeaturesListUpdated = await getSongFeaturesAPI(user, [
-		...songListUpdated,
-	]);
 
 	if (songListUpdated.error) {
 		songListUpdated.message = [songListUpdated.message];
@@ -43,11 +36,6 @@ const syncronizePlaylist = async (user, playlist) => {
 	const syncronizeSongsPromise = songListUpdated.map((currentSong) => {
 		return getSong(user.access_token, currentSong.id, currentSong);
 	});
-	const syncronizeSongsFeaturesPromise = songFeaturesListUpdated.map(
-		(feature) => {
-			return getSongFeatures(user.access_token, feature.id, feature);
-		}
-	);
 
 	const currentSongListIds = currentSongList.map(
 		(currentSong) => currentSong.id
@@ -60,10 +48,17 @@ const syncronizePlaylist = async (user, playlist) => {
 	const syncronizeRemoveSongListPromise = currentSongList
 		.filter((currentSong) => {
 			return !songListUpdatedIds.includes(currentSong.id);
-		})
-		.map((currentSong) => {
+		})async (currentSong) => {
+			const playCount = await UserSongHistory.count({
+				where: {
+					UserId: user.id,
+					SongId: currentSong.id,
+				},
+			});
 			const deleteData = {
 				active: false,
+				removed_date: Date.now(),
+				nostalgic: playCount >= 5
 				removed_date: Date.now(),
 			};
 			return updatePlaylistSong(playlist.id, currentSong.id, deleteData);
@@ -91,18 +86,6 @@ const syncronizePlaylist = async (user, playlist) => {
 				responseSyncronized,
 				"Syncronize completed successfully. " +
 					responseSyncronized.length
-			);
-		})
-		.then((response) => {
-			return Promise.allSettled(syncronizeSongsFeaturesPromise).then(
-				(responsesyncFeatures) => {
-					return addErrorMessages(
-						response,
-						responsesyncFeatures,
-						"Syncronize features completed successfully. " +
-							responsesyncFeatures.length
-					);
-				}
 			);
 		})
 		.then((response) => {

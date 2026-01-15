@@ -8,7 +8,11 @@ const formatSong = (rawData) => {
 	return {
 		id: rawData.id,
 		name: rawData.name,
-		image: rawData.album.images[0].url,
+		image:
+			(rawData.album.images &&
+				rawData.album.images[0] &&
+				rawData.album.images[0].url) ||
+			null,
 		artist: art.join(", "),
 		idartist: idartist,
 		album: rawData.album.name,

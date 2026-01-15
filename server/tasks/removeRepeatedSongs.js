@@ -9,7 +9,9 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 	const repeatedList = await getRepeatedSongs(user, playlist);
 
 	const repeatedTasks = repeatedList.map((repeatedSong) => {
-		const playlistSong = repeatedSong.getPlaylistSongs();
+		const playlistSong = repeatedSong.getPlaylistSongs({
+			where: { PlaylistId: playlist.id },
+		});
 		const removeSong = removeSongFromPlaylist(
 			user.access_token,
 			repeatedSong,
@@ -24,7 +26,15 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 		return playlistSong
 			.then((responsePlaylistSongs) => {
 				return removeSong.then((response) => {
-					response.add_date = responsePlaylistSongs[0].add_date;
+					if (
+						responsePlaylistSongs &&
+						responsePlaylistSongs.length > 0
+					) {
+						response.add_date = responsePlaylistSongs[0].add_date;
+					} else {
+						response.add_date = Date.now();
+					}
+
 					return response;
 				});
 			})
@@ -32,7 +42,7 @@ const removeRepeatedFromSinglePlaylist = async (user, playlist) => {
 				if (responseRemove.error) return responseRemove;
 
 				return addSong.then((response) => {
-					response.add_date = responseAddAPI.add_date;
+					response.add_date = responseRemove.add_date;
 					return response;
 				});
 			})

@@ -39,8 +39,6 @@ const request = async (
 		body: body,
 	};
 	const fetch = await getFetch();
-	// console.log("getFetch", fetch);
-
 	return fetch(url, requestOptions)
 		.then((response) => {
 			if (response.ok) {
@@ -55,11 +53,11 @@ const request = async (
 							responsetext,
 							status: response.status,
 							url: response.url,
-							request_url: url,
-							requestOptions: JSON.parse(requestOptions),
+							request_url: url
 						},
 					};
 					try {
+						finalresponse.message.requestOptions = JSON.parse(requestOptions);
 						finalresponse.message.detail = JSON.parse(responsetext);
 						finalresponse.message = JSON.parse(
 							finalresponse.message

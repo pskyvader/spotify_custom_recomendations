@@ -7,7 +7,7 @@ const getUserPlaylists = (user) => {
 			return playlists;
 		}
 		const filtered = playlists.filter((currentPlaylist) => {
-			return parseInt(user.id) === parseInt(currentPlaylist.UserId);
+			return String(user.id) === String(currentPlaylist.UserId);
 		});
 		let count = 0;
 		const playlistsPromises = filtered.map((currentPlaylist) => {

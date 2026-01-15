@@ -4,7 +4,7 @@ const { User } = require("../database");
 const { validateUserLogin } = require("../api/user");
 
 test("Get a list of recommended Songs", () => {
-	const minTime = parseInt(200 / 37 || 1);
+	const minDays = parseInt(200 / 37 || 1);
 	return User.findOne()
 		.then((user) => {
 			return validateUserLogin({
@@ -21,7 +21,7 @@ test("Get a list of recommended Songs", () => {
 				});
 		})
 		.then(({ user, playlists }) =>
-			getRecommendedSongs(user, playlists[0], minTime)
+			getRecommendedSongs(user, playlists[0], minDays)
 		)
 		.then((response) => {
 			expect(response).toBeDefined();

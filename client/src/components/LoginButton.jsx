@@ -11,10 +11,11 @@ export const Logout = () => {
 	const { setLoggedIn } = useContext(SessionContext);
 
 	const logoutAndRemoveCookie = useCallback(() => {
-		removeCookie("keep_logged");
-		removeCookie("access_token");
-		removeCookie("refresh_token");
-		removeCookie("hash");
+		const options = { path: "/" };
+		removeCookie("keep_logged", options);
+		removeCookie("access_token", options);
+		removeCookie("refresh_token", options);
+		removeCookie("hash", options);
 		Me.LogOut().then(() => {
 			setLoggedIn(false);
 		});

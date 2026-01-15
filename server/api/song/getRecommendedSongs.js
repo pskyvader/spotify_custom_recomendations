@@ -1,5 +1,6 @@
 const { getPlaylistSongs } = require("../playlist");
 const { getDeletedSongs } = require("./getDeletedSongs");
+const { getNostalgicSongs } = require("./getNostalgicSongs");
 const { getRecentlyPlayedSongs } = require("./getRecentlyPlayedSongs");
 const {
 	getTopSongs,
@@ -37,24 +38,38 @@ const getRecommendedSongs = async (user, playlist, minDays = null) => {
 		recommendedSongs = topSongs;
 	}
 
+	// Restore usage of our new "Creative Search" API wrapper
 	const recommendedTracks = await getRecommendedSongsAPI(
 		user.access_token,
 		recommendedSongs,
 		fullPlaylist.length,
 		user.country
 	);
-
-	if (recommendedTracks.error) return recommendedTracks;
+	// If API returns error (even after internal retries), fallback to topSongs
+	const validRecommendedTracks = recommendedTracks.error ? topSongs : recommendedTracks;
 
 	const removedSongs = await getDeletedSongs(playlist);
+	const nostalgicSongs = await getNostalgicSongs(user, playlist);
+	const nostalgicIds = nostalgicSongs.map((s) => s.id);
 
-	return recommendedTracks
-		.concat(recentSongsList)
+	// Combine sources: Creative Search Results + Nostalgic + Recent + Top
+	// then Filter out already in playlist or deleted (unless nostalgic)
+	// then Deduplicate
+	// then Limit to 200
+	return validRecommendedTracks
+		.concat(nostalgicSongs)
+		.concat(recentSongsList.slice(0, 50))
+		.concat(topSongs)
 		.filter(
 			(currentSong) =>
-				!removedSongs.find((song) => song.id === currentSong.id) &&
+				(nostalgicIds.includes(currentSong.id) ||
+					!removedSongs.find((song) => song.id === currentSong.id)) &&
 				!fullPlaylist.find((song) => song.id === currentSong.id)
-		);
+		)
+		.filter((song, index, self) =>
+			index === self.findIndex((t) => t.id === song.id)
+		)
+		.slice(0, 200);
 };
 
 module.exports = {

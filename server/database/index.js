@@ -38,14 +38,14 @@ if (process.env.PRODUCTION === "test") {
 	});
 }
 
-class User extends Model {}
+class User extends Model { }
 User.init(UserConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
 	// modelName: "User", // We need to choose the model name
 });
 
-class Playlist extends Model {}
+class Playlist extends Model { }
 Playlist.init(PlaylistConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
@@ -54,14 +54,14 @@ Playlist.init(PlaylistConfiguration, {
 User.hasMany(Playlist);
 Playlist.belongsTo(User);
 
-class Song extends Model {}
+class Song extends Model { }
 Song.init(SongConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
 	// modelName: "Song", // We need to choose the model name
 });
 
-class PlaylistSong extends Model {}
+class PlaylistSong extends Model { }
 PlaylistSong.init(PlaylistSongConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
@@ -76,7 +76,7 @@ PlaylistSong.belongsTo(Playlist);
 Song.hasMany(PlaylistSong);
 PlaylistSong.belongsTo(Song);
 
-class UserSongHistory extends Model {}
+class UserSongHistory extends Model { }
 UserSongHistory.init(UserSongHistoryConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
@@ -96,7 +96,7 @@ UserSongHistory.belongsTo(User);
 Song.hasMany(UserSongHistory);
 UserSongHistory.belongsTo(Song);
 
-class SongFeatures extends Model {}
+class SongFeatures extends Model { }
 SongFeatures.init(SongFeaturesConfiguration, {
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
@@ -112,7 +112,7 @@ const connection = async () => {
 			.authenticate()
 			.then(() => {
 				console.log("Connection has been established successfully.");
-				return sequelize.sync({ alter: false, force: false });
+				return sequelize.sync({ alter: true, force: false });
 			})
 			.then(() => console.log("Successfully Synced"))
 			.catch((error) => {

@@ -21,5 +21,10 @@ const PlaylistSongConfiguration = {
 		allowNull: false,
 		defaultValue: false,
 	},
+	nostalgic: {
+		type: DataTypes.BOOLEAN,
+		allowNull: false,
+		defaultValue: false,
+	},
 };
 module.exports = { PlaylistSongConfiguration };
