@@ -11,13 +11,13 @@ const {
 const day = 86400000;
 
 const getRecommendedSongs = async (user, playlist, minDays = null) => {
-	const minDaysInPlaylist = day * (minDays && minDays > 5 ? minDays : 5);
+	const minDaysInPlaylist = day * (minDays && minDays > 7 ? minDays : 7);
 
 	const [fullPlaylist, currentPlaylist, recentSongs, topSongs] =
 		await Promise.all([
 			getPlaylistSongs(playlist),
 			getPlaylistSongs(playlist, Date.now() - 2 * minDaysInPlaylist),
-			getRecentlyPlayedSongs(user, Date.now() - 1 * minDaysInPlaylist),
+			getRecentlyPlayedSongs(user, Date.now() - 1 * minDaysInPlaylist, 10),
 			getTopSongs(user.access_token),
 		]);
 

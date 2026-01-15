@@ -161,12 +161,9 @@ const getRecommendedSongs = async (
 		}
 		return track.available_markets.includes(userCountry);
 	});
-
-	// Return unique songs (deduplicate by ID) limited to ~200
-	const uniqueTracks = Array.from(new Map(filteredTracks.map(item => [item.id, item])).values());
-	
-	// Shuffle and limit to 200
-	return formatSongGroup(uniqueTracks.sort(() => Math.random() - 0.5).slice(0, 200));
+	return filteredTracks;
 };
 
-module.exports = { getRecommendedSongs };
+module.exports = {
+	getRecommendedSongs,
+};

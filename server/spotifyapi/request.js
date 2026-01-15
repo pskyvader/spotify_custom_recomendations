@@ -53,11 +53,15 @@ const request = async (
 							responsetext,
 							status: response.status,
 							url: response.url,
-							request_url: url
+							request_url: url,
+							requestOptions,
+							access_token: access_token,
 						},
 					};
 					try {
-						finalresponse.message.requestOptions = JSON.parse(requestOptions);
+						finalresponse.message.requestOptions = JSON.stringify(
+							finalresponse.message.requestOptions
+						);
 						finalresponse.message.detail = JSON.parse(responsetext);
 						finalresponse.message = JSON.parse(
 							finalresponse.message
@@ -72,12 +76,20 @@ const request = async (
 					return {
 						error: true,
 						message: err.message + ", URL:" + url,
+						requestOptions,
+						access_token: access_token,
+						...err,
 						...response,
 					};
 				});
 		})
 		.catch((err) => {
-			return { error: true, message: err.message };
+			return {
+				error: true,
+				message: err.message + ", URL:" + url,
+				requestOptions,
+				access_token: access_token,
+			};
 		});
 };
 
