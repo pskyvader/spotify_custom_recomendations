@@ -36,9 +36,9 @@ jobs:
 
     deploy:
         name: Deploy app
+        needs: build
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
             - uses: superfly/flyctl-actions/setup-flyctl@master
-            #- run: flyctl ssh console --command "docker system prune --force" --app fly-builder-black-frog-9783
             - run: flyctl deploy --remote-only
