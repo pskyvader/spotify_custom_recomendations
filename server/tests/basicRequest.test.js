@@ -9,7 +9,7 @@ nockBack.fixtures = path.join(__dirname, "nockfixtures");
 nockBack.setMode("record");
 
 const url = "https://api.spotify.com/v1/me";
-test.skip("Get a response from API", async () => {
+test("Get a response from API", async () => {
 	const { nockDone } = await nockBack("basicRequest.json");
 	const user = await User.findOne().then((user) => {
 		return validateUserLogin({
