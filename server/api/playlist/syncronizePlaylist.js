@@ -46,11 +46,11 @@ const syncronizePlaylist = async (user, playlist) => {
 	const syncronizeSongsPromise = songListUpdated.map((currentSong) => {
 		return getSong(user.access_token, currentSong.id, currentSong);
 	});
-	const syncronizeSongsFeaturesPromise = songFeaturesListUpdated.map(
-		(feature) => {
-			return getSongFeatures(user.access_token, feature.id, feature);
-		}
-	);
+	// const syncronizeSongsFeaturesPromise = songFeaturesListUpdated.map(
+	// 	(feature) => {
+	// 		return getSongFeatures(user.access_token, feature.id, feature);
+	// 	}
+	// );
 
 	const currentSongListIds = currentSongList.map(
 		(currentSong) => currentSong.id
@@ -103,18 +103,18 @@ const syncronizePlaylist = async (user, playlist) => {
 					responseSyncronized.length
 			);
 		})
-		.then((response) => {
-			return Promise.allSettled(syncronizeSongsFeaturesPromise).then(
-				(responsesyncFeatures) => {
-					return addErrorMessages(
-						response,
-						responsesyncFeatures,
-						"Syncronize features completed successfully. " +
-							responsesyncFeatures.length
-					);
-				}
-			);
-		})
+		// .then((response) => {
+		// 	return Promise.allSettled(syncronizeSongsFeaturesPromise).then(
+		// 		(responsesyncFeatures) => {
+		// 			return addErrorMessages(
+		// 				response,
+		// 				responsesyncFeatures,
+		// 				"Syncronize features completed successfully. " +
+		// 					responsesyncFeatures.length
+		// 			);
+		// 		}
+		// 	);
+		// })
 		.then((response) => {
 			return Promise.allSettled(syncronizeRemoveSongListPromise).then(
 				(responsesyncRemove) => {
