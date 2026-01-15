@@ -14,7 +14,7 @@ const renderTitle = (cellData, setCurrentSong = null) => {
 
 	return (
 		<>
-			<Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: 'wrap' }}>
+			<Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: 'wrap'}}>
 				<Avatar src={cellData.row.image} onClick={playSong}>
 					<FolderIcon />
 				</Avatar>
@@ -23,11 +23,6 @@ const renderTitle = (cellData, setCurrentSong = null) => {
 					secondary={cellData.row.artist}
 				/>
 			</Stack>
-			{/* <Stack>
-				<ListItem>
-					{cellData.row.id}
-				</ListItem>
-			</Stack> */}
 		</>
 	);
 };
@@ -43,7 +38,7 @@ export const SongListColumns = (
 		return <ActionButton PlaylistId={PlaylistId} uri={uri} />;
 	};
 	const columns = [
-		{ field: "", headerName: "ID", minWidth: 100, flex: 1, resizable: true, renderCell: (cellData) => cellData.row.id},
+		// { field: "", headerName: "ID", minWidth: 100, flex: 1, resizable: true, renderCell: (cellData) => cellData.row.id},
 		{ field: "name", headerName: "Title", minWidth: 200, flex: 1, resizable: true, renderCell: (cellData) => renderTitle(cellData, setCurrentSong), },
 		{ field: "album", headerName: "Album", minWidth: 100, flex: 1 },
 	];
