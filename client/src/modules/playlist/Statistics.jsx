@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import {
 	Chart,
-	ScatterSeries,
 	LineSeries,
 	ArgumentAxis,
 	ValueAxis,

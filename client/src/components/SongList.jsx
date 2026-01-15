@@ -7,7 +7,6 @@ import {
     Card, 
     CardContent, 
     CardMedia, 
-    Grid,
     IconButton,
     Stack,
     ListItemText,

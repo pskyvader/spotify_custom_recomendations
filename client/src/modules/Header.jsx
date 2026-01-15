@@ -12,7 +12,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Avatar, Button } from "@mui/material";
+import { Avatar } from "@mui/material";
 
 import { Logout } from "../components/LoginButton";
 import { ProfileContext } from "../context/ProfileContextProvider";
