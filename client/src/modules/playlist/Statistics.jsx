@@ -186,7 +186,9 @@ const Statistics = ({ playlistId, hidden }) => {
 	useEffect(() => {
 		if (!hidden && !playlistFeatures[playlistId]) {
 			Playlist.SongFeatures(playlistId).then((response) => {
-				if (response.error) return console.log(response);
+				if (response.error) {
+					return console.log(response);
+				}
 				playlistFeatures[playlistId] = response;
 				setPlaylistFeatures({ ...playlistFeatures });
 			});

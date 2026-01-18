@@ -1,6 +1,8 @@
 const { Op } = require("sequelize");
 const { Song } = require("../../database");
 
+const { log } = require("../../utils/logger");
+
 /**
  * Fetches recently played songs for a specific user.
  * @param {Object} user - The Sequelize user instance.
@@ -24,6 +26,10 @@ const getRecentlyPlayedSongs = async (user, date = 0, limit = null) => {
 	if (!isNaN(parsedLimit) && parsedLimit > 0) {
 		options.limit = parsedLimit;
 	}
+
+	log("date:", date, "limit:", limit);
+	log(`Fetching recently played songs for user ID ${user.id} with options:`, options);
+
 
 	return user
 		.getUserSongHistories(options)

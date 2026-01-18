@@ -4,11 +4,13 @@ const { Song } = require("../../database");
 const getPlaylistSongs = async (
 	playlist,
 	date = Date.now(),
-	syncIfNeeded = true
+	syncIfNeeded = false
 ) => {
 	if (!playlist || typeof playlist.getPlaylistSongs !== "function") {
-		console.warn("getPlaylistSongs: playlist is not a DB-backed object — returning empty list.");
-		return [];
+		const message = "getPlaylistSongs: playlist is not a DB-backed object — returning empty list."
+		console.warn(message);
+
+		return { error: true, messages: message };
 	}
 
 	let playlistSongList = await playlist

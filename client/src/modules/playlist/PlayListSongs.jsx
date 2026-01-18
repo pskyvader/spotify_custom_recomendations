@@ -12,7 +12,24 @@ const PlayListSongs = ({ playlistId, hidden }) => {
 		if (!hidden && !playlistTracks[playlistId]) {
 			Playlist.Playlist(playlistId).then((response) => {
 				// console.log("Playlist Songs", response);
-				if (response.error) return console.log(response);
+				if (response.error) {
+					return console.log(response);
+				}
+
+				if (response.length < 10) {
+					console.log("Playlist count too low, retrying in 5 seconds...");
+					return setTimeout(() => {
+						Playlist.Playlist(playlistId).then((response) => {
+							// console.log("Playlist Songs", response);
+							if (response.error) {
+								return console.log(response);
+							}
+							playlistTracks[playlistId] = response;
+							setPlaylistTracks({ ...playlistTracks });
+						});
+					}, 5000);
+
+				}
 				playlistTracks[playlistId] = response;
 				setPlaylistTracks({ ...playlistTracks });
 			});

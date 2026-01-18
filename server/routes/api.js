@@ -50,7 +50,7 @@ router.get("/lastplayed", async (req, res) => {
 	const user = req.user;
 	let response = cache.get(`get-lastplayed-${user.id}`);
 	if (!response) {
-		response = await getRecentlyPlayedSongs(user, limit=1000);
+		response = await getRecentlyPlayedSongs(user, date = 0, limit = 1000);
 		if (!response.error) {
 			response = response.map((recentSong) => {
 				const songResponse = recentSong.Song.toJSON();

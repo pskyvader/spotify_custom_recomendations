@@ -41,6 +41,10 @@ router.get("/", async (req, res) => {
 		log("GET /api/playlist/:id/ response (error)", playlistSongs);
 		return res.json(playlistSongs);
 	}
+	if (playlistSongs.length === 0) {
+		log("GET /api/playlist/:id/ response (empty)", playlistSongs);
+		return res.json(playlistSongs);
+	}
 	const parsedPlaylistSongs = playlistSongs.map((song) => {
 		return {
 			...song.toJSON(),
@@ -92,6 +96,8 @@ router.get("/status", async (req, res) => {
 	const syncResponse = await syncronizePlaylist(user, playlist);
 	if (syncResponse.error) {
 		error("sync error", syncResponse);
+	} else {
+		log("sync success", syncResponse);
 	}
 	delete req.playlistCache[user.hash + "-" + playlistId];
 	// log("sync", syncResponse);
@@ -107,9 +113,17 @@ router.get("/status", async (req, res) => {
 
 router.get("/activate", async (req, res) => {
 	log("GET /api/playlist/:id/activate", req.params);
+	const user = req.user;
 	const playlist = req.playlist;
 	const response = await playlist.update({ active: true });
 	cache.del(`get-playlist-last-sync-${playlist.id}`);
+	cache.del(`get-playlist-songs-${playlist.id}`);
+	const syncResponse = await syncronizePlaylist(user, playlist);
+	if (syncResponse.error) {
+		error("sync error", syncResponse);
+	} else {
+		log("sync success", syncResponse);
+	}
 	log("GET /api/playlist/:id/activate response", response);
 	res.json(response);
 });
@@ -119,6 +133,7 @@ router.get("/deactivate", async (req, res) => {
 	const playlist = req.playlist;
 	const response = await playlist.update({ active: false });
 	cache.del(`get-playlist-last-sync-${playlist.id}`);
+	cache.del(`get-playlist-songs-${playlist.id}`);
 	log("GET /api/playlist/:id/deactivate response", response);
 	res.json(response);
 });
@@ -217,7 +232,7 @@ router.get("/deletedsongs", async (req, res) => {
 router.get("/songfeatures", async (req, res) => {
 	log("GET /api/playlist/:id/songfeatures (DISABLED)", req.params);
 	// Audio features endpoint is deprecated by Spotify
-	const response = [];
+	const response = { error: true, messages: "songfeatures (DISABLED)" };
 	res.json(response);
 });
 
@@ -341,7 +356,8 @@ router.post("/remove/:songId", async (req, res) => {
 			cachedeleted,
 			tenMinutes
 		);
-	log("POST /api/playlist/:id/remove/:songId response", response);	}
+		log("POST /api/playlist/:id/remove/:songId response", response);
+	}
 
 	res.json(response);
 });

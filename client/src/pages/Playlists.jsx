@@ -108,7 +108,7 @@ const Playlists = () => {
 						<Tab label="Delete" />
 						<Tab label="Last Played" />
 						<Tab label="Deleted Songs" />
-						<Tab label="Statistics" />
+						{/* <Tab label="Statistics" /> */}
 					</Tabs>
 					<Root role="tabpanel" hidden={tabNumber !== 0}>
 						<PlayListSongs
@@ -137,12 +137,12 @@ const Playlists = () => {
 							hidden={tabNumber !== 4}
 						/>
 					</Root>
-					<Root role="tabpanel" hidden={tabNumber !== 5}>
+					{/* <Root role="tabpanel" hidden={tabNumber !== 5}>
 						<Statistics
 							playlistId={playlistid}
 							hidden={tabNumber !== 5}
 						/>
-					</Root>
+					</Root> */}
 					<Player />
 				</PlayerContextProvider>
 			</Container>
