@@ -3,7 +3,7 @@ const { removeFromPlaylist } = require("./removeFromPlaylist");
 const { addToPlaylist } = require("./addToPlaylist");
 const { deleteGarbage } = require("./deleteGarbage");
 const { removeRepeatedSongs } = require("./removeRepeatedSongs");
-const { log, error,log } = require("../utils/logger");
+const { log, error} = require("../utils/logger");
 
 
 const getDailyTasks = (userList) => {
