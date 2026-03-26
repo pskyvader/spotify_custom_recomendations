@@ -1,8 +1,9 @@
 const { User } = require("../database");
 const { refreshCookie } = require("../spotifyapi/user");
-
+const { log, error } = require("../utils/logger");
 const { getHourlyTasks, getDailyTasks } = require("../tasks");
 
+const enableLimits=false;
 const hour = 3600000;
 const tenMinutes = 600000;
 const day = 86400000;
@@ -39,10 +40,10 @@ const getAvailableUsers = async () => {
 			user.expiration = responseCookie.expiration;
 		}
 		response.message.push(`Expiration: ${user.expiration}`);
-		if (user.last_modified_hourly < Date.now() - hour + tenMinutes) {
+		if (!enableLimits || user.last_modified_hourly < Date.now() - hour + tenMinutes) {
 			response.hourly.push(user);
 		}
-		if (user.last_modified_daily < Date.now() - day + tenMinutes) {
+		if (!enbleLimits || user.last_modified_daily < Date.now() - day + tenMinutes) {
 			response.daily.push(user);
 		}
 	}
@@ -55,12 +56,14 @@ const automaticTasks = async () => {
 		error: false,
 		message: [],
 	};
-	if (LastTask > Date.now() - hour + tenMinutes) {
+	if (enableLimits && LastTask > Date.now() - hour + tenMinutes) {
 		response.error = true;
 		response.message = "Not able to run task for next hour";
 		return response;
 	}
 	const userList = await getAvailableUsers();
+	log("user list",userList);
+	
 	response.error = response.error || userList.error;
 	response.message.push(...userList.message);
 	const hourlyTaskList = getHourlyTasks(userList.hourly);
@@ -73,7 +76,7 @@ const automaticTasks = async () => {
 				const totalresponses = { message: [], error: false };
 				for (const r in hourlyResponses) {
 					if (hourlyResponses[r].value === undefined) {
-						console.log(
+						log(
 							hourlyResponses,
 							hourlyResponses[r],
 							"allSettled hourlyResponses"
@@ -99,6 +102,7 @@ const automaticTasks = async () => {
 			})
 			.then((previousResponse) => {
 				if (dailyTaskList.length === 0) {
+					previousResponse.message.push("no daily tasks available");
 					return previousResponse;
 				}
 				previousResponse.message.push(
@@ -120,6 +124,8 @@ const automaticTasks = async () => {
 			});
 		response.error = response.error || promiseResponse.error;
 		response.message.push(...promiseResponse.message);
+	} else{
+		response.message.push("not hourly tasks available");
 	}
 
 	LastTask = Date.now();
