@@ -43,7 +43,7 @@ const getAvailableUsers = async () => {
 		if (!enableLimits || user.last_modified_hourly < Date.now() - hour + tenMinutes) {
 			response.hourly.push(user);
 		}
-		if (!enbleLimits || user.last_modified_daily < Date.now() - day + tenMinutes) {
+		if (!enableLimits || user.last_modified_daily < Date.now() - day + tenMinutes) {
 			response.daily.push(user);
 		}
 	}
