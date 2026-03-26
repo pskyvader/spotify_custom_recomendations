@@ -1,6 +1,6 @@
 const { request } = require("../");
 const { formatSong } = require("./formatSong");
-conat {log}=require("../../utils/logger");
+const {log}=require("../../utils/logger");
 
 const week = 604800000;
 
