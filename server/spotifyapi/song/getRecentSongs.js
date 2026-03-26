@@ -1,5 +1,7 @@
 const { request } = require("../");
 const { formatSong } = require("./formatSong");
+conat {log}=require("../../utils/logger");
+
 const week = 604800000;
 
 const getRecentSongs = async (user) => {
@@ -12,7 +14,9 @@ const getRecentSongs = async (user) => {
 	while (url) {
 		const response = await request(user.access_token, url);
 		if (response.error) {
+			log(`get recent songs error for user {user} : {response}`);
 			return response;
+			
 		}
 		url = response.next;
 		items.push(...response.items);
