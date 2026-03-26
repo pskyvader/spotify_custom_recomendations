@@ -3,7 +3,7 @@ const { refreshCookie } = require("../spotifyapi/user");
 const { log, error } = require("../utils/logger");
 const { getHourlyTasks, getDailyTasks } = require("../tasks");
 
-const enableLimits=false;
+const enableLimits=process.env.ENABLE_LIMITS || true;
 const hour = 3600000;
 const tenMinutes = 600000;
 const day = 86400000;
