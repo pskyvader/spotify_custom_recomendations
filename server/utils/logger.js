@@ -5,11 +5,9 @@ const LOG_LEVELS = {
 	error: 3,
 };
 
-const { performance } = require("perf_hooks");
-
 // ---- Internal State ----
 let logBuffer = [];
-let startTime = performance.now();
+let startTime = Date.now();
 
 // ---- Config ----
 const getLevel = () => process.env.LOG_LEVEL || "debug";
@@ -22,22 +20,28 @@ const shouldLog = (level) => {
 
 const formatArgs = (args) => {
 	if (args.length === 1) return args[0];
-	return args.map(a => (typeof a === "object" ? JSON.stringify(a) : a)).join(" ");
+	return args.map(a =>
+		typeof a === "object" ? JSON.stringify(a) : a
+	).join(" ");
 };
 
+const now = () => Date.now();
+
+// ---- Core ----
 const pushLog = (level, args) => {
 	const entry = {
 		level,
-		ts: Date.now(),
-		uptimeMs: performance.now() - startTime,
+		ts: now(),
+		uptimeMs: now() - startTime,
 		message: formatArgs(args),
-		raw: args, // optional, keep original data
+		raw: args,
 	};
 
 	logBuffer.push(entry);
 
 	if (shouldLog(level)) {
 		const prefix = `[${level.toUpperCase()}]`;
+
 		if (level === "error") console.error(prefix, ...args);
 		else if (level === "warn") console.warn(prefix, ...args);
 		else if (level === "info") console.info(prefix, ...args);
@@ -60,26 +64,29 @@ const getLogs = (minLevel = getLevel()) => {
 	);
 };
 
-// ---- Optional Utilities ----
+// ---- Utilities ----
 const clearLogs = () => {
 	logBuffer = [];
-	startTime = performance.now();
+	startTime = now();
 };
 
 const getSummary = () => {
 	const summary = {
 		total: logBuffer.length,
 		byLevel: {},
-		durationMs: performance.now() - startTime,
+		durationMs: now() - startTime,
 	};
 
 	for (const lvl in LOG_LEVELS) {
-		summary.byLevel[lvl] = logBuffer.filter(l => l.level === lvl).length;
+		summary.byLevel[lvl] = logBuffer.filter(
+			(l) => l.level === lvl
+		).length;
 	}
 
 	return summary;
 };
 
+// ---- Export (FIXED) ----
 module.exports = {
 	log,
 	info,
@@ -89,5 +96,3 @@ module.exports = {
 	clearLogs,
 	getSummary,
 };
-
-module.exports = { log, info, warn, error };
