@@ -88,6 +88,6 @@ module.exports = {
 	getLogs,
 	clearLogs,
 	getSummary,
-};};
+};
 
 module.exports = { log, info, warn, error };
