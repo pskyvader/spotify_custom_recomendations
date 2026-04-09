@@ -1,7 +1,7 @@
 const { updateRecentSongs } = require("./updateRecentSongs");
 const { syncronizeMultiplePlaylists } = require("../api/playlist");
 
-const { log, error } = require("../utils/logger");
+const { log, info, error } = require("../utils/logger");
 
 const getHourlyTasks = (userList) => {
 	return userList.map((user) => {
@@ -16,23 +16,22 @@ const getHourlyTasks = (userList) => {
 
 				const syncResponse = await syncronizeMultiplePlaylists(user);
 
-				const response = {
-					error: updateResponse.error || syncResponse.error,
-					message: [
-						updateResponse.message,
-						...syncResponse.message,
-					],
-				};
-
 				user.set({ last_modified_hourly: Date.now() });
 
 				await user.save();
 
-				response.message.push(
-					`last hourly updated for user ${user.name} saved`
-				);
+				info("hourly tasks completed for user", {
+					userId: user.id,
+					userName: user.name,
+					updateError: updateResponse.error,
+					syncError: syncResponse.error,
+				});
 
-				return response;
+				return {
+					error: updateResponse.error || syncResponse.error,
+					addedCount: updateResponse.addedCount || 0,
+					failedCount: updateResponse.failedCount || 0,
+				};
 			} catch (err) {
 				// keep consistent with your system contract
 				error("Hourly task failed", {

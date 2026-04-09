@@ -111,7 +111,7 @@ const runTasks = async (tasks, label) => {
 
 	if (!tasks.length) {
 		info(`No ${label} tasks available`);
-		return { error: false };
+		return { error: false, totalMs: 0 };
 	}
 
 	const wrappedTasks = tasks.map((task, index) => (async () => {
@@ -132,13 +132,15 @@ const runTasks = async (tasks, label) => {
 
 	const hasError = results.some((r) => r?.error);
 
+	const batchMs = now() - batchStart;
+
 	info(`${label} batch completed`, {
 		count: tasks.length,
 		error: hasError,
-		totalMs: now() - batchStart,
+		totalMs: batchMs,
 	});
 
-	return { error: hasError };
+	return { error: hasError, totalMs: batchMs };
 };
 
 // ---- Main Entry ----
@@ -149,7 +151,11 @@ const automaticTasks = async () => {
 
 	// ---- Global rate limit ----
 	if (CONFIG.enableLimits && !shouldRun(lastTaskRun, TIME.hour)) {
-		warn("Global rate limit hit");
+		warn("Global rate limit hit", {
+			lastTaskRun,
+			now: now(),
+			nextAllowedRun: lastTaskRun + TIME.hour,
+		});
 
 		return {
 			error: true,
@@ -157,21 +163,32 @@ const automaticTasks = async () => {
 		};
 	}
 
+	// ---- Fetch users with timing ----
+	const usersFetchStart = now();
 	const users = await getAvailableUsers();
+	const usersFetchMs = now() - usersFetchStart;
 
 	let overallError = users.error;
 
 	const executions = [];
+	let hourlyMs = 0;
+	let dailyMs = 0;
 
 	if (CONFIG.enableHourly) {
 		executions.push(
-			runTasks(getHourlyTasks(users.hourly), "Hourly")
+			runTasks(getHourlyTasks(users.hourly), "Hourly").then((res) => {
+				hourlyMs = res.totalMs;
+				return res;
+			})
 		);
 	}
 
 	if (CONFIG.enableDaily) {
 		executions.push(
-			runTasks(getDailyTasks(users.daily), "Daily")
+			runTasks(getDailyTasks(users.daily), "Daily").then((res) => {
+				dailyMs = res.totalMs;
+				return res;
+			})
 		);
 	}
 
@@ -183,13 +200,25 @@ const automaticTasks = async () => {
 
 	lastTaskRun = now();
 
+	const totalMs = now() - globalStart;
+
 	info("All tasks finished", {
-		totalMs: now() - globalStart,
+		totalMs,
+		usersFetchMs,
+		hourlyTasksMs: hourlyMs,
+		dailyTasksMs: dailyMs,
+		otherMs: totalMs - usersFetchMs - hourlyMs - dailyMs,
 	});
 
 	return {
 		error: overallError,
 		logs: getLogs(),
+		timing: {
+			totalMs,
+			usersFetchMs,
+			hourlyTasksMs: hourlyMs,
+			dailyTasksMs: dailyMs,
+		},
 	};
 };
 

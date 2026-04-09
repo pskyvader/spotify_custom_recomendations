@@ -3,29 +3,29 @@ const { removeFromPlaylist } = require("./removeFromPlaylist");
 const { addToPlaylist } = require("./addToPlaylist");
 const { deleteGarbage } = require("./deleteGarbage");
 const { removeRepeatedSongs } = require("./removeRepeatedSongs");
-const { log, error } = require("../utils/logger");
+const { log, info, error } = require("../utils/logger");
 
 const getDailyTasks = (userList) => {
 	const songsToModify = 1 + Math.floor(Math.random() * 4);
 
-	log("beginning daily tasks");
+	log("beginning daily tasks", { userCount: userList.length });
 
 	const taskList = userList.map((user) => {
 		// 👇 RETURN A FUNCTION (NOT A PROMISE)
 		return async () => {
 			try {
-				log("remove repeated songs");
+				log("remove repeated songs", { userId: user.id });
 
 				const responseRepeated = await removeRepeatedSongs(user);
 
-				log("update times");
+				log("update times", { userId: user.id });
 
 				const averageResponse = await updateAverageTimes(
 					user,
 					responseRepeated
 				);
 
-				log("remove from playlist");
+				log("remove from playlist", { userId: user.id });
 
 				const removeResponse = await removeFromPlaylist(
 					user,
@@ -33,7 +33,7 @@ const getDailyTasks = (userList) => {
 					averageResponse
 				);
 
-				log("add to playlist");
+				log("add to playlist", { userId: user.id });
 
 				const addResponse = await addToPlaylist(
 					user,
@@ -42,19 +42,25 @@ const getDailyTasks = (userList) => {
 					removeResponse
 				);
 
-				log("save response");
+				log("save response", { userId: user.id });
 
 				user.set({ last_modified_daily: Date.now() });
 
 				await user.save();
 
-				addResponse.message.push(
-					`last daily updated for user ${user.name} saved`
-				);
+				info("daily tasks completed for user", {
+					userId: user.id,
+					userName: user.name,
+					removedTotal: removeResponse.removedTotal,
+					addedTotal: addResponse.addedTotal,
+				});
 
-				return addResponse;
+				return {
+					error: addResponse.error || removeResponse.error,
+					removedTotal: removeResponse.removedTotal,
+					addedTotal: addResponse.addedTotal,
+				};
 			} catch (err) {
-				// you said catch is handled elsewhere, but we still need a return shape
 				error("Daily task failed", {
 					userId: user.id,
 					error: err?.message,
