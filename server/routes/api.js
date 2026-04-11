@@ -100,7 +100,7 @@ router.use("/playlist/:playlistId", async (req, res, next) => {
 		req.playlist = retryPlaylist[0];
 		return next();
 	}
-	playlistCache[user.hash + "-" + playlistId] = currentPlaylist[0];
+	boundedCache.set(cacheKey, currentPlaylist[0], 3600); // 1 hour TTL
 	req.playlist = currentPlaylist[0];
 	next();
 });
