@@ -16,7 +16,7 @@ const {
 	getSong,
 } = require("../api/song");
 const { getPlaylistSongFeatures } = require("../api/songfeatures");
-const { default: cache } = require("../utils/cache") || {};
+const cache = require("../utils/cache");
 const boundedCache = require("../utils/boundedCache");
 
 const tenMinutes = 600;

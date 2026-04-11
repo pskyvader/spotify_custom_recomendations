@@ -6,7 +6,7 @@ const { getUserPlaylists } = require("../api/user");
 const { getRecentlyPlayedSongs } = require("../api/song");
 const apiRoute = require("./api.playlist");
 
-const { default: cache } = require("../utils/cache") || {};
+const cache = require("../utils/cache");
 const boundedCache = require("../utils/boundedCache");
 const tenMinutes = 600;
 
