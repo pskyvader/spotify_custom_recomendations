@@ -9,6 +9,7 @@ const {
 	clearLogs,
 } = require("../utils/logger");
 const { getHourlyTasks, getDailyTasks } = require("../tasks");
+const { taskQueue } = require("../utils/taskQueue");
 
 // ---- Config ----
 const CONFIG = {
@@ -25,17 +26,33 @@ const TIME = {
 
 let lastTaskRun = Date.now() - TIME.day;
 
+// Store ongoing/completed task runs
+const tasks_ongoingRun = {
+	id: null,
+	startedAt: null,
+	status: "idle", // idle, running, completed
+	hourlyCompleted: 0,
+	dailyCompleted: 0,
+	totalTimeMs: 0,
+	results: {},
+};
+
 // ---- Helpers ----
 const shouldRun = (lastRun, interval) =>
 	!CONFIG.enableLimits || lastRun < Date.now() - interval + TIME.tenMinutes;
 
 const now = () => Date.now();
 
-// ---- User Preparation (FULL PARALLEL) ----
-const getAvailableUsers = async () => {
+// ---- User Preparation (BATCHED - NOT ALL PARALLEL) ----
+const getAvailableUsers = async (limit = 50, offset = 0) => {
 	const start = now();
 
-	const users = await User.findAll();
+	// Use LIMIT/OFFSET to avoid loading all users at once
+	const users = await User.findAll({
+		limit: limit,
+		offset: offset,
+		raw: false,
+	});
 
 	const result = {
 		hourly: [],
@@ -49,7 +66,7 @@ const getAvailableUsers = async () => {
 
 			log("Processing user", { userId: user.id });
 
-			// ---- Token refresh (parallel) ----
+			// ---- Token refresh (parallel per batch) ----
 			if (user.expiration < now() + TIME.tenMinutes) {
 				const t = now();
 
@@ -94,8 +111,9 @@ const getAvailableUsers = async () => {
 		if (entry.daily) result.daily.push(entry.user);
 	}
 
-	info("User selection completed", {
-		totalUsers: users.length,
+	info("User selection completed (batch)", {
+		batchLimit: limit,
+		offset: offset,
 		validUsers: processed.filter(Boolean).length,
 		hourlyEligible: result.hourly.length,
 		dailyEligible: result.daily.length,
@@ -105,45 +123,54 @@ const getAvailableUsers = async () => {
 	return result;
 };
 
-// ---- Task Runner (PARALLEL PER TASK) ----
-const runTasks = async (tasks, label) => {
+// ---- Task Runner (QUEUED - NOT ALL PARALLEL) ----
+const runTasksQueued = async (taskFunctions, label) => {
 	const batchStart = now();
 
-	if (!tasks.length) {
+	if (!taskFunctions.length) {
 		info(`No ${label} tasks available`);
-		return { error: false, totalMs: 0 };
+		return { error: false, totalMs: 0, completed: 0 };
 	}
 
-	const wrappedTasks = tasks.map((task, index) => (async () => {
+	let completed = 0;
+	let hasError = false;
+
+	// Process tasks through queue
+	for (let i = 0; i < taskFunctions.length; i++) {
+		const taskFn = taskFunctions[i];
 		const t = now();
 
-		const res = await task();
+		try {
+			const res = await taskQueue.enqueue(taskFn, `${label}-task-${i + 1}/${taskFunctions.length}`);
 
-		info(`${label} task completed`, {
-			index,
-			ms: now() - t,
-			error: res?.error ?? null,
-		});
+			if (res?.error) {
+				hasError = true;
+			}
+			completed++;
 
-		return res;
-	})());
-
-	const results = await Promise.all(wrappedTasks);
-
-	const hasError = results.some((r) => r?.error);
+			info(`${label} task ${i + 1}/${taskFunctions.length} completed`, {
+				ms: now() - t,
+				error: res?.error ?? null,
+			});
+		} catch (err) {
+			hasError = true;
+			warn(`${label} task ${i + 1} failed`, { error: err.message });
+		}
+	}
 
 	const batchMs = now() - batchStart;
 
 	info(`${label} batch completed`, {
-		count: tasks.length,
+		count: taskFunctions.length,
+		completed,
 		error: hasError,
 		totalMs: batchMs,
 	});
 
-	return { error: hasError, totalMs: batchMs };
+	return { error: hasError, totalMs: batchMs, completed };
 };
 
-// ---- Main Entry ----
+// ---- Main Entry (BATCHED USER PROCESSING) ----
 const automaticTasks = async () => {
 	clearLogs();
 
@@ -163,39 +190,33 @@ const automaticTasks = async () => {
 		};
 	}
 
-	// ---- Fetch users with timing ----
+	// ---- Fetch users in batches ----
 	const usersFetchStart = now();
-	const users = await getAvailableUsers();
+	const users = await getAvailableUsers(50, 0); // Batch 50 users at a time
 	const usersFetchMs = now() - usersFetchStart;
 
 	let overallError = users.error;
 
-	const executions = [];
+	const taskFunctions = [];
 	let hourlyMs = 0;
 	let dailyMs = 0;
+	let hourlyCompleted = 0;
+	let dailyCompleted = 0;
 
-	if (CONFIG.enableHourly) {
-		executions.push(
-			runTasks(getHourlyTasks(users.hourly), "Hourly").then((res) => {
-				hourlyMs = res.totalMs;
-				return res;
-			})
-		);
+	if (CONFIG.enableHourly && users.hourly.length > 0) {
+		const hourlyTasks = getHourlyTasks(users.hourly);
+		const hourlyResult = await runTasksQueued(hourlyTasks, "Hourly");
+		hourlyMs = hourlyResult.totalMs;
+		hourlyCompleted = hourlyResult.completed;
+		overallError ||= hourlyResult.error;
 	}
 
-	if (CONFIG.enableDaily) {
-		executions.push(
-			runTasks(getDailyTasks(users.daily), "Daily").then((res) => {
-				dailyMs = res.totalMs;
-				return res;
-			})
-		);
-	}
-
-	const results = await Promise.all(executions);
-
-	for (const r of results) {
-		overallError ||= r.error;
+	if (CONFIG.enableDaily && users.daily.length > 0) {
+		const dailyTasks = getDailyTasks(users.daily);
+		const dailyResult = await runTasksQueued(dailyTasks, "Daily");
+		dailyMs = dailyResult.totalMs;
+		dailyCompleted = dailyResult.completed;
+		overallError ||= dailyResult.error;
 	}
 
 	lastTaskRun = now();
@@ -207,8 +228,14 @@ const automaticTasks = async () => {
 		usersFetchMs,
 		hourlyTasksMs: hourlyMs,
 		dailyTasksMs: dailyMs,
+		hourlyCompleted,
+		dailyCompleted,
 		otherMs: totalMs - usersFetchMs - hourlyMs - dailyMs,
 	});
+
+	// Update task run status
+	tasks_ongoingRun.status = "completed";
+	tasks_ongoingRun.totalTimeMs = totalMs;
 
 	return {
 		error: overallError,
@@ -218,8 +245,38 @@ const automaticTasks = async () => {
 			usersFetchMs,
 			hourlyTasksMs: hourlyMs,
 			dailyTasksMs: dailyMs,
+			hourlyCompleted,
+			dailyCompleted,
 		},
 	};
 };
 
-module.exports = { automaticTasks };
+// Run tasks asynchronously without blocking
+const runTasksAsync = async () => {
+	// If another run is in progress, skip
+	if (tasks_ongoingRun.status === "running") {
+		warn("Tasks already running, skipping");
+		return tasks_ongoingRun;
+	}
+
+	tasks_ongoingRun.status = "running";
+	tasks_ongoingRun.startedAt = now();
+	tasks_ongoingRun.id = Date.now();
+
+	// Run async without awaiting
+	automaticTasks()
+		.then((result) => {
+			tasks_ongoingRun.results = result;
+			tasks_ongoingRun.status = "completed";
+			info("Async tasks completed", result.timing);
+		})
+		.catch((err) => {
+			error("Async tasks failed", { error: err.message });
+			tasks_ongoingRun.status = "error";
+			tasks_ongoingRun.results = { error: true, message: err.message };
+		});
+
+	return tasks_ongoingRun;
+};
+
+module.exports = { automaticTasks, runTasksAsync, tasks_ongoingRun };

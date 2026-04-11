@@ -8,6 +8,9 @@ const {
 } = require("./formatSong");
 const { filterOutliers } = require("./filterOutliersFunction");
 const cache = require("./cache");
+const { memoryLoggingMiddleware, logMemorySnapshot, getMemoryUsage } = require("./memoryMonitor");
+const { taskQueue } = require("./taskQueue");
+const boundedCache = require("./boundedCache");
 
 module.exports = {
 	generateRandomString,
@@ -18,4 +21,9 @@ module.exports = {
 	formatSongFeaturesAPIList,
 	filterOutliers,
 	cache,
+	memoryLoggingMiddleware,
+	logMemorySnapshot,
+	getMemoryUsage,
+	taskQueue,
+	boundedCache,
 };

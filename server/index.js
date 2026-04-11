@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 const { sequelize, connection } = require("./database");
-const { login, callback, automaticTasks } = require("./pages");
+const { login, callback, runTasksAsync, tasks_ongoingRun } = require("./pages");
 const {
 	authorizeUser,
 	validateUserLogin,
@@ -16,7 +16,8 @@ const {
 } = require("./api/user");
 const apiRoute = require("./routes/api");
 const { log, error } = require("./utils/logger");
-;(async () => {
+const { memoryLoggingMiddleware, logMemorySnapshot } = require("./utils/memoryMonitor");
+; (async () => {
 	// Attempt DB connection and then start the server in degraded mode if DB not available
 	const dbResult = await connection();
 
@@ -59,6 +60,12 @@ const { log, error } = require("./utils/logger");
 	app.use(cookieParser(process.env.SESSION_SECRET));
 	app.disable("x-powered-by");
 
+	// Add memory monitoring for all requests
+	if (process.env.ENABLE_MEMORY_LOGGING === "true") {
+		app.use(memoryLoggingMiddleware);
+		logMemorySnapshot("Server startup complete");
+	}
+
 	// serve up production assets
 	const clientBuildPath = path.resolve(__dirname, "..", "client", "build");
 	const fs = require("fs");
@@ -99,10 +106,33 @@ const { log, error } = require("./utils/logger");
 		callback(req, res);
 	});
 	app.get("/tasks", function (req, res) {
-		log("GET /tasks");
-		automaticTasks().then((response) => {
-			log("GET /tasks response", response);
-			res.json(response);
+		log("GET /tasks - Starting async task run");
+
+		// Trigger async tasks
+		runTasksAsync();
+
+		// Return immediately without waiting
+		res.json({
+			status: "accepted",
+			message: "Tasks queued for processing",
+			taskId: tasks_ongoingRun.id,
+			startedAt: tasks_ongoingRun.startedAt,
+		});
+	});
+
+	// New endpoint: Check task status and get results
+	app.get("/tasks/status", function (req, res) {
+		log("GET /tasks/status - Checking task status");
+
+		res.json({
+			status: tasks_ongoingRun.status,
+			taskId: tasks_ongoingRun.id,
+			startedAt: tasks_ongoingRun.startedAt,
+			results: tasks_ongoingRun.results,
+			...(tasks_ongoingRun.status === "completed" && {
+				timing: tasks_ongoingRun.results.timing,
+				logs: tasks_ongoingRun.results.logs,
+			}),
 		});
 	});
 
@@ -120,7 +150,7 @@ const { log, error } = require("./utils/logger");
 	});
 
 	const tenMinutes = 600000;
-	const userCache = {};
+	const boundedCache = require("./utils/boundedCache");
 
 	app.use("/api", async (req, res, next) => {
 		log("API Middleware Check", req.originalUrl, "Hash:", req.session.hash);
@@ -137,7 +167,8 @@ const { log, error } = require("./utils/logger");
 			});
 		}
 
-		const user = userCache[session.hash];
+		const cacheKey = `user-${session.hash}`;
+		const user = boundedCache.get(cacheKey);
 		if (user && new Date(user.expiration) > Date.now() + tenMinutes) {
 			log("API Middleware: User found in cache (User ID: " + user.id + ")");
 			req.user = user;
@@ -156,7 +187,7 @@ const { log, error } = require("./utils/logger");
 			error("API Middleware: Validation error", validUser, "Response:", validUser);
 			return res.json(validUser);
 		}
-		userCache[session.hash] = validUser;
+		boundedCache.set(cacheKey, validUser, 3600); // 1 hour TTL
 		req.user = validUser;
 		next();
 	});

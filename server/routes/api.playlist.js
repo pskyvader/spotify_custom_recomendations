@@ -16,7 +16,8 @@ const {
 	getSong,
 } = require("../api/song");
 const { getPlaylistSongFeatures } = require("../api/songfeatures");
-const { cache } = require("../utils");
+const { default: cache } = require("../utils/cache") || {};
+const boundedCache = require("../utils/boundedCache");
 
 const tenMinutes = 600;
 
@@ -73,7 +74,7 @@ router.get("/sync", async (req, res) => {
 	if (response.error) {
 		error("sync error", response);
 	}
-	delete req.playlistCache[user.hash + "-" + playlistId];
+	boundedCache.delete(`playlist-${user.hash}-${playlistId}`);
 	log("GET /api/playlist/:id/sync response", response);
 	res.json(response);
 });
@@ -99,7 +100,7 @@ router.get("/status", async (req, res) => {
 	} else {
 		log("sync success", syncResponse);
 	}
-	delete req.playlistCache[user.hash + "-" + playlistId];
+	boundedCache.delete(`playlist-${user.hash}-${playlistId}`);
 	// log("sync", syncResponse);
 	cache.set(
 		`get-playlist-last-sync-${playlist.id}`,

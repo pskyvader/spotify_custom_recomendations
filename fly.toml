@@ -9,6 +9,13 @@ processes    = []
     MAX_SONGS_PER_PLAYLIST = "200"
     MIN_SONGS_PER_PLAYLIST = "50"
     PRODUCTION             = "production"
+    ENABLE_MEMORY_LOGGING  = "false"
+    TASK_CONCURRENCY       = "2"
+    CACHE_MAX_SIZE_MB      = "50"
+    CACHE_MAX_KEYS         = "10000"
+    ENABLE_LIMITS          = "true"
+    ENABLE_HOURLY          = "true"
+    ENABLE_DAILY           = "true"
 
 [experimental]
     allowed_public_ports = []

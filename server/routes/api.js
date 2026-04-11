@@ -6,10 +6,9 @@ const { getUserPlaylists } = require("../api/user");
 const { getRecentlyPlayedSongs } = require("../api/song");
 const apiRoute = require("./api.playlist");
 
-const { cache } = require("../utils");
+const { default: cache } = require("../utils/cache") || {};
+const boundedCache = require("../utils/boundedCache");
 const tenMinutes = 600;
-
-const playlistCache = {};
 
 router.get("/loggedin", async function (req, res) {
 	log("GET /api/loggedin");
@@ -73,8 +72,9 @@ router.use("/playlist/:playlistId", async (req, res, next) => {
 	log("Middleware /playlist/:playlistId", req.params);
 	const user = req.user;
 	const playlistId = req.params.playlistId;
-	const playlist = playlistCache[user.hash + "-" + playlistId];
-	req.playlistCache = playlistCache;
+	const cacheKey = `playlist-${user.hash}-${playlistId}`;
+
+	const playlist = boundedCache.get(cacheKey);
 	if (playlist) {
 		req.playlist = playlist;
 		return next();
@@ -96,7 +96,7 @@ router.use("/playlist/:playlistId", async (req, res, next) => {
 			});
 			return res.json({ error: true, message: "No playlist found" });
 		}
-		playlistCache[user.hash + "-" + playlistId] = retryPlaylist[0];
+		boundedCache.set(cacheKey, retryPlaylist[0], 3600); // 1 hour TTL
 		req.playlist = retryPlaylist[0];
 		return next();
 	}
